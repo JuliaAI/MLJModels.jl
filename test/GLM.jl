@@ -4,10 +4,12 @@ module TestGLM
 using MLJ
 using Test
 
+import MLJModels 
+import GLM # MLJModels.GLM_ now available for loading
+using MLJModels.GLM_
+
 task = load_boston()
 X, y = X_and_y(task)
-
-import GLM
 
 train, test = partition(eachindex(y), 0.7)
 

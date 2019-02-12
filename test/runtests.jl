@@ -21,9 +21,9 @@ end
     @test include("Clustering.jl")
 end
 
-# @testset "GLM" begin
-#     @test include("GLM.jl")
-# end
+@testset "GLM" begin
+    @test include("GLM.jl")
+end
 
 # @testset "XGBoost" begin
 #   @test_broken include("XGBoost.jl")

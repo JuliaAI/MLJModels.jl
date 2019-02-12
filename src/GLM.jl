@@ -1,11 +1,10 @@
 module GLM_
 
 import MLJBase
-import MLJ
 
 export OLSRegressor, OLS, LinearRegression
 
-import GLM
+import ..GLM # strange syntax for lazy-loading
 
 const OLSFitResult = GLM.LinearModel
 
@@ -64,7 +63,7 @@ function MLJBase.predict(model::OLSRegressor, fitresult::OLSFitResult, Xnew)
 end
 
 # metadata:
-MLJBase.load_path(::Type{<:OLS}) = "MLJ.OLS"
+MLJBase.load_path(::Type{<:OLS}) = "MLJModels.GLM_.OLS"
 MLJBase.package_name(::Type{<:OLS}) = "GLM"
 MLJBase.package_uuid(::Type{<:OLS}) = "38e38edf-8417-5370-95a0-9cbb8c7f171a"
 MLJBase.package_url(::Type{<:OLS}) = "https://github.com/JuliaStats/GLM.jl"
@@ -74,6 +73,3 @@ MLJBase.output_kind(::Type{<:OLS}) = :continuous
 MLJBase.output_quantity(::Type{<:OLS}) = :univariate
 
 end # module
-
-using .GLM_
-export OLSRegressor, OLS, LinearRegression
