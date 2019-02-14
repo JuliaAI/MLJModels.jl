@@ -98,7 +98,7 @@ function MLJBase.predict(model::OLS, fitresult::LMFitResult, Xnew)
     Xmatrix = MLJBase.matrix(Xnew)
     model.fit_intercept && (Xmatrix = hcat(Xmatrix, ones(eltype(Xmatrix), size(Xmatrix, 1), 1)))
     μ = GLM.predict(fitresult, Xmatrix)
-    σ̂ = GLM.dispersion(fitresult, sqr=false)
+    σ̂ = GLM.dispersion(fitresult, false)
     return [GLM.Normal(μᵢ, σ̂) for μᵢ ∈ μ]
 end
 
