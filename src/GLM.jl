@@ -98,10 +98,8 @@ function MLJBase.predict(model::OLS, fitresult::LMFitResult, Xnew)
     Xmatrix = MLJBase.matrix(Xnew)
     model.fit_intercept && (Xmatrix = hcat(Xmatrix, ones(eltype(Xmatrix), size(Xmatrix, 1), 1)))
     μ = GLM.predict(fitresult, Xmatrix)
-    # TODO: revisit the predicted standard deviation, here using a rough estimate based
-    # on the average of the standard deviations estimated on each of the training point.
-    ŝ = sum(GLM.stderror(fitresult))/length(μ)
-    return [GLM.Normal(μᵢ, ŝ) for μᵢ ∈ μ]
+    σ̂ = GLM.dispersion(fitresult, sqr=false)
+    return [GLM.Normal(μᵢ, σ̂) for μᵢ ∈ μ]
 end
 
 function MLJBase.predict(model::GLMCount, fitresult::GLMFitResult, Xnew)
