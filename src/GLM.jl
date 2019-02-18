@@ -2,7 +2,7 @@ module GLM_
 
 import MLJBase
 
-export OLSRegressor, OLS, LinearRegression
+export OLSRegressor #, OLS, LinearRegression
 
 import ..GLM # strange syntax for lazy-loading
 
@@ -24,8 +24,8 @@ function OLSRegressor(;fit_intercept=true)
 end
 
 # synonyms
-const OLS = OLSRegressor
-const LinearRegression = OLSRegressor
+# const OLS = OLSRegressor
+# const LinearRegression = OLSRegressor
 
 ####
 #### fit/predict OLSRegressor
