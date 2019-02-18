@@ -4,8 +4,9 @@
 # eg, `module TestDatasets` for code testing `datasets.jl`.
 
 using Test
-using Pkg
-#Pkg.add(PackageSpec(url="https://github.com/alan-turing-institute/MLJ.jl", rev="master")) 
+
+# using Pkg
+# Pkg.add(PackageSpec(url="https://github.com/alan-turing-institute/MLJ.jl", rev="master")) 
 
 @testset "DecisionTree" begin
   @test include("DecisionTree.jl")
