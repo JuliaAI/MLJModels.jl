@@ -1,8 +1,10 @@
 module ScikitLearn_
+
 #> export the new models you're going to define (and nothing else):
 export SVMClassifier, SVMRegressor
 export SVMNuClassifier, SVMNuRegressor
 export SVMLClassifier, SVMLRegressor
+
 #> for all Supervised models:
 import MLJBase
 
@@ -19,7 +21,6 @@ import ..ScikitLearn
 @sk_import svm: SVR
 @sk_import svm: NuSVR
 @sk_import svm: LinearSVR
-
 
 mutable struct SVMClassifier{Any} <: MLJBase.Deterministic{Any}
     C::Float64 
@@ -285,43 +286,10 @@ function SVMLRegressor(
     return model
 end
 
-
-#Use Multiple Dispatch to implement two versions of the fit method?
-#Thus allowing use of both categorical vectors and non-categorical vectors?
-#This can be reverted if necessary by simply deleting the code which handles
-#the separate case.
-
 function MLJBase.fit(model::SVMClassifier{Any}
              , verbosity::Int   #> must be here (and typed) even if not used (as here)
              , X
              , y)
-
-    Xmatrix = MLJBase.matrix(X)
-    cache = SVC(C=model.C,
-            kernel=model.kernel,
-            degree=model.degree,
-            coef0=model.coef0,
-            shrinking=model.shrinking,
-	    gamma=model.gamma,
-            tol=model.tol,
-            cache_size=model.cache_size,
-            max_iter=model.max_iter,
-            decision_function_shape=model.decision_function_shape,
-            random_state=model.random_state
-    )
-    
-    fitresult = ScikitLearn.fit!(cache,Xmatrix,y)
-
-    report = nothing
-    
-    return fitresult, cache, report 
-
-end
-
-function MLJBase.fit(model::SVMClassifier{Any}
-             , verbosity::Int   #> must be here (and typed) even if not used (as here)
-             , X
-             , y::CategoricalVector)
     
     Xmatrix = MLJBase.matrix(X)
     decoder = MLJBase.CategoricalDecoder(y)
@@ -352,33 +320,6 @@ function MLJBase.fit(model::SVMNuClassifier{Any}
              , verbosity::Int   #> must be here (and typed) even if not used (as here)
              , X
              , y)
-
-    Xmatrix = MLJBase.matrix(X)
-    cache = NuSVC(nu=model.nu,
-            kernel=model.kernel,
-            degree=model.degree,
-            coef0=model.coef0,
-            shrinking=model.shrinking,
-	    gamma=model.gamma,
-            tol=model.tol,
-            cache_size=model.cache_size,
-            max_iter=model.max_iter,
-            decision_function_shape=model.decision_function_shape,
-            random_state=model.random_state
-    )
-    
-    fitresult = ScikitLearn.fit!(cache,Xmatrix,y)
-
-    report = nothing
-    
-    return fitresult, cache, report 
-
-end
-
-function MLJBase.fit(model::SVMNuClassifier{Any}
-             , verbosity::Int   #> must be here (and typed) even if not used (as here)
-             , X
-             , y::CategoricalVector)
     
     Xmatrix = MLJBase.matrix(X)
     decoder = MLJBase.CategoricalDecoder(y)
@@ -409,8 +350,11 @@ function MLJBase.fit(model::SVMLClassifier{Any}
              , verbosity::Int   #> must be here (and typed) even if not used (as here)
              , X
              , y)
-
+    
     Xmatrix = MLJBase.matrix(X)
+    decoder = MLJBase.CategoricalDecoder(y)
+    y_plain = MLJBase.transform(decoder, y)
+
     cache = LinearSVC(C=model.C,
 	    loss = model.loss,
             dual=model.dual,
@@ -420,90 +364,34 @@ function MLJBase.fit(model::SVMLClassifier{Any}
             max_iter=model.max_iter,
             random_state=model.random_state
     )
+    
+    result = ScikitLearn.fit!(cache,Xmatrix,y_plain)
+    fitresult = (result, decoder)
+    report = nothing
+    
+    return fitresult, cache, report 
+
+end
+
+function MLJBase.fit(model::SVMRegressor{Any}
+             , verbosity::Int   #> must be here (and typed) even if not used (as here)
+             , X
+             , y)
+    
+    Xmatrix = MLJBase.matrix(X)
+    
+    cache = SVR(C=model.C,
+            kernel=model.kernel,
+            degree=model.degree,
+            coef0=model.coef0,
+            shrinking=model.shrinking,
+	    gamma=model.gamma,
+            tol=model.tol,
+            cache_size=model.cache_size,
+            max_iter=model.max_iter,
+            epsilon=model.epsilon)
     
     fitresult = ScikitLearn.fit!(cache,Xmatrix,y)
-
-    report = nothing
-    
-    return fitresult, cache, report 
-
-end
-
-function MLJBase.fit(model::SVMLClassifier{Any}
-             , verbosity::Int   #> must be here (and typed) even if not used (as here)
-             , X
-             , y::CategoricalVector)
-    
-    Xmatrix = MLJBase.matrix(X)
-    decoder = MLJBase.CategoricalDecoder(y)
-    y_plain = MLJBase.transform(decoder, y)
-
-    cache = LinearSVC(C=model.C,
-	    loss = model.loss,
-            dual=model.dual,
-            penalty=model.penalty,
-            intercept_scaling=model.intercept_scaling, 
-            tol=model.tol,
-            max_iter=model.max_iter,
-            random_state=model.random_state
-    )
-    
-    result = ScikitLearn.fit!(cache,Xmatrix,y_plain)
-    fitresult = (result, decoder)
-    report = nothing
-    
-    return fitresult, cache, report 
-
-end
-
-
-function MLJBase.fit(model::SVMRegressor{Any}
-             , verbosity::Int   #> must be here (and typed) even if not used (as here)
-             , X
-             , y)
-    
-    #Xmatrix = MLJBase.matrix(X)
-    
-    cache = SVR(C=model.C,
-            kernel=model.kernel,
-            degree=model.degree,
-            coef0=model.coef0,
-            shrinking=model.shrinking,
-	    gamma=model.gamma,
-            tol=model.tol,
-            cache_size=model.cache_size,
-            max_iter=model.max_iter,
-            epsilon=model.epsilon)
-    
-    fitresult = ScikitLearn.fit!(cache,X,y)
-    report = nothing
-    
-    return fitresult, cache, report 
-end
-
-
-function MLJBase.fit(model::SVMRegressor{Any}
-             , verbosity::Int   #> must be here (and typed) even if not used (as here)
-             , X
-             , y::CategoricalVector)
-    
-    Xmatrix = MLJBase.matrix(X)
-    decoder = MLJBase.CategoricalDecoder(y)
-    y_plain = MLJBase.transform(decoder, y)
-    
-    cache = SVR(C=model.C,
-            kernel=model.kernel,
-            degree=model.degree,
-            coef0=model.coef0,
-            shrinking=model.shrinking,
-	    gamma=model.gamma,
-            tol=model.tol,
-            cache_size=model.cache_size,
-            max_iter=model.max_iter,
-            epsilon=model.epsilon)
-    
-    result = ScikitLearn.fit!(cache,Xmatrix,y_plain)
-    fitresult = (result, decoder)
     report = nothing
     
     return fitresult, cache, report 
@@ -514,7 +402,7 @@ function MLJBase.fit(model::SVMNuRegressor{Any}
              , X
              , y)
     
-    #Xmatrix = MLJBase.matrix(X)
+    Xmatrix = MLJBase.matrix(X)
     
     cache = NuSVR(nu=model.nu,
             C=model.C,
@@ -527,35 +415,7 @@ function MLJBase.fit(model::SVMNuRegressor{Any}
             cache_size=model.cache_size,
             max_iter=model.max_iter)
     
-    fitresult = ScikitLearn.fit!(cache,X,y)
-    report = nothing
-    
-    return fitresult, cache, report 
-end
-
-
-function MLJBase.fit(model::SVMNuRegressor{Any}
-             , verbosity::Int   #> must be here (and typed) even if not used (as here)
-             , X
-             , y::CategoricalVector)
-    
-    Xmatrix = MLJBase.matrix(X)
-    decoder = MLJBase.CategoricalDecoder(y)
-    y_plain = MLJBase.transform(decoder, y)
-    
-    cache = NuSVR(nu=model.nu,
-            C=model.C,
-            kernel=model.kernel,
-            degree=model.degree,
-            coef0=model.coef0,
-            shrinking=model.shrinking,
-	    gamma=model.gamma,
-            tol=model.tol,
-            cache_size=model.cache_size,
-            max_iter=model.max_iter)
-    
-    result = ScikitLearn.fit!(cache,Xmatrix,y_plain)
-    fitresult = (result, decoder)
+    fitresult = ScikitLearn.fit!(cache,Xmatrix,y)
     report = nothing
     
     return fitresult, cache, report 
@@ -566,31 +426,7 @@ function MLJBase.fit(model::SVMLRegressor{Any}
              , X
              , y)
     
-    #Xmatrix = MLJBase.matrix(X)
-    
-    cache = LinearSVR(C=model.C,
-            loss=model.loss,
-	    fit_intercept=model.fit_intercept,
-	    dual=model.dual,
-	    tol=model.tol,
-	    max_iter=model.max_iter,
-	    epsilon=model.epsilon)
-    
-    fitresult = ScikitLearn.fit!(cache,X,y)
-    report = nothing
-    
-    return fitresult, cache, report 
-end
-
-
-function MLJBase.fit(model::SVMLRegressor{Any}
-             , verbosity::Int   #> must be here (and typed) even if not used (as here)
-             , X
-             , y::CategoricalVector)
-    
     Xmatrix = MLJBase.matrix(X)
-    decoder = MLJBase.CategoricalDecoder(y)
-    y_plain = MLJBase.transform(decoder, y)
     
     cache = LinearSVR(C=model.C,
             loss=model.loss,
@@ -600,48 +436,55 @@ function MLJBase.fit(model::SVMLRegressor{Any}
 	    max_iter=model.max_iter,
 	    epsilon=model.epsilon)
     
-    result = ScikitLearn.fit!(cache,Xmatrix,y_plain)
-    fitresult = (result, decoder)
+    fitresult = ScikitLearn.fit!(cache,Xmatrix,y)
     report = nothing
     
     return fitresult, cache, report 
 end
-
-
 
 
 #> placeholder types for predict dispatching
-SVMC = Union{SVMClassifier{Any}, SVMNuClassifier{Any}, SVMLClassifier{Any}}
-SVMR = Union{SVMRegressor{Any}, SVMNuRegressor{Any}, SVMLRegressor{Any}}
+SVMC = Union{SVMClassifier, SVMNuClassifier, SVMLClassifier}
+SVMR = Union{SVMRegressor, SVMNuRegressor, SVMLRegressor}
+SVM = Union{SVMC, SVMR}
 
-function MLJBase.predict(model::Union{SVMC,SVMR}
-                     , fitresult
-                     , Xnew) 
-    prediction = ScikitLearn.predict(fitresult,Xnew)
-    return prediction
-end
-
-function MLJBase.predict(model::Union{SVMC,SVMR}
+function MLJBase.predict(model::SVMC
                      , fitresult::Tuple
                      , Xnew)
 
     xnew = MLJBase.matrix(Xnew) 
-    plain, decoder = fitresult
-    prediction = ScikitLearn.predict(plain,xnew)
+    result, decoder = fitresult
+    prediction = ScikitLearn.predict(result, xnew)
     return MLJBase.inverse_transform(decoder,prediction)
+end
+
+function MLJBase.predict(model::SVMR
+                         , fitresult
+                         , Xnew)
+    xnew = MLJBase.matrix(Xnew)
+    prediction = ScikitLearn.predict(fitresult,xnew)
+    return prediction
 end
 
 
 # metadata:
-MLJBase.package_name(::Type{<:SVMC}) = "ScikitLearn"
-MLJBase.package_uuid(::Type{<:SVMC}) = "3646fa90-6ef7-5e7e-9f22-8aca16db6324"
-MLJBase.is_pure_julia(::Type{<:SVMC}) = :no
-#MLJBase.inputs_can_be(::Type{<:SVMClassifier}) = [:numeric, ]
-#MLJBase.target_kind(::Type{<:SVMClassifier}) = :
-#MLJBase.target_quantity(::Type{<:SVMClassifier}) = :
+MLJBase.load_path(::Type{<:SVMClassifier}) = "MLJModels.ScikitLearn_.SVMClassifier"
+MLJBase.load_path(::Type{<:SVMNuClassifier}) = "MLJModels.ScikitLearn_.SVMNuClassifier"
+MLJBase.load_path(::Type{<:SVMLClassifier}) = "MLJModels.ScikitLearn_.SVMLClassifier"
+MLJBase.load_path(::Type{<:SVMRegressor}) = "MLJModels.ScikitLearn_.SVMRegressor"
+MLJBase.load_path(::Type{<:SVMNuRegressor}) = "MLJModels.ScikitLearn_.SVMNuRegressor"
+MLJBase.load_path(::Type{<:SVMRegressor}) = "MLJModels.ScikitLearn_.SVMRegressor"
+MLJBase.load_path(::Type{<:SVMLRegressor}) = "MLJModels.ScikitLearn_.SVMLRegressor"
+
+MLJBase.package_name(::Type{<:SVM}) = "ScikitLearn"
+MLJBase.package_uuid(::Type{<:SVM}) = "3646fa90-6ef7-5e7e-9f22-8aca16db6324"
+MLJBase.is_pure_julia(::Type{<:SVM}) = :no
+MLJBase.package_url(::Type{<:SVM}) = "https://github.com/cstjean/ScikitLearn.jl"
+MLJBase.input_kinds(::Type{<:SVM}) = [:continuous, ]
+MLJBase.input_quantity(::Type{<:SVM}) = :multivariate
+MLJBase.output_kind(::Type{<:SVMC}) = :multiclass
+MLJBase.output_kind(::Type{<:SVMR}) = :continuous
+MLJBase.output_quantity(::Type{<:SVM}) = :univariate
+
 
 end # module
-## EXPOSE THE INTERFACE
-
-using .ScikitLearn_
-export SVMClassifier, SVMNuClassifier, SVMLClassifier, SVMRegressor, SVMNuRegressor, SVMLRegressor    
