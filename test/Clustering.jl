@@ -1,7 +1,7 @@
 module TestClustering
 
 # using Revise
-using MLJ
+using MLJBase
 using Test
 using Random:seed!
 using LinearAlgebra:norm
@@ -25,26 +25,23 @@ X, y = X_and_y(task)
 
 barekm = KMeans()
 
-fitresult, cache, report = MLJ.fit(barekm, 1, X)
+fitresult, cache, report = MLJBase.fit(barekm, 1, X)
 
-R = MLJ.transform(barekm, fitresult, X)
+R = MLJBase.matrix(MLJBase.transform(barekm, fitresult, X))
 
-X_array = convert(Matrix{Float64}, X)
+X_array = MLJBase.matrix(X)
 
 # distance from first point to second center
 @test R[1, 2] ≈ norm(view(X_array, 1, :) .- view(fitresult, :, 2))^2
 @test R[10, 3] ≈ norm(view(X_array, 10, :) .- view(fitresult, :, 3))^2
 
-p = MLJ.predict(barekm, fitresult, X)
+p = MLJBase.predict(barekm, fitresult, X)
 
-R_mat = MLJ.matrix(R)
+@test argmin(R[1, :]) == p[1]
+@test argmin(R[10, :]) == p[10]
 
-@test argmin(R_mat[1, :]) == p[1]
-@test argmin(R_mat[10, :]) == p[10]
-
-km = machine(barekm, X)
-
-fit!(km)
+# km = machine(barekm, X)
+# fit!(km)
 
 info(barekm)
 
@@ -54,20 +51,19 @@ info(barekm)
 
 barekm = KMedoids()
 
-fitresult, cache, report = MLJ.fit(barekm, 1, X)
+fitresult, cache, report = MLJBase.fit(barekm, 1, X)
 
-R = MLJ.matrix(MLJ.transform(barekm, fitresult, X))
+R = MLJBase.matrix(MLJBase.transform(barekm, fitresult, X))
 
 @test R[1, 2] ≈ evaluate(barekm.metric, view(X_array, 1, :), view(fitresult, :, 2))
 @test R[10, 3] ≈ evaluate(barekm.metric, view(X_array, 10, :), view(fitresult, :, 3))
 
-p = MLJ.predict(barekm, fitresult, X)
+p = MLJBase.predict(barekm, fitresult, X)
 
 @test all(report[:assignments] .== p)
 
-km = machine(barekm, X)
-
-fit!(km)
+# km = machine(barekm, X)
+# fit!(km)
 
 info(barekm)
 

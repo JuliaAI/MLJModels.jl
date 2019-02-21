@@ -73,7 +73,7 @@ function MLJBase.transform(model::KMeans
                          , X)
 
     Xarray = MLJBase.matrix(X)
-    (n, p), k = size(X), model.k
+    (n, p), k = size(Xarray), model.k
     # pairwise distance from samples to centers
     X̃ = pairwise(model.metric, transpose(Xarray), fitresult)
     return MLJBase.table(X̃, prototype=X)
@@ -112,7 +112,7 @@ function MLJBase.transform(model::KMedoids
                          , X)
 
     Xarray = MLJBase.matrix(X)
-    (n, p), k = size(X), model.k
+    (n, p), k = size(Xarray), model.k
     # pairwise distance from samples to medoids
     X̃ = pairwise(model.metric, transpose(Xarray), fitresult)
     return MLJBase.table(X̃, prototype=X)

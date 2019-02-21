@@ -125,6 +125,17 @@ MLJBase.load_path(::Type{<:OLS})       = "MLJModels.GLM_.OLS"
 MLJBase.input_kinds(::Type{<:OLS})     = [:continuous, ]
 MLJBase.output_kind(::Type{<:OLS})     = :continuous
 MLJBase.output_quantity(::Type{<:OLS}) = :univariate
+=======
+# metadata:
+MLJBase.load_path(::Type{<:OLSRegressor}) = "MLJModels.GLM_.OLSRegressor"
+MLJBase.package_name(::Type{<:OLSRegressor}) = "GLM"
+MLJBase.package_uuid(::Type{<:OLSRegressor}) = "38e38edf-8417-5370-95a0-9cbb8c7f171a"
+MLJBase.package_url(::Type{<:OLSRegressor}) = "https://github.com/JuliaStats/GLM.jl"
+MLJBase.is_pure_julia(::Type{<:OLSRegressor}) = :yes
+MLJBase.input_kinds(::Type{<:OLSRegressor}) = [:continuous, ]
+MLJBase.output_kind(::Type{<:OLSRegressor}) = :continuous
+MLJBase.output_quantity(::Type{<:OLSRegressor}) = :univariate
+>>>>>>> master
 
 MLJBase.load_path(::Type{<:GLMCount})       = "MLJModels.GLM_.GLMCount"
 MLJBase.input_kinds(::Type{<:GLMCount})     = [:continuous, ]
