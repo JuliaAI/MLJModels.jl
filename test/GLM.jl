@@ -18,7 +18,7 @@ atom_ols = OLSRegressor()
 fitresult, cache, report = MLJBase.fit(atom_ols, 1, MLJBase.selectrows(X, train), y[train])
 p = predict(atom_ols, fitresult, MLJBase.selectrows(X, test))
 
-p = predict_mean(ols, MLJ.selectrows(X, test))
+p = predict_mean(ols, MLJBase.selectrows(X, test))
 
 # hand made regression to compare
 
@@ -32,7 +32,7 @@ p2 = Xa1[test, :] * coefs
 
 info(atom_ols)
 
-p_distr = predict(ols, MLJ.selectrows(X, test))
+p_distr = predict(ols, MLJBase.selectrows(X, test))
 
 ###
 
