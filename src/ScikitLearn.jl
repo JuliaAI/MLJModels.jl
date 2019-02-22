@@ -22,6 +22,17 @@ import ..ScikitLearn
 @sk_import svm: NuSVR
 @sk_import svm: LinearSVR
 
+
+"""
+    SVMClassifier(; kwargs...)
+
+C-Support Vector classifier from
+[https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html#sklearn.svm.SVC](https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html#sklearn.svm.SVC). Implemented hyperparameters as per
+package documentation cited above.
+
+See also, SVMNuClassifier, SVMLClassifier, SVMRegressor
+
+"""
 mutable struct SVMClassifier{Any} <: MLJBase.Deterministic{Any}
     C::Float64 
     kernel::Union{String,Function}
@@ -71,6 +82,36 @@ function SVMClassifier(
     return model
 end
 
+
+function MLJBase.clean!(model::SVMClassifier)
+    warning = ""
+    if(typeof(model.kernel)==String && (!(model.kernel  in 			   
+            ["linear","poly","rbf","sigmoid","precomputed"])))
+            warning *="kernel parameter is not valid, setting to default=\"rbf\" \n"
+	    model.kernel="rbf"
+    end
+    if(typeof(model.gamma)==String && (!(model.gamma  in 		  
+            ["auto","scale"])))
+            warning *="gamma parameter is not valid, setting to default=\"auto\" \n"
+	    model.gamma="auto"
+    end
+    if(!(model.decision_function_shape in ["ovo","ovr"]))
+            warning *="decision_function_shape parameter is not valid, setting to default=\"ovr\" \n"
+	    model.decision_function_shape="ovr"
+    end
+    return warning
+end
+
+"""
+    SVMNuClassifier(; kwargs...)
+
+NU-Support Vector classifier from
+[https://scikit-learn.org/stable/modules/generated/sklearn.svm.NuSVC.html#sklearn.svm.NuSVC](https://scikit-learn.org/stable/modules/generated/sklearn.svm.NuSVC.html#sklearn.svm.NuSVC). Implemented hyperparameters as per
+package documentation cited above.
+
+See also, SVMClassifier, SVMLClassifier, SVMNuRegressor
+
+"""
 mutable struct SVMNuClassifier{Any} <: MLJBase.Deterministic{Any}
     nu::Float64
     kernel::Union{String,Function}
@@ -120,6 +161,36 @@ function SVMNuClassifier(
     return model
 end
 
+function MLJBase.clean!(model::SVMNuClassifier)
+    warning = ""
+    if(typeof(model.kernel)==String && (!(model.kernel  in 			   
+            ["linear","poly","rbf","sigmoid","precomputed"])))
+            warning *="kernel parameter is not valid, setting to default=\"rbf\" \n"
+	    model.kernel="rbf"
+    end
+    if(typeof(model.gamma)==String && (!(model.gamma  in 		  
+            ["auto","scale"])))
+            warning *="gamma parameter is not valid, setting to default=\"auto\" \n"
+	    model.gamma="auto"
+    end
+    if(!(model.decision_function_shape in ["ovo","ovr"]))
+            warning *="decision_function_shape parameter is not valid, setting to default=\"ovr\" \n"
+	    model.decision_function_shape="ovr"
+    end
+    return warning
+end
+
+"""
+    SVMLClassifier(; kwargs...)
+
+Linear-support Vector classifier from
+[https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html#sklearn.svm.LinearSVC](https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html#sklearn.svm.LinearSVC). Implemented hyperparameters as per
+package documentation cited above.
+
+See also, SVMClassifier, SVMNuClassifier, SVMLRegressor
+
+"""
+
 mutable struct SVMLClassifier{Any} <: MLJBase.Deterministic{Any}
     C::Float64 
     loss::String
@@ -133,6 +204,8 @@ end
 
 # constructor:
 #> all arguments are kwargs with a default value
+
+
 function SVMLClassifier(
     ;C=1.0
     ,loss="squared_hinge"
@@ -160,6 +233,29 @@ function SVMLClassifier(
     return model
 end
 
+function MLJBase.clean!(model::SVMLClassifier)
+    warning = ""
+    if(!(model.loss in ["hinge","squared_hinge"]))
+            warning *="loss parameter is not valid, setting to default=\"squared_hinge\" \n"
+	    model.loss="squared_hinge"
+    end
+    if(!(model.penalty in ["l1","l2"]))
+            warning *="penalty parameter is not valid, setting to default=\"l2\" \n"
+	    model.penalty="l2"
+    end
+    return warning
+end
+
+"""
+    SVMRegressor(; kwargs...)
+
+Epsilon-Support Vector Regression from 
+[https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVR.html#sklearn.svm.SVR](https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVR.html#sklearn.svm.SVR). Implemented hyperparameters as per
+package documentation cited above.
+
+See also, SVMClassifier, SVMNuRegressor, SVMLRegressor
+
+"""
 mutable struct SVMRegressor{Any} <: MLJBase.Deterministic{Any}
     C::Float64 
     kernel::Union{String,Function}
@@ -204,6 +300,32 @@ function SVMRegressor(
 
     return model
 end
+
+function MLJBase.clean!(model::SVMRegressor)
+    warning = ""
+    if(typeof(model.kernel)==String && (!(model.kernel  in 			   
+            ["linear","poly","rbf","sigmoid","precomputed"])))
+            warning *="kernel parameter is not valid, setting to default=\"rbf\" \n"
+	    model.kernel="rbf"
+    end
+    if(typeof(model.gamma)==String && (!(model.gamma  in 		  
+            ["auto","scale"])))
+            warning *="gamma parameter is not valid, setting to default=\"auto\" \n"
+	    model.gamma="auto"
+    end
+    return warning
+end
+
+"""
+    SVMNuRegressor(; kwargs...)
+
+Nu Support Vector Regression from 
+[https://scikit-learn.org/stable/modules/generated/sklearn.svm.NuSVR.html#sklearn.svm.NuSVR](https://scikit-learn.org/stable/modules/generated/sklearn.svm.NuSVR.html#sklearn.svm.NuSVR). Implemented hyperparameters as per
+package documentation cited above.
+
+See also, SVMNuClassifier, SVMRegressor, SVMLRegressor
+
+"""
 
 mutable struct SVMNuRegressor{Any} <: MLJBase.Deterministic{Any}
     nu::Float64
@@ -250,6 +372,32 @@ function SVMNuRegressor(
     return model
 end
 
+function MLJBase.clean!(model::SVMNuRegressor)
+    warning = ""
+    if(typeof(model.kernel)==String && (!(model.kernel  in 			   
+            ["linear","poly","rbf","sigmoid","precomputed"])))
+            warning *="kernel parameter is not valid, setting to default=\"rbf\" \n"
+	    model.kernel="rbf"
+    end
+    if(typeof(model.gamma)==String && (!(model.gamma  in 		  
+            ["auto","scale"])))
+            warning *="gamma parameter is not valid, setting to default=\"auto\" \n"
+	    model.gamma="auto"
+    end
+    return warning
+end
+
+"""
+    SVMLRegressor(; kwargs...)
+
+Linear Support Vector Regression from 
+[https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVR.html#sklearn.svm.LinearSVR](https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVR.html#sklearn.svm.LinearSVR). Implemented hyperparameters as per
+package documentation cited above.
+
+See also, SVMRegressor, SVMNuRegressor, SVMLClassifier
+
+"""
+
 mutable struct SVMLRegressor{Any} <: MLJBase.Deterministic{Any}
     C::Float64
     loss::String
@@ -285,6 +433,16 @@ function SVMLRegressor(
 
     return model
 end
+
+function MLJBase.clean!(model::SVMLRegressor)
+    warning = ""
+    if(!(model.loss in ["epsilon_insensitive","squared_epsilon_insensitive"]))
+            warning *="loss parameter is not valid, setting to default=\"epsilon_insensitive\" \n"
+	    model.loss="epsilon_insensitive"
+    end
+    return warning
+end
+
 
 function MLJBase.fit(model::SVMClassifier{Any}
              , verbosity::Int   #> must be here (and typed) even if not used (as here)
