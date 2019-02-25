@@ -45,6 +45,24 @@ info(baretree)
 # fit!(tree)
 # yyhat = predict_mode(tree, MLJBase.selectrows(X, 1:3))
 
+n,m = 10^3, 5 ;
+features = rand(n,m);
+weights = rand(-1:1,m);
+labels = features * weights;
+
+R1Tree = DecisionTreeRegressor(min_samples_leaf=5, pruning_purity_threshold=0.1)
+R2Tree = DecisionTreeRegressor(min_samples_split=5)
+model1, = MLJBase.fit(R1Tree,1, features, labels)
+
+vals1 = MLJBase.predict(R1Tree,model1,features)
+
+@test DecisionTree.R2(labels, vals1) > 0.8
+
+model2, = MLJBase.fit(R2Tree, 1, features, labels)
+vals2 = MLJBase.predict(R2Tree, model2, features) 
+@test DecisionTree.R2(labels, vals2) > 0.8
+
+
 
 end
 true
