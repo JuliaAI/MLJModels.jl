@@ -11,7 +11,6 @@ LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 MLJBase = "a7f614a8-145f-11e9-1d2a-a57a1082229d"
 Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 Requires = "ae029012-a4dd-5104-9daa-d747884805df"
-
 TOML = "191fdcea-f9f2-43e0-b922-d33f71e2abc3"
 
 [extras]
@@ -22,6 +21,5 @@ GaussianProcesses = "891a1506-143c-57d2-908e-e1f8e92e6de9"
 ScikitLearn = "3646fa90-6ef7-5e7e-9f22-8aca16db6324"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
-
 [targets]
-test = ["Clustering", "DecisionTree", "GLM", "GaussianProcesses","ScikitLearn", "Test"]
+test = ["Clustering", "DecisionTree", "GLM", "GaussianProcesses", "ScikitLearn", "Test"]
