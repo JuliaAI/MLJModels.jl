@@ -14,10 +14,7 @@ using CategoricalArrays
 ## CLASSIFIERS
 @test_logs (:warn,"kernel parameter is not valid, setting to default=\"rbf\" \n") SVMClassifier(kernel="wrong")
 @test_logs (:warn,"penalty parameter is not valid, setting to default=\"l2\" \n") SVMLClassifier(penalty="wrong")
-@test_logs (:warn,"loss parameter is not valid, setting to default=\"epsilon_insensitive\" \n") 
-SVMLRegressor(loss="wrong")
-
-
+@test_logs (:warn,"loss parameter is not valid, setting to default=\"epsilon_insensitive\" \n") SVMLRegressor(loss="wrong")
 
 plain_classifier = SVMClassifier()
 nu_classifier = SVMNuClassifier()

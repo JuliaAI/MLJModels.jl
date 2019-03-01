@@ -636,13 +636,12 @@ MLJBase.load_path(::Type{<:SVMLRegressor}) = "MLJModels.ScikitLearn_.SVMLRegress
 
 MLJBase.package_name(::Type{<:SVM}) = "ScikitLearn"
 MLJBase.package_uuid(::Type{<:SVM}) = "3646fa90-6ef7-5e7e-9f22-8aca16db6324"
-MLJBase.is_pure_julia(::Type{<:SVM}) = :no
+MLJBase.is_pure_julia(::Type{<:SVM}) = false
 MLJBase.package_url(::Type{<:SVM}) = "https://github.com/cstjean/ScikitLearn.jl"
-MLJBase.input_kinds(::Type{<:SVM}) = [:continuous, ]
-MLJBase.input_quantity(::Type{<:SVM}) = :multivariate
-MLJBase.output_kind(::Type{<:SVMC}) = :multiclass
-MLJBase.output_kind(::Type{<:SVMR}) = :continuous
-MLJBase.output_quantity(::Type{<:SVM}) = :univariate
-
+MLJBase.input_scitypes(::Type{<:SVM}) = MLJBase.Continuous
+MLJBase.input_is_multivariate(::Type{<:SVM}) = true
+MLJBase.target_scitype(::Type{<:SVMC}) = MLJBase.Multiclass
+MLJBase.target_scitype(::Type{<:SVMR}) = MLJBase.Continuous
+MLJBase.input_is_multivariate(::Type{<:SVM}) = true
 
 end # module

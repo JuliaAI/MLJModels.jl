@@ -118,16 +118,16 @@ const GLM_REGS = Union{Type{<:OLS}, Type{<:GLMCount}}
 MLJBase.package_name(::GLM_REGS)  = "GLM"
 MLJBase.package_uuid(::GLM_REGS)  = "38e38edf-8417-5370-95a0-9cbb8c7f171a"
 MLJBase.package_url(::GLM_REGS)   = "https://github.com/JuliaStats/GLM.jl"
-MLJBase.is_pure_julia(::GLM_REGS) = :yes
+MLJBase.is_pure_julia(::GLM_REGS) = true
 
 MLJBase.load_path(::Type{<:OLS})       = "MLJModels.GLM_.OLSRegressor"
-MLJBase.input_kinds(::Type{<:OLS})     = [:continuous, ]
-MLJBase.output_kind(::Type{<:OLS})     = :continuous
-MLJBase.output_quantity(::Type{<:OLS}) = :univariate
+MLJBase.input_scitypes(::Type{<:OLS})     = MLJBase.Continuous
+MLJBase.target_scitype(::Type{<:OLS})     = MLJBase.Continuous
+MLJBase.input_is_multivariate(::Type{<:OLS}) = true
 
 MLJBase.load_path(::Type{<:GLMCount})       = "MLJModels.GLM_.GLMCountRegressor"
-MLJBase.input_kinds(::Type{<:GLMCount})     = [:continuous, ]
-MLJBase.output_kind(::Type{<:GLMCount})     = :ordered_factor_infinite
-MLJBase.output_quantity(::Type{<:GLMCount}) = :univariate
+MLJBase.input_scitypes(::Type{<:GLMCount})     = MLJBase.Continuous
+MLJBase.target_scitype(::Type{<:GLMCount})     = MLJBase.Count
+MLJBase.input_is_multivariate(::Type{<:GLMCount}) = true
 
 end # module

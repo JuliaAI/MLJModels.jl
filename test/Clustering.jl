@@ -4,8 +4,8 @@ module TestClustering
 using MLJBase
 using Test
 using Random:seed!
-using LinearAlgebra:norm
-using Distances: evaluate
+import LinearAlgebra: norm
+import Distances: evaluate
 
 # load code to be tested:
 import MLJModels 
