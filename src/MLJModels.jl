@@ -15,6 +15,4 @@ function __init__()
     @require NaiveBayes="9bbee03b-0db5-5f46-924f-b5c9c21b8c60" include("NaiveBayes.jl")
 end
 
-
-
 end # module
