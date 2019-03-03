@@ -31,7 +31,7 @@ function MLJBase.fit(model::GaussianNBClassifier, verbosity::Int
     y = MLJBase.transform(decoder, Y)
 
     res = NaiveBayes.GaussianNB(levels_observed, p)
-    NaiveBayes.fit(res, Xmatrix, y)
+    res = NaiveBayes.fit(res, Xmatrix, y)
 
     fitresult = (res, levels_all)
     report = Dict{Symbol,Any}()
@@ -89,7 +89,7 @@ function MLJBase.fit(model::MultinomialNBClassifier, verbosity::Int
 
     res = NaiveBayes.MultinomialNB(levels_all, p ,alpha= model.alpha)
 
-    NaiveBayes.fit(res, Xmatrix, Y)
+    res = NaiveBayes.fit(res, Xmatrix, Y)
 
     fitresult = (res, levels_all)
 
@@ -115,7 +115,7 @@ function MLJBase.predict(model::MultinomialNBClassifier, fitresult, Xnew)
 
     return [MLJBase.UnivariateNominal(levels_all, vcat(probs[:,i], z)) for i in 1:n]
 end
-    
+
 # metadata:
 MLJBase.load_path(::Type{<:GaussianNBClassifier}) = "MLJModels.NaiveBayes_.GaussianNBClassifier"
 MLJBase.package_name(::Type{<:GaussianNBClassifier}) = "GaussianNB"
