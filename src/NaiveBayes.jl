@@ -130,7 +130,7 @@ end
 
 # metadata:
 MLJBase.load_path(::Type{<:GaussianNBClassifier}) = "MLJModels.NaiveBayes_.GaussianNBClassifier"
-MLJBase.package_name(::Type{<:GaussianNBClassifier}) = "GaussianNB"
+MLJBase.package_name(::Type{<:GaussianNBClassifier}) = "NaiveBayes"
 MLJBase.package_uuid(::Type{<:GaussianNBClassifier}) = "9bbee03b-0db5-5f46-924f-b5c9c21b8c60"
 MLJBase.package_url(::Type{<:GaussianNBClassifier}) = "https://github.com/dfdx/NaiveBayes.jl"
 MLJBase.is_pure_julia(::Type{<:GaussianNBClassifier}) = true
@@ -139,7 +139,7 @@ MLJBase.target_scitype(::Type{<:GaussianNBClassifier}) = Union{MLJBase.Multiclas
 MLJBase.input_is_multivariate(::Type{<:GaussianNBClassifier}) = true
 
 MLJBase.load_path(::Type{<:MultinomialNBClassifier}) = "MLJModels.NaiveBayes_.MultinomialNBClassifier"
-MLJBase.package_name(::Type{<:MultinomialNBClassifier}) = "MultinomialNB"
+MLJBase.package_name(::Type{<:MultinomialNBClassifier}) = "NaiveBayes"
 MLJBase.package_uuid(::Type{<:MultinomialNBClassifier}) = "9bbee03b-0db5-5f46-924f-b5c9c21b8c60"
 MLJBase.package_url(::Type{<:MultinomialNBClassifier}) = "https://github.com/dfdx/NaiveBayes.jl"
 MLJBase.is_pure_julia(::Type{<:MultinomialNBClassifier}) = true
