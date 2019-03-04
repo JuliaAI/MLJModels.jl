@@ -10,19 +10,11 @@ import NaiveBayes
 using MLJModels.NaiveBayes_
 using CategoricalArrays
 
-function get_output(val)
-    max = 0
-    res = 0
-    for ele in val.prob_given_level
-        if ele[2] > max
-            max = ele[2]
-            res = ele[1]
-        end
-    end
-    return res
-end
+
+## GAUSSIAN
 
 gaussian_classifier = GaussianNBClassifier()
+info(gaussian_classifier)
 
 # gaussian classifier takes continuous features
 task = load_iris()
@@ -36,49 +28,76 @@ gaussian_pred = predict(gaussian_classifier, fitresultG, selectrows(X, test));
 
 @test levels(keys(gaussian_pred[1].prob_given_level)) == levels(y[train])
 
-
 # test with linear data:
 x1 = randn(3000);
 x2 = randn(3000);
 x3 = randn(3000);
 X = (x1=x1, x2=x2, x3=x3);
-y = x1 - x2 -2x3;
-ycat = map(y) do η
+ycont = x1 - x2 -2x3;
+y = map(ycont) do η
     η > 0 ? "go" : "stop"
 end |> categorical;
-train, test = partition(eachindex(ycat), 0.8);
+train, test = partition(eachindex(y), 0.8);
 
 gaussian_classifier = GaussianNBClassifier()
 
 fitresultG, cacheG, reportG = MLJBase.fit(gaussian_classifier, 1,
-             selectrows(X, train), ycat[train])
+             selectrows(X, train), y[train])
 
-gaussian_pred = MLJBase.predict(gaussian_classifier, fitresultG, selectrows(X, test))
+gaussian_pred = MLJBase.predict_mode(gaussian_classifier, fitresultG, selectrows(X, test))
 
-@test sum(get_output.(gaussian_pred) .!= ycat[test])/length(ycat) < 0.05
+@test sum(gaussian_pred .!= y[test])/length(y) < 0.05
 
 
+## MULTINOMIAL
+
+# first contrive some test data
+
+# some word counts in children's books about colours:
+red = [2, 0, 1, 0, 1]
+blue = [4, 1, 2, 3, 2]
+green = [0, 2, 0, 6, 1]
+X = (red=red, blue=blue, green=green)
+
+# gender of author:
+y = categorical([:m, :f, :m, :f, :m])
+
+# Note: The smoothing algorithm is to add to the training data, for
+# each class observed, a row with every feature getting count of
+# alpha. So smoothing also effects the class marginals (is this
+# standard)? Only integer values of alpha allowed.
+
+# computing conditional probabilities by hand with Lagrangian smoothing (alpha=1):
+red_given_m = 5/16
+blue_given_m = 9/16
+green_given_m = 2/16
+red_given_f = 1/15
+blue_given_f = 5/15
+green_given_f = 9/15
+
+m_(red, blue, green) = 4/7*(red_given_m^red)*(blue_given_m^blue)*(green_given_m^green)
+f_(red, blue, green) = 3/7*(red_given_f^red)*(blue_given_f^blue)*(green_given_f^green)
+normalizer(red, blue, green) = m_(red, blue, green) + f_(red, blue, green)
+m(a...) = m_(a...)/normalizer(a...)
+f(a...) = f_(a...)/normalizer(a...)
+
+Xnew = (red=[1, 1], blue=[1, 2], green=[1, 3])
+
+# prediction by hand:
+yhand =[MLJBase.UnivariateNominal([:m, :f], [m(1, 1, 1), f(1, 1, 1)]),
+        MLJBase.UnivariateNominal([:m, :f], [m(1, 2, 3), f(1, 2, 3)])]
+        
 multinomial_classifier = MultinomialNBClassifier()
+info(multinomial_classifier)
 
-generate(n, m) = map(rand(Int, n)) do x mod(x,m) end |> categorical
-x1 = generate(1000, 2);
-x2 = generate(1000, 3);
-x3 = generate(1000, 5);
-function f(x)
-    if x == 0
-        return :zero
-    elseif x == 1
-        return :one
-    else
-        return :other
-    end
-end
+fitresultMLT, cacheMLT, reportMLT = MLJBase.fit(multinomial_classifier, 1, X, y)
 
-X = (x1=x1, x2=x2, x3=x3) # X is tabular
-y = map(f, x3)
-train, test = partition(eachindex(y), 0.8);
+yhat = MLJBase.predict(multinomial_classifier, fitresultMLT, Xnew)
 
-fitresultMLT, cacheMLT, reportMLT = MLJBase.fit(multinomial_classifier, 1, selectrows(X, train), y[train])
+@test_broken pdf(yhand[1], :m) ≈ pdf(yhat[1], :m)
+@test_broken pdf(yhand[1], :f) ≈ pdf(yhat[1], :f)
 
-MLTpred = MLJBase.predict(multinomial_classifier, fitresultMLT, selectrows(X, test))
+end # module
+true
 
+ 
