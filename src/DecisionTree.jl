@@ -161,7 +161,7 @@ MLJBase.package_uuid(::Type{<:DecisionTreeClassifier}) = "7806a523-6efd-50cb-b5f
 MLJBase.package_url(::Type{<:DecisionTreeClassifier}) = "https://github.com/bensadeghi/DecisionTree.jl"
 MLJBase.is_pure_julia(::Type{<:DecisionTreeClassifier}) = true
 MLJBase.input_scitypes(::Type{<:DecisionTreeClassifier}) = MLJBase.Continuous
-MLJBase.target_scitype(::Type{<:DecisionTreeClassifier}) = MLJBase.Multiclass
+MLJBase.target_scitype(::Type{<:DecisionTreeClassifier}) = Union{MLJBase.Multiclass,MLJBase.FiniteOrderedFactor}
 MLJBase.input_is_multivariate(::Type{<:DecisionTreeClassifier}) = true
 
 end # module

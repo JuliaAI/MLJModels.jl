@@ -640,7 +640,7 @@ MLJBase.is_pure_julia(::Type{<:SVM}) = false
 MLJBase.package_url(::Type{<:SVM}) = "https://github.com/cstjean/ScikitLearn.jl"
 MLJBase.input_scitypes(::Type{<:SVM}) = MLJBase.Continuous
 MLJBase.input_is_multivariate(::Type{<:SVM}) = true
-MLJBase.target_scitype(::Type{<:SVMC}) = MLJBase.Multiclass
+MLJBase.target_scitype(::Type{<:SVMC}) = Union{MLJBase.Multiclass,MLJBase.FiniteOrderedFactor}
 MLJBase.target_scitype(::Type{<:SVMR}) = MLJBase.Continuous
 MLJBase.input_is_multivariate(::Type{<:SVM}) = true
 
