@@ -33,7 +33,7 @@ package documentation cited above.
 See also, SVMNuClassifier, SVMLClassifier, SVMRegressor
 
 """
-mutable struct SVMClassifier{Any} <: MLJBase.Deterministic{Any}
+mutable struct SVMClassifier <: MLJBase.Deterministic{Any}
     C::Float64 
     kernel::Union{String,Function}
     degree::Int
@@ -62,7 +62,7 @@ function SVMClassifier(
     ,decision_function_shape="ovr"
     ,random_state=nothing)
 
-    model = SVMClassifier{Any}(
+    model = SVMClassifier(
         C
         , kernel
         , degree
@@ -112,7 +112,7 @@ package documentation cited above.
 See also, SVMClassifier, SVMLClassifier, SVMNuRegressor
 
 """
-mutable struct SVMNuClassifier{Any} <: MLJBase.Deterministic{Any}
+mutable struct SVMNuClassifier <: MLJBase.Deterministic{Any}
     nu::Float64
     kernel::Union{String,Function}
     degree::Int
@@ -141,7 +141,7 @@ function SVMNuClassifier(
     ,decision_function_shape="ovr"
     ,random_state=nothing)
 
-    model = SVMNuClassifier{Any}(
+    model = SVMNuClassifier(
         nu
         , kernel
         , degree
@@ -191,7 +191,7 @@ See also, SVMClassifier, SVMNuClassifier, SVMLRegressor
 
 """
 
-mutable struct SVMLClassifier{Any} <: MLJBase.Deterministic{Any}
+mutable struct SVMLClassifier <: MLJBase.Deterministic{Any}
     C::Float64 
     loss::String
     dual::Bool
@@ -216,7 +216,7 @@ function SVMLClassifier(
     ,intercept_scaling=1.
     ,random_state=nothing)
 
-    model = SVMLClassifier{Any}(
+    model = SVMLClassifier(
         C
         , loss
 	, dual
@@ -256,7 +256,7 @@ package documentation cited above.
 See also, SVMClassifier, SVMNuRegressor, SVMLRegressor
 
 """
-mutable struct SVMRegressor{Any} <: MLJBase.Deterministic{Any}
+mutable struct SVMRegressor <: MLJBase.Deterministic{Any}
     C::Float64 
     kernel::Union{String,Function}
     degree::Int
@@ -283,7 +283,7 @@ function SVMRegressor(
     ,max_iter=-1
     ,epsilon=0.1)
 
-    model = SVMRegressor{Any}(
+    model = SVMRegressor(
         C
         , kernel
         , degree
@@ -327,7 +327,7 @@ See also, SVMNuClassifier, SVMRegressor, SVMLRegressor
 
 """
 
-mutable struct SVMNuRegressor{Any} <: MLJBase.Deterministic{Any}
+mutable struct SVMNuRegressor <: MLJBase.Deterministic{Any}
     nu::Float64
     C::Float64 
     kernel::Union{String,Function}
@@ -354,7 +354,7 @@ function SVMNuRegressor(
     ,cache_size=200
     ,max_iter=-1)
 
-    model = SVMNuRegressor{Any}(
+    model = SVMNuRegressor(
         nu
 	, C
         , kernel
@@ -398,7 +398,7 @@ See also, SVMRegressor, SVMNuRegressor, SVMLClassifier
 
 """
 
-mutable struct SVMLRegressor{Any} <: MLJBase.Deterministic{Any}
+mutable struct SVMLRegressor <: MLJBase.Deterministic{Any}
     C::Float64
     loss::String
     fit_intercept::Bool 
@@ -419,7 +419,7 @@ function SVMLRegressor(
     ,max_iter=-1
     ,epsilon=0.1)
 
-    model = SVMLRegressor{Any}(
+    model = SVMLRegressor(
         C
 	, loss
 	, fit_intercept
@@ -444,7 +444,7 @@ function MLJBase.clean!(model::SVMLRegressor)
 end
 
 
-function MLJBase.fit(model::SVMClassifier{Any}
+function MLJBase.fit(model::SVMClassifier
              , verbosity::Int   #> must be here (and typed) even if not used (as here)
              , X
              , y)
@@ -468,13 +468,13 @@ function MLJBase.fit(model::SVMClassifier{Any}
     
     result = ScikitLearn.fit!(cache,Xmatrix,y_plain)
     fitresult = (result, decoder)
-    report = nothing
+    report = NamedTuple()
     
-    return fitresult, cache, report 
+    return fitresult, nothing, report 
 
 end
 
-function MLJBase.fit(model::SVMNuClassifier{Any}
+function MLJBase.fit(model::SVMNuClassifier
              , verbosity::Int   #> must be here (and typed) even if not used (as here)
              , X
              , y)
@@ -498,13 +498,13 @@ function MLJBase.fit(model::SVMNuClassifier{Any}
     
     result = ScikitLearn.fit!(cache,Xmatrix,y_plain)
     fitresult = (result, decoder)
-    report = nothing
+    report = NamedTuple()
     
-    return fitresult, cache, report 
+    return fitresult, nothing, report 
 
 end
 
-function MLJBase.fit(model::SVMLClassifier{Any}
+function MLJBase.fit(model::SVMLClassifier
              , verbosity::Int   #> must be here (and typed) even if not used (as here)
              , X
              , y)
@@ -525,13 +525,13 @@ function MLJBase.fit(model::SVMLClassifier{Any}
     
     result = ScikitLearn.fit!(cache,Xmatrix,y_plain)
     fitresult = (result, decoder)
-    report = nothing
+    report = NamedTuple()
     
-    return fitresult, cache, report 
+    return fitresult, nothing, report 
 
 end
 
-function MLJBase.fit(model::SVMRegressor{Any}
+function MLJBase.fit(model::SVMRegressor
              , verbosity::Int   #> must be here (and typed) even if not used (as here)
              , X
              , y)
@@ -550,12 +550,12 @@ function MLJBase.fit(model::SVMRegressor{Any}
             epsilon=model.epsilon)
     
     fitresult = ScikitLearn.fit!(cache,Xmatrix,y)
-    report = nothing
+    report = NamedTuple()
     
-    return fitresult, cache, report 
+    return fitresult, nothing, report 
 end
 
-function MLJBase.fit(model::SVMNuRegressor{Any}
+function MLJBase.fit(model::SVMNuRegressor
              , verbosity::Int   #> must be here (and typed) even if not used (as here)
              , X
              , y)
@@ -574,12 +574,12 @@ function MLJBase.fit(model::SVMNuRegressor{Any}
             max_iter=model.max_iter)
     
     fitresult = ScikitLearn.fit!(cache,Xmatrix,y)
-    report = nothing
+    report = NamedTuple()
     
-    return fitresult, cache, report 
+    return fitresult, nothing, report 
 end
 
-function MLJBase.fit(model::SVMLRegressor{Any}
+function MLJBase.fit(model::SVMLRegressor
              , verbosity::Int   #> must be here (and typed) even if not used (as here)
              , X
              , y)
@@ -595,9 +595,9 @@ function MLJBase.fit(model::SVMLRegressor{Any}
 	    epsilon=model.epsilon)
     
     fitresult = ScikitLearn.fit!(cache,Xmatrix,y)
-    report = nothing
+    report = NamedTuple()
     
-    return fitresult, cache, report 
+    return fitresult, nothing, report 
 end
 
 

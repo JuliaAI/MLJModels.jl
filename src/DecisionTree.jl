@@ -131,16 +131,19 @@ function MLJBase.fit(model::DecisionTreeClassifier{T2}
 
     #> return package-specific statistics (eg, feature rankings,
     #> internal estimates of generalization error) in `report`, which
-    #> should be `nothing` or a dictionary keyed on symbols.
+    #> should be a named tuple with the same type every call (can have
+    #> empty values):
 
     cache = nothing
-    report = nothing
+    report = NamedTuple{}()
 
     return fitresult, cache, report
 
 end
 
-function MLJBase.predict(model::DecisionTreeClassifier{T}
+MLJBase.fitted_params(::DecisionTreeClassifier, fitresult) = fitresult[1]
+
+function MLJBase.predict(::DecisionTreeClassifier{T}
                      , fitresult
                      , Xnew) where T
     Xmatrix = MLJBase.matrix(Xnew)

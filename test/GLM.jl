@@ -1,5 +1,6 @@
 module TestGLM
 
+# using Revise
 using Test
 
 using MLJBase
@@ -12,7 +13,7 @@ using MLJModels.GLM_
 ###
 
 task = load_boston()
-X, y = X_and_y(task)
+X, y = task()
 
 train, test = partition(eachindex(y), 0.7)
 
@@ -22,7 +23,8 @@ Xtrain = selectrows(X, train)
 ytrain = selectrows(y, train)
 Xtest  = selectrows(X, test)
 
-fitresult, _, _ = fit(atom_ols, 1, Xtrain, ytrain)
+fitresult, _, report = fit(atom_ols, 1, Xtrain, ytrain)
+MLJBase.fitted_params(atom_ols, fitresult)
 
 p = predict_mean(atom_ols, fitresult, Xtest)
 

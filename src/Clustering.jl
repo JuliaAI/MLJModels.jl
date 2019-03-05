@@ -63,10 +63,12 @@ function MLJBase.fit(model::KMeans
     result    = C.kmeans(permutedims(Xarray), model.k; distance=model.metric)
     fitresult = result.centers # centers (p x k)
     cache     = nothing
-    report    = Dict(:assignments => result.assignments) # size n
+    report    = (assignments=result.assignments,) # size n
 
     return fitresult, cache, report
 end
+
+MLJBase.fitted_params(::KMeans, fitresult) = (centers=fitresult,)
 
 function MLJBase.transform(model::KMeans
                          , fitresult::KMFitResultType
@@ -102,10 +104,13 @@ function MLJBase.fit(model::KMedoids
     result    = C.kmedoids(Carray, model.k)
     fitresult = permutedims(view(Xarray, result.medoids, :)) # medoids (p x k)
     cache     = nothing
-    report    = Dict(:assignments => result.assignments) # size n
+    report    = (assignments=result.assignments,) # size n
 
     return fitresult, cache, report
 end
+
+MLJBase.fitted_params(::KMedoids, fitresult) = (medoids=fitresult,)
+
 
 function MLJBase.transform(model::KMedoids
                          , fitresult::KMFitResultType

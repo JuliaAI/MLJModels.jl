@@ -46,18 +46,20 @@ function MLJBase.fit(model::OLS, verbosity::Int, X, y::Vector)
 
     fitresult = GLM.lm(Xmatrix, y)
 
-    coefs = GLM.coef(fitresult)
-
     ## TODO: add feature importance curve to report using `features`
-    report = Dict(:coef => coefs[1:end-Int(model.fit_intercept)]
-                , :intercept => ifelse(model.fit_intercept, coefs[end], nothing)
-                , :deviance => GLM.deviance(fitresult)
-                , :dof_residual => GLM.dof_residual(fitresult)
-                , :stderror => GLM.stderror(fitresult)
-                , :vcov => GLM.vcov(fitresult))
+    report = (deviance=GLM.deviance(fitresult)
+              , dof_residual=GLM.dof_residual(fitresult)
+              , stderror=GLM.stderror(fitresult)
+              , vcov=GLM.vcov(fitresult))
     cache = nothing
 
     return fitresult, cache, report
+end
+
+function MLJBase.fitted_params(model::OLS, fitresult)
+    coefs = GLM.coef(fitresult)
+    return (coef=coefs[1:end-Int(model.fit_intercept)],
+            intercept=ifelse(model.fit_intercept, coefs[end], nothing))
 end
 
 function MLJBase.fit(model::GLMCount, verbosity::Int, X, y::Vector)
@@ -68,18 +70,20 @@ function MLJBase.fit(model::GLMCount, verbosity::Int, X, y::Vector)
 
     fitresult = GLM.glm(Xmatrix, y, GLM.Poisson()) # Log link
 
-    coefs = GLM.coef(fitresult)
-
     ## TODO: add feature importance curve to report using `features`
-    report = Dict(:coef => coefs[1:end-Int(model.fit_intercept)]
-                , :intercept => ifelse(model.fit_intercept, coefs[end], nothing)
-                , :deviance => GLM.deviance(fitresult)
-                , :dof_residual => GLM.dof_residual(fitresult)
-                , :stderror => GLM.stderror(fitresult)
-                , :vcov => GLM.vcov(fitresult))
+    report = (deviance=GLM.deviance(fitresult)
+              , dof_residual=GLM.dof_residual(fitresult)
+              , stderror=GLM.stderror(fitresult)
+              , vcov=GLM.vcov(fitresult))
     cache = nothing
 
     return fitresult, cache, report
+end
+
+function MLJBase.fitted_params(model::GLMCount, fitresult)
+    coefs = GLM.coef(fitresult)
+    return (coef=coefs[1:end-Int(model.fit_intercept)],
+            intercept=ifelse(model.fit_intercept, coefs[end], nothing))
 end
 
 ####

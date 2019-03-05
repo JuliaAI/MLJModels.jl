@@ -26,16 +26,21 @@ function MLJBase.fit(model::GaussianNBClassifier, verbosity::Int
     res = NaiveBayes.fit(res, Xmatrix, y)
 
     fitresult = (res, levels_all)
-    report = Dict{Symbol,Any}()
-    report[:c_counts] = res.c_counts
-    report[:c_stats] = res.c_stats
-    report[:gaussians] = res.gaussians
-    report[:n_obs] = res.n_obs
+
+    report = NamedTuple{}()
     
     return fitresult, nothing, report
     
 end
 
+function MLJBase.fitted_params(model::GaussianNBClassifier, fitresult)
+    res = fitresult[1]
+    return (c_counts=res.c_counts,
+            c_stats=res.c_stats,
+            gaussians=res.gaussians,
+            n_obs=res.n_obs)
+end
+    
 function MLJBase.predict(model::GaussianNBClassifier, fitresult, Xnew)
 
     res, levels_all = fitresult
@@ -94,15 +99,19 @@ function MLJBase.fit(model::MultinomialNBClassifier, verbosity::Int
 
     fitresult = (res, levels_all)
 
-    report = Dict{Symbol,Any}()
-    report[:c_counts] = res.c_counts
-    report[:x_counts] = res.x_counts
-    report[:x_totals] = res.x_totals
-    report[:n_obs] = res.n_obs
+    report = NamedTuple()
     
     return fitresult, nothing, report
 end
 
+function MLJBase.fitted_params(model::MultinomialNBClassifier, fitresult)
+    res = fitresult[1]
+    return (c_counts=res.c_counts,
+            x_counts=res.x_counts,
+            x_totals=res.x_totals,
+            n_obs=res.n_obs)
+end
+    
 function MLJBase.predict(model::MultinomialNBClassifier, fitresult, Xnew)
     res, levels_all = fitresult
     Xmatrix = MLJBase.matrix(Xnew) |> collect |> permutedims

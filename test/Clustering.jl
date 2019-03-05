@@ -60,7 +60,7 @@ R = MLJBase.matrix(MLJBase.transform(barekm, fitresult, X))
 
 p = MLJBase.predict(barekm, fitresult, X)
 
-@test all(report[:assignments] .== p)
+@test all(report.assignments .== p)
 
 # km = machine(barekm, X)
 # fit!(km)
