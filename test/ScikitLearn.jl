@@ -92,5 +92,29 @@ info(SVMRegressor)
 info(SVMNuRegressor)
 info(SVMLRegressor)
 
+
+
+import MLJModels
+import ScikitLearn 
+using MLJ
+import MLJ.fit!
+using MLJBase
+import MLJModels.ScikitLearn_.SVMClassifier
+
+task = load_iris();
+model = SVMClassifier();
+mach = MLJ.machine(model, task);
+
+function test123(mach)
+    
+        mach.fitresult, mach.cache, mach.report =
+            fit(mach.model, 1, mach.args...)
+
+
+end
+
+test123(mach)
+
+
 end
 true
