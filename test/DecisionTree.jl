@@ -1,7 +1,6 @@
 module TestDecisionTree
 
 # using Revise
-import Pkg
 using Test
 import CategoricalArrays
 using MLJBase
