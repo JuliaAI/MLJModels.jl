@@ -21,7 +21,7 @@ using CategoricalArrays
 #> import package:
 import ..DecisionTree # strange syntax b/s we are lazy-loading
 
-# here T is target type, and the `Vector{T}` is for storing target levels:  
+# here T is target type, and the `Vector{T}` is for storing target levels:
 const DecisionTreeClassifierFitResultType{T} =
     Tuple{Union{DecisionTree.Node{Float64,T}, DecisionTree.Leaf{T}}, Vector{T}}
 
@@ -30,7 +30,7 @@ const DecisionTreeClassifierFitResultType{T} =
 
 CART decision tree classifier from
 [https://github.com/bensadeghi/DecisionTree.jl/blob/master/README.md](https://github.com/bensadeghi/DecisionTree.jl/blob/master/README.md). Predictions
-are probabilistic. 
+are Probabilistic.
 
 For post-fit pruning, set `post-prune=true` and set
 `min_purity_threshold` appropriately. Other hyperparameters as per
@@ -92,11 +92,70 @@ function MLJBase.clean!(model::DecisionTreeClassifier)
         model.pruning_purity = 1.0
     end
     if model.min_samples_split < 2
-        warning *= "Need min_samples_split < 2. Resetting min_samples_slit=2.\n"
+        warning *= "Need min_samples_split >= 2. Resetting min_samples_slit=2.\n"
         model.min_samples_split = 2
     end
     return warning
 end
+
+"""
+    DecisionTreeRegressor(; kwargs...)
+
+CART decision tree classifier from
+[https://github.com/bensadeghi/DecisionTree.jl/blob/master/README.md](https://github.com/bensadeghi/DecisionTree.jl/blob/master/README.md). Predictions
+are Deterministic.
+
+For post-fit pruning, set `post-prune=true` and set
+`pruning_purity_threshold` appropriately. Other hyperparameters as per
+package documentation cited above.
+
+"""
+
+mutable struct DecisionTreeRegressor{Any} <: MLJBase.Deterministic{Any}
+    pruning_purity_threshold::Float64
+    max_depth::Int
+    min_samples_leaf::Int
+    min_samples_split::Int
+    min_purity_increase::Float64
+    n_subfeatures::Int
+    post_prune::Bool
+end
+
+# constructor:
+#> all arguments are kwargs with a default value
+function DecisionTreeRegressor(;
+    pruning_purity_threshold=0.0
+    , max_depth=-1
+    , min_samples_leaf=5
+    , min_samples_split=2
+    , min_purity_increase=0.0
+    , n_subfeatures=0
+    , post_prune=false)
+
+    model = DecisionTreeRegressor{Any}(
+       pruning_purity_threshold
+       , max_depth
+       , min_samples_leaf
+       , min_samples_split
+       , min_purity_increase
+       , n_subfeatures
+       , post_prune)
+
+    message = MLJBase.clean!(model)       #> future proof by including these
+    isempty(message) || @warn message #> two lines even if no clean! defined below
+
+    return model
+end
+
+function MLJBase.clean!(model::DecisionTreeRegressor)
+    warning = ""
+    if model.min_samples_split < 2
+        warning *= "Need min_samples_split >= 2. Resetting min_samples_slit=2.\n"
+        model.min_samples_split = 2
+    end
+    return warning
+end
+
 
 #> A required `fit` method returns `fitresult, cache, report`. (Return
 #> `cache=nothing` unless you are overloading `update`)
@@ -141,7 +200,34 @@ function MLJBase.fit(model::DecisionTreeClassifier{T2}
 
 end
 
+function MLJBase.fit(model::DecisionTreeRegressor
+             , verbosity::Int   #> must be here (and typed) even if not used (as here)
+             , X
+             , y)
+
+    Xmatrix = MLJBase.matrix(X)
+
+    # is float. below really necessary?
+    fitresult = DecisionTree.build_tree(float.(y)
+				   , Xmatrix
+				   , model.n_subfeatures
+				   , model.max_depth
+				   , model.min_samples_leaf
+				   , model.min_samples_split
+				   , model.min_purity_increase)
+
+    if model.post_prune
+         fitresult = DecisionTree.prune_tree(fitresult, model.pruning_purity_threshold)
+    end
+    cache = nothing
+    report = nothing
+
+    return fitresult, cache, report
+end
+
 MLJBase.fitted_params(::DecisionTreeClassifier, fitresult) = fitresult[1]
+
+MLJBase.fitted_params(::DecisionTreeRegressor, fitresult) = fitresult[1]
 
 function MLJBase.predict(::DecisionTreeClassifier{T}
                      , fitresult
@@ -157,15 +243,33 @@ function MLJBase.predict(::DecisionTreeClassifier{T}
             for i in 1:size(y_probabilities, 1)]
 end
 
+
+function MLJBase.predict(model::DecisionTreeRegressor{Any}
+                     , fitresult
+                     , Xnew)
+    Xmatrix = MLJBase.matrix(Xnew)
+    return DecisionTree.apply_tree(fitresult,Xmatrix)
+end
+
+DTTypes=Union{DecisionTreeClassifier,DecisionTreeRegressor}
+
 # metadata:
-MLJBase.load_path(::Type{<:DecisionTreeClassifier}) = "MLJModels.DecisionTree_.DecisionTreeClassifier" 
-MLJBase.package_name(::Type{<:DecisionTreeClassifier}) = "DecisionTree"
-MLJBase.package_uuid(::Type{<:DecisionTreeClassifier}) = "7806a523-6efd-50cb-b5f6-3fa6f1930dbb"
-MLJBase.package_url(::Type{<:DecisionTreeClassifier}) = "https://github.com/bensadeghi/DecisionTree.jl"
-MLJBase.is_pure_julia(::Type{<:DecisionTreeClassifier}) = true
+MLJBase.package_name(::Type{<:DTTypes}) = "DecisionTree"
+MLJBase.package_uuid(::Type{<:DTTypes}) = "7806a523-6efd-50cb-b5f6-3fa6f1930dbb"
+MLJBase.package_url(::Type{<:DTTypes}) = "https://github.com/bensadeghi/DecisionTree.jl"
+MLJBase.is_pure_julia(::Type{<:DTTypes}) = true
+
+MLJBase.load_path(::Type{<:DecisionTreeClassifier}) = "MLJModels.DecisionTree_.DecisionTreeClassifier"
+MLJBase.load_path(::Type{<:DecisionTreeRegressor}) = "MLJModels.DecisionTree_.DecisionTreeRegressor"
+
 MLJBase.input_scitypes(::Type{<:DecisionTreeClassifier}) = MLJBase.Continuous
+MLJBase.input_scitypes(::Type{<:DecisionTreeRegressor}) = MLJBase.Continuous
+
 MLJBase.target_scitype(::Type{<:DecisionTreeClassifier}) = Union{MLJBase.Multiclass,MLJBase.FiniteOrderedFactor}
+MLJBase.target_scitype(::Type{<:DecisionTreeRegressor}) = MLJBase.Continuous
+
 MLJBase.input_is_multivariate(::Type{<:DecisionTreeClassifier}) = true
+MLJBase.input_is_multivariate(::Type{<:DecisionTreeRegressor}) = true
+
 
 end # module
-
