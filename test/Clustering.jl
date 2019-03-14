@@ -4,8 +4,8 @@ module TestClustering
 using MLJBase
 using Test
 using Random:seed!
-using LinearAlgebra:norm
-using Distances: evaluate
+import LinearAlgebra: norm
+import Distances: evaluate
 
 # load code to be tested:
 import MLJModels 
@@ -60,7 +60,7 @@ R = MLJBase.matrix(MLJBase.transform(barekm, fitresult, X))
 
 p = MLJBase.predict(barekm, fitresult, X)
 
-@test all(report[:assignments] .== p)
+@test all(report.assignments .== p)
 
 # km = machine(barekm, X)
 # fit!(km)

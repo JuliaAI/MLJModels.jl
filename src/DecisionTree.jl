@@ -190,22 +190,24 @@ function MLJBase.fit(model::DecisionTreeClassifier{T2}
 
     #> return package-specific statistics (eg, feature rankings,
     #> internal estimates of generalization error) in `report`, which
-    #> should be `nothing` or a dictionary keyed on symbols.
+    #> should be a named tuple with the same type every call (can have
+    #> empty values):
 
     cache = nothing
-    report = nothing
+    report = NamedTuple{}()
 
     return fitresult, cache, report
 
 end
 
-function MLJBase.fit(model::DecisionTreeRegressor{Any}
+function MLJBase.fit(model::DecisionTreeRegressor
              , verbosity::Int   #> must be here (and typed) even if not used (as here)
              , X
              , y)
     
     Xmatrix = MLJBase.matrix(X)
-    
+
+    # is float. below really necessary?
     fitresult = DecisionTree.build_tree(float.(y)
 				   , Xmatrix
 				   , model.n_subfeatures
@@ -223,7 +225,11 @@ function MLJBase.fit(model::DecisionTreeRegressor{Any}
     return fitresult, cache, report 
 end
 
-function MLJBase.predict(model::DecisionTreeClassifier{T}
+MLJBase.fitted_params(::DecisionTreeClassifier, fitresult) = fitresult[1]
+
+MLJBase.fitted_params(::DecisionTreeRegressor, fitresult) = fitresult[1]
+
+function MLJBase.predict(::DecisionTreeClassifier{T}
                      , fitresult
                      , Xnew) where T
     Xmatrix = MLJBase.matrix(Xnew)
@@ -246,22 +252,25 @@ function MLJBase.predict(model::DecisionTreeRegressor{Any}
 end
 
 DTTypes=Union{DecisionTreeClassifier,DecisionTreeRegressor}
+
 # metadata:
-MLJBase.load_path(::Type{<:DecisionTreeClassifier}) = "MLJModels.DecisionTree_.DecisionTreeClassifier" 
-MLJBase.load_path(::Type{<:DecisionTreeRegressor}) = "MLJModels.DecisionTree_.DecisionTreeClassifier"
-
-
 MLJBase.package_name(::Type{<:DTTypes}) = "DecisionTree"
 MLJBase.package_uuid(::Type{<:DTTypes}) = "7806a523-6efd-50cb-b5f6-3fa6f1930dbb"
 MLJBase.package_url(::Type{<:DTTypes}) = "https://github.com/bensadeghi/DecisionTree.jl"
-MLJBase.is_pure_julia(::Type{<:DTTypes}) = :yes
+MLJBase.is_pure_julia(::Type{<:DTTypes}) = true
 
-MLJBase.input_kinds(::Type{<:DecisionTreeClassifier}) = [:continuous, ]
-MLJBase.input_kinds(::Type{<:DecisionTreeRegressor}) = [:continuous, ]
-MLJBase.output_kind(::Type{<:DecisionTreeClassifier}) = :multiclass
-MLJBase.output_kind(::Type{<:DecisionTreeRegressor}) = :continuous
-MLJBase.output_quantity(::Type{<:DecisionTreeClassifier}) = :univariate
-MLJBase.output_quantity(::Type{<:DecisionTreeRegressor}) = :univariate
+MLJBase.load_path(::Type{<:DecisionTreeClassifier}) = "MLJModels.DecisionTree_.DecisionTreeClassifier" 
+MLJBase.load_path(::Type{<:DecisionTreeRegressor}) = "MLJModels.DecisionTree_.DecisionTreeRegressor"
+
+MLJBase.input_scitypes(::Type{<:DecisionTreeClassifier}) = MLJBase.Continuous
+MLJBase.input_scitypes(::Type{<:DecisionTreeRegressor}) = MLJBase.Continuous
+
+MLJBase.target_scitype(::Type{<:DecisionTreeClassifier}) = Union{MLJBase.Multiclass,MLJBase.FiniteOrderedFactor}
+MLJBase.target_scitype(::Type{<:DecisionTreeRegressor}) = MLJBase.Continous
+
+MLJBase.input_is_multivariate(::Type{<:DecisionTreeClassifier}) = true
+MLJBase.input_is_multivariate(::Type{<:DecisionTreeRegressor}) = true
+
 
 end # module
 

@@ -63,10 +63,12 @@ function MLJBase.fit(model::KMeans
     result    = C.kmeans(permutedims(Xarray), model.k; distance=model.metric)
     fitresult = result.centers # centers (p x k)
     cache     = nothing
-    report    = Dict(:assignments => result.assignments) # size n
+    report    = (assignments=result.assignments,) # size n
 
     return fitresult, cache, report
 end
+
+MLJBase.fitted_params(::KMeans, fitresult) = (centers=fitresult,)
 
 function MLJBase.transform(model::KMeans
                          , fitresult::KMFitResultType
@@ -102,10 +104,13 @@ function MLJBase.fit(model::KMedoids
     result    = C.kmedoids(Carray, model.k)
     fitresult = permutedims(view(Xarray, result.medoids, :)) # medoids (p x k)
     cache     = nothing
-    report    = Dict(:assignments => result.assignments) # size n
+    report    = (assignments=result.assignments,) # size n
 
     return fitresult, cache, report
 end
+
+MLJBase.fitted_params(::KMedoids, fitresult) = (medoids=fitresult,)
+
 
 function MLJBase.transform(model::KMedoids
                          , fitresult::KMFitResultType
@@ -149,19 +154,21 @@ MLJBase.load_path(::Type{<:KMeans}) = "MLJModels.Clustering_.KMeans" # lazy-load
 MLJBase.package_url(::Type{<:KMeans}) = "https://github.com/JuliaStats/Clustering.jl"
 MLJBase.package_name(::Type{<:KMeans}) = "Clustering"
 MLJBase.package_uuid(::Type{<:KMeans}) = "aaaa29a8-35af-508c-8bc3-b662a17a0fe5"
-MLJBase.is_pure_julia(::Type{<:KMeans}) = :yes
-MLJBase.input_kinds(::Type{<:KMeans}) = [:continuous,]
-MLJBase.output_kind(::Type{<:KMeans}) = :continuous
-MLJBase.output_quantity(::Type{<:KMeans}) = :multivariate
+MLJBase.is_pure_julia(::Type{<:KMeans}) = true
+MLJBase.input_scitypes(::Type{<:KMeans}) = MLJBase.Continuous
+MLJBase.input_is_multivariate(::Type{<:KMeans}) = true
+MLJBase.output_scitypes(::Type{<:KMeans}) = MLJBase.Continuous
+MLJBase.output_is_multivariate(::Type{<:KMeans}) = true
 
 MLJBase.load_path(::Type{<:KMedoids}) = "MLJModels.Clustering_.KMedoids" # lazy-loaded from MLJ
 MLJBase.package_url(::Type{<:KMedoids}) = MLJBase.package_url(KMeans)
 MLJBase.package_name(::Type{<:KMedoids}) = MLJBase.package_name(KMeans)
 MLJBase.package_uuid(::Type{<:KMedoids}) = MLJBase.package_uuid(KMeans)
-MLJBase.is_pure_julia(::Type{<:KMedoids}) = :yes
-MLJBase.input_kinds(::Type{<:KMedoids}) = [:continuous,]
-MLJBase.output_kind(::Type{<:KMedoids}) = :continuous
-MLJBase.output_quantity(::Type{<:KMedoids}) = :multivariate
+MLJBase.is_pure_julia(::Type{<:KMedoids}) = true
+MLJBase.input_scitypes(::Type{<:KMedoids}) = MLJBase.Continuous
+MLJBase.input_is_multivariate(::Type{<:KMedoids}) = true
+MLJBase.output_scitypes(::Type{<:KMedoids}) = MLJBase.Continuous
+MLJBase.output_is_multivariate(::Type{<:KMedoids}) = true
 
 end # module
 

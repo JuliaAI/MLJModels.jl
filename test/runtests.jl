@@ -28,6 +28,14 @@ end
     @test include("GLM.jl")
 end
 
+@testset "SVM" begin
+    @test include("ScikitLearn.jl")
+end
+
+@testset "NaiveBayes" begin
+    @test include("NaiveBayes.jl")
+end
+
 # @testset "XGBoost" begin
 #   @test_broken include("XGBoost.jl")
 # end
