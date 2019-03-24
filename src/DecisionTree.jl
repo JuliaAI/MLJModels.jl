@@ -227,7 +227,7 @@ end
 
 MLJBase.fitted_params(::DecisionTreeClassifier, fitresult) = fitresult[1]
 
-MLJBase.fitted_params(::DecisionTreeRegressor, fitresult) = fitresult[1]
+MLJBase.fitted_params(::DecisionTreeRegressor, fitresult) = fitresult
 
 function MLJBase.predict(::DecisionTreeClassifier{T}
                      , fitresult
