@@ -1,62 +1,34 @@
-module TestXGBoost
+module TestXGBoosts
 
-using MLJ
+using MLJBase
 using Test
-using Pkg
-Pkg.clone("https://github.com/dmlc/XGBoost.jl")
+import MLJModels
 import XGBoost
+import CategoricalArrays
+using MLJModels.XGBoost_
 
-function readlibsvm(fname::String, shape)
-    dmx = zeros(Float32, shape)
-    label = Float32[]
-    fi = open(fname, "r")
-    cnt = 1
-    for line in eachline(fi)
-        line = split(line, " ")
-        push!(label, parse(Float64, line[1]))
-        line = line[2:end]
-        for itm in line
-            itm = split(itm, ":")
-            dmx[cnt, parse(Int, itm[1]) + 1] = float(parse(Int, itm[2]))
-        end
-        cnt += 1
-    end
-    close(fi)
-    return (dmx, label)
-end
-
-train_X, train_Y = readlibsvm("../data/agaricus.txt.train", (6513, 126))
-test_X, test_Y = readlibsvm("../data/agaricus.txt.test", (1611, 126))
-
-dtrain = XGBoost.DMatrix("../data/agaricus.txt.train")
-dtest = XGBoost.DMatrix("../data/agaricus.txt.test")
+n,m = 10^3, 5 ;
+features = rand(n,m);
+weights = rand(-1:1,m);
+labels = features * weights;
 
 
+plain_regressor = XGBoostRegressor()
 
 
-#import XGBoost_
-bareboost = XGBoostRegressor(num_round=6)
-bfit,= MLJ.fit(bareboost,1,train_X,train_Y)
+#bst = XGBoost.xgboost(Xmatrix,  y[train])
 
 
-num_round=6
-bst = XGBoost.xgboost(train_X, num_round, label = train_Y)
-bst_pred = XGBoost.predict(bst,test_X)
-bst_DMatrix, = MLJ.fit(bareboost,1,dtrain)
+# test with linear data:
+fitresultR, cacheR, reportR = MLJBase.fit(plain_regressor, 1,
+                                          features, labels);
+
+rpred = predict(plain_regressor, fitresultR, features);
+
+@test fitresultR isa MLJBase.fitresult_type(plain_regressor)
+
+info(XGBoostRegressor)
 
 
-
-
-bpredict_fulltree = MLJ.predict(bareboost,bfit,test_X)
-bpredict_onetree = MLJ.predict(bareboost,bfit,test_X,ntree_limit=1)
-bpredict_DMatrix = MLJ.predict(bareboost,bst_DMatrix,dtest)
-
-
-
-@test  bpredict_fulltree !=bpredict_onetree
-@test  bpredict_fulltree ≈ bpredict_DMatrix atol=0.000001
-@test_logs (:warn,"updater has been changed to shotgun, the default option for booster=\"gblinear\"") XGBoostRegressor(num_round=1,booster="gblinear",updater="grow_colmaker")
-@test_logs (:warn,"\n num_class has been changed to 2") XGBoostClassifier(eval_metric="mlogloss",objective="multi:softprob")
-@test bst_pred ≈ bpredict_fulltree atol=0.000001
 end
 true
