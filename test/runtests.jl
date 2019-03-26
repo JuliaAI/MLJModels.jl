@@ -7,7 +7,7 @@ using Test
 
 # using Pkg
 # Pkg.add(PackageSpec(url="https://github.com/alan-turing-institute/MLJ.jl", rev="master"))
-
+if false
 @testset "DecisionTree" begin
   @test include("DecisionTree.jl")
 end
@@ -34,6 +34,7 @@ end
 
 @testset "NaiveBayes" begin
     @test include("NaiveBayes.jl")
+end
 end
 
 @testset "XGBoost" begin
