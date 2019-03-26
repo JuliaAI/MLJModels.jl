@@ -8,33 +8,33 @@ using Test
 # using Pkg
 # Pkg.add(PackageSpec(url="https://github.com/alan-turing-institute/MLJ.jl", rev="master"))
 
-#@testset "DecisionTree" begin
-#  @test include("DecisionTree.jl")
-#end
+@testset "DecisionTree" begin
+  @test include("DecisionTree.jl")
+end
 
-#@testset "GaussianProcesses" begin
-#  @test include("GaussianProcesses.jl")
-#end
+@testset "GaussianProcesses" begin
+  @test include("GaussianProcesses.jl")
+end
 
 # @testset "MultivariateStats" begin
 #   @test include("LocalMultivariateStats.jl")
 # end
 
-#@testset "Clustering" begin
-#    @test include("Clustering.jl")
-#end
+@testset "Clustering" begin
+    @test include("Clustering.jl")
+end
 
-#@testset "GLM" begin
-#    @test include("GLM.jl")
-#end
+@testset "GLM" begin
+    @test include("GLM.jl")
+end
 
-#@testset "SVM" begin
-#    @test include("ScikitLearn.jl")
-#end
+@testset "SVM" begin
+    @test include("ScikitLearn.jl")
+end
 
-#@testset "NaiveBayes" begin
-#    @test include("NaiveBayes.jl")
-#end
+@testset "NaiveBayes" begin
+    @test include("NaiveBayes.jl")
+end
 
 @testset "XGBoost" begin
    @test include("XGBoost.jl")

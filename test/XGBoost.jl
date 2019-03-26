@@ -1,4 +1,4 @@
-module TestXGBoosts
+module TestXGBoost
 
 using MLJBase
 using Test
