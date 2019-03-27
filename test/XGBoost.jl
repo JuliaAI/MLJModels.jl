@@ -8,16 +8,18 @@ using CategoricalArrays
 using MLJModels.XGBoost_
 
 
-@test_logs (:warn,"\n objective function is more suited to XGBoostClassifier or XGBoostCount") XGBoostRegressor(objective="wrong")
-@test_logs (:warn,"\n objective function is more suited to XGBoostClassifier or XGBoostRegressor") XGBoostCount(objective="wrong")
-@test_logs (:warn,"\n objective function is more suited to XGBoostRegressor or XGBoostCount") XGBoostClassifier(objective="wrong")
+@test_logs (:warn,"\n objective function is not valid and has been changed to reg:linear") XGBoostRegressor(objective="wrong")
+@test_logs (:warn,"\n objective function is not valid and has been changed to count:poisson") XGBoostCount(objective="wrong")
+@test_logs (:warn,"\n objective function is more suited to :automatic") XGBoostClassifier(objective="wrong")
 
-
+using Random: seed!
+seed!(0)
 plain_regressor = XGBoostRegressor()
 n,m = 10^3, 5 ;
 features = rand(n,m);
 weights = rand(-1:1,m);
 labels = features * weights;
+features = MLJBase.table(features)
 fitresultR, cacheR, reportR = MLJBase.fit(plain_regressor, 1, features, labels);
 rpred = predict(plain_regressor, fitresultR, features);
 @test fitresultR isa MLJBase.fitresult_type(plain_regressor)
@@ -53,7 +55,7 @@ train, test = partition(eachindex(y), 0.6) # levels of y are split across split
 
 
 
-fitresultCl, cacheCl, reportCl = MLJBase.fit(plain_classifier, 0,
+fitresultCl, cacheCl, reportCl = MLJBase.fit(plain_classifier, 1,
                                             selectrows(X, train), y[train];)
 
 println(fitresultCl)

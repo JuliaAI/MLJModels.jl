@@ -143,7 +143,8 @@ end
 function MLJBase.clean!(model::XGBoostRegressor)
     warning = ""
     if(!(model.objective in ["reg:linear","reg:gamma","reg:tweedie"]))
-            warning *="\n objective function is more suited to XGBoostClassifier or XGBoostCount"
+            warning *="\n objective function is not valid and has been changed to reg:linear"
+            model.objective="reg:linear"
     end
     return warning
 end
@@ -361,7 +362,8 @@ end
 function MLJBase.clean!(model::XGBoostCount)
     warning = ""
     if(!(model.objective in ["count:poisson"]))
-            warning *="\n objective function is more suited to XGBoostClassifier or XGBoostRegressor"
+            warning *="\n objective function is not valid and has been changed to count:poisson"
+            model.objective="count:poisson"
     end
     return warning
 end
@@ -569,7 +571,8 @@ end
 function MLJBase.clean!(model::XGBoostClassifier)
     warning = ""
     if(!(model.objective ==":automatic"))
-            warning *="\n objective function is more suited to XGBoostRegressor or XGBoostCount"
+            warning *="\n objective function is more suited to :automatic"
+            model.objective=":automatic"
     end
     return warning
 end
@@ -590,20 +593,22 @@ function MLJBase.fit(model::XGBoostClassifier
              , verbosity::Int     #> must be here even if unsupported in pkg
              , X
              , y)
-
+             Xmatrix = MLJBase.matrix(X)
+             classes = levels(y) # *all* levels in pool of y, not just observed ones
+             num_class = length(classes)
+             decoder = MLJBase.CategoricalDecoder(y, Int)
+             y_plain = MLJBase.transform(decoder, y)
+             if(num_class==2)
+                 model.objective="binary:logistic"
+             else
+                 model.objective="multi:softprob"
+             end
+             @show(num_class)
+             @show(model.objective)
              silent =
-                 verbosity > 0 ?  0 : 0
+                 verbosity > 0 ?  1 : 1
                  #classifier case currently doesn't accept different silent, check
-    Xmatrix = MLJBase.matrix(X)
-    classes = levels(y) # *all* levels in pool of y, not just observed ones
-    num_class = length(classes)
-    decoder = MLJBase.CategoricalDecoder(y, Int)
-    y_plain = MLJBase.transform(decoder, y)
-    if(num_class==2)
-        model.objective="binary:logistic"
-    else
-        model.objective="multi:softprob"
-    end
+
     result = XGBoost.xgboost(Xmatrix, label=y_plain
                                , model.num_round
                                , booster = model.booster
@@ -663,11 +668,8 @@ function MLJBase.predict(model::XGBoostClassifier
         , Xnew)
 
     result,decoder = fitresult
-    @show(decoder)
     Xmatrix = MLJBase.matrix(Xnew)
     prediction = XGBoost.predict(result, Xmatrix)
-    @show(length(levels(decoder)))
-    @show(length(levels(prediction)))
     #return MLJBase.UnivariateNominal(decoder,prediction)
 
     return MLJBase.inverse_transform(decoder,prediction)
