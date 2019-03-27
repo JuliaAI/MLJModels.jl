@@ -53,7 +53,7 @@ train, test = partition(eachindex(y), 0.6) # levels of y are split across split
 
 
 
-fitresultCl, cacheCl, reportCl = MLJBase.fit(plain_classifier, 1,
+fitresultCl, cacheCl, reportCl = MLJBase.fit(plain_classifier, 0,
                                             selectrows(X, train), y[train];)
 
 println(fitresultCl)

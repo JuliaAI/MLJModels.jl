@@ -161,15 +161,15 @@ function MLJBase.fit(model::XGBoostRegressor
              , X
              , y)
 
-             verbosity =
-                 verbosity > 0 ?  1 : 0
+             silent =
+                 verbosity > 0 ?  0 : 1
     Xmatrix = MLJBase.matrix(X)
     dm = XGBoost.DMatrix(Xmatrix,label=y)
 
     fitresult = XGBoost.xgboost(dm
                                , model.num_round
                                , booster = model.booster
-                               , silent = verbosity
+                               , silent = silent
                                , disable_default_eval_metric = model.disable_default_eval_metric
                                , eta = model.eta
                                , gamma = model.gamma
@@ -373,8 +373,8 @@ function MLJBase.fit(model::XGBoostCount
              , X
              , y)
 
-             verbosity =
-                 verbosity > 0 ?  1 : 0
+             silent =
+                 verbosity > 0 ?  0 : 1
 
     Xmatrix = MLJBase.matrix(X)
     dm = XGBoost.DMatrix(Xmatrix,label=y)
@@ -382,7 +382,7 @@ function MLJBase.fit(model::XGBoostCount
     fitresult = XGBoost.xgboost(dm
                                , model.num_round
                                , booster = model.booster
-                               , silent = verbosity
+                               , silent = silent
                                , disable_default_eval_metric = model.disable_default_eval_metric
                                , eta = model.eta
                                , gamma = model.gamma
@@ -591,9 +591,9 @@ function MLJBase.fit(model::XGBoostClassifier
              , X
              , y)
 
-             verbosity =
-                 verbosity > 0 ?  1 : 0
-
+             silent =
+                 verbosity > 0 ?  0 : 0
+                 #classifier case currently doesn't accept different silent, check
     Xmatrix = MLJBase.matrix(X)
     classes = levels(y) # *all* levels in pool of y, not just observed ones
     num_class = length(classes)
@@ -607,7 +607,7 @@ function MLJBase.fit(model::XGBoostClassifier
     result = XGBoost.xgboost(Xmatrix, label=y_plain
                                , model.num_round
                                , booster = model.booster
-                               , silent = verbosity
+                               , silent = silent
                                , disable_default_eval_metric = model.disable_default_eval_metric
                                , eta = model.eta
                                , gamma = model.gamma
