@@ -15,6 +15,7 @@ import ..XGBoost
 mutable struct XGBoostRegressor{Any} <:MLJBase.Deterministic{Any}
     num_round::Integer
     booster::String
+    silent::Union{Int,Bool}
     disable_default_eval_metric::Real
     eta::Real
     gamma::Real
@@ -60,6 +61,7 @@ https://xgboost.readthedocs.io/en/latest/parameter.html.
 function XGBoostRegressor(
     ;num_round=1
     ,booster="gbtree"
+    ,silent=0  #> might be redundant due to verbosity
     ,disable_default_eval_metric=0
     ,eta=0.3
     ,gamma=0
@@ -98,6 +100,7 @@ function XGBoostRegressor(
     model = XGBoostRegressor{Any}(
     num_round
     ,booster
+    ,silent  #> might be redundant due to verbosity
     ,disable_default_eval_metric
     ,eta
     ,gamma
@@ -161,8 +164,8 @@ function MLJBase.fit(model::XGBoostRegressor
              , X
              , y)
 
-             verbosity =
-                 verbosity > 0 ?  1 : 0
+    if(verbosity>1)
+        verbosity==1
     end
     Xmatrix = MLJBase.matrix(X)
     dm = XGBoost.DMatrix(Xmatrix,label=y)
@@ -234,6 +237,7 @@ end
 mutable struct XGBoostCount{Any} <:MLJBase.Deterministic{Any}
     num_round::Integer
     booster::String
+    silent::Union{Int,Bool}
     disable_default_eval_metric::Real
     eta::Real
     gamma::Real
@@ -279,6 +283,7 @@ https://xgboost.readthedocs.io/en/latest/parameter.html.
 function XGBoostCount(
     ;num_round=1
     ,booster="gbtree"
+    ,silent=0  #> might be redundant due to verbosity
     ,disable_default_eval_metric=0
     ,eta=0.3
     ,gamma=0
@@ -317,6 +322,7 @@ function XGBoostCount(
     model = XGBoostCount{Any}(
     num_round
     ,booster
+    ,silent  #> might be redundant due to verbosity
     ,disable_default_eval_metric
     ,eta
     ,gamma
