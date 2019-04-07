@@ -668,16 +668,16 @@ function MLJBase.predict(model::XGBoostClassifier
         , Xnew)
 
     result,decoder = fitresult
-    cols = length((decoder.pool).levels)
-    rows = Int(length(prediction)/cols)
     Xmatrix = MLJBase.matrix(Xnew)
     prediction = XGBoost.predict(result, Xmatrix)
+    cols = length((decoder.pool).levels)
+    rows = Int(length(prediction)/cols)
     preds = reshape(prediction,cols,rows)
     #return MLJBase.UnivariateNominal(decoder,prediction)
     result=[]
     for i=1:rows
         single = preds[:,i]
-        d = UnivariateNominal(levels(decoder), single)
+        d = MLJBase.UnivariateNominal(levels(decoder), single)
         result=[result;d]
     end
     return result

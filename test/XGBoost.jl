@@ -60,7 +60,7 @@ fitresultCl, cacheCl, reportCl = MLJBase.fit(plain_classifier, 1,
 
 println(fitresultCl)
 clpred = predict(plain_classifier, fitresultCl, selectrows(X, test));
-@test levels(clpred) == levels(y[train])
+@test sort(levels(clpred[1])) == sort(levels(y[train]))
 
 @test fitresultCl isa MLJBase.fitresult_type(plain_regressor)
 info(XGBoostClassifier)
