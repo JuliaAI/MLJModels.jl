@@ -1,62 +1,104 @@
 module TestXGBoost
 
-using MLJ
+using MLJBase
 using Test
-using Pkg
-Pkg.clone("https://github.com/dmlc/XGBoost.jl")
+import MLJModels
 import XGBoost
+using CategoricalArrays
+using MLJModels.XGBoost_
 
-function readlibsvm(fname::String, shape)
-    dmx = zeros(Float32, shape)
-    label = Float32[]
-    fi = open(fname, "r")
-    cnt = 1
-    for line in eachline(fi)
-        line = split(line, " ")
-        push!(label, parse(Float64, line[1]))
-        line = line[2:end]
-        for itm in line
-            itm = split(itm, ":")
-            dmx[cnt, parse(Int, itm[1]) + 1] = float(parse(Int, itm[2]))
-        end
-        cnt += 1
-    end
-    close(fi)
-    return (dmx, label)
-end
-
-train_X, train_Y = readlibsvm("../data/agaricus.txt.train", (6513, 126))
-test_X, test_Y = readlibsvm("../data/agaricus.txt.test", (1611, 126))
-
-dtrain = XGBoost.DMatrix("../data/agaricus.txt.train")
-dtest = XGBoost.DMatrix("../data/agaricus.txt.test")
+@test_logs (:warn, "Only \"linear\", \"gamma\" and \"tweedie\" objectives are supported . Setting objective=\"linear\". ") XGBoostRegressor(objective="wrong")
+@test_logs (:warn, "Changing objective to \"automatic\", the only supported value. ") XGBoostClassifier(objective="wrong")
+@test_logs (:warn, "Changing objective to \"poisson\", the only supported value. ") XGBoostCount(objective="wrong")
 
 
+## REGRESSOR
+
+using Random: seed!
+seed!(0)
+plain_regressor = XGBoostRegressor()
+n,m = 10^3, 5 ;
+features = rand(n,m);
+weights = rand(-1:1,m);
+labels = features * weights;
+features = MLJBase.table(features)
+fitresultR, cacheR, reportR = MLJBase.fit(plain_regressor, 0, features, labels);
+rpred = predict(plain_regressor, fitresultR, features);
+@test fitresultR isa MLJBase.fitresult_type(plain_regressor)
+info(XGBoostRegressor)
+
+plain_regressor.objective = "gamma"
+labels = abs.(labels)
+fitresultR, cacheR, reportR = MLJBase.fit(plain_regressor, 0, features, labels);
+rpred = predict(plain_regressor, fitresultR, features);
 
 
-#import XGBoost_
-bareboost = XGBoostRegressor(num_round=6)
-bfit,= MLJ.fit(bareboost,1,train_X,train_Y)
+## COUNT
+
+count_regressor = XGBoostCount(num_round=10)
+using Random: seed!
+using Distributions
+
+seed!(0)
+
+X = randn(100, 3) .* randn(3)'
+Xtable = table(X)
+
+α = 0.1
+β = [-0.3, 0.2, -0.1]
+λ = exp.(α .+ X * β)
+y = [rand(Poisson(λᵢ)) for λᵢ ∈ λ]
+
+fitresultC, cacheC, reportC = MLJBase.fit(count_regressor, 0, Xtable, y);
+cpred = predict(count_regressor, fitresultC, Xtable);
+@test fitresultC isa MLJBase.fitresult_type(count_regressor)
+info(XGBoostCount)
 
 
-num_round=6
-bst = XGBoost.xgboost(train_X, num_round, label = train_Y)
-bst_pred = XGBoost.predict(bst,test_X)
-bst_DMatrix, = MLJ.fit(bareboost,1,dtrain)
+plain_classifier = XGBoostClassifier(num_round=100, seed=0)
+
+# test binary case:
+N=2
+seed!(0)
+X = (x1=rand(1000), x2=rand(1000), x3=rand(1000))
+y = map(X.x1) do x
+    mod(round(Int, 10*x), N)
+end |> categorical
+train, test = partition(eachindex(y), 0.6) 
+fitresult, cache, report = MLJBase.fit(plain_classifier, 0,
+                                            selectrows(X, train), y[train];)
+yhat = mode.(predict(plain_classifier, fitresult, selectrows(X, test)))
+misclassification_rate = sum(yhat .!= y[test])/length(test)
+@test misclassification_rate < 0.1
+
+# Multiclass{10} case:
+N=10
+seed!(0)
+X = (x1=rand(1000), x2=rand(1000), x3=rand(1000))
+y = map(X.x1) do x
+    mod(round(Int, 10*x), N)
+end |> categorical
+train, test = partition(eachindex(y), 0.6) 
+fitresult, cache, report = MLJBase.fit(plain_classifier, 0,
+                                            selectrows(X, train), y[train];)
+yhat = mode.(predict(plain_classifier, fitresult, selectrows(X, test)))
+misclassification_rate = sum(yhat .!= y[test])/length(test)
+@test misclassification_rate < 0.1
 
 
+# check target pool preserved:
+X = (x1=rand(400), x2=rand(400), x3=rand(400))
+y = vcat(fill(:x, 100), fill(:y, 100), fill(:z, 200)) |>categorical
+train, test = partition(eachindex(y), 0.5) 
+@assert length(unique(y[train])) == 2
+@assert length(unique(y[test])) == 1
+fitresult, cache, report = MLJBase.fit(plain_classifier, 0,
+                                            selectrows(X, train), y[train];)
+yhat = predict(plain_classifier, fitresult, selectrows(X, test))
+@test Set(levels(yhat[1])) == Set(levels(y[train]))
 
+@test fitresult isa MLJBase.fitresult_type(plain_classifier)
+info(XGBoostClassifier)
 
-bpredict_fulltree = MLJ.predict(bareboost,bfit,test_X)
-bpredict_onetree = MLJ.predict(bareboost,bfit,test_X,ntree_limit=1)
-bpredict_DMatrix = MLJ.predict(bareboost,bst_DMatrix,dtest)
-
-
-
-@test  bpredict_fulltree !=bpredict_onetree
-@test  bpredict_fulltree ≈ bpredict_DMatrix atol=0.000001
-@test_logs (:warn,"updater has been changed to shotgun, the default option for booster=\"gblinear\"") XGBoostRegressor(num_round=1,booster="gblinear",updater="grow_colmaker")
-@test_logs (:warn,"\n num_class has been changed to 2") XGBoostClassifier(eval_metric="mlogloss",objective="multi:softprob")
-@test bst_pred ≈ bpredict_fulltree atol=0.000001
 end
 true

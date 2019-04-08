@@ -1,23 +1,18 @@
 module XGBoost_
 
-#> export the new models you're going to define (and nothing else):
-export XGBoostRegressor, XGBoostClassifier
+export XGBoostRegressor, XGBoostClassifier, XGBoostCount
 
-#> for all Supervised models:
-import MLJ
-import MLJ: CanWeightTarget, CanRankFeatures
-import MLJ: Nominal, Numeric, NA, Probababilistic, Multivariate,  Multiclass
-
-#> for all classifiers:
+import MLJBase
 using CategoricalArrays
+import ..XGBoost
+# import XGBoost
 
-#> import package:
-import XGBoost
 
-mutable struct XGBoostRegressor{Integer} <:MLJ.Supervised{Integer}  #check the parametric type here..
+## REGRESSOR
+
+mutable struct XGBoostRegressor{Any} <:MLJBase.Deterministic{Any}
     num_round::Integer
     booster::String
-    silent::Union{Int,Bool}
     disable_default_eval_metric::Real
     eta::Real
     gamma::Real
@@ -52,20 +47,22 @@ mutable struct XGBoostRegressor{Integer} <:MLJ.Supervised{Integer}  #check the p
     eval_metric
     seed::Integer
     watchlist
-    num_class::Integer
 end
 
-
 """
-# constructor:
-A full list of the kwargs accepted, and their value ranges, consult
-https://xgboost.readthedocs.io/en/latest/parameter.html.
-The only required kwarg is num_round.
+    XGBoostRegressor(; objective="linear", kwargs...)
+
+The XGBoost model for targets with `Continuous` scitype. Gives
+deterministic predictions. Admissible values for `objective` are
+"linear", "gamma" or "tweedie". For other `kwargs`, see
+[https://xgboost.readthedocs.io/en/latest/parameter.html](https://xgboost.readthedocs.io/en/latest/parameter.html).
+
+See also: XGBoostCount, XGBoostClassifier
+
 """
 function XGBoostRegressor(
     ;num_round=1
     ,booster="gbtree"
-    ,silent=0  #> might be redundant due to verbosity
     ,disable_default_eval_metric=0
     ,eta=0.3
     ,gamma=0
@@ -99,13 +96,11 @@ function XGBoostRegressor(
     ,base_score=0.5
     ,eval_metric="rmse"
     ,seed=0
-    ,watchlist=[]
-    ,num_class=1)
+    ,watchlist=[])
 
-    model = XGBoostRegressor{Integer}(
+    model = XGBoostRegressor{Any}(
     num_round
     ,booster
-    ,silent  #> might be redundant due to verbosity
     ,disable_default_eval_metric
     ,eta
     ,gamma
@@ -139,19 +134,110 @@ function XGBoostRegressor(
     ,base_score
     ,eval_metric
     ,seed
-    ,watchlist
-    ,num_class)
+    ,watchlist)
 
-     message = MLJ.clean!(model)           #> future proof by including these
+     message = MLJBase.clean!(model)           #> future proof by including these
      isempty(message) || @warn message #> two lines even if no clean! defined below
 
     return model
 end
 
-mutable struct XGBoostClassifier{Integer} <:MLJ.Supervised{Integer}  #check the parametric type here..
+
+function MLJBase.clean!(model::XGBoostRegressor)
+    warning = ""
+    if(!(model.objective in ["linear", "gamma", "tweedie",
+                             "reg:linear","reg:gamma","reg:tweedie"]))
+            warning *="Only \"linear\", \"gamma\" and \"tweedie\" objectives are supported . Setting objective=\"linear\". "
+            model.objective="linear"
+    end
+    return warning
+end
+
+
+#> The following optional method (the fallback does nothing, returns
+#> empty warning) is called by the constructor above but also by the
+#> fit methods below:
+
+#> A required `fit` method returns `fitresult, cache, report`. (Return
+#> `cache=nothing` unless you are overloading `update`)
+
+function MLJBase.fit(model::XGBoostRegressor
+             , verbosity::Int     #> must be here even if unsupported in pkg
+             , X
+             , y)
+
+             silent =
+                 verbosity > 0 ?  false : true
+    Xmatrix = MLJBase.matrix(X)
+    dm = XGBoost.DMatrix(Xmatrix,label=y)
+
+    objective =
+        model.objective in ["linear", "gamma", "tweedie"] ? "reg:"*model.objective : model.objective
+    
+    fitresult = XGBoost.xgboost(dm
+                               , model.num_round
+                               , booster = model.booster
+                               , silent = silent
+                               , disable_default_eval_metric = model.disable_default_eval_metric
+                               , eta = model.eta
+                               , gamma = model.gamma
+                               , max_depth = model.max_depth
+                               , min_child_weight = model.min_child_weight
+                               , max_delta_step = model.max_delta_step
+                               , subsample = model.subsample
+                               , colsample_bytree = model.colsample_bytree
+                               , colsample_bylevel = model.colsample_bylevel
+                               , lambda = model.lambda
+                               , alpha = model.alpha
+                               , tree_method = model.tree_method
+                               , sketch_eps = model.sketch_eps
+                               , scale_pos_weight = model.scale_pos_weight
+                               , updater = model.updater
+                               , refresh_leaf = model.refresh_leaf
+                               , process_type = model.process_type
+                               , grow_policy = model.grow_policy
+                               , max_leaves = model.max_leaves
+                               , max_bin = model.max_bin
+                               , predictor = model.predictor
+                               , sample_type = model.sample_type
+                               , normalize_type = model.normalize_type
+                               , rate_drop = model.rate_drop
+                               , one_drop = model.one_drop
+                               , skip_drop = model.skip_drop
+                               , feature_selector = model.feature_selector
+                               , top_k = model.top_k
+                               , tweedie_variance_power = model.tweedie_variance_power
+                               , objective = objective
+                               , base_score = model.base_score
+                               , eval_metric=model.eval_metric
+                               , seed = model.seed
+                               , watchlist=model.watchlist)
+
+    #> return package-specific statistics (eg, feature rankings,
+    #> internal estimates of generalization error) in `report`, which
+    #> should be `nothing` or a dictionary keyed on symbols.
+
+    cache = nothing
+    report = nothing
+
+    return fitresult, cache, report
+
+end
+
+
+function MLJBase.predict(model::XGBoostRegressor
+        , fitresult
+        , Xnew)
+    Xmatrix = MLJBase.matrix(Xnew)
+    return XGBoost.predict(fitresult, Xmatrix)
+end
+
+
+## COUNT REGRESSOR
+
+mutable struct XGBoostCount{Any} <:MLJBase.Deterministic{Any}
     num_round::Integer
     booster::String
-    silent::Union{Int,Bool}
     disable_default_eval_metric::Real
     eta::Real
     gamma::Real
@@ -186,20 +272,22 @@ mutable struct XGBoostClassifier{Integer} <:MLJ.Supervised{Integer}  #check the 
     eval_metric
     seed::Integer
     watchlist
-    num_class::Integer
 end
 
 
 """
-# constructor:
-A full list of the kwargs accepted, and their value ranges, consult
-https://xgboost.readthedocs.io/en/latest/parameter.html.
-The only required kwarg is num_round.
+    XGBoostCount(; kwargs...)
+
+The XGBoost model for targets with `Count` scitype. Gives
+deterministic predictions. For admissible `kwargs`, see
+[https://xgboost.readthedocs.io/en/latest/parameter.html](https://xgboost.readthedocs.io/en/latest/parameter.html).
+
+See also: XGBoostRegressor, XGBoostClassifier
+
 """
-function XGBoostClassifier(
+function XGBoostCount(
     ;num_round=1
     ,booster="gbtree"
-    ,silent=0  #> might be redundant due to verbosity
     ,disable_default_eval_metric=0
     ,eta=0.3
     ,gamma=0
@@ -229,17 +317,15 @@ function XGBoostClassifier(
     ,feature_selector="cyclic"
     ,top_k=0
     ,tweedie_variance_power=1.5
-    ,objective="binary:logistic"
+    ,objective="count:poisson"
     ,base_score=0.5
     ,eval_metric="rmse"
     ,seed=0
-    ,watchlist=[]
-    ,num_class=1)
+    ,watchlist=[])
 
-    model = XGBoostClassifier{Integer}(
+    model = XGBoostCount{Any}(
     num_round
     ,booster
-    ,silent  #> might be redundant due to verbosity
     ,disable_default_eval_metric
     ,eta
     ,gamma
@@ -273,79 +359,262 @@ function XGBoostClassifier(
     ,base_score
     ,eval_metric
     ,seed
-    ,watchlist
-    ,num_class)
+    ,watchlist)
 
-     message = MLJ.clean!(model)           #> future proof by including these
+     message = MLJBase.clean!(model)    
+     isempty(message) || @warn message 
+
+    return model
+end
+
+function MLJBase.clean!(model::XGBoostCount)
+    warning = ""
+    if(!(model.objective in ["count:poisson"]))
+            warning *="Changing objective to \"poisson\", the only supported value. "
+            model.objective="poisson"
+    end
+    return warning
+end
+
+function MLJBase.fit(model::XGBoostCount
+             , verbosity::Int     #> must be here even if unsupported in pkg
+             , X
+             , y)
+
+             silent =
+                 verbosity > 0 ?  false : true
+
+    Xmatrix = MLJBase.matrix(X)
+    dm = XGBoost.DMatrix(Xmatrix,label=y)
+
+    fitresult = XGBoost.xgboost(dm
+                               , model.num_round
+                               , booster = model.booster
+                               , silent = silent
+                               , disable_default_eval_metric = model.disable_default_eval_metric
+                               , eta = model.eta
+                               , gamma = model.gamma
+                               , max_depth = model.max_depth
+                               , min_child_weight = model.min_child_weight
+                               , max_delta_step = model.max_delta_step
+                               , subsample = model.subsample
+                               , colsample_bytree = model.colsample_bytree
+                               , colsample_bylevel = model.colsample_bylevel
+                               , lambda = model.lambda
+                               , alpha = model.alpha
+                               , tree_method = model.tree_method
+                               , sketch_eps = model.sketch_eps
+                               , scale_pos_weight = model.scale_pos_weight
+                               , updater = model.updater
+                               , refresh_leaf = model.refresh_leaf
+                               , process_type = model.process_type
+                               , grow_policy = model.grow_policy
+                               , max_leaves = model.max_leaves
+                               , max_bin = model.max_bin
+                               , predictor = model.predictor
+                               , sample_type = model.sample_type
+                               , normalize_type = model.normalize_type
+                               , rate_drop = model.rate_drop
+                               , one_drop = model.one_drop
+                               , skip_drop = model.skip_drop
+                               , feature_selector = model.feature_selector
+                               , top_k = model.top_k
+                               , tweedie_variance_power = model.tweedie_variance_power
+                               , objective = "count:poisson"
+                               , base_score = model.base_score
+                               , eval_metric=model.eval_metric
+                               , seed = model.seed
+                               , watchlist=model.watchlist)
+
+    #> return package-specific statistics (eg, feature rankings,
+    #> internal estimates of generalization error) in `report`, which
+    #> should be `nothing` or a dictionary keyed on symbols.
+
+    cache = nothing
+    report = nothing
+
+    return fitresult, cache, report
+
+end
+
+function MLJBase.predict(model::XGBoostCount
+        , fitresult
+        , Xnew)
+    Xmatrix = MLJBase.matrix(Xnew)
+    return XGBoost.predict(fitresult, Xmatrix)
+end
+
+
+## CLASSIFIER
+
+mutable struct XGBoostClassifier{Any} <:MLJBase.Probabilistic{Any}
+    num_round::Integer
+    booster::String
+    disable_default_eval_metric::Real
+    eta::Real
+    gamma::Real
+    max_depth::Real
+    min_child_weight::Real
+    max_delta_step::Real
+    subsample::Real
+    colsample_bytree::Real
+    colsample_bylevel::Real
+    lambda::Real
+    alpha::Real
+    tree_method::String
+    sketch_eps::Real
+    scale_pos_weight::Real
+    updater::String
+    refresh_leaf::Union{Int,Bool}
+    process_type::String
+    grow_policy::String
+    max_leaves::Int
+    max_bin::Int
+    predictor::String
+    sample_type::String
+    normalize_type::String
+    rate_drop::Real
+    one_drop
+    skip_drop::Real
+    feature_selector::String
+    top_k::Real
+    tweedie_variance_power::Real
+    objective
+    base_score::Real
+    eval_metric
+    seed::Integer
+    watchlist
+end
+
+"""
+    XGBoostClassifier(; kwargs...)
+
+The XGBoost model for targets with `FiniteOrderedFactor` or
+`Multiclass` scitype (including `Binary=Multiclass{2}`). Gives
+probabilistic predictions. For admissible `kwargs`, see
+[https://xgboost.readthedocs.io/en/latest/parameter.html](https://xgboost.readthedocs.io/en/latest/parameter.html).
+
+See also: XGBoostCount, XGBoostRegressor
+
+"""
+function XGBoostClassifier(
+    ;num_round=1
+    ,booster="gbtree"
+    ,disable_default_eval_metric=0
+    ,eta=0.3
+    ,gamma=0
+    ,max_depth=6
+    ,min_child_weight=1
+    ,max_delta_step=0
+    ,subsample=1
+    ,colsample_bytree=1
+    ,colsample_bylevel=1
+    ,lambda=1
+    ,alpha=0
+    ,tree_method="auto"
+    ,sketch_eps=0.03
+    ,scale_pos_weight=1
+    ,updater="grow_colmaker"
+    ,refresh_leaf=1
+    ,process_type="default"
+    ,grow_policy="depthwise"
+    ,max_leaves=0
+    ,max_bin=256
+    ,predictor="cpu_predictor" #> gpu version not currently working with Julia, maybe remove completely?
+    ,sample_type="uniform"
+    ,normalize_type="tree"
+    ,rate_drop=0.0
+    ,one_drop=0
+    ,skip_drop=0.0
+    ,feature_selector="cyclic"
+    ,top_k=0
+    ,tweedie_variance_power=1.5
+    ,objective="automatic"
+    ,base_score=0.5
+    ,eval_metric="mlogloss"
+    ,seed=0
+    ,watchlist=[])
+
+    model = XGBoostClassifier{Any}(
+    num_round
+    ,booster
+    ,disable_default_eval_metric
+    ,eta
+    ,gamma
+    ,max_depth
+    ,min_child_weight
+    ,max_delta_step
+    ,subsample
+    ,colsample_bytree
+    ,colsample_bylevel
+    ,lambda
+    ,alpha
+    ,tree_method
+    ,sketch_eps
+    ,scale_pos_weight
+    ,updater
+    ,refresh_leaf
+    ,process_type
+    ,grow_policy
+    ,max_leaves
+    ,max_bin
+    ,predictor #> gpu version not currently working with Julia, maybe remove completely?
+    ,sample_type
+    ,normalize_type
+    ,rate_drop
+    ,one_drop
+    ,skip_drop
+    ,feature_selector
+    ,top_k
+    ,tweedie_variance_power
+    ,objective
+    ,base_score
+    ,eval_metric
+    ,seed
+    ,watchlist)
+
+     message = MLJBase.clean!(model)           #> future proof by including these
      isempty(message) || @warn message #> two lines even if no clean! defined below
 
     return model
 end
 
 
-
-
-function MLJ.clean!(model::XGBoostRegressor)
+function MLJBase.clean!(model::XGBoostClassifier)
     warning = ""
-    if(model.booster=="gblinear" &&(model.updater!=("shotgun") && model.updater!=("coord_descent")))
-        model.updater="shotgun"
-        warning *= "updater has been changed to shotgun, the default option for booster=\"gblinear\""
-    end
-    if(model.objective in ["multi:softmax","multi:softprob","binary:logistic","binary:logitraw","binary:hinge"])
-            warning *="\n objective function is more suited to XGBoostClassifier"
-    end
-    if(model.objective in ["multi:softmax","multi:softprob"])
-        if model.num_class==1
-            model.num_class=2
-            warning *= "\n num_class has been changed to 2"
-        end
-        if model.eval_metric=="rmse"
-            model.eval_metric="mlogloss"
-            warning *= "\n eval_metric has been changed to mlogloss"
-        end
+    if(!(model.objective =="automatic"))
+            warning *="Changing objective to \"automatic\", the only supported value. "
+            model.objective="automatic"
     end
     return warning
 end
 
-function MLJ.clean!(model::XGBoostClassifier)
-    warning = ""
-    if(model.booster=="gblinear" &&(model.updater!=("shotgun") && model.updater!=("coord_descent")))
-        model.updater="shotgun"
-        warning *= "updater has been changed to shotgun, the default option for booster=\"gblinear\""
+function MLJBase.fit(model::XGBoostClassifier
+                     , verbosity::Int     #> must be here even if unsupported in pkg
+                     , X
+                     , y)
+    Xmatrix = MLJBase.matrix(X)
+    classes = levels(y) # *all* levels in pool of y, not just observed ones
+    num_class = length(classes)
+    decoder = MLJBase.CategoricalDecoder(y, Int, true) # start_at_zero=true
+    y_plain = MLJBase.transform(decoder, y)
+
+    # an idiosynchrony of xgboost is that num_class=1 for binary case
+    if(num_class==2)
+        objective="binary:logistic"
+        y_plain = convert(Array{Bool}, y_plain)
+        num_class = 1 # idiosynchony of XGBoost
+    else
+        objective="multi:softprob"
     end
-    if(!(model.objective in ["multi:softmax","multi:softprob","binary:logistic","binary:logitraw","binary:hinge"]))
-            warning *="\n objective function is more suited to XGBoostClassifier"
-    end
-    if(model.objective in ["multi:softmax","multi:softprob"])
-        if model.num_class==1
-            model.num_class=2
-            warning *= "\n num_class has been changed to 2"
-        end
-        if model.eval_metric=="rmse"
-            model.eval_metric="mlogloss"
-            warning *= "\n eval_metric has been changed to mlogloss"
-        end
-    end
-    return warning
-end
-
-#> The following optional method (the fallback does nothing, returns
-#> empty warning) is called by the constructor above but also by the
-#> fit methods below:
-
-#> A required `fit` method returns `fitresult, cache, report`. (Return
-#> `cache=nothing` unless you are overloading `update`)
-
-function MLJ.fit(model::Union{XGBoostRegressor,XGBoostClassifier}
-             , verbosity            #> must be here even if unsupported in pkg
-             , X::Array{<:Real,2}
-             , y::Vector)
-
-    dm = XGBoost.DMatrix(X,label=y)
-    fitresult = XGBoost.xgboost( dm
+    silent =
+        verbosity > 0 ?  false : true
+    #classifier case currently doesn't accept different silent, check
+    
+    result = XGBoost.xgboost(Xmatrix, label=y_plain
                                , model.num_round
                                , booster = model.booster
-                               , silent = verbosity
+                               , silent = silent
                                , disable_default_eval_metric = model.disable_default_eval_metric
                                , eta = model.eta
                                , gamma = model.gamma
@@ -375,71 +644,14 @@ function MLJ.fit(model::Union{XGBoostRegressor,XGBoostClassifier}
                                , feature_selector = model.feature_selector
                                , top_k = model.top_k
                                , tweedie_variance_power = model.tweedie_variance_power
-                               , objective = model.objective
+                               , objective = objective
                                , base_score = model.base_score
                                , eval_metric=model.eval_metric
                                , seed = model.seed
                                , watchlist=model.watchlist
-                               , num_class=model.num_class)
+                               , num_class=num_class)
 
-    #> return package-specific statistics (eg, feature rankings,
-    #> internal estimates of generalization error) in `report`, which
-    #> should be `nothing` or a dictionary keyed on symbols.
-
-    cache = nothing
-    report = nothing
-
-    return fitresult, cache, report
-
-end
-
-function MLJ.fit(model::Union{XGBoostRegressor,XGBoostClassifier}
-             , verbosity            #> must be here even if unsupported in pkg
-             , dm::XGBoost.DMatrix)
-
-    fitresult = XGBoost.xgboost( dm
-                               , model.num_round
-                               , booster = model.booster
-                               , silent = verbosity
-                               , disable_default_eval_metric = model.disable_default_eval_metric
-                               , eta = model.eta
-                               , gamma = model.gamma
-                               , max_depth = model.max_depth
-                               , min_child_weight = model.min_child_weight
-                               , max_delta_step = model.max_delta_step
-                               , subsample = model.subsample
-                               , colsample_bytree = model.colsample_bytree
-                               , colsample_bylevel = model.colsample_bylevel
-                               , lambda = model.lambda
-                               , alpha = model.alpha
-                               , tree_method = model.tree_method
-                               , sketch_eps = model.sketch_eps
-                               , scale_pos_weight = model.scale_pos_weight
-                               , updater = model.updater
-                               , refresh_leaf = model.refresh_leaf
-                               , process_type = model.process_type
-                               , grow_policy = model.grow_policy
-                               , max_leaves = model.max_leaves
-                               , max_bin = model.max_bin
-                               , predictor = model.predictor
-                               , sample_type = model.sample_type
-                               , normalize_type = model.normalize_type
-                               , rate_drop = model.rate_drop
-                               , one_drop = model.one_drop
-                               , skip_drop = model.skip_drop
-                               , feature_selector = model.feature_selector
-                               , top_k = model.top_k
-                               , tweedie_variance_power = model.tweedie_variance_power
-                               , objective = model.objective
-                               , base_score = model.base_score
-                               , eval_metric=model.eval_metric
-                               , seed = model.seed
-                               , watchlist=model.watchlist
-                               , num_class = model.num_class)
-
-    #> return package-specific statistics (eg, feature rankings,
-    #> internal estimates of generalization error) in `report`, which
-    #> should be `nothing` or a dictionary keyed on symbols.
+    fitresult = (result, decoder)
 
     cache = nothing
     report = nothing
@@ -449,27 +661,53 @@ function MLJ.fit(model::Union{XGBoostRegressor,XGBoostClassifier}
 end
 
 
+function MLJBase.predict(model::XGBoostClassifier
+        , fitresult
+        , Xnew)
 
-#Order of predict matters, see https://discourse.julialang.org/t/fun-with-kwargs-methods/15711/5
+    result, decoder = fitresult
+    Xmatrix = MLJBase.matrix(Xnew)
+    XGBpredictions = XGBoost.predict(result, Xmatrix)
 
-function MLJ.predict(model::Union{XGBoostRegressor,XGBoostClassifier}
-        , fitresult::XGBoost.Booster
-        , Xnew::Union{XGBoost.DMatrix,Array{<:Real,2}}
-        ; ntree_limit::Integer)
+    nlevels = length(levels(decoder))
+    all_levels = MLJBase.inverse_transform(decoder, collect(0:nlevels-1)) 
+    npatterns = MLJBase.nrows(Xnew)
 
-    return XGBoost.predict(fitresult, Xnew,ntree_limit=ntree_limit)
+    if nlevels == 2 
+        true_class_probabilities = reshape(XGBpredictions, 1, npatterns)
+        false_class_probabilities = 1 .- true_class_probabilities
+        XGBpredictions = vcat(false_class_probabilities, true_class_probabilities)
+    end
+
+    prediction_probabilities = reshape(XGBpredictions, nlevels, npatterns)
+    
+    predictions = [MLJBase.UnivariateNominal(all_levels,
+                                             prediction_probabilities[:,i])
+                   for i in 1:npatterns]
+
+    return predictions
 end
 
 
-function MLJ.predict(model::Union{XGBoostRegressor,XGBoostClassifier}
-        , fitresult::XGBoost.Booster
-        , Xnew::Union{XGBoost.DMatrix,Array{<:Real,2}})
+## METADATA
 
-    return XGBoost.predict(fitresult, Xnew)
+XGTypes=Union{XGBoostRegressor,XGBoostCount,XGBoostClassifier}
+
+MLJBase.package_name(::Type{<:XGTypes}) = "XGBoost"
+MLJBase.package_uuid(::Type{<:XGTypes}) = "009559a3-9522-5dbb-924b-0b6ed2b22bb9"
+MLJBase.package_url(::Type{<:XGTypes}) = "https://github.com/dmlc/XGBoost.jl"
+MLJBase.is_pure_julia(::Type{<:XGTypes}) = false
+
+MLJBase.load_path(::Type{<:XGBoostRegressor}) = "MLJModels.XGBoost_.XGBoostRegressor"
+MLJBase.input_scitypes(::Type{<:XGBoostRegressor}) = MLJBase.Continuous
+MLJBase.target_scitype(::Type{<:XGBoostRegressor}) = MLJBase.Continuous
+
+MLJBase.load_path(::Type{<:XGBoostCount}) = "MLJModels.XGBoost_.XGBoostCount"
+MLJBase.input_scitypes(::Type{<:XGBoostCount}) = MLJBase.Continuous
+MLJBase.target_scitype(::Type{<:XGBoostCount}) = MLJBase.Count
+
+MLJBase.load_path(::Type{<:XGBoostClassifier}) = "MLJModels.XGBoost_.XGBoostClassifier"
+MLJBase.input_scitypes(::Type{<:XGBoostClassifier}) = MLJBase.Continuous
+MLJBase.target_scitype(::Type{<:XGBoostClassifier}) = Union{MLJBase.Multiclass,MLJBase.FiniteOrderedFactor}
+
 end
-
-#module end
-end
-
-using .XGBoost_
-export XGBoostClassifier,XGBoostRegressor

@@ -13,6 +13,7 @@ function __init__()
     @require Clustering="aaaa29a8-35af-508c-8bc3-b662a17a0fe5" include("Clustering.jl")
     @require ScikitLearn="3646fa90-6ef7-5e7e-9f22-8aca16db6324" include("ScikitLearn.jl")
     @require NaiveBayes="9bbee03b-0db5-5f46-924f-b5c9c21b8c60" include("NaiveBayes.jl")
+    @require XGBoost = "009559a3-9522-5dbb-924b-0b6ed2b22bb9" include("XGBoost.jl")
 end
 
 end # module

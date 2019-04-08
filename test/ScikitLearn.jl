@@ -27,7 +27,7 @@ train, test = partition(eachindex(y), 0.6) # levels of y are split across split
 
 fitresultC, cacheC, reportC = MLJBase.fit(plain_classifier, 1,
                                           selectrows(X, train), y[train]);
-fitresultCnu, cacheCnu, reportCnu = MLJBase.fit(nu_classifier, 1, 
+fitresultCnu, cacheCnu, reportCnu = MLJBase.fit(nu_classifier, 1,
                                           selectrows(X, train), y[train]);
 fitresultCL, cacheCL, reportCL = MLJBase.fit(linear_classifier, 1,
                                           selectrows(X, train), y[train]);
@@ -51,7 +51,7 @@ end |> categorical;
 train, test = partition(eachindex(ycat), 0.8);
 fitresultC, cacheC, reportC = MLJBase.fit(plain_classifier, 1,
                                           selectrows(X, train), ycat[train]);
-fitresultCnu, cacheCnu, reportCnu = MLJBase.fit(nu_classifier, 1, 
+fitresultCnu, cacheCnu, reportCnu = MLJBase.fit(nu_classifier, 1,
                                           selectrows(X, train), ycat[train]);
 fitresultCL, cacheCL, reportCL = MLJBase.fit(linear_classifier, 1,
                                           selectrows(X, train), ycat[train]);
@@ -91,9 +91,6 @@ info(SVMLClassifier)
 info(SVMRegressor)
 info(SVMNuRegressor)
 info(SVMLRegressor)
-
-
-
 
 end
 true

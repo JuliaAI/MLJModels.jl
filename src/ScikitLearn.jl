@@ -34,7 +34,7 @@ See also, SVMNuClassifier, SVMLClassifier, SVMRegressor
 
 """
 mutable struct SVMClassifier <: MLJBase.Deterministic{Any}
-    C::Float64 
+    C::Float64
     kernel::Union{String,Function}
     degree::Int
     gamma::Union{Float64,String}
@@ -76,7 +76,7 @@ function SVMClassifier(
         , random_state
         )
 
-    message = MLJBase.clean!(model)       #> future proof by including these 
+    message = MLJBase.clean!(model)       #> future proof by including these
     isempty(message) || @warn message #> two lines even if no clean! defined below
 
     return model
@@ -85,12 +85,12 @@ end
 
 function MLJBase.clean!(model::SVMClassifier)
     warning = ""
-    if(typeof(model.kernel)==String && (!(model.kernel  in 			   
+    if(typeof(model.kernel)==String && (!(model.kernel  in
             ["linear","poly","rbf","sigmoid","precomputed"])))
             warning *="kernel parameter is not valid, setting to default=\"rbf\" \n"
 	    model.kernel="rbf"
     end
-    if(typeof(model.gamma)==String && (!(model.gamma  in 		  
+    if(typeof(model.gamma)==String && (!(model.gamma  in
             ["auto","scale"])))
             warning *="gamma parameter is not valid, setting to default=\"auto\" \n"
 	    model.gamma="auto"
@@ -155,7 +155,7 @@ function SVMNuClassifier(
         , random_state
         )
 
-    message = MLJBase.clean!(model)       #> future proof by including these 
+    message = MLJBase.clean!(model)       #> future proof by including these
     isempty(message) || @warn message #> two lines even if no clean! defined below
 
     return model
@@ -163,12 +163,12 @@ end
 
 function MLJBase.clean!(model::SVMNuClassifier)
     warning = ""
-    if(typeof(model.kernel)==String && (!(model.kernel  in 			   
+    if(typeof(model.kernel)==String && (!(model.kernel  in
             ["linear","poly","rbf","sigmoid","precomputed"])))
             warning *="kernel parameter is not valid, setting to default=\"rbf\" \n"
 	    model.kernel="rbf"
     end
-    if(typeof(model.gamma)==String && (!(model.gamma  in 		  
+    if(typeof(model.gamma)==String && (!(model.gamma  in
             ["auto","scale"])))
             warning *="gamma parameter is not valid, setting to default=\"auto\" \n"
 	    model.gamma="auto"
@@ -192,7 +192,7 @@ See also, SVMClassifier, SVMNuClassifier, SVMLRegressor
 """
 
 mutable struct SVMLClassifier <: MLJBase.Deterministic{Any}
-    C::Float64 
+    C::Float64
     loss::String
     dual::Bool
     penalty::String
@@ -227,7 +227,7 @@ function SVMLClassifier(
         , random_state
         )
 
-    message = MLJBase.clean!(model)       #> future proof by including these 
+    message = MLJBase.clean!(model)       #> future proof by including these
     isempty(message) || @warn message #> two lines even if no clean! defined below
 
     return model
@@ -249,7 +249,7 @@ end
 """
     SVMRegressor(; kwargs...)
 
-Epsilon-Support Vector Regression from 
+Epsilon-Support Vector Regression from
 [https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVR.html#sklearn.svm.SVR](https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVR.html#sklearn.svm.SVR). Implemented hyperparameters as per
 package documentation cited above.
 
@@ -257,7 +257,7 @@ See also, SVMClassifier, SVMNuRegressor, SVMLRegressor
 
 """
 mutable struct SVMRegressor <: MLJBase.Deterministic{Any}
-    C::Float64 
+    C::Float64
     kernel::Union{String,Function}
     degree::Int
     gamma::Union{Float64,String}
@@ -295,7 +295,7 @@ function SVMRegressor(
         , max_iter
         , epsilon)
 
-    message = MLJBase.clean!(model)       #> future proof by including these 
+    message = MLJBase.clean!(model)       #> future proof by including these
     isempty(message) || @warn message #> two lines even if no clean! defined below
 
     return model
@@ -303,12 +303,12 @@ end
 
 function MLJBase.clean!(model::SVMRegressor)
     warning = ""
-    if(typeof(model.kernel)==String && (!(model.kernel  in 			   
+    if(typeof(model.kernel)==String && (!(model.kernel  in
             ["linear","poly","rbf","sigmoid","precomputed"])))
             warning *="kernel parameter is not valid, setting to default=\"rbf\" \n"
 	    model.kernel="rbf"
     end
-    if(typeof(model.gamma)==String && (!(model.gamma  in 		  
+    if(typeof(model.gamma)==String && (!(model.gamma  in
             ["auto","scale"])))
             warning *="gamma parameter is not valid, setting to default=\"auto\" \n"
 	    model.gamma="auto"
@@ -319,7 +319,7 @@ end
 """
     SVMNuRegressor(; kwargs...)
 
-Nu Support Vector Regression from 
+Nu Support Vector Regression from
 [https://scikit-learn.org/stable/modules/generated/sklearn.svm.NuSVR.html#sklearn.svm.NuSVR](https://scikit-learn.org/stable/modules/generated/sklearn.svm.NuSVR.html#sklearn.svm.NuSVR). Implemented hyperparameters as per
 package documentation cited above.
 
@@ -329,7 +329,7 @@ See also, SVMNuClassifier, SVMRegressor, SVMLRegressor
 
 mutable struct SVMNuRegressor <: MLJBase.Deterministic{Any}
     nu::Float64
-    C::Float64 
+    C::Float64
     kernel::Union{String,Function}
     degree::Int
     gamma::Union{Float64,String}
@@ -366,7 +366,7 @@ function SVMNuRegressor(
         , cache_size
         , max_iter)
 
-    message = MLJBase.clean!(model)       #> future proof by including these 
+    message = MLJBase.clean!(model)       #> future proof by including these
     isempty(message) || @warn message #> two lines even if no clean! defined below
 
     return model
@@ -374,12 +374,12 @@ end
 
 function MLJBase.clean!(model::SVMNuRegressor)
     warning = ""
-    if(typeof(model.kernel)==String && (!(model.kernel  in 			   
+    if(typeof(model.kernel)==String && (!(model.kernel  in
             ["linear","poly","rbf","sigmoid","precomputed"])))
             warning *="kernel parameter is not valid, setting to default=\"rbf\" \n"
 	    model.kernel="rbf"
     end
-    if(typeof(model.gamma)==String && (!(model.gamma  in 		  
+    if(typeof(model.gamma)==String && (!(model.gamma  in
             ["auto","scale"])))
             warning *="gamma parameter is not valid, setting to default=\"auto\" \n"
 	    model.gamma="auto"
@@ -390,7 +390,7 @@ end
 """
     SVMLRegressor(; kwargs...)
 
-Linear Support Vector Regression from 
+Linear Support Vector Regression from
 [https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVR.html#sklearn.svm.LinearSVR](https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVR.html#sklearn.svm.LinearSVR). Implemented hyperparameters as per
 package documentation cited above.
 
@@ -401,7 +401,7 @@ See also, SVMRegressor, SVMNuRegressor, SVMLClassifier
 mutable struct SVMLRegressor <: MLJBase.Deterministic{Any}
     C::Float64
     loss::String
-    fit_intercept::Bool 
+    fit_intercept::Bool
     dual::Bool
     tol::Float64
     max_iter::Int
@@ -428,7 +428,7 @@ function SVMLRegressor(
         , max_iter
         , epsilon)
 
-    message = MLJBase.clean!(model)       #> future proof by including these 
+    message = MLJBase.clean!(model)       #> future proof by including these
     isempty(message) || @warn message #> two lines even if no clean! defined below
 
     return model
@@ -448,7 +448,7 @@ function MLJBase.fit(model::SVMClassifier
              , verbosity::Int   #> must be here (and typed) even if not used (as here)
              , X
              , y)
-    
+
     Xmatrix = MLJBase.matrix(X)
     decoder = MLJBase.CategoricalDecoder(y)
     y_plain = MLJBase.transform(decoder, y)
@@ -465,12 +465,12 @@ function MLJBase.fit(model::SVMClassifier
             decision_function_shape=model.decision_function_shape,
             random_state=model.random_state
     )
-    
+
     result = ScikitLearn.fit!(cache,Xmatrix,y_plain)
     fitresult = (result, decoder)
     report = NamedTuple()
-    
-    return fitresult, nothing, report 
+
+    return fitresult, nothing, report
 
 end
 
@@ -478,7 +478,7 @@ function MLJBase.fit(model::SVMNuClassifier
              , verbosity::Int   #> must be here (and typed) even if not used (as here)
              , X
              , y)
-    
+
     Xmatrix = MLJBase.matrix(X)
     decoder = MLJBase.CategoricalDecoder(y)
     y_plain = MLJBase.transform(decoder, y)
@@ -495,12 +495,12 @@ function MLJBase.fit(model::SVMNuClassifier
             decision_function_shape=model.decision_function_shape,
             random_state=model.random_state
     )
-    
+
     result = ScikitLearn.fit!(cache,Xmatrix,y_plain)
     fitresult = (result, decoder)
     report = NamedTuple()
-    
-    return fitresult, nothing, report 
+
+    return fitresult, nothing, report
 
 end
 
@@ -508,7 +508,7 @@ function MLJBase.fit(model::SVMLClassifier
              , verbosity::Int   #> must be here (and typed) even if not used (as here)
              , X
              , y)
-    
+
     Xmatrix = MLJBase.matrix(X)
     decoder = MLJBase.CategoricalDecoder(y)
     y_plain = MLJBase.transform(decoder, y)
@@ -517,17 +517,17 @@ function MLJBase.fit(model::SVMLClassifier
 	    loss = model.loss,
             dual=model.dual,
             penalty=model.penalty,
-            intercept_scaling=model.intercept_scaling, 
+            intercept_scaling=model.intercept_scaling,
             tol=model.tol,
             max_iter=model.max_iter,
             random_state=model.random_state
     )
-    
+
     result = ScikitLearn.fit!(cache,Xmatrix,y_plain)
     fitresult = (result, decoder)
     report = NamedTuple()
-    
-    return fitresult, nothing, report 
+
+    return fitresult, nothing, report
 
 end
 
@@ -535,9 +535,9 @@ function MLJBase.fit(model::SVMRegressor
              , verbosity::Int   #> must be here (and typed) even if not used (as here)
              , X
              , y)
-    
+
     Xmatrix = MLJBase.matrix(X)
-    
+
     cache = SVR(C=model.C,
             kernel=model.kernel,
             degree=model.degree,
@@ -548,20 +548,20 @@ function MLJBase.fit(model::SVMRegressor
             cache_size=model.cache_size,
             max_iter=model.max_iter,
             epsilon=model.epsilon)
-    
+
     fitresult = ScikitLearn.fit!(cache,Xmatrix,y)
     report = NamedTuple()
-    
-    return fitresult, nothing, report 
+
+    return fitresult, nothing, report
 end
 
 function MLJBase.fit(model::SVMNuRegressor
              , verbosity::Int   #> must be here (and typed) even if not used (as here)
              , X
              , y)
-    
+
     Xmatrix = MLJBase.matrix(X)
-    
+
     cache = NuSVR(nu=model.nu,
             C=model.C,
             kernel=model.kernel,
@@ -572,20 +572,20 @@ function MLJBase.fit(model::SVMNuRegressor
             tol=model.tol,
             cache_size=model.cache_size,
             max_iter=model.max_iter)
-    
+
     fitresult = ScikitLearn.fit!(cache,Xmatrix,y)
     report = NamedTuple()
-    
-    return fitresult, nothing, report 
+
+    return fitresult, nothing, report
 end
 
 function MLJBase.fit(model::SVMLRegressor
              , verbosity::Int   #> must be here (and typed) even if not used (as here)
              , X
              , y)
-    
+
     Xmatrix = MLJBase.matrix(X)
-    
+
     cache = LinearSVR(C=model.C,
             loss=model.loss,
 	    fit_intercept=model.fit_intercept,
@@ -593,11 +593,11 @@ function MLJBase.fit(model::SVMLRegressor
 	    tol=model.tol,
 	    max_iter=model.max_iter,
 	    epsilon=model.epsilon)
-    
+
     fitresult = ScikitLearn.fit!(cache,Xmatrix,y)
     report = NamedTuple()
-    
-    return fitresult, nothing, report 
+
+    return fitresult, nothing, report
 end
 
 
@@ -610,7 +610,7 @@ function MLJBase.predict(model::SVMC
                      , fitresult::Tuple
                      , Xnew)
 
-    xnew = MLJBase.matrix(Xnew) 
+    xnew = MLJBase.matrix(Xnew)
     result, decoder = fitresult
     prediction = ScikitLearn.predict(result, xnew)
     return MLJBase.inverse_transform(decoder,prediction)

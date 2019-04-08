@@ -44,6 +44,8 @@ info(baretree)
 # tree = machine(baretree, X, y)
 # fit!(tree)
 # yyhat = predict_mode(tree, MLJBase.selectrows(X, 1:3))
+using Random: seed!
+seed!(0)
 
 n,m = 10^3, 5 ;
 features = rand(n,m);
