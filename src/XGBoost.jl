@@ -1,16 +1,14 @@
 module XGBoost_
 
-#> export the new models you're going to define (and nothing else):
 export XGBoostRegressor, XGBoostClassifier, XGBoostCount
 
-#> for all Supervised models:
 import MLJBase
-
-#> for all classifiers:
 using CategoricalArrays
-
-#> import package:
 import ..XGBoost
+# import XGBoost
+
+
+## REGRESSOR
 
 mutable struct XGBoostRegressor{Any} <:MLJBase.Deterministic{Any}
     num_round::Integer
@@ -51,11 +49,16 @@ mutable struct XGBoostRegressor{Any} <:MLJBase.Deterministic{Any}
     watchlist
 end
 
-
 """
-# constructor:
-A full list of the kwargs accepted, and their value ranges, consult
-https://xgboost.readthedocs.io/en/latest/parameter.html.
+    XGBoostRegressor(; objective="linear", kwargs...)
+
+The XGBoost model for targets with `Continuous` scitype. Gives
+deterministic predictions. Admissible values for `objective` are
+"linear", "gamma" or "tweedie". For other `kwargs`, see
+[https://xgboost.readthedocs.io/en/latest/parameter.html](https://xgboost.readthedocs.io/en/latest/parameter.html).
+
+See also: XGBoostCount, XGBoostClassifier
+
 """
 function XGBoostRegressor(
     ;num_round=1
@@ -142,9 +145,10 @@ end
 
 function MLJBase.clean!(model::XGBoostRegressor)
     warning = ""
-    if(!(model.objective in ["reg:linear","reg:gamma","reg:tweedie"]))
-            warning *="\n objective function is not valid and has been changed to reg:linear"
-            model.objective="reg:linear"
+    if(!(model.objective in ["linear", "gamma", "tweedie",
+                             "reg:linear","reg:gamma","reg:tweedie"]))
+            warning *="Only \"linear\", \"gamma\" and \"tweedie\" objectives are supported . Setting objective=\"linear\". "
+            model.objective="linear"
     end
     return warning
 end
@@ -163,10 +167,13 @@ function MLJBase.fit(model::XGBoostRegressor
              , y)
 
              silent =
-                 verbosity > 0 ?  0 : 1
+                 verbosity > 0 ?  false : true
     Xmatrix = MLJBase.matrix(X)
     dm = XGBoost.DMatrix(Xmatrix,label=y)
 
+    objective =
+        model.objective in ["linear", "gamma", "tweedie"] ? "reg:"*model.objective : model.objective
+    
     fitresult = XGBoost.xgboost(dm
                                , model.num_round
                                , booster = model.booster
@@ -200,7 +207,7 @@ function MLJBase.fit(model::XGBoostRegressor
                                , feature_selector = model.feature_selector
                                , top_k = model.top_k
                                , tweedie_variance_power = model.tweedie_variance_power
-                               , objective = model.objective
+                               , objective = objective
                                , base_score = model.base_score
                                , eval_metric=model.eval_metric
                                , seed = model.seed
@@ -226,10 +233,7 @@ function MLJBase.predict(model::XGBoostRegressor
 end
 
 
-
-
-
-
+## COUNT REGRESSOR
 
 mutable struct XGBoostCount{Any} <:MLJBase.Deterministic{Any}
     num_round::Integer
@@ -272,9 +276,14 @@ end
 
 
 """
-# constructor:
-A full list of the kwargs accepted, and their value ranges, consult
-https://xgboost.readthedocs.io/en/latest/parameter.html.
+    XGBoostCount(; kwargs...)
+
+The XGBoost model for targets with `Count` scitype. Gives
+deterministic predictions. For admissible `kwargs`, see
+[https://xgboost.readthedocs.io/en/latest/parameter.html](https://xgboost.readthedocs.io/en/latest/parameter.html).
+
+See also: XGBoostRegressor, XGBoostClassifier
+
 """
 function XGBoostCount(
     ;num_round=1
@@ -352,23 +361,20 @@ function XGBoostCount(
     ,seed
     ,watchlist)
 
-     message = MLJBase.clean!(model)           #> future proof by including these
-     isempty(message) || @warn message #> two lines even if no clean! defined below
+     message = MLJBase.clean!(model)    
+     isempty(message) || @warn message 
 
     return model
 end
 
-
 function MLJBase.clean!(model::XGBoostCount)
     warning = ""
     if(!(model.objective in ["count:poisson"]))
-            warning *="\n objective function is not valid and has been changed to count:poisson"
-            model.objective="count:poisson"
+            warning *="Changing objective to \"poisson\", the only supported value. "
+            model.objective="poisson"
     end
     return warning
 end
-
-
 
 function MLJBase.fit(model::XGBoostCount
              , verbosity::Int     #> must be here even if unsupported in pkg
@@ -376,7 +382,7 @@ function MLJBase.fit(model::XGBoostCount
              , y)
 
              silent =
-                 verbosity > 0 ?  0 : 1
+                 verbosity > 0 ?  false : true
 
     Xmatrix = MLJBase.matrix(X)
     dm = XGBoost.DMatrix(Xmatrix,label=y)
@@ -414,7 +420,7 @@ function MLJBase.fit(model::XGBoostCount
                                , feature_selector = model.feature_selector
                                , top_k = model.top_k
                                , tweedie_variance_power = model.tweedie_variance_power
-                               , objective = model.objective
+                               , objective = "count:poisson"
                                , base_score = model.base_score
                                , eval_metric=model.eval_metric
                                , seed = model.seed
@@ -439,6 +445,7 @@ function MLJBase.predict(model::XGBoostCount
 end
 
 
+## CLASSIFIER
 
 mutable struct XGBoostClassifier{Any} <:MLJBase.Probabilistic{Any}
     num_round::Integer
@@ -479,11 +486,16 @@ mutable struct XGBoostClassifier{Any} <:MLJBase.Probabilistic{Any}
     watchlist
 end
 
-
 """
-# constructor:
-A full list of the kwargs accepted, and their value ranges, consult
-https://xgboost.readthedocs.io/en/latest/parameter.html.
+    XGBoostClassifier(; kwargs...)
+
+The XGBoost model for targets with `FiniteOrderedFactor` or
+`Multiclass` scitype (including `Binary=Multiclass{2}`). Gives
+probabilistic predictions. For admissible `kwargs`, see
+[https://xgboost.readthedocs.io/en/latest/parameter.html](https://xgboost.readthedocs.io/en/latest/parameter.html).
+
+See also: XGBoostCount, XGBoostRegressor
+
 """
 function XGBoostClassifier(
     ;num_round=1
@@ -517,9 +529,9 @@ function XGBoostClassifier(
     ,feature_selector="cyclic"
     ,top_k=0
     ,tweedie_variance_power=1.5
-    ,objective=":automatic"
+    ,objective="automatic"
     ,base_score=0.5
-    ,eval_metric="rmse"
+    ,eval_metric="mlogloss"
     ,seed=0
     ,watchlist=[])
 
@@ -570,45 +582,35 @@ end
 
 function MLJBase.clean!(model::XGBoostClassifier)
     warning = ""
-    if(!(model.objective ==":automatic"))
-            warning *="\n objective function is more suited to :automatic"
-            model.objective=":automatic"
+    if(!(model.objective =="automatic"))
+            warning *="Changing objective to \"automatic\", the only supported value. "
+            model.objective="automatic"
     end
     return warning
 end
 
-
-
-
-
-
-#> The following optional method (the fallback does nothing, returns
-#> empty warning) is called by the constructor above but also by the
-#> fit methods below:
-
-#> A required `fit` method returns `fitresult, cache, report`. (Return
-#> `cache=nothing` unless you are overloading `update`)
-
 function MLJBase.fit(model::XGBoostClassifier
-             , verbosity::Int     #> must be here even if unsupported in pkg
-             , X
-             , y)
-             Xmatrix = MLJBase.matrix(X)
-             classes = levels(y) # *all* levels in pool of y, not just observed ones
-             num_class = length(classes)
-             decoder = MLJBase.CategoricalDecoder(y, Int)
-             y_plain = MLJBase.transform(decoder, y)
-             if(num_class==2)
-                 model.objective="binary:logistic"
-             else
-                 model.objective="multi:softprob"
-             end
-             @show(num_class)
-             @show(model.objective)
-             silent =
-                 verbosity > 0 ?  1 : 1
-                 #classifier case currently doesn't accept different silent, check
+                     , verbosity::Int     #> must be here even if unsupported in pkg
+                     , X
+                     , y)
+    Xmatrix = MLJBase.matrix(X)
+    classes = levels(y) # *all* levels in pool of y, not just observed ones
+    num_class = length(classes)
+    decoder = MLJBase.CategoricalDecoder(y, Int, true) # start_at_zero=true
+    y_plain = MLJBase.transform(decoder, y)
 
+    # an idiosynchrony of xgboost is that num_class=1 for binary case
+    if(num_class==2)
+        objective="binary:logistic"
+        y_plain = convert(Array{Bool}, y_plain)
+        num_class = 1 # idiosynchony of XGBoost
+    else
+        objective="multi:softprob"
+    end
+    silent =
+        verbosity > 0 ?  false : true
+    #classifier case currently doesn't accept different silent, check
+    
     result = XGBoost.xgboost(Xmatrix, label=y_plain
                                , model.num_round
                                , booster = model.booster
@@ -642,7 +644,7 @@ function MLJBase.fit(model::XGBoostClassifier
                                , feature_selector = model.feature_selector
                                , top_k = model.top_k
                                , tweedie_variance_power = model.tweedie_variance_power
-                               , objective = model.objective
+                               , objective = objective
                                , base_score = model.base_score
                                , eval_metric=model.eval_metric
                                , seed = model.seed
@@ -650,10 +652,6 @@ function MLJBase.fit(model::XGBoostClassifier
                                , num_class=num_class)
 
     fitresult = (result, decoder)
-
-    #> return package-specific statistics (eg, feature rankings,
-    #> internal estimates of generalization error) in `report`, which
-    #> should be `nothing` or a dictionary keyed on symbols.
 
     cache = nothing
     report = nothing
@@ -667,28 +665,33 @@ function MLJBase.predict(model::XGBoostClassifier
         , fitresult
         , Xnew)
 
-    result,decoder = fitresult
+    result, decoder = fitresult
     Xmatrix = MLJBase.matrix(Xnew)
-    prediction = XGBoost.predict(result, Xmatrix)
-    cols = length((decoder.pool).levels)
-    rows = Int(length(prediction)/cols)
-    preds = reshape(prediction,cols,rows)
-    #return MLJBase.UnivariateNominal(decoder,prediction)
-    result=[]
-    for i=1:rows
-        single = preds[:,i]
-        d = MLJBase.UnivariateNominal(levels(decoder), single)
-        result=[result;d]
+    XGBpredictions = XGBoost.predict(result, Xmatrix)
+
+    nlevels = length(levels(decoder))
+    all_levels = MLJBase.inverse_transform(decoder, collect(0:nlevels-1)) 
+    npatterns = MLJBase.nrows(Xnew)
+
+    if nlevels == 2 
+        true_class_probabilities = reshape(XGBpredictions, 1, npatterns)
+        false_class_probabilities = 1 .- true_class_probabilities
+        XGBpredictions = vcat(false_class_probabilities, true_class_probabilities)
     end
-    return result
+
+    prediction_probabilities = reshape(XGBpredictions, nlevels, npatterns)
+    
+    predictions = [MLJBase.UnivariateNominal(all_levels,
+                                             prediction_probabilities[:,i])
+                   for i in 1:npatterns]
+
+    return predictions
 end
 
 
-
-
+## METADATA
 
 XGTypes=Union{XGBoostRegressor,XGBoostCount,XGBoostClassifier}
-
 
 MLJBase.package_name(::Type{<:XGTypes}) = "XGBoost"
 MLJBase.package_uuid(::Type{<:XGTypes}) = "009559a3-9522-5dbb-924b-0b6ed2b22bb9"
@@ -698,19 +701,13 @@ MLJBase.is_pure_julia(::Type{<:XGTypes}) = false
 MLJBase.load_path(::Type{<:XGBoostRegressor}) = "MLJModels.XGBoost_.XGBoostRegressor"
 MLJBase.input_scitypes(::Type{<:XGBoostRegressor}) = MLJBase.Continuous
 MLJBase.target_scitype(::Type{<:XGBoostRegressor}) = MLJBase.Continuous
-MLJBase.input_is_multivariate(::Type{<:XGBoostRegressor}) = true
-
 
 MLJBase.load_path(::Type{<:XGBoostCount}) = "MLJModels.XGBoost_.XGBoostCount"
 MLJBase.input_scitypes(::Type{<:XGBoostCount}) = MLJBase.Continuous
 MLJBase.target_scitype(::Type{<:XGBoostCount}) = MLJBase.Count
-MLJBase.input_is_multivariate(::Type{<:XGBoostCount}) = true
 
-
-MLJBase.load_path(::Type{<:XGBoostClassifier}) = "MLJModels.XGBoost_.XGBoostCount"
+MLJBase.load_path(::Type{<:XGBoostClassifier}) = "MLJModels.XGBoost_.XGBoostClassifier"
 MLJBase.input_scitypes(::Type{<:XGBoostClassifier}) = MLJBase.Continuous
 MLJBase.target_scitype(::Type{<:XGBoostClassifier}) = Union{MLJBase.Multiclass,MLJBase.FiniteOrderedFactor}
-MLJBase.input_is_multivariate(::Type{<:XGBoostClassifier}) = true
-
 
 end
