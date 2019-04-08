@@ -33,6 +33,10 @@ end
     @test include("NaiveBayes.jl")
 end
 
+# brittle hack b/s of https://github.com/dmlc/XGBoost.jl/issues/58:
+using Pkg
+Pkg.add(PackageSpec(url="https://github.com/dmlc/XGBoost.jl"))
+
 @testset "XGBoost" begin
    @test include("XGBoost.jl")
- end
+end
