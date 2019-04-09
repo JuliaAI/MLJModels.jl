@@ -7,6 +7,8 @@ using CategoricalArrays
 import ..XGBoost
 # import XGBoost
 
+generate_seed() = mod(round(Int, time()*1e8), 10000)
+
 
 ## REGRESSOR
 
@@ -50,12 +52,14 @@ mutable struct XGBoostRegressor{Any} <:MLJBase.Deterministic{Any}
 end
 
 """
-    XGBoostRegressor(; objective="linear", kwargs...)
+    XGBoostRegressor(; objective="linear", seed=0, kwargs...)
 
 The XGBoost model for targets with `Continuous` scitype. Gives
-deterministic predictions. Admissible values for `objective` are
+deterministic (point) predictions. Admissible values for `objective` are
 "linear", "gamma" or "tweedie". For other `kwargs`, see
 [https://xgboost.readthedocs.io/en/latest/parameter.html](https://xgboost.readthedocs.io/en/latest/parameter.html).
+
+For a time-dependent random seed, use `seed=-1`. 
 
 See also: XGBoostCount, XGBoostClassifier
 
@@ -173,6 +177,9 @@ function MLJBase.fit(model::XGBoostRegressor
 
     objective =
         model.objective in ["linear", "gamma", "tweedie"] ? "reg:"*model.objective : model.objective
+
+    seed =
+        model.seed == -1 ? generate_seed() : model.seed
     
     fitresult = XGBoost.xgboost(dm
                                , model.num_round
@@ -210,7 +217,7 @@ function MLJBase.fit(model::XGBoostRegressor
                                , objective = objective
                                , base_score = model.base_score
                                , eval_metric=model.eval_metric
-                               , seed = model.seed
+                               , seed = seed
                                , watchlist=model.watchlist)
 
     #> return package-specific statistics (eg, feature rankings,
@@ -276,11 +283,13 @@ end
 
 
 """
-    XGBoostCount(; kwargs...)
+    XGBoostCount(; seed=0, kwargs...)
 
 The XGBoost model for targets with `Count` scitype. Gives
-deterministic predictions. For admissible `kwargs`, see
+deterministic (point) predictions. For admissible `kwargs`, see
 [https://xgboost.readthedocs.io/en/latest/parameter.html](https://xgboost.readthedocs.io/en/latest/parameter.html).
+
+For a time-dependent random seed, use `seed=-1`. 
 
 See also: XGBoostRegressor, XGBoostClassifier
 
@@ -387,6 +396,9 @@ function MLJBase.fit(model::XGBoostCount
     Xmatrix = MLJBase.matrix(X)
     dm = XGBoost.DMatrix(Xmatrix,label=y)
 
+    seed =
+        model.seed == -1 ? generate_seed() : model.seed
+
     fitresult = XGBoost.xgboost(dm
                                , model.num_round
                                , booster = model.booster
@@ -423,7 +435,7 @@ function MLJBase.fit(model::XGBoostCount
                                , objective = "count:poisson"
                                , base_score = model.base_score
                                , eval_metric=model.eval_metric
-                               , seed = model.seed
+                               , seed = seed
                                , watchlist=model.watchlist)
 
     #> return package-specific statistics (eg, feature rankings,
@@ -487,12 +499,14 @@ mutable struct XGBoostClassifier{Any} <:MLJBase.Probabilistic{Any}
 end
 
 """
-    XGBoostClassifier(; kwargs...)
+    XGBoostClassifier(; seed=0, kwargs...)
 
 The XGBoost model for targets with `FiniteOrderedFactor` or
 `Multiclass` scitype (including `Binary=Multiclass{2}`). Gives
 probabilistic predictions. For admissible `kwargs`, see
 [https://xgboost.readthedocs.io/en/latest/parameter.html](https://xgboost.readthedocs.io/en/latest/parameter.html).
+
+For a time-dependent random seed, use `seed=-1`. 
 
 See also: XGBoostCount, XGBoostRegressor
 
@@ -607,9 +621,12 @@ function MLJBase.fit(model::XGBoostClassifier
     else
         objective="multi:softprob"
     end
+
     silent =
         verbosity > 0 ?  false : true
-    #classifier case currently doesn't accept different silent, check
+
+    seed =
+        model.seed == -1 ? generate_seed() : model.seed
     
     result = XGBoost.xgboost(Xmatrix, label=y_plain
                                , model.num_round
@@ -647,7 +664,7 @@ function MLJBase.fit(model::XGBoostClassifier
                                , objective = objective
                                , base_score = model.base_score
                                , eval_metric=model.eval_metric
-                               , seed = model.seed
+                               , seed = seed
                                , watchlist=model.watchlist
                                , num_class=num_class)
 
