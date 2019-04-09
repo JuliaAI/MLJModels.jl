@@ -6,6 +6,7 @@ import MLJModels
 import XGBoost
 using CategoricalArrays
 using MLJModels.XGBoost_
+using Random: seed!
 
 @test_logs (:warn, "Only \"linear\", \"gamma\" and \"tweedie\" objectives are supported . Setting objective=\"linear\". ") XGBoostRegressor(objective="wrong")
 @test_logs (:warn, "Changing objective to \"automatic\", the only supported value. ") XGBoostClassifier(objective="wrong")
@@ -14,7 +15,6 @@ using MLJModels.XGBoost_
 
 ## REGRESSOR
 
-using Random: seed!
 seed!(0)
 plain_regressor = XGBoostRegressor()
 n,m = 10^3, 5 ;
@@ -54,6 +54,8 @@ cpred = predict(count_regressor, fitresultC, Xtable);
 @test fitresultC isa MLJBase.fitresult_type(count_regressor)
 info(XGBoostCount)
 
+
+## CLASSIFIER
 
 plain_classifier = XGBoostClassifier(num_round=100, seed=0)
 

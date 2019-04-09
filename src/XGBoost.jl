@@ -610,14 +610,23 @@ function MLJBase.fit(model::XGBoostClassifier
     Xmatrix = MLJBase.matrix(X)
     classes = levels(y) # *all* levels in pool of y, not just observed ones
     num_class = length(classes)
+
+    eval_metric = model.eval_metric
+    if num_class == 2 && eval_metric == "mlogloss"
+        eval_metric = "logloss"
+    end
+    if num_class > 2 && eval_metric == "logloss"
+        eval_metric = "mlogloss"
+    end
+    
     decoder = MLJBase.CategoricalDecoder(y, Int, true) # start_at_zero=true
     y_plain = MLJBase.transform(decoder, y)
 
-    # an idiosynchrony of xgboost is that num_class=1 for binary case
+    # An idiosynchrony of xgboost is that num_class=1 for binary case.
     if(num_class==2)
         objective="binary:logistic"
         y_plain = convert(Array{Bool}, y_plain)
-        num_class = 1 # idiosynchony of XGBoost
+        num_class = 1 
     else
         objective="multi:softprob"
     end
@@ -663,7 +672,7 @@ function MLJBase.fit(model::XGBoostClassifier
                                , tweedie_variance_power = model.tweedie_variance_power
                                , objective = objective
                                , base_score = model.base_score
-                               , eval_metric=model.eval_metric
+                               , eval_metric=eval_metric
                                , seed = seed
                                , watchlist=model.watchlist
                                , num_class=num_class)
