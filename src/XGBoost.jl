@@ -13,22 +13,22 @@ generate_seed() = mod(round(Int, time()*1e8), 10000)
 ## REGRESSOR
 
 mutable struct XGBoostRegressor{Any} <:MLJBase.Deterministic{Any}
-    num_round::Integer
+    num_round::Int
     booster::String
-    disable_default_eval_metric::Real
-    eta::Real
-    gamma::Real
-    max_depth::Real
-    min_child_weight::Real
-    max_delta_step::Real
-    subsample::Real
-    colsample_bytree::Real
-    colsample_bylevel::Real
-    lambda::Real
-    alpha::Real
+    disable_default_eval_metric::Int
+    eta::Float64
+    gamma::Float64
+    max_depth::Int
+    min_child_weight::Float64
+    max_delta_step::Float64
+    subsample::Float64
+    colsample_bytree::Float64
+    colsample_bylevel::Float64
+    lambda::Float64
+    alpha::Float64
     tree_method::String
-    sketch_eps::Real
-    scale_pos_weight::Real
+    sketch_eps::Float64
+    scale_pos_weight::Float64
     updater::String
     refresh_leaf::Union{Int,Bool}
     process_type::String
@@ -38,17 +38,16 @@ mutable struct XGBoostRegressor{Any} <:MLJBase.Deterministic{Any}
     predictor::String
     sample_type::String
     normalize_type::String
-    rate_drop::Real
+    rate_drop::Float64
     one_drop
-    skip_drop::Real
+    skip_drop::Float64
     feature_selector::String
-    top_k::Real
-    tweedie_variance_power::Real
+    top_k::Int
+    tweedie_variance_power::Float64
     objective
-    base_score::Real
+    base_score::Float64
     eval_metric
-    seed::Integer
-    watchlist
+    seed::Int
 end
 
 """
@@ -99,8 +98,7 @@ function XGBoostRegressor(
     ,objective="reg:linear"
     ,base_score=0.5
     ,eval_metric="rmse"
-    ,seed=0
-    ,watchlist=[])
+    ,seed=0)
 
     model = XGBoostRegressor{Any}(
     num_round
@@ -137,8 +135,7 @@ function XGBoostRegressor(
     ,objective
     ,base_score
     ,eval_metric
-    ,seed
-    ,watchlist)
+    ,seed)
 
      message = MLJBase.clean!(model)           #> future proof by including these
      isempty(message) || @warn message #> two lines even if no clean! defined below
@@ -217,8 +214,7 @@ function MLJBase.fit(model::XGBoostRegressor
                                , objective = objective
                                , base_score = model.base_score
                                , eval_metric=model.eval_metric
-                               , seed = seed
-                               , watchlist=model.watchlist)
+                               , seed = seed)
 
     #> return package-specific statistics (eg, feature rankings,
     #> internal estimates of generalization error) in `report`, which
@@ -243,22 +239,22 @@ end
 ## COUNT REGRESSOR
 
 mutable struct XGBoostCount{Any} <:MLJBase.Deterministic{Any}
-    num_round::Integer
+    num_round::Int
     booster::String
-    disable_default_eval_metric::Real
-    eta::Real
-    gamma::Real
-    max_depth::Real
-    min_child_weight::Real
-    max_delta_step::Real
-    subsample::Real
-    colsample_bytree::Real
-    colsample_bylevel::Real
-    lambda::Real
-    alpha::Real
+    disable_default_eval_metric::Int
+    eta::Float64
+    gamma::Float64
+    max_depth::Int
+    min_child_weight::Float64
+    max_delta_step::Float64
+    subsample::Float64
+    colsample_bytree::Float64
+    colsample_bylevel::Float64
+    lambda::Float64
+    alpha::Float64
     tree_method::String
-    sketch_eps::Real
-    scale_pos_weight::Real
+    sketch_eps::Float64
+    scale_pos_weight::Float64
     updater::String
     refresh_leaf::Union{Int,Bool}
     process_type::String
@@ -268,17 +264,16 @@ mutable struct XGBoostCount{Any} <:MLJBase.Deterministic{Any}
     predictor::String
     sample_type::String
     normalize_type::String
-    rate_drop::Real
+    rate_drop::Float64
     one_drop
-    skip_drop::Real
+    skip_drop::Float64
     feature_selector::String
-    top_k::Real
-    tweedie_variance_power::Real
+    top_k::Int
+    tweedie_variance_power::Float64
     objective
-    base_score::Real
+    base_score::Float64
     eval_metric
-    seed::Integer
-    watchlist
+    seed::Int
 end
 
 
@@ -329,8 +324,7 @@ function XGBoostCount(
     ,objective="count:poisson"
     ,base_score=0.5
     ,eval_metric="rmse"
-    ,seed=0
-    ,watchlist=[])
+    ,seed=0)
 
     model = XGBoostCount{Any}(
     num_round
@@ -367,8 +361,7 @@ function XGBoostCount(
     ,objective
     ,base_score
     ,eval_metric
-    ,seed
-    ,watchlist)
+    ,seed)
 
      message = MLJBase.clean!(model)    
      isempty(message) || @warn message 
@@ -435,8 +428,7 @@ function MLJBase.fit(model::XGBoostCount
                                , objective = "count:poisson"
                                , base_score = model.base_score
                                , eval_metric=model.eval_metric
-                               , seed = seed
-                               , watchlist=model.watchlist)
+                               , seed = seed)
 
     #> return package-specific statistics (eg, feature rankings,
     #> internal estimates of generalization error) in `report`, which
@@ -460,22 +452,22 @@ end
 ## CLASSIFIER
 
 mutable struct XGBoostClassifier{Any} <:MLJBase.Probabilistic{Any}
-    num_round::Integer
+    num_round::Int
     booster::String
-    disable_default_eval_metric::Real
-    eta::Real
-    gamma::Real
-    max_depth::Real
-    min_child_weight::Real
-    max_delta_step::Real
-    subsample::Real
-    colsample_bytree::Real
-    colsample_bylevel::Real
-    lambda::Real
-    alpha::Real
+    disable_default_eval_metric::Int
+    eta::Float64
+    gamma::Float64
+    max_depth::Int
+    min_child_weight::Float64
+    max_delta_step::Float64
+    subsample::Float64
+    colsample_bytree::Float64
+    colsample_bylevel::Float64
+    lambda::Float64
+    alpha::Float64
     tree_method::String
-    sketch_eps::Real
-    scale_pos_weight::Real
+    sketch_eps::Float64
+    scale_pos_weight::Float64
     updater::String
     refresh_leaf::Union{Int,Bool}
     process_type::String
@@ -485,17 +477,16 @@ mutable struct XGBoostClassifier{Any} <:MLJBase.Probabilistic{Any}
     predictor::String
     sample_type::String
     normalize_type::String
-    rate_drop::Real
+    rate_drop::Float64
     one_drop
-    skip_drop::Real
+    skip_drop::Float64
     feature_selector::String
-    top_k::Real
-    tweedie_variance_power::Real
+    top_k::Int
+    tweedie_variance_power::Float64
     objective
-    base_score::Real
+    base_score::Float64
     eval_metric
-    seed::Integer
-    watchlist
+    seed::Int
 end
 
 """
@@ -546,8 +537,7 @@ function XGBoostClassifier(
     ,objective="automatic"
     ,base_score=0.5
     ,eval_metric="mlogloss"
-    ,seed=0
-    ,watchlist=[])
+    ,seed=0)
 
     model = XGBoostClassifier{Any}(
     num_round
@@ -584,8 +574,7 @@ function XGBoostClassifier(
     ,objective
     ,base_score
     ,eval_metric
-    ,seed
-    ,watchlist)
+    ,seed)
 
      message = MLJBase.clean!(model)           #> future proof by including these
      isempty(message) || @warn message #> two lines even if no clean! defined below
@@ -674,7 +663,6 @@ function MLJBase.fit(model::XGBoostClassifier
                                , base_score = model.base_score
                                , eval_metric=eval_metric
                                , seed = seed
-                               , watchlist=model.watchlist
                                , num_class=num_class)
 
     fitresult = (result, decoder)
