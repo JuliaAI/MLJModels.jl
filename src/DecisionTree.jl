@@ -262,11 +262,11 @@ MLJBase.is_pure_julia(::Type{<:DTTypes}) = true
 MLJBase.load_path(::Type{<:DecisionTreeClassifier}) = "MLJModels.DecisionTree_.DecisionTreeClassifier"
 MLJBase.load_path(::Type{<:DecisionTreeRegressor}) = "MLJModels.DecisionTree_.DecisionTreeRegressor"
 
-MLJBase.input_scitypes(::Type{<:DecisionTreeClassifier}) = MLJBase.Continuous
-MLJBase.input_scitypes(::Type{<:DecisionTreeRegressor}) = MLJBase.Continuous
+MLJBase.input_scitype_union(::Type{<:DecisionTreeClassifier}) = MLJBase.Continuous
+MLJBase.input_scitype_union(::Type{<:DecisionTreeRegressor}) = MLJBase.Continuous
 
-MLJBase.target_scitype(::Type{<:DecisionTreeClassifier}) = Union{MLJBase.Multiclass,MLJBase.FiniteOrderedFactor}
-MLJBase.target_scitype(::Type{<:DecisionTreeRegressor}) = MLJBase.Continuous
+MLJBase.target_scitype_union(::Type{<:DecisionTreeClassifier}) = Union{MLJBase.Multiclass,MLJBase.FiniteOrderedFactor}
+MLJBase.target_scitype_union(::Type{<:DecisionTreeRegressor}) = MLJBase.Continuous
 
 MLJBase.input_is_multivariate(::Type{<:DecisionTreeClassifier}) = true
 MLJBase.input_is_multivariate(::Type{<:DecisionTreeRegressor}) = true

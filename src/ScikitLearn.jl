@@ -638,10 +638,10 @@ MLJBase.package_name(::Type{<:SVM}) = "ScikitLearn"
 MLJBase.package_uuid(::Type{<:SVM}) = "3646fa90-6ef7-5e7e-9f22-8aca16db6324"
 MLJBase.is_pure_julia(::Type{<:SVM}) = false
 MLJBase.package_url(::Type{<:SVM}) = "https://github.com/cstjean/ScikitLearn.jl"
-MLJBase.input_scitypes(::Type{<:SVM}) = MLJBase.Continuous
+MLJBase.input_scitype_union(::Type{<:SVM}) = MLJBase.Continuous
 MLJBase.input_is_multivariate(::Type{<:SVM}) = true
-MLJBase.target_scitype(::Type{<:SVMC}) = Union{MLJBase.Multiclass,MLJBase.FiniteOrderedFactor}
-MLJBase.target_scitype(::Type{<:SVMR}) = MLJBase.Continuous
+MLJBase.target_scitype_union(::Type{<:SVMC}) = Union{MLJBase.Multiclass,MLJBase.FiniteOrderedFactor}
+MLJBase.target_scitype_union(::Type{<:SVMR}) = MLJBase.Continuous
 MLJBase.input_is_multivariate(::Type{<:SVM}) = true
 
 end # module

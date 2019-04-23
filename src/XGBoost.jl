@@ -713,15 +713,15 @@ MLJBase.package_url(::Type{<:XGTypes}) = "https://github.com/dmlc/XGBoost.jl"
 MLJBase.is_pure_julia(::Type{<:XGTypes}) = false
 
 MLJBase.load_path(::Type{<:XGBoostRegressor}) = "MLJModels.XGBoost_.XGBoostRegressor"
-MLJBase.input_scitypes(::Type{<:XGBoostRegressor}) = MLJBase.Continuous
-MLJBase.target_scitype(::Type{<:XGBoostRegressor}) = MLJBase.Continuous
+MLJBase.input_scitype_union(::Type{<:XGBoostRegressor}) = MLJBase.Continuous
+MLJBase.target_scitype_union(::Type{<:XGBoostRegressor}) = MLJBase.Continuous
 
 MLJBase.load_path(::Type{<:XGBoostCount}) = "MLJModels.XGBoost_.XGBoostCount"
-MLJBase.input_scitypes(::Type{<:XGBoostCount}) = MLJBase.Continuous
-MLJBase.target_scitype(::Type{<:XGBoostCount}) = MLJBase.Count
+MLJBase.input_scitype_union(::Type{<:XGBoostCount}) = MLJBase.Continuous
+MLJBase.target_scitype_union(::Type{<:XGBoostCount}) = MLJBase.Count
 
 MLJBase.load_path(::Type{<:XGBoostClassifier}) = "MLJModels.XGBoost_.XGBoostClassifier"
-MLJBase.input_scitypes(::Type{<:XGBoostClassifier}) = MLJBase.Continuous
-MLJBase.target_scitype(::Type{<:XGBoostClassifier}) = Union{MLJBase.Multiclass,MLJBase.FiniteOrderedFactor}
+MLJBase.input_scitype_union(::Type{<:XGBoostClassifier}) = MLJBase.Continuous
+MLJBase.target_scitype_union(::Type{<:XGBoostClassifier}) = Union{MLJBase.Multiclass,MLJBase.FiniteOrderedFactor}
 
 end

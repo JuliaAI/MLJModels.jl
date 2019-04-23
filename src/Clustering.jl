@@ -155,9 +155,9 @@ MLJBase.package_url(::Type{<:KMeans}) = "https://github.com/JuliaStats/Clusterin
 MLJBase.package_name(::Type{<:KMeans}) = "Clustering"
 MLJBase.package_uuid(::Type{<:KMeans}) = "aaaa29a8-35af-508c-8bc3-b662a17a0fe5"
 MLJBase.is_pure_julia(::Type{<:KMeans}) = true
-MLJBase.input_scitypes(::Type{<:KMeans}) = MLJBase.Continuous
+MLJBase.input_scitype_union(::Type{<:KMeans}) = MLJBase.Continuous
 MLJBase.input_is_multivariate(::Type{<:KMeans}) = true
-MLJBase.output_scitypes(::Type{<:KMeans}) = MLJBase.Continuous
+MLJBase.output_scitype_union(::Type{<:KMeans}) = MLJBase.Continuous
 MLJBase.output_is_multivariate(::Type{<:KMeans}) = true
 
 MLJBase.load_path(::Type{<:KMedoids}) = "MLJModels.Clustering_.KMedoids" # lazy-loaded from MLJ
@@ -165,9 +165,9 @@ MLJBase.package_url(::Type{<:KMedoids}) = MLJBase.package_url(KMeans)
 MLJBase.package_name(::Type{<:KMedoids}) = MLJBase.package_name(KMeans)
 MLJBase.package_uuid(::Type{<:KMedoids}) = MLJBase.package_uuid(KMeans)
 MLJBase.is_pure_julia(::Type{<:KMedoids}) = true
-MLJBase.input_scitypes(::Type{<:KMedoids}) = MLJBase.Continuous
+MLJBase.input_scitype_union(::Type{<:KMedoids}) = MLJBase.Continuous
 MLJBase.input_is_multivariate(::Type{<:KMedoids}) = true
-MLJBase.output_scitypes(::Type{<:KMedoids}) = MLJBase.Continuous
+MLJBase.output_scitype_union(::Type{<:KMedoids}) = MLJBase.Continuous
 MLJBase.output_is_multivariate(::Type{<:KMedoids}) = true
 
 end # module
