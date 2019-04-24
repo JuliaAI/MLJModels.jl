@@ -13,6 +13,9 @@ Pkg = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
 Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 Requires = "ae029012-a4dd-5104-9daa-d747884805df"
 
+[compat]
+MLJBase = "0.1.1"
+
 [extras]
 Clustering = "aaaa29a8-35af-508c-8bc3-b662a17a0fe5"
 DecisionTree = "7806a523-6efd-50cb-b5f6-3fa6f1930dbb"
