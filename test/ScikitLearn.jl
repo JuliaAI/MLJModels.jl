@@ -85,6 +85,10 @@ Lrpred = predict(linear_regressor, fitresultRL, selectrows(X, test));
 @test norm(nurpred - y[test])/sqrt(length(y)) < 0.2
 @test norm(Lrpred - y[test])/sqrt(length(y)) < 0.2
 
+enet = ElasticNet()
+fitresultE, cacheE, reportE = MLJBase.fit(enet, 1,
+                                          selectrows(X, train), ycat[train]);
+
 info(SVMClassifier)
 info(SVMNuClassifier)
 info(SVMLClassifier)
