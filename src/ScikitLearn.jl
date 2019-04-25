@@ -4,6 +4,7 @@ module ScikitLearn_
 export SVMClassifier, SVMRegressor
 export SVMNuClassifier, SVMNuRegressor
 export SVMLClassifier, SVMLRegressor
+export ElasticNet, ElasticNetCV
 
 #> for all Supervised models:
 import MLJBase
@@ -21,17 +22,17 @@ import ..ScikitLearn
 @sk_import svm: SVR
 @sk_import svm: NuSVR
 @sk_import svm: LinearSVR
+@sk_import linear_model : ElasticNet
+@sk_import linear_model : ElasticNetCV
+
 
 
 """
     SVMClassifier(; kwargs...)
-
 C-Support Vector classifier from
 [https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html#sklearn.svm.SVC](https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html#sklearn.svm.SVC). Implemented hyperparameters as per
 package documentation cited above.
-
 See also, SVMNuClassifier, SVMLClassifier, SVMRegressor
-
 """
 mutable struct SVMClassifier <: MLJBase.Deterministic{Any}
     C::Float64
@@ -104,13 +105,10 @@ end
 
 """
     SVMNuClassifier(; kwargs...)
-
 NU-Support Vector classifier from
 [https://scikit-learn.org/stable/modules/generated/sklearn.svm.NuSVC.html#sklearn.svm.NuSVC](https://scikit-learn.org/stable/modules/generated/sklearn.svm.NuSVC.html#sklearn.svm.NuSVC). Implemented hyperparameters as per
 package documentation cited above.
-
 See also, SVMClassifier, SVMLClassifier, SVMNuRegressor
-
 """
 mutable struct SVMNuClassifier <: MLJBase.Deterministic{Any}
     nu::Float64
@@ -182,13 +180,10 @@ end
 
 """
     SVMLClassifier(; kwargs...)
-
 Linear-support Vector classifier from
 [https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html#sklearn.svm.LinearSVC](https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html#sklearn.svm.LinearSVC). Implemented hyperparameters as per
 package documentation cited above.
-
 See also, SVMClassifier, SVMNuClassifier, SVMLRegressor
-
 """
 
 mutable struct SVMLClassifier <: MLJBase.Deterministic{Any}
@@ -248,13 +243,10 @@ end
 
 """
     SVMRegressor(; kwargs...)
-
 Epsilon-Support Vector Regression from
 [https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVR.html#sklearn.svm.SVR](https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVR.html#sklearn.svm.SVR). Implemented hyperparameters as per
 package documentation cited above.
-
 See also, SVMClassifier, SVMNuRegressor, SVMLRegressor
-
 """
 mutable struct SVMRegressor <: MLJBase.Deterministic{Any}
     C::Float64
@@ -318,13 +310,10 @@ end
 
 """
     SVMNuRegressor(; kwargs...)
-
 Nu Support Vector Regression from
 [https://scikit-learn.org/stable/modules/generated/sklearn.svm.NuSVR.html#sklearn.svm.NuSVR](https://scikit-learn.org/stable/modules/generated/sklearn.svm.NuSVR.html#sklearn.svm.NuSVR). Implemented hyperparameters as per
 package documentation cited above.
-
 See also, SVMNuClassifier, SVMRegressor, SVMLRegressor
-
 """
 
 mutable struct SVMNuRegressor <: MLJBase.Deterministic{Any}
@@ -389,13 +378,10 @@ end
 
 """
     SVMLRegressor(; kwargs...)
-
 Linear Support Vector Regression from
 [https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVR.html#sklearn.svm.LinearSVR](https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVR.html#sklearn.svm.LinearSVR). Implemented hyperparameters as per
 package documentation cited above.
-
 See also, SVMRegressor, SVMNuRegressor, SVMLClassifier
-
 """
 
 mutable struct SVMLRegressor <: MLJBase.Deterministic{Any}
@@ -622,6 +608,99 @@ function MLJBase.predict(model::SVMR
     xnew = MLJBase.matrix(Xnew)
     prediction = ScikitLearn.predict(fitresult,xnew)
     return prediction
+end
+
+
+"""
+   ElasticNet(; kwargs...)
+ElasticNet from
+[https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.ElasticNet.html](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.ElasticNet.html). Implemented hyperparameters as per
+package documentation cited above.
+
+"""
+mutable struct ElasticNet <: MLJBase.Deterministic{Any}
+    alpha::Float64
+    l1_ratio::Float64
+    fit_intercept::Bool
+    normalize::Bool
+    precompute::Bool
+    max_iter::Int
+    copy_X::Bool
+    tol::Float64
+    warm_start::Bool
+    positive::Bool
+    selection::String
+end
+
+# constructor:
+#> all arguments are kwargs with a default value
+function ElasticNet(
+    ;alpha=1.0
+    ,l1_ratio = 0.5
+    ,fit_intercept = true
+    ,normalize=false
+    ,precompute=false
+    ,max_iter=1000
+    ,copy_X=true
+    ,tol=0.0001
+    ,warm_start=false
+    ,positive=false
+    ,selection="cyclic")
+
+    model = ElasticNet(
+        alpha
+        , l1_ratio
+        , fit_intercept
+        , normalize
+        , precompute
+        , max_iter
+        , copy_X
+        , tol
+        , warm_start
+        , positive
+        , selection
+        )
+
+    message = MLJBase.clean!(model)       #> future proof by including these
+    isempty(message) || @warn message #> two lines even if no clean! defined below
+
+    return model
+end
+
+
+function MLJBase.clean!(model::ElasticNet)
+    warning = ""
+    return warning
+end
+
+function MLJBase.fit(model::ElasticNet
+             , verbosity::Int   #> must be here (and typed) even if not used (as here)
+             , X
+             , y)
+
+    Xmatrix = MLJBase.matrix(X)
+    decoder = MLJBase.CategoricalDecoder(y)
+    y_plain = MLJBase.transform(decoder, y)
+
+    cache = ElasticNet(alpha=model.alpha,
+            l1_ratio=model.l1_ratio,
+            fit_intercept=model.fit_intercept,
+            normalize=model.normalize,
+            precompute=model.precompute,
+            max_iter=model.max_iter,
+	    copy_X=model.copy_X,
+            tol=model.tol,
+            warm_start=model.warm_start,
+            positive=model.positive,
+	    model=model.selection
+    )
+
+    result = ScikitLearn.fit(cache,Xmatrix,y_plain)
+    fitresult = (result, decoder)
+    report = NamedTuple()
+
+    return fitresult, nothing, report
+
 end
 
 
