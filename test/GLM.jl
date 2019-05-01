@@ -13,7 +13,7 @@ using MLJModels.GLM_
 ###
 
 task = load_boston()
-X, y = task()
+X, y = task();
 
 train, test = partition(eachindex(y), 0.7)
 

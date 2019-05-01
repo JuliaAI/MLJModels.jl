@@ -33,7 +33,7 @@ package documentation cited above.
 See also, SVMNuClassifier, SVMLClassifier, SVMRegressor
 
 """
-mutable struct SVMClassifier <: MLJBase.Deterministic{Any}
+mutable struct SVMClassifier <: MLJBase.Deterministic
     C::Float64
     kernel::Union{String,Function}
     degree::Int
@@ -112,7 +112,7 @@ package documentation cited above.
 See also, SVMClassifier, SVMLClassifier, SVMNuRegressor
 
 """
-mutable struct SVMNuClassifier <: MLJBase.Deterministic{Any}
+mutable struct SVMNuClassifier <: MLJBase.Deterministic
     nu::Float64
     kernel::Union{String,Function}
     degree::Int
@@ -191,7 +191,7 @@ See also, SVMClassifier, SVMNuClassifier, SVMLRegressor
 
 """
 
-mutable struct SVMLClassifier <: MLJBase.Deterministic{Any}
+mutable struct SVMLClassifier <: MLJBase.Deterministic
     C::Float64
     loss::String
     dual::Bool
@@ -256,7 +256,7 @@ package documentation cited above.
 See also, SVMClassifier, SVMNuRegressor, SVMLRegressor
 
 """
-mutable struct SVMRegressor <: MLJBase.Deterministic{Any}
+mutable struct SVMRegressor <: MLJBase.Deterministic
     C::Float64
     kernel::Union{String,Function}
     degree::Int
@@ -327,7 +327,7 @@ See also, SVMNuClassifier, SVMRegressor, SVMLRegressor
 
 """
 
-mutable struct SVMNuRegressor <: MLJBase.Deterministic{Any}
+mutable struct SVMNuRegressor <: MLJBase.Deterministic
     nu::Float64
     C::Float64
     kernel::Union{String,Function}
@@ -398,7 +398,7 @@ See also, SVMRegressor, SVMNuRegressor, SVMLClassifier
 
 """
 
-mutable struct SVMLRegressor <: MLJBase.Deterministic{Any}
+mutable struct SVMLRegressor <: MLJBase.Deterministic
     C::Float64
     loss::String
     fit_intercept::Bool

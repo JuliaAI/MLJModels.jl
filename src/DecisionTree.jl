@@ -1,9 +1,9 @@
 #> This code implements the MLJ model interface for models in the
 #> DecisionTree.jl package. It is annotated so that it may serve as a
-#> template for other supervised models of type `Probabilistic`. The
-#> annotations, which begin with "#>", should be removed (but copy
-#> this file first!). See also the model interface specification at
-#> "doc/adding_new_models.md".
+#> template for other regressors of Deterministic type and classifiers
+#> of Probabilistic type. The annotations, which begin with "#>",
+#> should be removed (but copy this file first!). See also the model
+#> interface specification at "doc/adding_new_models.md".
 
 #> Note that all models need to "register" their location by setting
 #> `load_path(<:ModelType)` appropriately.
@@ -15,15 +15,11 @@ export DecisionTreeClassifier, DecisionTreeRegressor
 
 import MLJBase
 
-#> needed for all classifiers:
+#> needed for classifiers:
 using CategoricalArrays
 
 #> import package:
 import ..DecisionTree # strange syntax b/s we are lazy-loading
-
-# here T is target type, and the `Vector{T}` is for storing target levels:
-const DecisionTreeClassifierFitResultType{T} =
-    Tuple{Union{DecisionTree.Node{Float64,T}, DecisionTree.Leaf{T}}, Vector{T}}
 
 """
     DecisionTreeClassifer(; kwargs...)
@@ -37,8 +33,7 @@ For post-fit pruning, set `post-prune=true` and set
 package documentation cited above.
 
 """
-mutable struct DecisionTreeClassifier{T} <: MLJBase.Probabilistic{DecisionTreeClassifierFitResultType{T}}
-    target_type::Type{T}  # target is CategoricalArray{target_type}
+mutable struct DecisionTreeClassifier <: MLJBase.Probabilistic
     pruning_purity::Float64
     max_depth::Int
     min_samples_leaf::Int
@@ -50,11 +45,10 @@ mutable struct DecisionTreeClassifier{T} <: MLJBase.Probabilistic{DecisionTreeCl
     merge_purity_threshold::Float64
 end
 
-# constructor:
+# keywork constructor:
 #> all arguments are kwargs with a default value
 function DecisionTreeClassifier(
-    ; target_type=Int
-    , pruning_purity=1.0
+    ; pruning_purity=1.0
     , max_depth=-1
     , min_samples_leaf=1
     , min_samples_split=2
@@ -64,9 +58,8 @@ function DecisionTreeClassifier(
     , post_prune=false
     , merge_purity_threshold=0.9)
 
-    model = DecisionTreeClassifier{target_type}(
-        target_type
-        , pruning_purity
+    model = DecisionTreeClassifier(
+        pruning_purity
         , max_depth
         , min_samples_leaf
         , min_samples_split
@@ -111,7 +104,7 @@ package documentation cited above.
 
 """
 
-mutable struct DecisionTreeRegressor{Any} <: MLJBase.Deterministic{Any}
+mutable struct DecisionTreeRegressor <: MLJBase.Deterministic
     pruning_purity_threshold::Float64
     max_depth::Int
     min_samples_leaf::Int
@@ -132,7 +125,7 @@ function DecisionTreeRegressor(;
     , n_subfeatures=0
     , post_prune=false)
 
-    model = DecisionTreeRegressor{Any}(
+    model = DecisionTreeRegressor(
        pruning_purity_threshold
        , max_depth
        , min_samples_leaf
@@ -159,13 +152,10 @@ end
 
 #> A required `fit` method returns `fitresult, cache, report`. (Return
 #> `cache=nothing` unless you are overloading `update`)
-function MLJBase.fit(model::DecisionTreeClassifier{T2}
+function MLJBase.fit(model::DecisionTreeClassifier
              , verbosity::Int   #> must be here (and typed!!) even if not used (as here)
              , X
-             , y::CategoricalVector{T}) where {T,T2}
-
-    T == T2 || throw(ErrorException("Type, $T, of target incompatible "*
-                                    "with type, $T2, of $model."))
+             , y)
 
     Xmatrix = MLJBase.matrix(X)
 
@@ -207,7 +197,6 @@ function MLJBase.fit(model::DecisionTreeRegressor
 
     Xmatrix = MLJBase.matrix(X)
 
-    # is float. below really necessary?
     fitresult = DecisionTree.build_tree(float.(y)
 				   , Xmatrix
 				   , model.n_subfeatures
@@ -229,9 +218,9 @@ MLJBase.fitted_params(::DecisionTreeClassifier, fitresult) = fitresult[1]
 
 MLJBase.fitted_params(::DecisionTreeRegressor, fitresult) = fitresult[1]
 
-function MLJBase.predict(::DecisionTreeClassifier{T}
+function MLJBase.predict(::DecisionTreeClassifier
                      , fitresult
-                     , Xnew) where T
+                     , Xnew)
     Xmatrix = MLJBase.matrix(Xnew)
     tree, classes = fitresult
 
@@ -243,8 +232,7 @@ function MLJBase.predict(::DecisionTreeClassifier{T}
             for i in 1:size(y_probabilities, 1)]
 end
 
-
-function MLJBase.predict(model::DecisionTreeRegressor{Any}
+function MLJBase.predict(model::DecisionTreeRegressor
                      , fitresult
                      , Xnew)
     Xmatrix = MLJBase.matrix(Xnew)

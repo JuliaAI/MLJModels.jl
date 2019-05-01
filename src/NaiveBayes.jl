@@ -6,7 +6,7 @@ import MLJBase
 using CategoricalArrays
 import ..NaiveBayes
 
-mutable struct GaussianNBClassifier <: MLJBase.Probabilistic{Any}
+mutable struct GaussianNBClassifier <: MLJBase.Probabilistic
 end
 
 function MLJBase.fit(model::GaussianNBClassifier, verbosity::Int
@@ -73,7 +73,7 @@ end
 
 # MultinomialNBClassifier
 
-mutable struct MultinomialNBClassifier <: MLJBase.Probabilistic{Any} where T
+mutable struct MultinomialNBClassifier <: MLJBase.Probabilistic
     alpha::Int
 end
 

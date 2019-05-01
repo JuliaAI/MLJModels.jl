@@ -10,27 +10,17 @@ import ..GaussianProcesses # strange lazy-loading syntax
 
 const GP = GaussianProcesses
 
-# here T is target type:
-const CD{T,C} = MLJBase.CategoricalDecoder{Int,false,T,1,UInt32,C}
-const GPClassifierFitResultType{T} =
-    Tuple{GP.GPE,     # TODO: make this a concrete type for ensembling efficiency
-          Union{CD{T,CategoricalValue{T,UInt32}},
-                CD{T,CategoricalString{UInt32}}}}
-
-mutable struct GPClassifier{T, M<:GP.Mean, K<:GP.Kernel} <: MLJBase.Deterministic{GPClassifierFitResultType{T}}
-    target_type::Type{T} # target is CategoricalArray{target_type}
+mutable struct GPClassifier{M<:GP.Mean, K<:GP.Kernel} <: MLJBase.Deterministic
     mean::M
     kernel::K
 end
 
 function GPClassifier(
-    ; target_type=Int
-    , mean=GP.MeanZero()
+    ; mean=GP.MeanZero()
     , kernel=GP.SE(0.0,1.0)) # binary
 
     model = GPClassifier(
-        target_type
-        , mean
+        mean
         , kernel)
 
     message = MLJBase.clean!(model)
@@ -39,21 +29,17 @@ function GPClassifier(
     return model
 end
 
-# function MLJBase.clean!
+# function MLJBase.clean! not provided
 
-function MLJBase.fit(model::GPClassifier{T2,M,K}
+function MLJBase.fit(model::GPClassifier{M,K}
             , verbosity::Int
             , X
-            , y::CategoricalVector{T}) where {T,T2,M,K}
+            , y) where {M,K}
 
     Xmatrix = MLJBase.matrix(X)
     
-    T == T2 || throw(ErrorException("Type, $T, of target incompatible "*
-                                    "with type, $T2, of $model."))
-
     decoder = MLJBase.CategoricalDecoder(y, Int)
     y_plain = MLJBase.transform(decoder, y)
-
 
     if VERSION < v"1.0"
         XT = collect(transpose(Xmatrix))
@@ -80,9 +66,9 @@ function MLJBase.fit(model::GPClassifier{T2,M,K}
     return fitresult, cache, report
 end
 
-function MLJBase.predict(model::GPClassifier{T}
+function MLJBase.predict(model::GPClassifier
                        , fitresult
-                       , Xnew) where T
+                       , Xnew) 
 
     Xmatrix = MLJBase.matrix(Xnew)
     

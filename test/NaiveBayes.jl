@@ -3,6 +3,7 @@ module TestNaiveBayes
 # using Revise
 using MLJBase
 using Test
+import Random.seed!
 
 import MLJModels
 import NaiveBayes
@@ -29,6 +30,7 @@ gaussian_pred = predict(gaussian_classifier, fitresultG, selectrows(X, test));
 @test levels(keys(gaussian_pred[1].prob_given_level)) == levels(y[train])
 
 # test with linear data:
+seed!(1234)
 x1 = randn(3000);
 x2 = randn(3000);
 x3 = randn(3000);
@@ -44,7 +46,8 @@ gaussian_classifier = GaussianNBClassifier()
 fitresultG, cacheG, reportG = MLJBase.fit(gaussian_classifier, 1,
              selectrows(X, train), y[train])
 
-gaussian_pred = MLJBase.predict_mode(gaussian_classifier, fitresultG, selectrows(X, test))
+gaussian_pred = MLJBase.predict_mode(gaussian_classifier,
+                                     fitresultG, selectrows(X, test))
 
 @test sum(gaussian_pred .!= y[test])/length(y) < 0.05
 

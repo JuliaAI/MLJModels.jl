@@ -24,7 +24,6 @@ labels = features * weights;
 features = MLJBase.table(features)
 fitresultR, cacheR, reportR = MLJBase.fit(plain_regressor, 0, features, labels);
 rpred = predict(plain_regressor, fitresultR, features);
-@test fitresultR isa MLJBase.fitresult_type(plain_regressor)
 info(XGBoostRegressor)
 
 plain_regressor.objective = "gamma"
@@ -51,7 +50,6 @@ y = [rand(Poisson(λᵢ)) for λᵢ ∈ λ]
 
 fitresultC, cacheC, reportC = MLJBase.fit(count_regressor, 0, Xtable, y);
 cpred = predict(count_regressor, fitresultC, Xtable);
-@test fitresultC isa MLJBase.fitresult_type(count_regressor)
 info(XGBoostCount)
 
 
@@ -99,7 +97,6 @@ fitresult, cache, report = MLJBase.fit(plain_classifier, 0,
 yhat = predict(plain_classifier, fitresult, selectrows(X, test))
 @test Set(levels(yhat[1])) == Set(levels(y[train]))
 
-@test fitresult isa MLJBase.fitresult_type(plain_classifier)
 info(XGBoostClassifier)
 
 end

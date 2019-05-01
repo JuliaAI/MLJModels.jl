@@ -12,7 +12,7 @@ generate_seed() = mod(round(Int, time()*1e8), 10000)
 
 ## REGRESSOR
 
-mutable struct XGBoostRegressor{Any} <:MLJBase.Deterministic{Any}
+mutable struct XGBoostRegressor <:MLJBase.Deterministic
     num_round::Int
     booster::String
     disable_default_eval_metric::Int
@@ -100,7 +100,7 @@ function XGBoostRegressor(
     ,eval_metric="rmse"
     ,seed=0)
 
-    model = XGBoostRegressor{Any}(
+    model = XGBoostRegressor(
     num_round
     ,booster
     ,disable_default_eval_metric
@@ -238,7 +238,7 @@ end
 
 ## COUNT REGRESSOR
 
-mutable struct XGBoostCount{Any} <:MLJBase.Deterministic{Any}
+mutable struct XGBoostCount <:MLJBase.Deterministic
     num_round::Int
     booster::String
     disable_default_eval_metric::Int
@@ -326,7 +326,7 @@ function XGBoostCount(
     ,eval_metric="rmse"
     ,seed=0)
 
-    model = XGBoostCount{Any}(
+    model = XGBoostCount(
     num_round
     ,booster
     ,disable_default_eval_metric
@@ -451,7 +451,7 @@ end
 
 ## CLASSIFIER
 
-mutable struct XGBoostClassifier{Any} <:MLJBase.Probabilistic{Any}
+mutable struct XGBoostClassifier <:MLJBase.Probabilistic
     num_round::Int
     booster::String
     disable_default_eval_metric::Int
@@ -539,7 +539,7 @@ function XGBoostClassifier(
     ,eval_metric="mlogloss"
     ,seed=0)
 
-    model = XGBoostClassifier{Any}(
+    model = XGBoostClassifier(
     num_round
     ,booster
     ,disable_default_eval_metric
