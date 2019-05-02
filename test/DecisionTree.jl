@@ -48,14 +48,14 @@ using Random: seed!
 seed!(0)
 
 n,m = 10^3, 5 ;
-features = rand(n,m);
+raw_features = rand(n,m);
 weights = rand(-1:1,m);
-labels = features * weights;
+labels = raw_features * weights;
+features = MLJBase.table(raw_features);
 
 R1Tree = DecisionTreeRegressor(min_samples_leaf=5, pruning_purity_threshold=0.1)
 R2Tree = DecisionTreeRegressor(min_samples_split=5)
 model1, = MLJBase.fit(R1Tree,1, features, labels)
-
 
 @test model1 isa MLJBase.fitresult_type(R1Tree)
 
@@ -65,15 +65,11 @@ model1_prune, = MLJBase.fit(R1Tree,1, features, labels)
 vals1_prune = MLJBase.predict(R1Tree,model1_prune,features)
 @test vals1 !=vals1_prune
 
-
 @test DecisionTree.R2(labels, vals1) > 0.8
-
-
 
 model2, = MLJBase.fit(R2Tree, 1, features, labels)
 vals2 = MLJBase.predict(R2Tree, model2, features)
 @test DecisionTree.R2(labels, vals2) > 0.8
-
 
 info(R1Tree)
 
