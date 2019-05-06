@@ -492,7 +492,7 @@ end
 """
     XGBoostClassifier(; seed=0, kwargs...)
 
-The XGBoost model for targets with `FiniteOrderedFactor` or
+The XGBoost model for targets with `OrderedFactor` or
 `Multiclass` scitype (including `Binary=Multiclass{2}`). Gives
 probabilistic predictions. For admissible `kwargs`, see
 [https://xgboost.readthedocs.io/en/latest/parameter.html](https://xgboost.readthedocs.io/en/latest/parameter.html).
@@ -722,6 +722,6 @@ MLJBase.target_scitype_union(::Type{<:XGBoostCount}) = MLJBase.Count
 
 MLJBase.load_path(::Type{<:XGBoostClassifier}) = "MLJModels.XGBoost_.XGBoostClassifier"
 MLJBase.input_scitype_union(::Type{<:XGBoostClassifier}) = MLJBase.Continuous
-MLJBase.target_scitype_union(::Type{<:XGBoostClassifier}) = Union{MLJBase.Multiclass,MLJBase.FiniteOrderedFactor}
+MLJBase.target_scitype_union(::Type{<:XGBoostClassifier}) = Union{MLJBase.Multiclass,MLJBase.OrderedFactor}
 
 end
