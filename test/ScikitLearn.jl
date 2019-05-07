@@ -35,9 +35,9 @@ pcpred = predict(plain_classifier, fitresultC, selectrows(X, test));
 nucpred = predict(nu_classifier, fitresultCnu, selectrows(X, test));
 lcpred = predict(linear_classifier, fitresultCL, selectrows(X, test));
 
-@test levels(pcpred) == levels(y[train])
-@test levels(nucpred) == levels(y[train])
-@test levels(lcpred) == levels(y[train])
+@test Set(classes(pcpred[1])) == Set(classes(y[1]))
+@test Set(classes(nucpred[1])) == Set(classes(y[1]))
+@test Set(classes(lcpred[1])) == Set(classes(y[1]))
 
 # test with linear data:
 x1 = randn(3000);

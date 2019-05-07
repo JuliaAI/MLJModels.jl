@@ -492,9 +492,9 @@ end
 """
     XGBoostClassifier(; seed=0, kwargs...)
 
-The XGBoost model for targets with `OrderedFactor` or
-`Multiclass` scitype (including `Binary=Multiclass{2}`). Gives
-probabilistic predictions. For admissible `kwargs`, see
+The XGBoost model for targets with `Finite` scitype (including
+`Binary=Multiclass{2}`). Gives probabilistic predictions. For
+admissible `kwargs`, see
 [https://xgboost.readthedocs.io/en/latest/parameter.html](https://xgboost.readthedocs.io/en/latest/parameter.html).
 
 For a time-dependent random seed, use `seed=-1`. 
@@ -597,8 +597,9 @@ function MLJBase.fit(model::XGBoostClassifier
                      , X
                      , y)
     Xmatrix = MLJBase.matrix(X)
-    classes = levels(y) # *all* levels in pool of y, not just observed ones
-    num_class = length(classes)
+
+    a_target_element = y[1] # a CategoricalValue or CategoricalString
+    num_class = length(MLJBase.classes(a_target_element))
 
     eval_metric = model.eval_metric
     if num_class == 2 && eval_metric == "mlogloss"
@@ -607,9 +608,8 @@ function MLJBase.fit(model::XGBoostClassifier
     if num_class > 2 && eval_metric == "logloss"
         eval_metric = "mlogloss"
     end
-    
-    decoder = MLJBase.CategoricalDecoder(y, Int, true) # start_at_zero=true
-    y_plain = MLJBase.transform(decoder, y)
+
+    y_plain = MLJBase.int(y) .- 1 # integer relabeling should start at 0
 
     # An idiosynchrony of xgboost is that num_class=1 for binary case.
     if(num_class==2)
@@ -665,7 +665,7 @@ function MLJBase.fit(model::XGBoostClassifier
                                , seed = seed
                                , num_class=num_class)
 
-    fitresult = (result, decoder)
+    fitresult = (result, a_target_element)
 
     cache = nothing
     report = nothing
@@ -679,12 +679,14 @@ function MLJBase.predict(model::XGBoostClassifier
         , fitresult
         , Xnew)
 
-    result, decoder = fitresult
+    result, a_target_element = fitresult
+    decode = MLJBase.decoder(a_target_element)
+    classes = MLJBase.classes(a_target_element)
+    
     Xmatrix = MLJBase.matrix(Xnew)
     XGBpredictions = XGBoost.predict(result, Xmatrix)
 
-    nlevels = length(levels(decoder))
-    all_levels = MLJBase.inverse_transform(decoder, collect(0:nlevels-1)) 
+    nlevels = length(classes)
     npatterns = MLJBase.nrows(Xnew)
 
     if nlevels == 2 
@@ -695,7 +697,7 @@ function MLJBase.predict(model::XGBoostClassifier
 
     prediction_probabilities = reshape(XGBpredictions, nlevels, npatterns)
     
-    predictions = [MLJBase.UnivariateNominal(all_levels,
+    predictions = [MLJBase.UnivariateNominal(classes,
                                              prediction_probabilities[:,i])
                    for i in 1:npatterns]
 
@@ -722,6 +724,6 @@ MLJBase.target_scitype_union(::Type{<:XGBoostCount}) = MLJBase.Count
 
 MLJBase.load_path(::Type{<:XGBoostClassifier}) = "MLJModels.XGBoost_.XGBoostClassifier"
 MLJBase.input_scitype_union(::Type{<:XGBoostClassifier}) = MLJBase.Continuous
-MLJBase.target_scitype_union(::Type{<:XGBoostClassifier}) = Union{MLJBase.Multiclass,MLJBase.OrderedFactor}
+MLJBase.target_scitype_union(::Type{<:XGBoostClassifier}) = MLJBase.Finite
 
 end

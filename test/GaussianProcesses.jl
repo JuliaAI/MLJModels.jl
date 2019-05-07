@@ -14,7 +14,7 @@ X, y = X_and_y(task)
 
 # load code to be tested:
 import MLJModels 
-import GaussianProcesses # MLJModels.GaussianProcesses_ now available for loading
+import GaussianProcesses 
 using MLJModels.GaussianProcesses_
 
 baregp = GPClassifier()
@@ -22,7 +22,6 @@ baregp = GPClassifier()
 # split the rows:
 allrows = eachindex(y)
 train, test = partition(allrows, 0.7, shuffle=true)
-@test sort(vcat(train, test)) == allrows
 
 fitresult, cache, report =
     MLJBase.fit(baregp, 1, MLJBase.selectrows(X, train), y[train])

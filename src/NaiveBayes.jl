@@ -11,21 +11,18 @@ end
 
 function MLJBase.fit(model::GaussianNBClassifier, verbosity::Int
                 , X
-                , Y)
+                , y)
 
     Xmatrix = MLJBase.matrix(X)' |> collect
     p = size(Xmatrix, 1)
 
-    levels_observed = unique(Y)
-    levels_all = levels(Y)
+    yplain = identity.(y) # y as plain Vector
+    classes_seen = unique(yplain)
 
-    decoder = MLJBase.CategoricalDecoder(Y)
-    y = MLJBase.transform(decoder, Y)
+    # initiates dictionaries keyed on classes_seen:
+    res = NaiveBayes.GaussianNB(classes_seen, p) 
 
-    res = NaiveBayes.GaussianNB(levels_observed, p)
-    res = NaiveBayes.fit(res, Xmatrix, y)
-
-    fitresult = (res, levels_all)
+    fitresult = NaiveBayes.fit(res, Xmatrix, yplain)
 
     report = NamedTuple{}()
     
@@ -43,31 +40,21 @@ end
     
 function MLJBase.predict(model::GaussianNBClassifier, fitresult, Xnew)
 
-    res, levels_all = fitresult
-
     Xmatrix = MLJBase.matrix(Xnew)' |> collect
     n = size(Xmatrix, 2)
 
-    levels_observed, logprobs = NaiveBayes.predict_logprobs(res, Xmatrix)
+    classes_observed, logprobs = NaiveBayes.predict_logprobs(fitresult, Xmatrix)
 
-    # Note that NaiveBayes.predict_logprobs returns the
-    # levels_observed in possibly different order to the
-    # levels_observed passed to NaiveBayes.fit. And the probabilities
-    # are not normalized.
-
-    # re-order levels_all, so observed come first:
-    levels_unobserved = filter(levels_all) do L
-        !(L in levels_observed)
-    end
-    levels_all = vcat(levels_observed, levels_unobserved)
+    # Note that NaiveBayes does not normalize the probabilities.
 
     probs = exp.(logprobs)
     col_sums = sum(probs, dims=1)
     probs = probs ./ col_sums
 
-    z = zeros(length(levels_all) - length(levels_observed)) 
-
-    return [MLJBase.UnivariateNominal(levels_all, vcat(probs[:,i], z)) for i in 1:n]
+    # UnivariateNominal constructor automatically adds unobserved
+    # classes with zero probability:
+    return [MLJBase.UnivariateNominal(classes_observed, probs[:,i])
+            for i in 1:n]
     
 end
 
@@ -84,20 +71,15 @@ end
 
 function MLJBase.fit(model::MultinomialNBClassifier, verbosity::Int
                 , X
-                , Y)
+                , y)
 
     Xmatrix = MLJBase.matrix(X) |> permutedims
     p = size(Xmatrix, 1)
-    levels_observed = unique(Y)
-    levels_all = MLJBase.levels(Y)
+    yplain = identity.(y)
+    classes_observed = unique(yplain)
 
-    decoder = MLJBase.CategoricalDecoder(Y)
-    y = MLJBase.transform(decoder, Y)
-
-    res = NaiveBayes.MultinomialNB(levels_all, p ,alpha= model.alpha)
-    res = NaiveBayes.fit(res, Xmatrix, y)
-
-    fitresult = (res, levels_all)
+    res = NaiveBayes.MultinomialNB(classes_observed, p ,alpha= model.alpha)
+    fitresult = NaiveBayes.fit(res, Xmatrix, yplain)
 
     report = NamedTuple()
     
@@ -113,28 +95,20 @@ function MLJBase.fitted_params(model::MultinomialNBClassifier, fitresult)
 end
     
 function MLJBase.predict(model::MultinomialNBClassifier, fitresult, Xnew)
-    res, levels_all = fitresult
+
     Xmatrix = MLJBase.matrix(Xnew) |> collect |> permutedims
     n = size(Xmatrix, 2)
 
-    # Note that NaiveBayes.predict_logprobs returns the
-    # levels_observed in possibly different order to the
-    # levels_observed passed to NaiveBayes.fit. And the probabilities
+    # Note that NaiveBayes.predict_logprobs returns probabilities that
     # are not normalized.
 
-    levels_observed ,logprobs = NaiveBayes.predict_logprobs(res, Int.(Xmatrix))
-    levels_unobserved = filter(levels_all) do L
-        !(L in levels_observed)
-    end
-    levels_all = vcat(levels_observed, levels_unobserved)
+    classes_observed, logprobs = NaiveBayes.predict_logprobs(fitresult, Int.(Xmatrix))
 
     probs = exp.(logprobs)
     col_sums = sum(probs, dims=1)
     probs = probs ./ col_sums
 
-    z = zeros(length(levels_all) - length(levels_observed)) 
-
-    return [MLJBase.UnivariateNominal(levels_all, vcat(probs[:,i], z)) for i in 1:n]
+    return [MLJBase.UnivariateNominal(classes_observed, probs[:,i]) for i in 1:n]
 end
 
 # metadata:
@@ -144,7 +118,7 @@ MLJBase.package_uuid(::Type{<:GaussianNBClassifier}) = "9bbee03b-0db5-5f46-924f-
 MLJBase.package_url(::Type{<:GaussianNBClassifier}) = "https://github.com/dfdx/NaiveBayes.jl"
 MLJBase.is_pure_julia(::Type{<:GaussianNBClassifier}) = true
 MLJBase.input_scitype_union(::Type{<:GaussianNBClassifier}) = MLJBase.Continuous
-MLJBase.target_scitype_union(::Type{<:GaussianNBClassifier}) = Union{MLJBase.Multiclass,MLJBase.OrderedFactor}
+MLJBase.target_scitype_union(::Type{<:GaussianNBClassifier}) = MLJBase.Finite
 MLJBase.input_is_multivariate(::Type{<:GaussianNBClassifier}) = true
 
 MLJBase.load_path(::Type{<:MultinomialNBClassifier}) = "MLJModels.NaiveBayes_.MultinomialNBClassifier"
@@ -153,7 +127,7 @@ MLJBase.package_uuid(::Type{<:MultinomialNBClassifier}) = "9bbee03b-0db5-5f46-92
 MLJBase.package_url(::Type{<:MultinomialNBClassifier}) = "https://github.com/dfdx/NaiveBayes.jl"
 MLJBase.is_pure_julia(::Type{<:MultinomialNBClassifier}) = true
 MLJBase.input_scitype_union(::Type{<:MultinomialNBClassifier}) = MLJBase.Count
-MLJBase.target_scitype_union(::Type{<:MultinomialNBClassifier}) = Union{MLJBase.Multiclass,MLJBase.OrderedFactor}
+MLJBase.target_scitype_union(::Type{<:MultinomialNBClassifier}) = MLJBase.Finite
 MLJBase.input_is_multivariate(::Type{<:MultinomialNBClassifier}) = true
 
 end     #module

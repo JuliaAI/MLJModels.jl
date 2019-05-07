@@ -38,27 +38,19 @@ function MLJBase.fit(model::GPClassifier{M,K}
 
     Xmatrix = MLJBase.matrix(X)
     
-    decoder = MLJBase.CategoricalDecoder(y, Int)
-    y_plain = MLJBase.transform(decoder, y)
+    y_plain = MLJBase.int(y)
 
-    if VERSION < v"1.0"
-        XT = collect(transpose(Xmatrix))
-        yP = convert(Vector{Float64}, y_plain)
-        gp = GP.GPE(XT
-                  , yP
-                  , model.mean
-                  , model.kernel)
+    a_target_element = y[1]
+    nclasses = length(MLJBase.classes(a_target_element))
+    decode = MLJBase.decoder(a_target_element)
 
-        GP.fit!(gp, XT, yP)
-    else
-        gp = GP.GPE(transpose(Xmatrix)
-                  , y_plain
-                  , model.mean
-                  , model.kernel)
-        GP.fit!(gp, transpose(Xmatrix), y_plain)
-    end
+    gp = GP.GPE(transpose(Xmatrix)
+                , y_plain
+                , model.mean
+                , model.kernel)
+    GP.fit!(gp, transpose(Xmatrix), y_plain)
 
-    fitresult = (gp, decoder)
+    fitresult = (gp, nclasses, decode)
 
     cache = nothing
     report = nothing
@@ -72,14 +64,13 @@ function MLJBase.predict(model::GPClassifier
 
     Xmatrix = MLJBase.matrix(Xnew)
     
-    gp, decoder = fitresult
+    gp, nclasses, decode = fitresult
 
-    nlevels = length(decoder.pool.levels)
     pred = GP.predict_y(gp, transpose(Xmatrix))[1] # Float
     # rounding with clamping between 1 and nlevels
-    pred_rc = clamp.(round.(Int, pred), 1, nlevels)
+    pred_rc = clamp.(round.(Int, pred), 1, nclasses)
 
-    return MLJBase.inverse_transform(decoder, pred_rc)
+    return decode(pred_rc)
 end
 
 # metadata:
@@ -89,7 +80,7 @@ MLJBase.package_uuid(::Type{<:GPClassifier}) = "891a1506-143c-57d2-908e-e1f8e92e
 MLJBase.package_url(::Type{<:GPClassifier}) = "https://github.com/STOR-i/GaussianProcesses.jl"
 MLJBase.is_pure_julia(::Type{<:GPClassifier}) = true
 MLJBase.input_scitype_union(::Type{<:GPClassifier}) = MLJBase.Continuous
-MLJBase.target_scitype_union(::Type{<:GPClassifier}) = Union{MLJBase.Multiclass,MLJBase.OrderedFactor}
+MLJBase.target_scitype_union(::Type{<:GPClassifier}) = MLJBase.Finite
 MLJBase.input_is_multivariate(::Type{<:GPClassifier}) = true
 
 end # module

@@ -7,12 +7,12 @@ using MLJBase
 
 # load code to be tested:
 import MLJModels
-import DecisionTree # MLJModels.DecisionTree_ now available via lazy-loading
+import DecisionTree 
 using MLJModels.DecisionTree_
 
 # get some test data:
 task = load_iris();
-X, y = X_and_y(task) # a table and categorical vector
+X, y = X_and_y(task)       # a table and CategoricalVector
 
 baretree = DecisionTreeClassifier()
 
@@ -35,7 +35,7 @@ yhat = MLJBase.predict(baretree, fitresult, X);
 
 # check preservation of levels:
 yyhat = predict_mode(baretree, fitresult, MLJBase.selectrows(X, 1:3))
-@test CategoricalArrays.levels(yyhat) == CategoricalArrays.levels(y)
+@test MLJBase.classes(yyhat[1]) == MLJBase.classes(y[1])
 
 info(baretree)
 
