@@ -15,7 +15,7 @@ Requires = "ae029012-a4dd-5104-9daa-d747884805df"
 
 [compat]
 Distributions = "<0.19"
-MLJBase = "0.1.1"
+MLJBase = "0.2.0"
 
 [extras]
 Clustering = "aaaa29a8-35af-508c-8bc3-b662a17a0fe5"
