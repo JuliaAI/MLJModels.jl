@@ -35,8 +35,8 @@ end
 
 # brittle hack b/s of https://github.com/dmlc/XGBoost.jl/issues/58:
 using Pkg
-#Pkg.add(PackageSpec(url="https://github.com/dmlc/XGBoost.jl"))
-Pkg.add(PackageSpec(name="XGBoost", version="0.3.1"))
+Pkg.add(PackageSpec(url="https://github.com/dmlc/XGBoost.jl"))
+#Pkg.add(PackageSpec(name="XGBoost", version="0.3.1"))
 
 @testset "XGBoost" begin
    @test include("XGBoost.jl")
