@@ -91,8 +91,8 @@ f(a...) = f_(a...)/normalizer(a...)
 Xnew = (red=[1, 1], blue=[1, 2], green=[1, 3])
 
 # prediction by hand:
-yhand =[MLJBase.UnivariateNominal([:m, :f], [m(1, 1, 1), f(1, 1, 1)]),
-        MLJBase.UnivariateNominal([:m, :f], [m(1, 2, 3), f(1, 2, 3)])]
+yhand =[MLJBase.UnivariateFinite([:m, :f], [m(1, 1, 1), f(1, 1, 1)]),
+        MLJBase.UnivariateFinite([:m, :f], [m(1, 2, 3), f(1, 2, 3)])]
         
 multinomial_classifier = MultinomialNBClassifier()
 info(multinomial_classifier)

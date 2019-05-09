@@ -51,9 +51,9 @@ function MLJBase.predict(model::GaussianNBClassifier, fitresult, Xnew)
     col_sums = sum(probs, dims=1)
     probs = probs ./ col_sums
 
-    # UnivariateNominal constructor automatically adds unobserved
+    # UnivariateFinite constructor automatically adds unobserved
     # classes with zero probability:
-    return [MLJBase.UnivariateNominal(classes_observed, probs[:,i])
+    return [MLJBase.UnivariateFinite(classes_observed, probs[:,i])
             for i in 1:n]
     
 end
@@ -108,7 +108,7 @@ function MLJBase.predict(model::MultinomialNBClassifier, fitresult, Xnew)
     col_sums = sum(probs, dims=1)
     probs = probs ./ col_sums
 
-    return [MLJBase.UnivariateNominal(classes_observed, probs[:,i]) for i in 1:n]
+    return [MLJBase.UnivariateFinite(classes_observed, probs[:,i]) for i in 1:n]
 end
 
 # metadata:

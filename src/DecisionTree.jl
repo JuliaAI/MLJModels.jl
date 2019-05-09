@@ -144,7 +144,7 @@ function MLJBase.predict(::DecisionTreeClassifier
     tree, classes_seen = fitresult
 
     y_probabilities = DecisionTree.apply_tree_proba(tree, Xmatrix, classes_seen)
-    return [MLJBase.UnivariateNominal(classes_seen, y_probabilities[i,:])
+    return [MLJBase.UnivariateFinite(classes_seen, y_probabilities[i,:])
             for i in 1:size(y_probabilities, 1)]
 end
 

@@ -697,7 +697,7 @@ function MLJBase.predict(model::XGBoostClassifier
 
     prediction_probabilities = reshape(XGBpredictions, nlevels, npatterns)
     
-    predictions = [MLJBase.UnivariateNominal(classes,
+    predictions = [MLJBase.UnivariateFinite(classes,
                                              prediction_probabilities[:,i])
                    for i in 1:npatterns]
 
