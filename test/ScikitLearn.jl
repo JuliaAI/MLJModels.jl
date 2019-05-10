@@ -4,6 +4,8 @@ module TestScikitLearn
 using MLJBase
 using Test
 using LinearAlgebra
+import Random.seed!
+seed!(1234)
 
 import MLJModels
 import ScikitLearn
@@ -85,9 +87,61 @@ Lrpred = predict(linear_regressor, fitresultRL, selectrows(X, test));
 @test norm(nurpred - y[test])/sqrt(length(y)) < 0.2
 @test norm(Lrpred - y[test])/sqrt(length(y)) < 0.2
 
-enet = ElasticNet()
-fitresultE, cacheE, reportE = MLJBase.fit(enet, 1,
-                                          selectrows(X, train), ycat[train]);
+
+## ELASTIC NET
+
+# generate some synthetic linear data:
+
+x1 = randn(3000);
+x2 = randn(3000);
+x3 = randn(3000);
+X = (x1=x1, x2=x2, x3=x3);
+y = x1 - x2 -2x3 + 0.02*randn(3000);
+
+train, test = partition(eachindex(y), 0.7)
+
+# test CV version:
+rgsCV = SCElasticNetCV(copy_X=true, cv=5, eps=0.001,
+       fit_intercept=true, l1_ratio=[0.5, 0.9], max_iter=1000, n_alphas=100,
+       normalize=false, positive=false,
+       precompute="auto", selection="cyclic",
+       tol=0.0001)
+
+
+fitresult, cache, report = MLJBase.fit(rgsCV, 0,
+                                       selectrows(X, train),
+                                       y[train]);
+
+yhat = predict(rgsCV, fitresult, selectrows(X, test));
+@test norm(yhat - y[test])/sqrt(length(y)) < 0.2
+
+# test intercept and coefficients close to true:
+fitted = fitted_params(rgsCV, fitresult)
+@test abs(fitted.intercept) < 0.01
+@test abs(fitted.coef[3] .+ 2) < 0.01
+
+alpha, l1_ratio = report.alpha, report.l1_ratio
+
+# test non-CV version:
+rgs = SCElasticNet(alpha=alpha, l1_ratio=l1_ratio, fit_intercept=true,
+                 normalize=false, precompute=false, max_iter=1000,
+                 copy_X=false, tol=0.0001, warm_start=false,
+                 positive=false, selection="random")
+
+fitresult, cache, report = MLJBase.fit(rgs, 0,
+                                       selectrows(X, train),
+                                       y[train]);
+yhat = predict(rgs, fitresult, selectrows(X, test));
+@test norm(yhat - y[test])/sqrt(length(y)) < 0.2
+@test keys(report) == (:n_iters,:placeholder)
+fitted = fitted_params(rgs, fitresult)
+@test abs(fitted.intercept) < 0.01
+@test abs(fitted.coef[3] .+ 2) < 0.01
+
+
+
+
+
 
 info(SVMClassifier)
 info(SVMNuClassifier)
@@ -95,6 +149,10 @@ info(SVMLClassifier)
 info(SVMRegressor)
 info(SVMNuRegressor)
 info(SVMLRegressor)
+
+info(SCElasticNet)
+info(SCElasticNetCV)
+
 
 end
 true
