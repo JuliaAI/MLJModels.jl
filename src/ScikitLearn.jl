@@ -673,7 +673,7 @@ end
 
 function MLJBase.clean!(model::SCElasticNet)
     warning = ""
-	if(model.alpha<0)
+	if(model.alpha<0.0)
 		warning *="alpha must be stricly positive, set to 1"
 		model.alpha=1
 	end
