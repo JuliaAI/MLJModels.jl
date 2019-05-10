@@ -24,7 +24,6 @@ labels = features * weights;
 features = MLJBase.table(features)
 fitresultR, cacheR, reportR = MLJBase.fit(plain_regressor, 0, features, labels);
 rpred = predict(plain_regressor, fitresultR, features);
-@test fitresultR isa MLJBase.fitresult_type(plain_regressor)
 info(XGBoostRegressor)
 
 plain_regressor.objective = "gamma"
@@ -51,7 +50,6 @@ y = [rand(Poisson(λᵢ)) for λᵢ ∈ λ]
 
 fitresultC, cacheC, reportC = MLJBase.fit(count_regressor, 0, Xtable, y);
 cpred = predict(count_regressor, fitresultC, Xtable);
-@test fitresultC isa MLJBase.fitresult_type(count_regressor)
 info(XGBoostCount)
 
 
@@ -63,43 +61,45 @@ plain_classifier = XGBoostClassifier(num_round=100, seed=0)
 N=2
 seed!(0)
 X = (x1=rand(1000), x2=rand(1000), x3=rand(1000))
-y = map(X.x1) do x
-    mod(round(Int, 10*x), N)
+ycat = map(X.x1) do x
+    string(mod(round(Int, 10*x), N))
 end |> categorical
+y = identity.(ycat) # make plain Vector with categ. elements
 train, test = partition(eachindex(y), 0.6) 
 fitresult, cache, report = MLJBase.fit(plain_classifier, 0,
                                             selectrows(X, train), y[train];)
 yhat = mode.(predict(plain_classifier, fitresult, selectrows(X, test)))
 misclassification_rate = sum(yhat .!= y[test])/length(test)
-@test misclassification_rate < 0.1
+@test misclassification_rate < 0.01
 
 # Multiclass{10} case:
 N=10
 seed!(0)
 X = (x1=rand(1000), x2=rand(1000), x3=rand(1000))
-y = map(X.x1) do x
-    mod(round(Int, 10*x), N)
+ycat = map(X.x1) do x
+    string(mod(round(Int, 10*x), N))
 end |> categorical
+y = identity.(ycat) # make plain Vector with categ. elements
+
 train, test = partition(eachindex(y), 0.6) 
 fitresult, cache, report = MLJBase.fit(plain_classifier, 0,
                                             selectrows(X, train), y[train];)
 yhat = mode.(predict(plain_classifier, fitresult, selectrows(X, test)))
 misclassification_rate = sum(yhat .!= y[test])/length(test)
-@test misclassification_rate < 0.1
-
+@test misclassification_rate < 0.01
 
 # check target pool preserved:
 X = (x1=rand(400), x2=rand(400), x3=rand(400))
-y = vcat(fill(:x, 100), fill(:y, 100), fill(:z, 200)) |>categorical
+ycat = vcat(fill(:x, 100), fill(:y, 100), fill(:z, 200)) |>categorical
+y = identity.(ycat)
 train, test = partition(eachindex(y), 0.5) 
-@assert length(unique(y[train])) == 2
-@assert length(unique(y[test])) == 1
+@test length(unique(y[train])) == 2
+@test length(unique(y[test])) == 1
 fitresult, cache, report = MLJBase.fit(plain_classifier, 0,
                                             selectrows(X, train), y[train];)
-yhat = predict(plain_classifier, fitresult, selectrows(X, test))
-@test Set(levels(yhat[1])) == Set(levels(y[train]))
+yhat = predict_mode(plain_classifier, fitresult, selectrows(X, test))
+@test Set(MLJBase.classes(yhat[1])) == Set(MLJBase.classes(y[train][1]))
 
-@test fitresult isa MLJBase.fitresult_type(plain_classifier)
 info(XGBoostClassifier)
 
 end

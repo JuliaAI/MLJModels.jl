@@ -14,18 +14,17 @@ X, y = X_and_y(task)
 
 # load code to be tested:
 import MLJModels 
-import GaussianProcesses # MLJModels.GaussianProcesses_ now available for loading
+import GaussianProcesses 
 using MLJModels.GaussianProcesses_
 
-baregp = GPClassifier(target_type=String)
+baregp = GPClassifier()
 
 # split the rows:
 allrows = eachindex(y)
 train, test = partition(allrows, 0.7, shuffle=true)
-@test sort(vcat(train, test)) == allrows
 
-fitresult, cache, report = MLJBase.fit(baregp, 1, MLJBase.selectrows(X, train), y[train])
-@test fitresult isa MLJBase.fitresult_type(baregp)
+fitresult, cache, report =
+    MLJBase.fit(baregp, 1, MLJBase.selectrows(X, train), y[train])
 yhat = predict(baregp, fitresult, MLJBase.selectrows(X, test));
 
 @test sum(yhat .== y[test]) / length(y[test]) >= 0.7 # around 0.7

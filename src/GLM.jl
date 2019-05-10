@@ -7,23 +7,18 @@ export OLSRegressor, OLS,
 
 import ..GLM
 
-const LMFitResult  = GLM.LinearModel
-const GLMFitResult = GLM.GeneralizedLinearModel
-
-LMFitResult(coefs::Vector, b=nothing) = LMFitResult(coefs, b)
-
 ####
 #### REGRESSION TYPES
 ####
 
-mutable struct OLSRegressor <: MLJBase.Probabilistic{LMFitResult}
+mutable struct OLSRegressor <: MLJBase.Probabilistic
     fit_intercept::Bool
 # allowrankdeficient::Bool
 end
 
 OLSRegressor(;fit_intercept=true) = OLSRegressor(fit_intercept)
 
-mutable struct GLMCountRegressor <: MLJBase.Probabilistic{GLMFitResult}
+mutable struct GLMCountRegressor <: MLJBase.Probabilistic
     fit_intercept::Bool
 # link
 end
@@ -38,7 +33,7 @@ const GLMCount = GLMCountRegressor
 #### FIT FUNCTIONS
 ####
 
-function MLJBase.fit(model::OLS, verbosity::Int, X, y::Vector)
+function MLJBase.fit(model::OLS, verbosity::Int, X, y)
 
     Xmatrix = MLJBase.matrix(X)
     features = MLJBase.schema(X).names
@@ -62,7 +57,7 @@ function MLJBase.fitted_params(model::OLS, fitresult)
             intercept=ifelse(model.fit_intercept, coefs[end], nothing))
 end
 
-function MLJBase.fit(model::GLMCount, verbosity::Int, X, y::Vector)
+function MLJBase.fit(model::GLMCount, verbosity::Int, X, y)
 
     Xmatrix = MLJBase.matrix(X)
     features = MLJBase.schema(X).names
@@ -91,14 +86,14 @@ end
 ####
 
 function MLJBase.predict_mean(model::Union{OLS, GLMCount}
-                            , fitresult::Union{LMFitResult, GLMFitResult}
+                            , fitresult
                             , Xnew)
     Xmatrix = MLJBase.matrix(Xnew)
     model.fit_intercept && (Xmatrix = hcat(Xmatrix, ones(eltype(Xmatrix), size(Xmatrix, 1), 1)))
     return GLM.predict(fitresult, Xmatrix)
 end
 
-function MLJBase.predict(model::OLS, fitresult::LMFitResult, Xnew)
+function MLJBase.predict(model::OLS, fitresult, Xnew)
     Xmatrix = MLJBase.matrix(Xnew)
     model.fit_intercept && (Xmatrix = hcat(Xmatrix, ones(eltype(Xmatrix), size(Xmatrix, 1), 1)))
     μ = GLM.predict(fitresult, Xmatrix)
@@ -106,7 +101,7 @@ function MLJBase.predict(model::OLS, fitresult::LMFitResult, Xnew)
     return [GLM.Normal(μᵢ, σ̂) for μᵢ ∈ μ]
 end
 
-function MLJBase.predict(model::GLMCount, fitresult::GLMFitResult, Xnew)
+function MLJBase.predict(model::GLMCount, fitresult, Xnew)
     Xmatrix = MLJBase.matrix(Xnew)
     model.fit_intercept && (Xmatrix = hcat(Xmatrix, ones(eltype(Xmatrix), size(Xmatrix, 1), 1)))
     λ = GLM.predict(fitresult, Xmatrix)

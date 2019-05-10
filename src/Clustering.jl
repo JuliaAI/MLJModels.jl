@@ -19,8 +19,6 @@ const C = Clustering
 
 # ----------------------------------
 
-const KMFitResultType = AbstractMatrix{<:Real} # the medoids
-
 mutable struct KMeans{M<:SemiMetric} <: MLJBase.Unsupervised
     k::Int
     metric::M
@@ -71,7 +69,7 @@ end
 MLJBase.fitted_params(::KMeans, fitresult) = (centers=fitresult,)
 
 function MLJBase.transform(model::KMeans
-                         , fitresult::KMFitResultType
+                         , fitresult
                          , X)
 
     Xarray = MLJBase.matrix(X)
@@ -113,7 +111,7 @@ MLJBase.fitted_params(::KMedoids, fitresult) = (medoids=fitresult,)
 
 
 function MLJBase.transform(model::KMedoids
-                         , fitresult::KMFitResultType
+                         , fitresult
                          , X)
 
     Xarray = MLJBase.matrix(X)
@@ -127,7 +125,7 @@ end
 #### Predict methods
 ####
 
-function MLJBase.predict(model::Union{KMeans,KMedoids}, fitresult::KMFitResultType, Xnew)
+function MLJBase.predict(model::Union{KMeans,KMedoids}, fitresult, Xnew)
 
     Xarray = MLJBase.matrix(Xnew)
     (n, p), k = size(Xarray), model.k

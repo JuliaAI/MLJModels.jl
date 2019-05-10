@@ -1,9 +1,9 @@
 #> This code implements the MLJ model interface for models in the
 #> DecisionTree.jl package. It is annotated so that it may serve as a
-#> template for other supervised models of type `Probabilistic`. The
-#> annotations, which begin with "#>", should be removed (but copy
-#> this file first!). See also the model interface specification at
-#> "doc/adding_new_models.md".
+#> template for other regressors of Deterministic type and classifiers
+#> of Probabilistic type. The annotations, which begin with "#>",
+#> should be removed (but copy this file first!). See also the model
+#> interface specification at "doc/adding_new_models.md".
 
 #> Note that all models need to "register" their location by setting
 #> `load_path(<:ModelType)` appropriately.
@@ -15,15 +15,14 @@ export DecisionTreeClassifier, DecisionTreeRegressor
 
 import MLJBase
 
-#> needed for all classifiers:
+#> needed for classifiers:
 using CategoricalArrays
 
 #> import package:
 import ..DecisionTree # strange syntax b/s we are lazy-loading
 
-# here T is target type, and the `Vector{T}` is for storing target levels:
-const DecisionTreeClassifierFitResultType{T} =
-    Tuple{Union{DecisionTree.Node{Float64,T}, DecisionTree.Leaf{T}}, Vector{T}}
+
+## CLASSIFIER
 
 """
     DecisionTreeClassifer(; kwargs...)
@@ -37,8 +36,7 @@ For post-fit pruning, set `post-prune=true` and set
 package documentation cited above.
 
 """
-mutable struct DecisionTreeClassifier{T} <: MLJBase.Probabilistic{DecisionTreeClassifierFitResultType{T}}
-    target_type::Type{T}  # target is CategoricalArray{target_type}
+mutable struct DecisionTreeClassifier <: MLJBase.Probabilistic
     pruning_purity::Float64
     max_depth::Int
     min_samples_leaf::Int
@@ -50,11 +48,10 @@ mutable struct DecisionTreeClassifier{T} <: MLJBase.Probabilistic{DecisionTreeCl
     merge_purity_threshold::Float64
 end
 
-# constructor:
+# keywork constructor:
 #> all arguments are kwargs with a default value
 function DecisionTreeClassifier(
-    ; target_type=Int
-    , pruning_purity=1.0
+    ; pruning_purity=1.0
     , max_depth=-1
     , min_samples_leaf=1
     , min_samples_split=2
@@ -64,9 +61,8 @@ function DecisionTreeClassifier(
     , post_prune=false
     , merge_purity_threshold=0.9)
 
-    model = DecisionTreeClassifier{target_type}(
-        target_type
-        , pruning_purity
+    model = DecisionTreeClassifier(
+        pruning_purity
         , max_depth
         , min_samples_leaf
         , min_samples_split
@@ -98,6 +94,63 @@ function MLJBase.clean!(model::DecisionTreeClassifier)
     return warning
 end
 
+
+#> A required `fit` method returns `fitresult, cache, report`. (Return
+#> `cache=nothinobserg` unless you are overloading `update`)
+function MLJBase.fit(model::DecisionTreeClassifier
+             , verbosity::Int   #> must be here (and typed!!) even if not used (as here)
+             , X
+             , y)
+
+    Xmatrix = MLJBase.matrix(X)
+
+    yplain = identity.(y) # y as plain not abstact vector
+    classes_seen = unique(yplain)
+    
+    tree = DecisionTree.build_tree(yplain,
+                                   Xmatrix,
+                                   model.n_subfeatures,
+                                   model.max_depth,
+                                   model.min_samples_leaf,
+                                   model.min_samples_split,
+                                   model.min_purity_increase)
+    if model.post_prune
+        tree = DecisionTree.prune_tree(tree, model.merge_purity_threshold)
+    end
+
+    verbosity < 3 || DecisionTree.print_tree(tree, model.display_depth)
+
+    fitresult = (tree, classes_seen)
+
+    #> return package-specific statistics (eg, feature rankings,
+    #> internal estimates of generalization error) in `report`, which
+    #> should be a named tuple with the same type every call (can have
+    #> empty values):
+
+    cache = nothing
+    report = NamedTuple{}()
+
+    return fitresult, cache, report
+
+end
+
+MLJBase.fitted_params(::DecisionTreeClassifier, fitresult) = fitresult[1]
+
+function MLJBase.predict(::DecisionTreeClassifier
+                     , fitresult
+                     , Xnew)
+    Xmatrix = MLJBase.matrix(Xnew)
+
+    tree, classes_seen = fitresult
+
+    y_probabilities = DecisionTree.apply_tree_proba(tree, Xmatrix, classes_seen)
+    return [MLJBase.UnivariateFinite(classes_seen, y_probabilities[i,:])
+            for i in 1:size(y_probabilities, 1)]
+end
+
+
+## REGRESSOR
+
 """
     DecisionTreeRegressor(; kwargs...)
 
@@ -111,7 +164,7 @@ package documentation cited above.
 
 """
 
-mutable struct DecisionTreeRegressor{Any} <: MLJBase.Deterministic{Any}
+mutable struct DecisionTreeRegressor <: MLJBase.Deterministic
     pruning_purity_threshold::Float64
     max_depth::Int
     min_samples_leaf::Int
@@ -132,7 +185,7 @@ function DecisionTreeRegressor(;
     , n_subfeatures=0
     , post_prune=false)
 
-    model = DecisionTreeRegressor{Any}(
+    model = DecisionTreeRegressor(
        pruning_purity_threshold
        , max_depth
        , min_samples_leaf
@@ -156,50 +209,6 @@ function MLJBase.clean!(model::DecisionTreeRegressor)
     return warning
 end
 
-
-#> A required `fit` method returns `fitresult, cache, report`. (Return
-#> `cache=nothing` unless you are overloading `update`)
-function MLJBase.fit(model::DecisionTreeClassifier{T2}
-             , verbosity::Int   #> must be here (and typed!!) even if not used (as here)
-             , X
-             , y::CategoricalVector{T}) where {T,T2}
-
-    T == T2 || throw(ErrorException("Type, $T, of target incompatible "*
-                                    "with type, $T2, of $model."))
-
-    Xmatrix = MLJBase.matrix(X)
-
-    classes = levels(y) # *all* levels in pool of y, not just observed ones
-    decoder = MLJBase.CategoricalDecoder(y)
-    y_plain = MLJBase.transform(decoder, y)
-
-    tree = DecisionTree.build_tree(y_plain
-                                   , Xmatrix
-                                   , model.n_subfeatures
-                                   , model.max_depth
-                                   , model.min_samples_leaf
-                                   , model.min_samples_split
-                                   , model.min_purity_increase)
-    if model.post_prune
-        tree = DecisionTree.prune_tree(tree, model.merge_purity_threshold)
-    end
-
-    verbosity < 3 || DecisionTree.print_tree(tree, model.display_depth)
-
-    fitresult = (tree, classes)
-
-    #> return package-specific statistics (eg, feature rankings,
-    #> internal estimates of generalization error) in `report`, which
-    #> should be a named tuple with the same type every call (can have
-    #> empty values):
-
-    cache = nothing
-    report = NamedTuple{}()
-
-    return fitresult, cache, report
-
-end
-
 function MLJBase.fit(model::DecisionTreeRegressor
              , verbosity::Int   #> must be here (and typed) even if not used (as here)
              , X
@@ -207,7 +216,6 @@ function MLJBase.fit(model::DecisionTreeRegressor
 
     Xmatrix = MLJBase.matrix(X)
 
-    # is float. below really necessary?
     fitresult = DecisionTree.build_tree(float.(y)
 				   , Xmatrix
 				   , model.n_subfeatures
@@ -217,7 +225,8 @@ function MLJBase.fit(model::DecisionTreeRegressor
 				   , model.min_purity_increase)
 
     if model.post_prune
-         fitresult = DecisionTree.prune_tree(fitresult, model.pruning_purity_threshold)
+        fitresult = DecisionTree.prune_tree(fitresult,
+                                            model.pruning_purity_threshold)
     end
     cache = nothing
     report = nothing
@@ -225,35 +234,20 @@ function MLJBase.fit(model::DecisionTreeRegressor
     return fitresult, cache, report
 end
 
-MLJBase.fitted_params(::DecisionTreeClassifier, fitresult) = fitresult[1]
+MLJBase.fitted_params(::DecisionTreeRegressor, fitresult) = fitresult
 
-MLJBase.fitted_params(::DecisionTreeRegressor, fitresult) = fitresult[1]
-
-function MLJBase.predict(::DecisionTreeClassifier{T}
-                     , fitresult
-                     , Xnew) where T
-    Xmatrix = MLJBase.matrix(Xnew)
-    tree, classes = fitresult
-
-    # apply_tree_proba returns zero probabilities on levels unseen in
-    # train, so we can give it all the levels in the pool of the
-    # training vector:
-    y_probabilities = DecisionTree.apply_tree_proba(tree, Xmatrix, classes)
-    return [MLJBase.UnivariateNominal(classes, y_probabilities[i,:])
-            for i in 1:size(y_probabilities, 1)]
-end
-
-
-function MLJBase.predict(model::DecisionTreeRegressor{Any}
+function MLJBase.predict(model::DecisionTreeRegressor
                      , fitresult
                      , Xnew)
     Xmatrix = MLJBase.matrix(Xnew)
     return DecisionTree.apply_tree(fitresult,Xmatrix)
 end
 
+
+## METADATA
+
 DTTypes=Union{DecisionTreeClassifier,DecisionTreeRegressor}
 
-# metadata:
 MLJBase.package_name(::Type{<:DTTypes}) = "DecisionTree"
 MLJBase.package_uuid(::Type{<:DTTypes}) = "7806a523-6efd-50cb-b5f6-3fa6f1930dbb"
 MLJBase.package_url(::Type{<:DTTypes}) = "https://github.com/bensadeghi/DecisionTree.jl"
@@ -265,7 +259,7 @@ MLJBase.load_path(::Type{<:DecisionTreeRegressor}) = "MLJModels.DecisionTree_.De
 MLJBase.input_scitype_union(::Type{<:DecisionTreeClassifier}) = MLJBase.Continuous
 MLJBase.input_scitype_union(::Type{<:DecisionTreeRegressor}) = MLJBase.Continuous
 
-MLJBase.target_scitype_union(::Type{<:DecisionTreeClassifier}) = Union{MLJBase.Multiclass,MLJBase.FiniteOrderedFactor}
+MLJBase.target_scitype_union(::Type{<:DecisionTreeClassifier}) = MLJBase.Finite
 MLJBase.target_scitype_union(::Type{<:DecisionTreeRegressor}) = MLJBase.Continuous
 
 MLJBase.input_is_multivariate(::Type{<:DecisionTreeClassifier}) = true

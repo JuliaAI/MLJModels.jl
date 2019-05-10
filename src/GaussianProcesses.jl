@@ -10,27 +10,17 @@ import ..GaussianProcesses # strange lazy-loading syntax
 
 const GP = GaussianProcesses
 
-# here T is target type:
-const CD{T,C} = MLJBase.CategoricalDecoder{Int,false,T,1,UInt32,C}
-const GPClassifierFitResultType{T} =
-    Tuple{GP.GPE,     # TODO: make this a concrete type for ensembling efficiency
-          Union{CD{T,CategoricalValue{T,UInt32}},
-                CD{T,CategoricalString{UInt32}}}}
-
-mutable struct GPClassifier{T, M<:GP.Mean, K<:GP.Kernel} <: MLJBase.Deterministic{GPClassifierFitResultType{T}}
-    target_type::Type{T} # target is CategoricalArray{target_type}
+mutable struct GPClassifier{M<:GP.Mean, K<:GP.Kernel} <: MLJBase.Deterministic
     mean::M
     kernel::K
 end
 
 function GPClassifier(
-    ; target_type=Int
-    , mean=GP.MeanZero()
+    ; mean=GP.MeanZero()
     , kernel=GP.SE(0.0,1.0)) # binary
 
     model = GPClassifier(
-        target_type
-        , mean
+        mean
         , kernel)
 
     message = MLJBase.clean!(model)
@@ -39,40 +29,28 @@ function GPClassifier(
     return model
 end
 
-# function MLJBase.clean!
+# function MLJBase.clean! not provided
 
-function MLJBase.fit(model::GPClassifier{T2,M,K}
+function MLJBase.fit(model::GPClassifier{M,K}
             , verbosity::Int
             , X
-            , y::CategoricalVector{T}) where {T,T2,M,K}
+            , y) where {M,K}
 
     Xmatrix = MLJBase.matrix(X)
     
-    T == T2 || throw(ErrorException("Type, $T, of target incompatible "*
-                                    "with type, $T2, of $model."))
+    y_plain = MLJBase.int(y)
 
-    decoder = MLJBase.CategoricalDecoder(y, Int)
-    y_plain = MLJBase.transform(decoder, y)
+    a_target_element = y[1]
+    nclasses = length(MLJBase.classes(a_target_element))
+    decode = MLJBase.decoder(a_target_element)
 
+    gp = GP.GPE(transpose(Xmatrix)
+                , y_plain
+                , model.mean
+                , model.kernel)
+    GP.fit!(gp, transpose(Xmatrix), y_plain)
 
-    if VERSION < v"1.0"
-        XT = collect(transpose(Xmatrix))
-        yP = convert(Vector{Float64}, y_plain)
-        gp = GP.GPE(XT
-                  , yP
-                  , model.mean
-                  , model.kernel)
-
-        GP.fit!(gp, XT, yP)
-    else
-        gp = GP.GPE(transpose(Xmatrix)
-                  , y_plain
-                  , model.mean
-                  , model.kernel)
-        GP.fit!(gp, transpose(Xmatrix), y_plain)
-    end
-
-    fitresult = (gp, decoder)
+    fitresult = (gp, nclasses, decode)
 
     cache = nothing
     report = nothing
@@ -80,20 +58,19 @@ function MLJBase.fit(model::GPClassifier{T2,M,K}
     return fitresult, cache, report
 end
 
-function MLJBase.predict(model::GPClassifier{T}
+function MLJBase.predict(model::GPClassifier
                        , fitresult
-                       , Xnew) where T
+                       , Xnew) 
 
     Xmatrix = MLJBase.matrix(Xnew)
     
-    gp, decoder = fitresult
+    gp, nclasses, decode = fitresult
 
-    nlevels = length(decoder.pool.levels)
     pred = GP.predict_y(gp, transpose(Xmatrix))[1] # Float
     # rounding with clamping between 1 and nlevels
-    pred_rc = clamp.(round.(Int, pred), 1, nlevels)
+    pred_rc = clamp.(round.(Int, pred), 1, nclasses)
 
-    return MLJBase.inverse_transform(decoder, pred_rc)
+    return decode(pred_rc)
 end
 
 # metadata:
@@ -103,7 +80,7 @@ MLJBase.package_uuid(::Type{<:GPClassifier}) = "891a1506-143c-57d2-908e-e1f8e92e
 MLJBase.package_url(::Type{<:GPClassifier}) = "https://github.com/STOR-i/GaussianProcesses.jl"
 MLJBase.is_pure_julia(::Type{<:GPClassifier}) = true
 MLJBase.input_scitype_union(::Type{<:GPClassifier}) = MLJBase.Continuous
-MLJBase.target_scitype_union(::Type{<:GPClassifier}) = Union{MLJBase.Multiclass,MLJBase.FiniteOrderedFactor}
+MLJBase.target_scitype_union(::Type{<:GPClassifier}) = MLJBase.Finite
 MLJBase.input_is_multivariate(::Type{<:GPClassifier}) = true
 
 end # module

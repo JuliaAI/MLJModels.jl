@@ -34,7 +34,7 @@ C-Support Vector classifier from
 package documentation cited above.
 See also, SVMNuClassifier, SVMLClassifier, SVMRegressor
 """
-mutable struct SVMClassifier <: MLJBase.Deterministic{Any}
+mutable struct SVMClassifier <: MLJBase.Deterministic
     C::Float64
     kernel::Union{String,Function}
     degree::Int
@@ -110,7 +110,7 @@ NU-Support Vector classifier from
 package documentation cited above.
 See also, SVMClassifier, SVMLClassifier, SVMNuRegressor
 """
-mutable struct SVMNuClassifier <: MLJBase.Deterministic{Any}
+mutable struct SVMNuClassifier <: MLJBase.Deterministic
     nu::Float64
     kernel::Union{String,Function}
     degree::Int
@@ -186,7 +186,7 @@ package documentation cited above.
 See also, SVMClassifier, SVMNuClassifier, SVMLRegressor
 """
 
-mutable struct SVMLClassifier <: MLJBase.Deterministic{Any}
+mutable struct SVMLClassifier <: MLJBase.Deterministic
     C::Float64
     loss::String
     dual::Bool
@@ -248,7 +248,7 @@ Epsilon-Support Vector Regression from
 package documentation cited above.
 See also, SVMClassifier, SVMNuRegressor, SVMLRegressor
 """
-mutable struct SVMRegressor <: MLJBase.Deterministic{Any}
+mutable struct SVMRegressor <: MLJBase.Deterministic
     C::Float64
     kernel::Union{String,Function}
     degree::Int
@@ -316,7 +316,7 @@ package documentation cited above.
 See also, SVMNuClassifier, SVMRegressor, SVMLRegressor
 """
 
-mutable struct SVMNuRegressor <: MLJBase.Deterministic{Any}
+mutable struct SVMNuRegressor <: MLJBase.Deterministic
     nu::Float64
     C::Float64
     kernel::Union{String,Function}
@@ -384,7 +384,7 @@ package documentation cited above.
 See also, SVMRegressor, SVMNuRegressor, SVMLClassifier
 """
 
-mutable struct SVMLRegressor <: MLJBase.Deterministic{Any}
+mutable struct SVMLRegressor <: MLJBase.Deterministic
     C::Float64
     loss::String
     fit_intercept::Bool
@@ -436,8 +436,9 @@ function MLJBase.fit(model::SVMClassifier
              , y)
 
     Xmatrix = MLJBase.matrix(X)
-    decoder = MLJBase.CategoricalDecoder(y)
-    y_plain = MLJBase.transform(decoder, y)
+
+    y_plain = MLJBase.int(y)
+    decode  = MLJBase.decoder(y[1]) # for predict method
 
     cache = SVC(C=model.C,
             kernel=model.kernel,
@@ -452,8 +453,8 @@ function MLJBase.fit(model::SVMClassifier
             random_state=model.random_state
     )
 
-    result = ScikitLearn.fit!(cache,Xmatrix,y_plain)
-    fitresult = (result, decoder)
+    result = ScikitLearn.fit!(cache, Xmatrix, y_plain)
+    fitresult = (result, decode)
     report = NamedTuple()
 
     return fitresult, nothing, report
@@ -466,8 +467,9 @@ function MLJBase.fit(model::SVMNuClassifier
              , y)
 
     Xmatrix = MLJBase.matrix(X)
-    decoder = MLJBase.CategoricalDecoder(y)
-    y_plain = MLJBase.transform(decoder, y)
+
+    y_plain = MLJBase.int(y)
+    decode  = MLJBase.decoder(y[1]) # for predict method
 
     cache = NuSVC(nu=model.nu,
             kernel=model.kernel,
@@ -483,7 +485,7 @@ function MLJBase.fit(model::SVMNuClassifier
     )
 
     result = ScikitLearn.fit!(cache,Xmatrix,y_plain)
-    fitresult = (result, decoder)
+    fitresult = (result, decode)
     report = NamedTuple()
 
     return fitresult, nothing, report
@@ -496,8 +498,9 @@ function MLJBase.fit(model::SVMLClassifier
              , y)
 
     Xmatrix = MLJBase.matrix(X)
-    decoder = MLJBase.CategoricalDecoder(y)
-    y_plain = MLJBase.transform(decoder, y)
+
+    y_plain = MLJBase.int(y)
+    decode  = MLJBase.decoder(y[1]) # for predict method
 
     cache = LinearSVC(C=model.C,
 	    loss = model.loss,
@@ -510,7 +513,7 @@ function MLJBase.fit(model::SVMLClassifier
     )
 
     result = ScikitLearn.fit!(cache,Xmatrix,y_plain)
-    fitresult = (result, decoder)
+    fitresult = (result, decode)
     report = NamedTuple()
 
     return fitresult, nothing, report
@@ -587,19 +590,19 @@ function MLJBase.fit(model::SVMLRegressor
 end
 
 
-#> placeholder types for predict dispatching
+# placeholder types for predict dispatching
 SVMC = Union{SVMClassifier, SVMNuClassifier, SVMLClassifier}
 SVMR = Union{SVMRegressor, SVMNuRegressor, SVMLRegressor}
 SVM = Union{SVMC, SVMR}
 
 function MLJBase.predict(model::SVMC
-                     , fitresult::Tuple
-                     , Xnew)
+                         , fitresult
+                         , Xnew)
 
     xnew = MLJBase.matrix(Xnew)
-    result, decoder = fitresult
+    result, decode = fitresult
     prediction = ScikitLearn.predict(result, xnew)
-    return MLJBase.inverse_transform(decoder,prediction)
+    return decode(prediction)
 end
 
 function MLJBase.predict(model::SVMR
@@ -719,7 +722,7 @@ MLJBase.is_pure_julia(::Type{<:SVM}) = false
 MLJBase.package_url(::Type{<:SVM}) = "https://github.com/cstjean/ScikitLearn.jl"
 MLJBase.input_scitype_union(::Type{<:SVM}) = MLJBase.Continuous
 MLJBase.input_is_multivariate(::Type{<:SVM}) = true
-MLJBase.target_scitype_union(::Type{<:SVMC}) = Union{MLJBase.Multiclass,MLJBase.FiniteOrderedFactor}
+MLJBase.target_scitype_union(::Type{<:SVMC}) = MLJBase.Finite
 MLJBase.target_scitype_union(::Type{<:SVMR}) = MLJBase.Continuous
 MLJBase.input_is_multivariate(::Type{<:SVM}) = true
 
