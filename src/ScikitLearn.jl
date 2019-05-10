@@ -791,7 +791,7 @@ function MLJBase.clean!(model::SCElasticNetCV)
 	if(model.alphas!=nothing)
 	if(model.alphas<0)
 		warning *="alpha must be stricly positive, set to 1"
-		model.alpha=1
+		model.alphas=1
 	end
 	end
 	if(!(0<model.l1_ratio<=1))
