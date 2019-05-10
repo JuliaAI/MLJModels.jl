@@ -673,8 +673,16 @@ end
 
 function MLJBase.clean!(model::SCElasticNet)
     warning = ""
-    return warning
+	if(model.alpha<0)
+		warning *="alpha must be stricly positive, set to 1"
+		model.alpha=1
+	end
+	if(!(0<model.l1_ratio<=1))
+		warning *="l1 must be in (0,1], set to 1"
+		model.l1_ratio=1
+	end
 end
+
 
 function MLJBase.fit(model::SCElasticNet
              , verbosity::Int   #> must be here (and typed) even if not used (as here)
@@ -780,7 +788,14 @@ end
 
 function MLJBase.clean!(model::SCElasticNetCV)
     warning = ""
-    return warning
+	if(model.alpha<0)
+		warning *="alpha must be stricly positive, set to 1"
+		model.alpha=1
+	end
+	if(!(0<model.l1_ratio<=1))
+		warning *="l1 must be in (0,1], set to 1"
+		model.l1_ratio=1
+	end
 end
 
 function MLJBase.fit(model::SCElasticNetCV
