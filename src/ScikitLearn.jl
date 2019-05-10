@@ -677,10 +677,15 @@ function MLJBase.clean!(model::SCElasticNet)
 		warning *="alpha must be stricly positive, set to 1"
 		model.alpha=1
 	end
-	if(!(0<model.l1_ratio<=1))
-		warning *="l1 must be in (0,1], set to 1"
-		model.l1_ratio=1
+	if(model.l1_ratio!=nothing)
+		for (iter,val) in enumerate(model.l1_ratio)
+			if(!(0<val<=1))
+				warning *="l1 must be in (0,1], set to 1"
+				model.l1_ratio[iter]=1
+			end
+		end
 	end
+	return warning
 end
 
 
@@ -789,15 +794,20 @@ end
 function MLJBase.clean!(model::SCElasticNetCV)
     warning = ""
 	if(model.alphas!=nothing)
-	if(model.alphas<0)
-		warning *="alpha must be stricly positive, set to 1"
-		model.alphas=1
+		if(model.alphas<0.0)
+			warning *="alpha must be stricly positive, set to 1"
+			model.alphas=1
+		end
 	end
+	if(model.l1_ratio!=nothing)
+		for (iter,val) in enumerate(model.l1_ratio)
+			if(!(0<val<=1))
+				warning *="l1 must be in (0,1], set to 1"
+				model.l1_ratio[iter]=1
+			end
+		end
 	end
-	if(!(0<model.l1_ratio<=1))
-		warning *="l1 must be in (0,1], set to 1"
-		model.l1_ratio=1
-	end
+	return warning
 end
 
 function MLJBase.fit(model::SCElasticNetCV
