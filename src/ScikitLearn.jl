@@ -681,6 +681,7 @@ function MLJBase.clean!(model::SCElasticNet)
 		warning *="l1 must be in (0,1], set to 1"
 		model.l1_ratio=1
 	end
+	return warning
 end
 
 
@@ -796,6 +797,7 @@ function MLJBase.clean!(model::SCElasticNetCV)
 		warning *="l1 must be in (0,1], set to 1"
 		model.l1_ratio=1
 	end
+	return warning
 end
 
 function MLJBase.fit(model::SCElasticNetCV
