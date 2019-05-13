@@ -709,7 +709,7 @@ function MLJBase.fit(model::SCElasticNet
 
     result = ScikitLearn.fit!(cache,Xmatrix,y)
     fitresult = result
-	report = NamedTuple{(:n_iters,:placeholder)}((fitresult.n_iter_,nothing))
+	report = NamedTuple{(:n_iter,:dual_gap)}((fitresult.n_iter_, fitresult.dual_gap_))
     return fitresult, nothing, report
 
 end
@@ -834,7 +834,7 @@ function MLJBase.fit(model::SCElasticNetCV
 
     result = ScikitLearn.fit!(cache,Xmatrix,y)
     fitresult = result
-    report = NamedTuple{(:l1_ratio,:alpha,:n_iters)}((fitresult.l1_ratio_,fitresult.alpha_,fitresult.n_iter_))
+    report = NamedTuple{(:l1_ratio,:alpha,:n_iter,:dual_gap)}((fitresult.l1_ratio_,fitresult.alpha_,fitresult.n_iter_,fitresult.dual_gap_))
 
     return fitresult, nothing, report
 
