@@ -88,6 +88,10 @@ Lrpred = predict(linear_regressor, fitresultRL, selectrows(X, test));
 @test norm(Lrpred - y[test])/sqrt(length(y)) < 0.2
 
 
+## enet = SCElasticNet()
+## enetCV = SCElasticNetCV()
+
+
 ## ELASTIC NET
 
 # generate some synthetic linear data:
@@ -133,7 +137,7 @@ fitresult, cache, report = MLJBase.fit(rgs, 0,
                                        y[train]);
 yhat = predict(rgs, fitresult, selectrows(X, test));
 @test norm(yhat - y[test])/sqrt(length(y)) < 0.2
-@test keys(report) == (:n_iters,:placeholder)
+@test keys(report) == (:n_iter,:dual_gap)
 fitted = fitted_params(rgs, fitresult)
 @test abs(fitted.intercept) < 0.01
 @test abs(fitted.coef[3] .+ 2) < 0.01
