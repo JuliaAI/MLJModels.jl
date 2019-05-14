@@ -4,7 +4,7 @@ module ScikitLearn_
 export SVMClassifier, SVMRegressor
 export SVMNuClassifier, SVMNuRegressor
 export SVMLClassifier, SVMLRegressor
-export SCElasticNet, SCElasticNetCV
+export ElasticNet, ElasticNetCV
 
 #> for all Supervised models:
 import MLJBase
@@ -18,13 +18,9 @@ import ..ScikitLearn
 @sk_import svm: SVC
 @sk_import svm: NuSVC
 @sk_import svm: LinearSVC
-
 @sk_import svm: SVR
 @sk_import svm: NuSVR
 @sk_import svm: LinearSVR
-@sk_import linear_model : ElasticNet
-@sk_import linear_model : ElasticNetCV
-
 
 
 """
@@ -614,14 +610,49 @@ function MLJBase.predict(model::SVMR
 end
 
 
+## METADATA
+
+MLJBase.load_path(::Type{<:SVMClassifier}) = "MLJModels.ScikitLearn_.SVMClassifier"
+MLJBase.load_path(::Type{<:SVMNuClassifier}) = "MLJModels.ScikitLearn_.SVMNuClassifier"
+MLJBase.load_path(::Type{<:SVMLClassifier}) = "MLJModels.ScikitLearn_.SVMLClassifier"
+MLJBase.load_path(::Type{<:SVMRegressor}) = "MLJModels.ScikitLearn_.SVMRegressor"
+MLJBase.load_path(::Type{<:SVMNuRegressor}) = "MLJModels.ScikitLearn_.SVMNuRegressor"
+MLJBase.load_path(::Type{<:SVMRegressor}) = "MLJModels.ScikitLearn_.SVMRegressor"
+MLJBase.load_path(::Type{<:SVMLRegressor}) = "MLJModels.ScikitLearn_.SVMLRegressor"
+
+MLJBase.package_name(::Type{<:SVM}) = "ScikitLearn"
+MLJBase.package_uuid(::Type{<:SVM}) = "3646fa90-6ef7-5e7e-9f22-8aca16db6324"
+MLJBase.is_pure_julia(::Type{<:SVM}) = false
+MLJBase.package_url(::Type{<:SVM}) = "https://github.com/cstjean/ScikitLearn.jl"
+MLJBase.input_scitype_union(::Type{<:SVM}) = MLJBase.Continuous
+MLJBase.input_is_multivariate(::Type{<:SVM}) = true
+MLJBase.target_scitype_union(::Type{<:SVMC}) = MLJBase.Finite
+MLJBase.target_scitype_union(::Type{<:SVMR}) = MLJBase.Continuous
+MLJBase.input_is_multivariate(::Type{<:SVM}) = true
+
+
+################
+# LINEAR MODEL #
+################
+
+# to avoid name conflicts we use this instead of @sk_import:
+(ScikitLearn.Skcore).import_sklearn()
+ElasticNet_ =
+    (ScikitLearn.Skcore.pyimport)("sklearn.linear_model")[:ElasticNet]
+ElasticNetCV_ =
+    (ScikitLearn.Skcore.pyimport)("sklearn.linear_model")[:ElasticNetCV]
+ 
+
+## ELASTIC NET
+
 """
-   SCElasticNet(; kwargs...)
+   ElasticNet(; kwargs...)
 ElasticNet from
 [https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.ElasticNet.html](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.ElasticNet.html). Implemented hyperparameters as per
 package documentation cited above.
 
 """
-mutable struct SCElasticNet <: MLJBase.Deterministic
+mutable struct ElasticNet <: MLJBase.Deterministic
     alpha::Float64
     l1_ratio::Float64
     fit_intercept::Bool
@@ -637,7 +668,7 @@ end
 
 # constructor:
 #> all arguments are kwargs with a default value
-function SCElasticNet(
+function ElasticNet(
     ;alpha=1.0
     ,l1_ratio = 0.5
     ,fit_intercept = true
@@ -650,7 +681,7 @@ function SCElasticNet(
     ,positive=false
     ,selection="cyclic")
 
-    model = SCElasticNet(
+    model = ElasticNet(
         alpha
         , l1_ratio
         , fit_intercept
@@ -671,7 +702,7 @@ function SCElasticNet(
 end
 
 
-function MLJBase.clean!(model::SCElasticNet)
+function MLJBase.clean!(model::ElasticNet)
     warning = ""
 	if(model.alpha<0.0)
 		warning *="alpha must be stricly positive, set to 1"
@@ -689,14 +720,14 @@ function MLJBase.clean!(model::SCElasticNet)
 end
 
 
-function MLJBase.fit(model::SCElasticNet
+function MLJBase.fit(model::ElasticNet
              , verbosity::Int   #> must be here (and typed) even if not used (as here)
              , X
              , y)
 
     Xmatrix = MLJBase.matrix(X)
 
-    cache = ElasticNet(alpha=model.alpha,
+    cache = ElasticNet_(alpha=model.alpha,
             l1_ratio=model.l1_ratio,
             fit_intercept=model.fit_intercept,
             normalize=model.normalize,
@@ -714,12 +745,12 @@ function MLJBase.fit(model::SCElasticNet
 
 end
 
-function MLJBase.fitted_params(model::SCElasticNet, fitresult)
+function MLJBase.fitted_params(model::ElasticNet, fitresult)
 	 return NamedTuple{(:intercept,:coef)}((fitresult.intercept_,fitresult.coef_))
 end
 
 
-function MLJBase.predict(model::SCElasticNet
+function MLJBase.predict(model::ElasticNet
                          , fitresult
                          , Xnew)
     xnew = MLJBase.matrix(Xnew)
@@ -728,14 +759,16 @@ function MLJBase.predict(model::SCElasticNet
 end
 
 
+## ELASTIC NET CV 
+
 """
-   SCElasticNetCV(; kwargs...)
+   ElasticNetCV(; kwargs...)
 ElasticNetCV from
 [https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.ElasticNetCV.html](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.ElasticNetCV.html). Implemented hyperparameters as per
 package documentation cited above.
 
 """
-mutable struct SCElasticNetCV <: MLJBase.Deterministic
+mutable struct ElasticNetCV <: MLJBase.Deterministic
     l1_ratio
 	eps::Float64
 	n_alphas::Int
@@ -753,7 +786,7 @@ end
 
 # constructor:
 #> all arguments are kwargs with a default value
-function SCElasticNetCV(
+function ElasticNetCV(
     ;l1_ratio = 0.5
 	,eps=0.001
 	,n_alphas=100
@@ -768,7 +801,7 @@ function SCElasticNetCV(
     ,positive=false
     ,selection="cyclic")
 
-    model = SCElasticNetCV(
+    model = ElasticNetCV(
 		l1_ratio
 		, eps
 		, n_alphas
@@ -791,7 +824,7 @@ function SCElasticNetCV(
 end
 
 
-function MLJBase.clean!(model::SCElasticNetCV)
+function MLJBase.clean!(model::ElasticNetCV)
     warning = ""
 	if(model.alphas!=nothing)
 		if(model.alphas<0.0)
@@ -810,14 +843,14 @@ function MLJBase.clean!(model::SCElasticNetCV)
 	return warning
 end
 
-function MLJBase.fit(model::SCElasticNetCV
+function MLJBase.fit(model::ElasticNetCV
              , verbosity::Int   #> must be here (and typed) even if not used (as here)
              , X
              , y)
 
     Xmatrix = MLJBase.matrix(X)
 
-    cache = ElasticNetCV(l1_ratio=model.l1_ratio
+    cache = ElasticNetCV_(l1_ratio=model.l1_ratio
 						, eps=model.eps
 						, n_alphas = model.n_alphas
 						, alphas = model.alphas
@@ -840,11 +873,11 @@ function MLJBase.fit(model::SCElasticNetCV
 
 end
 
-function MLJBase.fitted_params(model::SCElasticNetCV, fitresult)
+function MLJBase.fitted_params(model::ElasticNetCV, fitresult)
 	 return NamedTuple{(:intercept,:coef)}((fitresult.intercept_,fitresult.coef_))
 end
 
-function MLJBase.predict(model::SCElasticNetCV
+function MLJBase.predict(model::ElasticNetCV
                          , fitresult
                          , Xnew)
     xnew = MLJBase.matrix(Xnew)
@@ -852,40 +885,26 @@ function MLJBase.predict(model::SCElasticNetCV
     return prediction
 end
 
-# metadata:
-MLJBase.load_path(::Type{<:SVMClassifier}) = "MLJModels.ScikitLearn_.SVMClassifier"
-MLJBase.load_path(::Type{<:SVMNuClassifier}) = "MLJModels.ScikitLearn_.SVMNuClassifier"
-MLJBase.load_path(::Type{<:SVMLClassifier}) = "MLJModels.ScikitLearn_.SVMLClassifier"
-MLJBase.load_path(::Type{<:SVMRegressor}) = "MLJModels.ScikitLearn_.SVMRegressor"
-MLJBase.load_path(::Type{<:SVMNuRegressor}) = "MLJModels.ScikitLearn_.SVMNuRegressor"
-MLJBase.load_path(::Type{<:SVMRegressor}) = "MLJModels.ScikitLearn_.SVMRegressor"
-MLJBase.load_path(::Type{<:SVMLRegressor}) = "MLJModels.ScikitLearn_.SVMLRegressor"
 
-MLJBase.package_name(::Type{<:SVM}) = "ScikitLearn"
-MLJBase.package_uuid(::Type{<:SVM}) = "3646fa90-6ef7-5e7e-9f22-8aca16db6324"
-MLJBase.is_pure_julia(::Type{<:SVM}) = false
-MLJBase.package_url(::Type{<:SVM}) = "https://github.com/cstjean/ScikitLearn.jl"
-MLJBase.input_scitype_union(::Type{<:SVM}) = MLJBase.Continuous
-MLJBase.input_is_multivariate(::Type{<:SVM}) = true
-MLJBase.target_scitype_union(::Type{<:SVMC}) = MLJBase.Finite
-MLJBase.target_scitype_union(::Type{<:SVMR}) = MLJBase.Continuous
-MLJBase.input_is_multivariate(::Type{<:SVM}) = true
+## METATDATA
 
-MLJBase.load_path(::Type{<:SCElasticNet}) = "MLJModels.ScikitLearn_.SCElasticNet"
-MLJBase.package_name(::Type{<:SCElasticNet}) = "ScikitLearn"
-MLJBase.package_uuid(::Type{<:SCElasticNet}) = "3646fa90-6ef7-5e7e-9f22-8aca16db6324"
-MLJBase.is_pure_julia(::Type{<:SCElasticNet}) = false
-MLJBase.package_url(::Type{<:SCElasticNet}) = "https://github.com/cstjean/ScikitLearn.jl"
-MLJBase.input_scitype_union(::Type{<:SCElasticNet}) = MLJBase.Continuous
-MLJBase.target_scitype_union(::Type{<:SCElasticNet}) = MLJBase.Continuous
-MLJBase.input_is_multivariate(::Type{<:SCElasticNet}) = true
+MLJBase.load_path(::Type{<:ElasticNet}) = "MLJModels.ScikitLearn_.ElasticNet"
+MLJBase.package_name(::Type{<:ElasticNet}) = "ScikitLearn"
+MLJBase.package_uuid(::Type{<:ElasticNet}) = "3646fa90-6ef7-5e7e-9f22-8aca16db6324"
+MLJBase.is_pure_julia(::Type{<:ElasticNet}) = false
+MLJBase.package_url(::Type{<:ElasticNet}) = "https://github.com/cstjean/ScikitLearn.jl"
+MLJBase.input_scitype_union(::Type{<:ElasticNet}) = MLJBase.Continuous
+MLJBase.target_scitype_union(::Type{<:ElasticNet}) = MLJBase.Continuous
+MLJBase.input_is_multivariate(::Type{<:ElasticNet}) = true
 
-MLJBase.load_path(::Type{<:SCElasticNetCV}) = "MLJModels.ScikitLearn_.SCElasticNet"
-MLJBase.package_name(::Type{<:SCElasticNetCV}) = "ScikitLearn"
-MLJBase.package_uuid(::Type{<:SCElasticNetCV}) = "3646fa90-6ef7-5e7e-9f22-8aca16db6324"
-MLJBase.is_pure_julia(::Type{<:SCElasticNetCV}) = false
-MLJBase.package_url(::Type{<:SCElasticNetCV}) = "https://github.com/cstjean/ScikitLearn.jl"
-MLJBase.input_scitype_union(::Type{<:SCElasticNetCV}) = MLJBase.Continuous
-MLJBase.target_scitype_union(::Type{<:SCElasticNetCV}) = MLJBase.Continuous
-MLJBase.input_is_multivariate(::Type{<:SCElasticNetCV}) = true
+MLJBase.load_path(::Type{<:ElasticNetCV}) = "MLJModels.ScikitLearn_.ElasticNetCV"
+MLJBase.package_name(::Type{<:ElasticNetCV}) = "ScikitLearn"
+MLJBase.package_uuid(::Type{<:ElasticNetCV}) = "3646fa90-6ef7-5e7e-9f22-8aca16db6324"
+MLJBase.is_pure_julia(::Type{<:ElasticNetCV}) = false
+MLJBase.package_url(::Type{<:ElasticNetCV}) = "https://github.com/cstjean/ScikitLearn.jl"
+MLJBase.input_scitype_union(::Type{<:ElasticNetCV}) = MLJBase.Continuous
+MLJBase.target_scitype_union(::Type{<:ElasticNetCV}) = MLJBase.Continuous
+MLJBase.input_is_multivariate(::Type{<:ElasticNetCV}) = true
+
+
 end # module

@@ -88,8 +88,8 @@ Lrpred = predict(linear_regressor, fitresultRL, selectrows(X, test));
 @test norm(Lrpred - y[test])/sqrt(length(y)) < 0.2
 
 
-## enet = SCElasticNet()
-## enetCV = SCElasticNetCV()
+## enet = ElasticNet()
+## enetCV = ElasticNetCV()
 
 
 ## ELASTIC NET
@@ -105,7 +105,7 @@ y = x1 - x2 -2x3 + 0.02*randn(3000);
 train, test = partition(eachindex(y), 0.7)
 
 # test CV version:
-rgsCV = SCElasticNetCV(copy_X=true, cv=5, eps=0.001,
+rgsCV = ElasticNetCV(copy_X=true, cv=5, eps=0.001,
        fit_intercept=true, l1_ratio=[0.5, 0.9], max_iter=1000, n_alphas=100,
        normalize=false, positive=false,
        precompute="auto", selection="cyclic",
@@ -127,7 +127,7 @@ fitted = fitted_params(rgsCV, fitresult)
 alpha, l1_ratio = report.alpha, report.l1_ratio
 
 # test non-CV version:
-rgs = SCElasticNet(alpha=alpha, l1_ratio=l1_ratio, fit_intercept=true,
+rgs = ElasticNet(alpha=alpha, l1_ratio=l1_ratio, fit_intercept=true,
                  normalize=false, precompute=false, max_iter=1000,
                  copy_X=false, tol=0.0001, warm_start=false,
                  positive=false, selection="random")
@@ -154,8 +154,8 @@ info(SVMRegressor)
 info(SVMNuRegressor)
 info(SVMLRegressor)
 
-info(SCElasticNet)
-info(SCElasticNetCV)
+info(ElasticNet)
+info(ElasticNetCV)
 
 
 end
