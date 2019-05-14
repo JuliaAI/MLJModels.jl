@@ -14,7 +14,6 @@ Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 Requires = "ae029012-a4dd-5104-9daa-d747884805df"
 
 [compat]
-Distributions = "<0.19"
 MLJBase = "0.2.0"
 
 [extras]
