@@ -5,6 +5,10 @@
 
 using Test
 
+@testset "MultivariateStats" begin
+  @test include("MultivariateStats.jl")
+end
+
 @testset "DecisionTree" begin
   @test include("DecisionTree.jl")
 end

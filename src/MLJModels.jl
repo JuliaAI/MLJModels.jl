@@ -7,6 +7,7 @@ using Requires
 const srcdir = dirname(@__FILE__) # the directory containing this file:
 
 function __init__()
+    @require MultivariateStats="6f286f6a-111f-5878-ab1e-185364afe411" include("MultivariateStats.jl")
     @require DecisionTree="7806a523-6efd-50cb-b5f6-3fa6f1930dbb" include("DecisionTree.jl")
     @require GaussianProcesses="891a1506-143c-57d2-908e-e1f8e92e6de9" include("GaussianProcesses.jl")
     @require GLM="38e38edf-8417-5370-95a0-9cbb8c7f171a" include("GLM.jl")
