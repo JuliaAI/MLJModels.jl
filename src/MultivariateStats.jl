@@ -172,7 +172,7 @@ end
 #### METADATA
 ####
 
-MLJBase.load_path(::Type{<:PCA})  = "MLJModels.MultivariateStats_.RidgeRegressor"
+MLJBase.load_path(::Type{<:PCA})  = "MLJModels.MultivariateStats_.PCA"
 MLJBase.package_name(::Type{<:PCA})  = MLJBase.package_name(RidgeRegressor)
 MLJBase.package_uuid(::Type{<:PCA})  = MLJBase.package_uuid(RidgeRegressor)
 MLJBase.package_url(::Type{<:PCA})  = MLJBase.package_url(RidgeRegressor)
