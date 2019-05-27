@@ -4,6 +4,7 @@ using MLJBase
 using Test
 using LinearAlgebra
 
+import MLJModels
 import LIBSVM 
 using MLJModels.LIBSVM_
 using CategoricalArrays
