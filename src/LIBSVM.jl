@@ -5,7 +5,6 @@ export LinearSVC, SVC
 export NuSVC, NuSVR
 export EpsilonSVR
 export OneClassSVM
-export Linearsolver, Kernel
 
 #> for all Supervised models:
 import MLJBase
@@ -287,13 +286,10 @@ Helper function to get the parameters from the SVM model struct.
 """
 function get_svm_parameters(model::Union{SVC, NuSVC, NuSVR, EpsilonSVR, OneClassSVM})
     #Build arguments for calling svmtrain
-    model.gamma == :auto && (model.gamma = 1.0/size(matrix(X)', 1))
     params = Tuple{Symbol, Any}[]
     push!(params, (:svmtype, eval(Meta.parse("LIBSVM.$(typeof(model))")))) # LIBSVM model type
     for fn in fieldnames(typeof(model))
-        if fn != :fit
-            push!(params, (fn, getfield(model, fn)))
-        end
+        push!(params, (fn, getfield(model, fn)))
     end
 
     return params
@@ -328,6 +324,7 @@ function MLJBase.fit(model::Union{SVC, NuSVC}, verbosity::Int, X, y)
 
     cache = nothing
 
+    model.gamma == :auto && (model.gamma = 1.0/size(Xmatrix, 1))
     result = LIBSVM.svmtrain(Xmatrix, y_plain; 
         get_svm_parameters(model)..., 
         verbose = ifelse(verbosity > 0, true, false)
@@ -345,6 +342,7 @@ function MLJBase.fit(model::Union{NuSVR, EpsilonSVR}, verbosity::Int, X, y)
 
     cache = nothing
 
+    model.gamma == :auto && (model.gamma = 1.0/size(Xmatrix, 1))
     fitresult = LIBSVM.svmtrain(Xmatrix, y;
         get_svm_parameters(model)..., 
         verbose = ifelse(verbosity > 0, true, false)
@@ -361,6 +359,7 @@ function MLJBase.fit(model::OneClassSVM, verbosity::Int, X)
 
     cache = nothing
 
+    model.gamma == :auto && (model.gamma = 1.0/size(Xmatrix, 1))
     fitresult = LIBSVM.svmtrain(Xmatrix; 
         get_svm_parameters(model)..., 
         verbose = ifelse(verbosity > 0, true, false)
@@ -389,9 +388,9 @@ function MLJBase.predict(model::Union{NuSVR, EpsilonSVR}, fitresult, Xnew)
     return p
 end
 
-function MLJBase.predict(model::OneClassSVM, fitresult, Xnew)
+function MLJBase.transform(model::OneClassSVM, fitresult, Xnew)
     (p,d) = LIBSVM.svmpredict(fitresult, MLJBase.matrix(Xnew)')
-    return p
+    return categorical(p)
 end
 
 
@@ -412,6 +411,6 @@ MLJBase.input_is_multivariate(::Type{<:SVM}) = true
 MLJBase.input_scitype_union(::Type{<:SVM}) = MLJBase.Continuous
 MLJBase.target_scitype_union(::Type{<:Union{LinearSVC, SVC, NuSVC}}) = MLJBase.Finite
 MLJBase.target_scitype_union(::Type{<:Union{NuSVR, EpsilonSVR}}) = MLJBase.Continuous
-MLJBase.target_scitype_union(::Type{<:OneClassSVM}) = MLJBase.Unknown # Bool (true means inlier)
+MLJBase.output_scitype_union(::Type{<:OneClassSVM}) = MLJBase.Finite{2} # Bool (true means inlier)
 
 end # module

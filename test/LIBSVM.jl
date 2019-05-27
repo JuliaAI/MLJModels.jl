@@ -4,6 +4,7 @@ using MLJBase
 using Test
 using LinearAlgebra
 
+import LIBSVM 
 using MLJModels.LIBSVM_
 using CategoricalArrays
 
@@ -81,11 +82,11 @@ oneclasssvm = OneClassSVM()
 
 fitresultoc, cacheoc, reportoc = MLJBase.fit(oneclasssvm, 1,
                                           selectrows(X, train));
-ocpred = MLJBase.predict(oneclasssvm, fitresultoc, selectrows(X, test)); # output is BitArray
+ocpred = MLJBase.transform(oneclasssvm, fitresultoc, selectrows(X, test)); # output is CategoricalArray{Bool}
 
 # test whether the proprotion of outliers corresponds to the `nu` parameter
-@test isapprox((length(train) - sum(MLJBase.predict(oneclasssvm, fitresultoc, selectrows(X, train)))) / length(train), oneclasssvm.nu, atol=0.001)
-@test isapprox((length(test) - sum(ocpred))  / length(test), oneclasssvm.nu, atol=0.05)
+@test isapprox((length(train) - sum(MLJBase.transform(oneclasssvm, fitresultoc, selectrows(X, train)) .== true)) / length(train), oneclasssvm.nu, atol=0.001)
+@test isapprox((length(test) - sum(ocpred .== true))  / length(test), oneclasssvm.nu, atol=0.05)
 
 
 ## INFO
