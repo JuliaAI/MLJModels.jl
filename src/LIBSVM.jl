@@ -150,7 +150,7 @@ function NuSVC(
     return model
 end
 
-mutable struct OneClassSVM <: MLJBase.Deterministic
+mutable struct OneClassSVM <: MLJBase.Unsupervised
     kernel::LIBSVM.Kernel.KERNEL
     gamma::Union{Float64, Symbol}
     nu::Float64
