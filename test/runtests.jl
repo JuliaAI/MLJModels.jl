@@ -33,6 +33,10 @@ end
     @test include("ScikitLearn.jl")
 end
 
+@testset "LIBSVM" begin
+    @test include("LIBSVM.jl")
+end
+
 @testset "NaiveBayes" begin
     @test include("NaiveBayes.jl")
 end
