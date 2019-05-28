@@ -8,7 +8,8 @@ import MLJModels
 import LIBSVM 
 using MLJModels.LIBSVM_
 using CategoricalArrays
-
+import Random.seed!
+seed!(1234)
 
 ## CLASSIFIERS
 
