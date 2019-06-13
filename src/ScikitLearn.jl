@@ -769,7 +769,7 @@ package documentation cited above.
 
 """
 mutable struct ElasticNetCV <: MLJBase.Deterministic
-    l1_ratio
+        l1_ratio::Float64
 	eps::Float64
 	n_alphas::Int
 	alphas
@@ -784,44 +784,33 @@ mutable struct ElasticNetCV <: MLJBase.Deterministic
 	selection::String
 end
 
-# constructor:
-#> all arguments are kwargs with a default value
-function ElasticNetCV(
-    ;l1_ratio = 0.5
-	,eps=0.001
-	,n_alphas=100
-	,alphas=nothing
-    ,fit_intercept = true
-    ,normalize=false
-    ,precompute=false
-    ,max_iter=1000
-    ,tol=0.0001
-	,cv=nothing
-	,copy_X=true
-    ,positive=false
-    ,selection="cyclic")
-
-    model = ElasticNetCV(
-		l1_ratio
-		, eps
-		, n_alphas
-		, alphas
-		, fit_intercept
-		, normalize
-		, precompute
-		, max_iter
-		, tol
-		, cv
-		, copy_X
-		, positive
-		, selection
-        )
-
-    message = MLJBase.clean!(model)       #> future proof by including these
-    isempty(message) || @warn message #> two lines even if no clean! defined below
-
-    return model
-end
+MLJBase.@set_defaults(ElasticNetCV(
+    #l1_ratio =
+    0.5,
+    # eps=
+    0.001,
+    # n_alphas=
+    100,
+    # alphas=
+    nothing,
+    # fit_intercept =
+    true,
+    # normalize=
+    false,
+    # precompute=
+    false,
+    # max_iter=
+    1000,
+    # tol=
+    0.0001,
+    # cv=
+    nothing,
+    # copy_X=
+    true,
+    # positive=
+    false,
+    # selection=
+    "cyclic"))
 
 
 function MLJBase.clean!(model::ElasticNetCV)
