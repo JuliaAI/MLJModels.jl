@@ -769,7 +769,7 @@ package documentation cited above.
 
 """
 mutable struct ElasticNetCV <: MLJBase.Deterministic
-        l1_ratio::Float64
+        l1_ratio
 	eps::Float64
 	n_alphas::Int
 	alphas
