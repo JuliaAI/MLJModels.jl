@@ -42,7 +42,7 @@ mutable struct DecisionTreeClassifier <: MLJBase.Probabilistic
     min_samples_leaf::Int
     min_samples_split::Int
     min_purity_increase::Float64
-    n_subfeatures::Float64
+    n_subfeatures::Int
     display_depth::Int
     post_prune::Bool
     merge_purity_threshold::Float64
