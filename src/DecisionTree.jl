@@ -27,13 +27,20 @@ import ..DecisionTree # strange syntax b/s we are lazy-loading
 """
     DecisionTreeClassifer(; kwargs...)
 
-CART decision tree classifier from
-[https://github.com/bensadeghi/DecisionTree.jl/blob/master/README.md](https://github.com/bensadeghi/DecisionTree.jl/blob/master/README.md). Predictions
-are Probabilistic.
+A variationn on the CART decision tree classifier from
+    [https://github.com/bensadeghi/DecisionTree.jl/blob/master/README.md](https://github.com/bensadeghi/DecisionTree.jl/blob/master/README.md). 
+
+Instead of predicting the mode class at each leaf, a UnivariateFinite
+distribution is fit to the leaf training classes, with smoothing
+controlled by an additional hyperparameter `pdf_smoothing`: If `n` is
+the number of classes, then each class probability is replaced by
+`pdf_smoothing/n`, if it falls below that value, and the resulting
+vector of probabilities is renormalized.
 
 For post-fit pruning, set `post-prune=true` and set
 `min_purity_threshold` appropriately. Other hyperparameters as per
 package documentation cited above.
+
 
 """
 mutable struct DecisionTreeClassifier <: MLJBase.Probabilistic
@@ -46,6 +53,7 @@ mutable struct DecisionTreeClassifier <: MLJBase.Probabilistic
     display_depth::Int
     post_prune::Bool
     merge_purity_threshold::Float64
+    pdf_smoothing::Float64
 end
 
 # keywork constructor:
@@ -59,7 +67,8 @@ function DecisionTreeClassifier(
     , n_subfeatures=0
     , display_depth=5
     , post_prune=false
-    , merge_purity_threshold=0.9)
+    , merge_purity_threshold=0.9
+    , pdf_smoothing=0.05)
 
     model = DecisionTreeClassifier(
         pruning_purity
@@ -70,7 +79,8 @@ function DecisionTreeClassifier(
         , n_subfeatures
         , display_depth
         , post_prune
-        , merge_purity_threshold)
+        , merge_purity_threshold
+        , pdf_smoothing)
 
     message = MLJBase.clean!(model)       #> future proof by including these
     isempty(message) || @warn message #> two lines even if no clean! defined below
@@ -91,12 +101,16 @@ function MLJBase.clean!(model::DecisionTreeClassifier)
         warning *= "Need min_samples_split >= 2. Resetting min_samples_slit=2.\n"
         model.min_samples_split = 2
     end
+    if model.pdf_smoothing < 0 || model.pdf_smoothing > 1
+        warning *= "Need pdf_smoothing in range [0, 1]. Resetting to 0.05\n"
+        model.pdf_smoothing = 0.05
+    end
     return warning
 end
 
 
 #> A required `fit` method returns `fitresult, cache, report`. (Return
-#> `cache=nothinobserg` unless you are overloading `update`)
+#> `cache=nothing` unless you are overloading `update`)
 function MLJBase.fit(model::DecisionTreeClassifier
              , verbosity::Int   #> must be here (and typed!!) even if not used (as here)
              , X
@@ -136,7 +150,16 @@ end
 
 MLJBase.fitted_params(::DecisionTreeClassifier, fitresult) = fitresult[1]
 
-function MLJBase.predict(::DecisionTreeClassifier
+function smooth(prob_vector, smoothing)
+    threshold = smoothing/length(prob_vector)
+    smoothed_vector = map(prob_vector) do p
+        p < threshold ? threshold : p
+    end
+    smoothed_vector = smoothed_vector/sum(smoothed_vector)
+    return smoothed_vector
+end
+
+function MLJBase.predict(model::DecisionTreeClassifier
                      , fitresult
                      , Xnew)
     Xmatrix = MLJBase.matrix(Xnew)
@@ -144,7 +167,9 @@ function MLJBase.predict(::DecisionTreeClassifier
     tree, classes_seen = fitresult
 
     y_probabilities = DecisionTree.apply_tree_proba(tree, Xmatrix, classes_seen)
-    return [MLJBase.UnivariateFinite(classes_seen, y_probabilities[i,:])
+    return [MLJBase.UnivariateFinite(classes_seen,
+                                     smooth(y_probabilities[i,:],
+                                            model.pdf_smoothing))
             for i in 1:size(y_probabilities, 1)]
 end
 
