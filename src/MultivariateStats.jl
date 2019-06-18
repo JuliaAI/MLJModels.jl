@@ -1,6 +1,6 @@
 module MultivariateStats_
 
-export RidgeRegressor, PCA
+export RidgeRegressor, PCA, KernelPCA
 
 import MLJBase
 import ..MultivariateStats # lazy loading
@@ -169,6 +169,91 @@ function MLJBase.transform(model::PCA
 end
 
 ####
+#### KernelPCA
+####
+
+const KernelPCAFitResultType = MS.KernelPCA
+
+mutable struct KernelPCA <: MLJBase.Unsupervised
+    ncomp::Union{Nothing, Int}       # number of KernelPCA components, all if nothing
+    kernel::Union{Nothing, Function} # kernel function of 2 vector arguments x and y, returns a scalar value, (x,y)->x'y if nothing
+    solver::Union{Nothing, Symbol}   # eig solver, :eig or :eigs, :eig if nothing
+    inverse::Union{Nothing, Bool}    # perform calculation for inverse transform for, false if nothing
+    β::Union{Nothing, Real}          # Hyperparameter of the ridge regression that learns the inverse transform when inverse is true, 1.0 if nothing
+    tol::Union{Nothing, Real}        # Convergence tolerance for eigs solver, 0.0 if nothing
+    maxiter::Union{Nothing, Int}     # maximu number of iterations for eigs solver, 300 if nothing
+end
+
+function KernelPCA(; ncomp=nothing
+                   , kernel=(x,y)->x'y
+                   , solver=:eig
+                   , inverse=false
+                   , β=1.0
+                   , tol=0.0
+                   , maxiter=300)
+
+    model = KernelPCA(ncomp, kernel, solver, inverse, β, tol, maxiter)
+
+    message = MLJBase.clean!(model)
+    isempty(message) || @warn message
+    return model
+end
+
+function MLJBase.clean!(model::KernelPCA)
+    warning = ""
+    if model.ncomp isa Int && model.ncomp < 1
+        warning *= "Need ncomp > 1. Resetting ncomp=p.\n"
+        model.ncomp = nothing
+    end
+    if model.solver ∉ [:eig, :eigs]
+        warning *= "Unknown eigen solver. Resetting to sovler=:eig.\n"
+        model.solver = :eig
+    end
+    return warning
+end
+
+function MLJBase.fit(model::KernelPCA
+                   , verbosity::Int
+                   , X)
+
+    Xarray = MLJBase.matrix(X)
+    mindim = minimum(size(Xarray))
+
+    ncomp = (model.ncomp === nothing) ? mindim : model.ncomp
+
+    fitresult = MS.fit(MS.KernelPCA, permutedims(Xarray)
+                     ; kernel=model.kernel
+                     , maxoutdim=ncomp
+                     , solver=model.solver
+                     , inverse=model.inverse
+                     , β=model.β
+                     , tol=model.tol
+                     , maxiter=model.maxiter)
+
+    cache = nothing
+    report = (indim=MS.indim(fitresult)
+            , outdim=MS.outdim(fitresult)
+            , projection=MS.projection(fitresult)
+            , principalvars=MS.principalvars(fitresult))
+
+    return fitresult, cache, report
+end
+
+MLJBase.fitted_params(::KernelPCA, fitresult) = (projection=fitresult,)
+
+
+function MLJBase.transform(model::KernelPCA
+                         , fitresult::KernelPCAFitResultType
+                         , X)
+
+    Xarray = MLJBase.matrix(X)
+    # X is n x d, need to transpose and copy twice...
+    return MLJBase.table(
+                permutedims(MS.transform(fitresult, permutedims(Xarray))),
+                prototype=X)
+end
+
+####
 #### METADATA
 ####
 
@@ -179,6 +264,11 @@ MLJBase.package_url(::Type{<:PCA})  = MLJBase.package_url(RidgeRegressor)
 MLJBase.is_pure_julia(::Type{<:PCA}) = true
 MLJBase.input_scitype_union(::Type{<:PCA}) = MLJBase.Continuous
 MLJBase.output_scitype_union(::Type{<:PCA}) = MLJBase.Continuous
+
+MLJBase.load_path(::Type{<:KernelPCA})  = "MLJModels.MultivariateStats_.KernelPCA"
+MLJBase.is_pure_julia(::Type{<:KernelPCA}) = true
+MLJBase.input_scitype_union(::Type{<:KernelPCA}) = MLJBase.Continuous
+MLJBase.output_scitype_union(::Type{<:KernelPCA}) = MLJBase.Continuous
 
 end # of module
 

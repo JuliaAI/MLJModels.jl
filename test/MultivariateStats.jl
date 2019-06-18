@@ -61,5 +61,19 @@ end
     @test abs.(Xtr) ≈ Xtr_ref
 end
 
+@testset "KernelPCA" begin
+    task = load_crabs()
+
+    X, y = X_and_y(task)
+
+    kpca = KernelPCA()
+    fitresult, cache, report = MLJBase.fit(kpca, 1, X)
+    Xtr = MLJBase.matrix(MLJBase.transform(kpca, fitresult, X))
+    X_array = MLJBase.matrix(X)
+
+	# TODO: implement a test for synthetic / crabs dataset
+    @test false
+end
+
 end
 true
