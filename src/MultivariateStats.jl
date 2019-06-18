@@ -266,6 +266,9 @@ MLJBase.input_scitype_union(::Type{<:PCA}) = MLJBase.Continuous
 MLJBase.output_scitype_union(::Type{<:PCA}) = MLJBase.Continuous
 
 MLJBase.load_path(::Type{<:KernelPCA})  = "MLJModels.MultivariateStats_.KernelPCA"
+MLJBase.package_name(::Type{<:KernelPCA})  = MLJBase.package_name(RidgeRegressor)
+MLJBase.package_uuid(::Type{<:KernelPCA})  = MLJBase.package_uuid(RidgeRegressor)
+MLJBase.package_url(::Type{<:KernelPCA})  = MLJBase.package_url(RidgeRegressor)
 MLJBase.is_pure_julia(::Type{<:KernelPCA}) = true
 MLJBase.input_scitype_union(::Type{<:KernelPCA}) = MLJBase.Continuous
 MLJBase.output_scitype_union(::Type{<:KernelPCA}) = MLJBase.Continuous
