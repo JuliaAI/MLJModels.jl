@@ -1,6 +1,6 @@
 module MultivariateStats_
 
-export RidgeRegressor, PCA, KernelPCA
+export RidgeRegressor, PCA, KernelPCA, ICA
 
 import MLJBase
 import ..MultivariateStats # lazy loading
@@ -254,6 +254,92 @@ function MLJBase.transform(model::KernelPCA
 end
 
 ####
+#### ICA
+####
+
+const ICAFitResultType = MS.ICA
+
+mutable struct ICA <: MLJBase.Unsupervised
+    k::Int # The number of independent components to recover
+    alg::Union{Nothing, Symbol} # ICA algorithm (only :fastica is implemented upstream)j
+    fun::Union{Nothing, MS.ICAGDeriv{Real}} # The approx neg-entropy functor. It can be obtained using the function icagfun, currently accepting :tanh and :gaus functions
+    do_whiten::Union{Nothing, Bool} # whether to perform pre-whitening, default true
+    maxiter::Union{Nothing, Int}  # Maximum number of iterations, default 100
+    tol::Union{Nothing, Real} # convergence tolerance for change in matrix W, default 1e-6
+    mean::Union{Nothing, Real, Vector{Float64}} # can be 0 (the input data has already been centralized), nothing (it will be computed), vector (a pre-computed mean vector), or nothing
+    winit::Union{Nothing, Matrix{Float64}} # initial guess of a matrix W, which should be an empty matrix (random initialisation) a matrix of size (k, k) (if do_whiten is true), a matrix of size (m, k) (if do_whiten is false), or zeros(0,0)
+end
+
+function ICA(k
+           , alg=:fastica
+           , fun=MS.icagfun(:tanh)
+           , do_whiten=true
+           , maxiter=100
+           , tol=1.0e-6
+           , mean=nothing
+           , winit=zeros(0,0))
+
+    model = ICA(k, alg, fun, do_whiten, maxiter, tol, mean, winit)
+
+    message = MLJBase.clean!(model)
+    isempty(message) || @warn message
+    return model
+end
+
+function MLJBase.clean!(model::ICA)
+    warning = ""
+    if model.alg != :fastica
+        warning *= "Unknown ICA algorithm. Resetting to alg=:fastica.\n"
+        model.alg = :fastica
+    end
+    if (model.mean isa Real) && !iszero(model.mean)
+        warning *= "Need mean to be nothing, zero or a vector." *
+                   " Resetting to mean=nothing.\n"
+        model.mean = nothing
+    end
+    return warning
+end
+
+function MLJBase.fit(model::ICA
+                   , verbosity::Int
+                   , X)
+
+    Xarray = MLJBase.matrix(X)
+    m, n = size(Xarray)
+
+    k = (model.k <= min(m, n)) ? min(m, n) : model.k
+
+    fitresult = MS.fit(MS.ICA, permutedims(Xarray), k=k
+                     , alg=model.alg
+                     , fun=model.fun
+                     , do_whiten=odel.do_whiten
+                     , maxiter=model.maxiter
+                     , tol=model.tol
+                     , mean=model.mean
+                     , winit=model.winit)
+
+    cache = nothing
+    report = (indim=MS.indim(fitresult),
+              outdim=MS.outdim(fitresult),
+              mean=MS.mean(fitresult))
+
+    return fitresult, cache, report
+end
+
+MLJBase.fitted_params(::ICA, fitresult) = (projection=fitresult,)
+
+function MLJBase.transform(model::ICA
+                         , fitresult::ICAFitResultType
+                         , X)
+
+    Xarray = MLJBase.matrix(X)
+    # X is n x d, need to transpose and copy twice...
+    return MLJBase.table(
+                permutedims(MS.transform(fitresult, permutedims(Xarray))),
+                prototype=X)
+end
+
+####
 #### METADATA
 ####
 
@@ -272,6 +358,14 @@ MLJBase.package_url(::Type{<:KernelPCA})  = MLJBase.package_url(RidgeRegressor)
 MLJBase.is_pure_julia(::Type{<:KernelPCA}) = true
 MLJBase.input_scitype_union(::Type{<:KernelPCA}) = MLJBase.Continuous
 MLJBase.output_scitype_union(::Type{<:KernelPCA}) = MLJBase.Continuous
+
+MLJBase.load_path(::Type{<:ICA})  = "MLJModels.MultivariateStats_.ICA"
+MLJBase.package_name(::Type{<:ICA})  = MLJBase.package_name(RidgeRegressor)
+MLJBase.package_uuid(::Type{<:ICA})  = MLJBase.package_uuid(RidgeRegressor)
+MLJBase.package_url(::Type{<:ICA})  = MLJBase.package_url(RidgeRegressor)
+MLJBase.is_pure_julia(::Type{<:ICA}) = true
+MLJBase.input_scitype_union(::Type{<:ICA}) = MLJBase.Continuous
+MLJBase.output_scitype_union(::Type{<:ICA}) = MLJBase.Continuous
 
 end # of module
 

@@ -75,5 +75,14 @@ end
     @test false
 end
 
+@testset "ICA" begin
+    task = load_crabs()
+
+    X, y = X_and_y(task)
+
+	# TODO: implement a test for synthetic / crabs dataset
+    @test false
+end
+
 end
 true
