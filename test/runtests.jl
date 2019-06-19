@@ -17,10 +17,6 @@ end
   @test include("GaussianProcesses.jl")
 end
 
-# @testset "MultivariateStats" begin
-#   @test include("LocalMultivariateStats.jl")
-# end
-
 @testset "Clustering" begin
     @test include("Clustering.jl")
 end
@@ -46,6 +42,6 @@ end
 #Pkg.add(PackageSpec(url="https://github.com/dmlc/XGBoost.jl"))
 #Pkg.add(PackageSpec(name="XGBoost", version="0.3.0"))
 
-# @testset "XGBoost" begin
-#    @test include("XGBoost.jl")
-# end
+@testset "XGBoost" begin
+    @test include("XGBoost.jl")
+ end
