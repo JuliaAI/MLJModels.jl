@@ -262,7 +262,7 @@ const ICAFitResultType = MS.ICA
 mutable struct ICA <: MLJBase.Unsupervised
     k::Int # The number of independent components to recover
     alg::Union{Nothing, Symbol} # ICA algorithm (only :fastica is implemented upstream)j
-    fun::Union{Nothing, MS.ICAGDeriv{Real}} # The approx neg-entropy functor. It can be obtained using the function icagfun, currently accepting :tanh and :gaus functions
+    fun::Union{Nothing, MS.ICAGDeriv{T}} where T<:Real # The approx neg-entropy functor. It can be obtained using the function icagfun, currently accepting :tanh and :gaus functions
     do_whiten::Union{Nothing, Bool} # whether to perform pre-whitening, default true
     maxiter::Union{Nothing, Int}  # Maximum number of iterations, default 100
     tol::Union{Nothing, Real} # convergence tolerance for change in matrix W, default 1e-6
@@ -271,7 +271,7 @@ mutable struct ICA <: MLJBase.Unsupervised
 end
 
 function ICA(k
-           , alg=:fastica
+           ; alg=:fastica
            , fun=MS.icagfun(:tanh)
            , do_whiten=true
            , maxiter=100
@@ -309,10 +309,10 @@ function MLJBase.fit(model::ICA
 
     k = (model.k <= min(m, n)) ? min(m, n) : model.k
 
-    fitresult = MS.fit(MS.ICA, permutedims(Xarray), k=k
-                     , alg=model.alg
+    fitresult = MS.fit(MS.ICA, permutedims(Xarray), k
+                     ; alg=model.alg
                      , fun=model.fun
-                     , do_whiten=odel.do_whiten
+                     , do_whiten=model.do_whiten
                      , maxiter=model.maxiter
                      , tol=model.tol
                      , mean=model.mean
