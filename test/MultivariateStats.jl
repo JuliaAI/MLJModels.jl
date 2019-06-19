@@ -61,26 +61,49 @@ end
 end
 
 @testset "KernelPCA" begin
+
     task = load_crabs()
-
     X, y = X_and_y(task)
-
-    kpca = KernelPCA()
-    fitresult, cache, report = MLJBase.fit(kpca, 1, X)
-    Xtr = MLJBase.matrix(MLJBase.transform(kpca, fitresult, X))
     X_array = MLJBase.matrix(X)
 
-    # TODO: implement a test for synthetic / crabs dataset
-    @test false
+    # MultivariateStats KernelPCA
+    kpca_ms = MultivariateStats.fit(MultivariateStats.KernelPCA
+                                  , permutedims(X_array))
+    Xtr_ms = permutedims(MultivariateStats.transform(kpca_ms, permutedims(X_array)))
+
+    # MLJ KernelPCA
+    kpca_mlj = KernelPCA()
+    fitresult, _, _ = MLJBase.fit(kpca_mlj, 1, X)
+    Xtr_mlj = MLJBase.matrix(MLJBase.transform(kpca_mlj, fitresult, X))
+
+    @test Xtr_mlj ≈ Xtr_ms
+
 end
 
 @testset "ICA" begin
+
     task = load_crabs()
-
     X, y = X_and_y(task)
+    X_array = MLJBase.matrix(X)
+    k = 5
+    tolerance = 5.0
 
-    # TODO: implement a test for synthetic / crabs dataset
-    @test false
+    # MultivariateStats ICA
+    seed!(1234) # winit gets randomly initialised
+    ica_ms = MultivariateStats.fit(MultivariateStats.ICA
+                                 , permutedims(X_array)
+                                 , k
+                                 ; tol=tolerance)
+    Xtr_ms = permutedims(MultivariateStats.transform(ica_ms, permutedims(X_array)))
+
+    # MLJ ICA
+    seed!(1234) # winit gets randomly initialised
+    ica_mlj = ICA(k; tol=tolerance)
+    fitresult, _, _ = MLJBase.fit(ica_mlj, 1, X)
+    Xtr_mlj = MLJBase.matrix(MLJBase.transform(ica_mlj, fitresult, X))
+
+    @test Xtr_mlj ≈ Xtr_ms
+
 end
 
 end
