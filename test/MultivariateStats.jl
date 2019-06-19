@@ -41,24 +41,23 @@ seed!(1234)
 end
 
 @testset "PCA" begin
+
     task = load_crabs()
-
     X, y = X_and_y(task)
-
-    barepca = PCA(pratio=0.9999)
-    info(barepca)
-
-    fitresult, cache, report = MLJBase.fit(barepca, 1, X)
-
-    Xtr = MLJBase.matrix(MLJBase.transform(barepca, fitresult, X))
-
     X_array = MLJBase.matrix(X)
+    pratio = 0.9999
 
-    # home made PCA (the sign flip is irrelevant)
-    Xac = X_array .- mean(X_array, dims=1)
-    U, S, _ = svd(Xac)
-    Xtr_ref = abs.(U .* S')
-    @test abs.(Xtr) ≈ Xtr_ref
+    # MultivariateStats PCA
+    pca_ms = MultivariateStats.fit(MultivariateStats.PCA, permutedims(X_array), pratio=pratio)
+    Xtr_ms = permutedims(MultivariateStats.transform(pca_ms, permutedims(X_array)))
+
+    # MLJ PCA
+    pca_mlj = PCA(pratio=pratio)
+    fitresult, _, _ = MLJBase.fit(pca_mlj, 1, X)
+    Xtr_mlj = MLJBase.matrix(MLJBase.transform(pca_mlj, fitresult, X))
+
+    @test Xtr_mlj ≈ Xtr_ms
+
 end
 
 @testset "KernelPCA" begin
@@ -71,7 +70,7 @@ end
     Xtr = MLJBase.matrix(MLJBase.transform(kpca, fitresult, X))
     X_array = MLJBase.matrix(X)
 
-	# TODO: implement a test for synthetic / crabs dataset
+    # TODO: implement a test for synthetic / crabs dataset
     @test false
 end
 
@@ -80,7 +79,7 @@ end
 
     X, y = X_and_y(task)
 
-	# TODO: implement a test for synthetic / crabs dataset
+    # TODO: implement a test for synthetic / crabs dataset
     @test false
 end
 
