@@ -41,24 +41,69 @@ seed!(1234)
 end
 
 @testset "PCA" begin
+
     task = load_crabs()
-
     X, y = X_and_y(task)
+    X_array = MLJBase.matrix(X)
+    pratio = 0.9999
 
-    barepca = PCA(pratio=0.9999)
-    info(barepca)
+    # MultivariateStats PCA
+    pca_ms = MultivariateStats.fit(MultivariateStats.PCA, permutedims(X_array), pratio=pratio)
+    Xtr_ms = permutedims(MultivariateStats.transform(pca_ms, permutedims(X_array)))
 
-    fitresult, cache, report = MLJBase.fit(barepca, 1, X)
+    # MLJ PCA
+    pca_mlj = PCA(pratio=pratio)
+    fitresult, _, _ = MLJBase.fit(pca_mlj, 1, X)
+    Xtr_mlj = MLJBase.matrix(MLJBase.transform(pca_mlj, fitresult, X))
 
-    Xtr = MLJBase.matrix(MLJBase.transform(barepca, fitresult, X))
+    @test Xtr_mlj ≈ Xtr_ms
 
+end
+
+@testset "KernelPCA" begin
+
+    task = load_crabs()
+    X, y = X_and_y(task)
     X_array = MLJBase.matrix(X)
 
-    # home made PCA (the sign flip is irrelevant)
-    Xac = X_array .- mean(X_array, dims=1)
-    U, S, _ = svd(Xac)
-    Xtr_ref = abs.(U .* S')
-    @test abs.(Xtr) ≈ Xtr_ref
+    # MultivariateStats KernelPCA
+    kpca_ms = MultivariateStats.fit(MultivariateStats.KernelPCA
+                                  , permutedims(X_array))
+    Xtr_ms = permutedims(MultivariateStats.transform(kpca_ms, permutedims(X_array)))
+
+    # MLJ KernelPCA
+    kpca_mlj = KernelPCA()
+    fitresult, _, _ = MLJBase.fit(kpca_mlj, 1, X)
+    Xtr_mlj = MLJBase.matrix(MLJBase.transform(kpca_mlj, fitresult, X))
+
+    @test Xtr_mlj ≈ Xtr_ms
+
+end
+
+@testset "ICA" begin
+
+    task = load_crabs()
+    X, y = X_and_y(task)
+    X_array = MLJBase.matrix(X)
+    k = 5
+    tolerance = 5.0
+
+    # MultivariateStats ICA
+    seed!(1234) # winit gets randomly initialised
+    ica_ms = MultivariateStats.fit(MultivariateStats.ICA
+                                 , permutedims(X_array)
+                                 , k
+                                 ; tol=tolerance)
+    Xtr_ms = permutedims(MultivariateStats.transform(ica_ms, permutedims(X_array)))
+
+    # MLJ ICA
+    seed!(1234) # winit gets randomly initialised
+    ica_mlj = ICA(k; tol=tolerance)
+    fitresult, _, _ = MLJBase.fit(ica_mlj, 1, X)
+    Xtr_mlj = MLJBase.matrix(MLJBase.transform(ica_mlj, fitresult, X))
+
+    @test Xtr_mlj ≈ Xtr_ms
+
 end
 
 end
