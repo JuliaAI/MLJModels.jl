@@ -350,6 +350,7 @@ function MLJBase.fit(model::Union{SVC, NuSVC}, verbosity::Int, X, y)
 
     cache = nothing
 
+    model = deepcopy(model)
     model.gamma == :auto && (model.gamma = 1.0/size(Xmatrix, 1))
     result = LIBSVM.svmtrain(Xmatrix, y_plain; 
         get_svm_parameters(model)..., 
@@ -368,6 +369,7 @@ function MLJBase.fit(model::Union{NuSVR, EpsilonSVR}, verbosity::Int, X, y)
 
     cache = nothing
 
+    model = deepcopy(model)
     model.gamma == :auto && (model.gamma = 1.0/size(Xmatrix, 1))
     fitresult = LIBSVM.svmtrain(Xmatrix, y;
         get_svm_parameters(model)..., 
@@ -385,6 +387,7 @@ function MLJBase.fit(model::OneClassSVM, verbosity::Int, X)
 
     cache = nothing
 
+    model = deepcopy(model)
     model.gamma == :auto && (model.gamma = 1.0/size(Xmatrix, 1))
     fitresult = LIBSVM.svmtrain(Xmatrix; 
         get_svm_parameters(model)..., 
