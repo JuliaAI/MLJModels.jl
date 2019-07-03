@@ -87,18 +87,18 @@ MLJBase.target_scitype_union(::Type{<:RidgeRegressor}) = MLJBase.Continuous
 const PCAFitResultType = MS.PCA
 
 mutable struct PCA <: MLJBase.Unsupervised
-    ncomp::Union{Nothing, Int} # number of PCA components, all if nothing
+    maxoutdim::Union{Nothing, Int} # number of PCA components, all if nothing
     method::Symbol  # cov or svd (auto by default, choice based on dims)
     pratio::Float64 # ratio of variances preserved in the principal subspace
     mean::Union{Nothing, Real, Vector{Float64}} # 0 if pre-centered
 end
 
-function PCA(; ncomp=nothing
+function PCA(; maxoutdim=nothing
              , method=:auto
              , pratio=0.99
              , mean=nothing)
 
-    model = PCA(ncomp, method, pratio, mean)
+    model = PCA(maxoutdim, method, pratio, mean)
     message = MLJBase.clean!(model)
     isempty(message) || @warn message
     return model
@@ -106,9 +106,9 @@ end
 
 function MLJBase.clean!(model::PCA)
     warning = ""
-    if model.ncomp isa Int && model.ncomp < 1
-        warning *= "Need ncomp > 1. Resetting ncomp=p.\n"
-        model.ncomp = nothing
+    if model.maxoutdim isa Int && model.maxoutdim < 1
+        warning *= "Need maxoutdim > 1. Resetting maxoutdim=p.\n"
+        model.maxoutdim = nothing
     end
     if model.method ∉ [:auto, :cov, :svd]
         warning *= "Unknown method specification. Resetting to method=:auto.\n"
@@ -133,13 +133,13 @@ function MLJBase.fit(model::PCA
     Xarray = MLJBase.matrix(X)
     mindim = minimum(size(Xarray))
 
-    ncomp = (model.ncomp === nothing) ? mindim : model.ncomp
+    maxoutdim = (model.maxoutdim === nothing) ? mindim : model.maxoutdim
 
     # NOTE: copy/transpose
     fitresult = MS.fit(MS.PCA, permutedims(Xarray)
                      ; method=model.method
                      , pratio=model.pratio
-                     , maxoutdim=ncomp
+                     , maxoutdim=maxoutdim
                      , mean=model.mean)
 
     cache = nothing
@@ -175,7 +175,7 @@ end
 const KernelPCAFitResultType = MS.KernelPCA
 
 mutable struct KernelPCA <: MLJBase.Unsupervised
-    ncomp::Union{Nothing, Int}       # number of KernelPCA components, all if nothing
+    maxoutdim::Union{Nothing, Int}       # number of KernelPCA components, all if nothing
     kernel::Union{Nothing, Function} # kernel function of 2 vector arguments x and y, returns a scalar value, (x,y)->x'y if nothing
     solver::Union{Nothing, Symbol}   # eig solver, :eig or :eigs, :eig if nothing
     inverse::Union{Nothing, Bool}    # perform calculation for inverse transform for, false if nothing
@@ -184,7 +184,7 @@ mutable struct KernelPCA <: MLJBase.Unsupervised
     maxiter::Union{Nothing, Int}     # maximu number of iterations for eigs solver, 300 if nothing
 end
 
-function KernelPCA(; ncomp=nothing
+function KernelPCA(; maxoutdim=nothing
                    , kernel=(x,y)->x'y
                    , solver=:eig
                    , inverse=false
@@ -192,7 +192,7 @@ function KernelPCA(; ncomp=nothing
                    , tol=0.0
                    , maxiter=300)
 
-    model = KernelPCA(ncomp, kernel, solver, inverse, β, tol, maxiter)
+    model = KernelPCA(maxoutdim, kernel, solver, inverse, β, tol, maxiter)
 
     message = MLJBase.clean!(model)
     isempty(message) || @warn message
@@ -201,9 +201,9 @@ end
 
 function MLJBase.clean!(model::KernelPCA)
     warning = ""
-    if model.ncomp isa Int && model.ncomp < 1
-        warning *= "Need ncomp > 1. Resetting ncomp=p.\n"
-        model.ncomp = nothing
+    if model.maxoutdim isa Int && model.maxoutdim < 1
+        warning *= "Need maxoutdim > 1. Resetting maxoutdim=p.\n"
+        model.maxoutdim = nothing
     end
     if model.solver ∉ [:eig, :eigs]
         warning *= "Unknown eigen solver. Resetting to sovler=:eig.\n"
@@ -219,11 +219,11 @@ function MLJBase.fit(model::KernelPCA
     Xarray = MLJBase.matrix(X)
     mindim = minimum(size(Xarray))
 
-    ncomp = (model.ncomp === nothing) ? mindim : model.ncomp
+    maxoutdim = (model.maxoutdim === nothing) ? mindim : model.maxoutdim
 
     fitresult = MS.fit(MS.KernelPCA, permutedims(Xarray)
                      ; kernel=model.kernel
-                     , maxoutdim=ncomp
+                     , maxoutdim=maxoutdim
                      , solver=model.solver
                      , inverse=model.inverse
                      , β=model.β
