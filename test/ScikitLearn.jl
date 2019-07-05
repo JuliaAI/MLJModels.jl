@@ -144,7 +144,33 @@ fitted = fitted_params(rgs, fitresult)
 
 
 
+import ScikitLearn: @sk_import
+@sk_import datasets: (make_friedman2, make_regression)
+@sk_import gaussian_process.kernels: (DotProduct, WhiteKernel)
 
+
+X,y = make_friedman2()
+gpr = ScikitLearn_.GaussianProcessRegressor(kernel = DotProduct() + WhiteKernel(), random_state = 1)
+res, cache, rep = MLJBase.fit(gpr, 1, X,y);
+res.score(X,y)
+predict(gpr, res, X[2:end, :])
+
+
+X, y = make_regression(n_features=4, n_informative=2, random_state=0, shuffle=false)
+reg = ScikitLearn_.AdaBoostRegressor(random_state=0, n_estimators=100)
+res, cache, rep = MLJBase.fit(reg, 1, X,y);
+@test norm(predict(regr, res, [0 0 0 0])[1] - 4.7972) < 1e-4
+@test norm(res.score(X, y) - 0.9771) < 1e-4
+
+reg = ScikitLearn_.LassoLars(alpha = 0.01)
+res, cache, rep = MLJBase.fit(clf, 1, [-1 1; 0 0; 1 1], [-1,0,-1])
+@test norm(res.coef_ - [0, -0.963257]) < 1e-4
+
+seed!(0)
+X,y = randn(10, 5), randn(10)
+reg = ScikitLearn_.Ridge(alpha = 1.0)
+res, cache, rep = MLJBase.fit(reg, 1, X, y)
+@test norm(res.intercept_ - -0.78011) < 1e-5
 
 
 info(SVMClassifier)
