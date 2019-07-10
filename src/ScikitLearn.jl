@@ -108,6 +108,11 @@ macro sklmodel(ex)
         $(esc(fit_ex))
         $(esc(clean_ex))
         $(esc(predict_ex))
+        MLJBase.load_path(::Type{<:$(esc(stname))}) = string($(stname))
+        MLJBase.package_name(::Type{<:$(esc(stname))}) = "ScikitLearn"
+        MLJBase.package_uuid(::Type{<:$(esc(stname))}) = "3646fa90-6ef7-5e7e-9f22-8aca16db6324"
+        MLJBase.is_pure_julia(::Type{<:$(esc(stname))}) = false
+        MLJBase.package_url(::Type{<:$(esc(stname))}) = "https://github.com/cstjean/ScikitLearn.jl"
     end
 end
 
@@ -746,14 +751,14 @@ ARDRegression_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).ARDRegr
     lambda_1::Float64 = 1e-6
     lambda_2::Float64 = 1e-6
     compute_score::Bool = false
-    threshhold_lambda::Float64 = 1.0e4
+    threshold_lambda::Float64 = 1.0e4
     fit_intercept::Bool = true
     normalize::Bool = false
     copy_X::Bool = true
     verbose::Bool = false
 end
 
-LassoCV_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).BayesianRidge
+BayesianRidge_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).BayesianRidge
 @sklmodel mutable struct BayesianRidge <: MLJBase.Deterministic
     n_iter::Int = 300::(arg>0)
     tol::Float64 = 0.001
@@ -829,14 +834,30 @@ LarsCV_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).LarsCV
 @sklmodel mutable struct LarsCV <: MLJBase.Deterministic
     fit_intercept::Bool = true
     verbose::Union{Bool,Int} = 0
+    max_iter::Int = 500
     normalize::Bool = true
     precompute::Any = "auto"
     cv::Any = 5
-    max_n_alphas::Union{Nothing,Int} = nothing
+    max_n_alphas::Int = 1000
     n_jobs::Union{Nothing,Int} = nothing
     eps::Float64 = 1e-8
     copy_X::Bool = true
     positive::Bool = false
+end
+
+Lasso_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).Lasso
+@sklmodel mutable struct Lasso <: MLJBase.Deterministic
+    alpha::Float64 = 1.0
+    fit_intercept::Bool = true
+    normalize::Bool = false
+    precompute::Any = false
+    copy_X::Bool = true
+    max_iter::Int = 1000
+    tol::Float64 = 0.0001
+    warm_start::Bool = false
+    positive::Bool = false
+    random_state::Any = nothing
+    selection::String = "cyclic"
 end
 
 LassoCV_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).LassoCV
@@ -880,8 +901,8 @@ LassoLarsCV_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).LassoLars
     normalize::Bool = true
     precompute::Any = "auto"
     cv::Any = 5
-    max_n_alphas::Union{Nothing,Int} = nothing
-    njobs::Union{Nothing,Int} = nothing
+    max_n_alphas::Int = 1000
+    n_jobs::Union{Nothing,Int} = nothing
     eps::Float64 = 2.220446049250313e-16::(arg>0.0)
     copy_X::Bool = true
     positive::Any = false
@@ -898,12 +919,12 @@ end
 MultiTaskElasticNet_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).MultiTaskElasticNet
 @sklmodel mutable struct MultiTaskElasticNet <: MLJBase.Deterministic
     alpha::Float64 = 1.0
-    l1_ratio::Union{Float64, Vector{Float64}} = 1.0::(0<=arg<=1)
+    l1_ratio::Union{Float64, Vector{Float64}} = 0.5::(0<=arg<=1)
     fit_intercept::Bool = true
     normalize::Bool = true
     copy_X::Bool = true
-    max_iter::Int = 500
-    tol::Float64 = 1e-6
+    max_iter::Int = 1000
+    tol::Float64 = 0.0001
     warm_start::Bool = false
     random_state::Any = nothing
     selection::String = "cyclic"
@@ -911,14 +932,14 @@ end
 
 MultiTaskElasticNetCV_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).MultiTaskElasticNetCV
 @sklmodel mutable struct MultiTaskElasticNetCV <: MLJBase.Deterministic
-    l1_ratio::Union{Float64, Vector{Float64}} = 1.0
+    l1_ratio::Union{Float64, Vector{Float64}} = 0.5
     eps::Float64 = 1e-3
-    n_alphas::Union{Nothing,Int} = nothing
+    n_alphas::Int = 100
     alphas::Any = nothing
     fit_intercept::Bool = true
-    normalize::Bool = true
-    max_iter::Int = 500
-    tol::Float64 = 1e-6
+    normalize::Bool = false
+    max_iter::Int = 1000
+    tol::Float64 = 0.0001
     cv::Int = 5
     copy_X::Bool = true
     verbose::Union{Bool, Int} = 0
@@ -930,7 +951,7 @@ end
 MultiTaskLassoCV_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).MultiTaskLassoCV
 @sklmodel mutable struct MultiTaskLassoCV <: MLJBase.Deterministic
     eps::Float64 = 1e-3
-    n_alphas::Union{Nothing,Int} = nothing
+    n_alphas::Int = 100
     alphas::Any = nothing
     fit_intercept::Bool = true
     normalize::Bool = false
@@ -1092,7 +1113,7 @@ BaggingRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.ensemble")).BaggingR
 end
 
 GradientBoostingRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.ensemble")).GradientBoostingRegressor
-mutable struct GradientBoostingRegressor <: MLJBase.Deterministic
+@sklmodel mutable struct GradientBoostingRegressor <: MLJBase.Deterministic
     loss::String = "ls"::(arg in ("ls","lad","huber","quantile"))
     learning_rate::Float64 = 0.1
     n_estimators::Int = 100
@@ -1117,22 +1138,22 @@ mutable struct GradientBoostingRegressor <: MLJBase.Deterministic
     tol::Float64 = 1e-4
 end
 
-HistGradientBoostingRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.ensemble")).HistGradientBoostingRegressor
-@sklmodel mutable struct HistGradientBoostingRegressor <: MLJBase.Deterministic
-    loss::Any = "least_squares"
-    learning_rate::Float64 = 0.1
-    max_iter::Int = 100
-    max_leaf_nodes::Int = 31
-    max_depth::Union{Int, Nothing} = nothing
-    min_samples_leaf::Int = 20
-    l2_regularization::Float64 = 0.0
-    max_bins::Int = 256
-    scoring::Any = nothing
-    validation_fraction::Union{Int, Float64, Nothing} = 0.1
-    n_iter_no_change::Union{Int, Nothing} = nothing
-    tol::Union{Float64, Any} = 1e-7
-    random_state::Any = nothing
-end
+# HistGradientBoostingRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.ensemble")).HistGradientBoostingRegressor
+# @sklmodel mutable struct HistGradientBoostingRegressor <: MLJBase.Deterministic
+#     loss::Any = "least_squares"
+#     learning_rate::Float64 = 0.1
+#     max_iter::Int = 100
+#     max_leaf_nodes::Int = 31
+#     max_depth::Union{Int, Nothing} = nothing
+#     min_samples_leaf::Int = 20
+#     l2_regularization::Float64 = 0.0
+#     max_bins::Int = 256
+#     scoring::Any = nothing
+#     validation_fraction::Union{Int, Float64, Nothing} = 0.1
+#     n_iter_no_change::Union{Int, Nothing} = nothing
+#     tol::Union{Float64, Any} = 1e-7
+#     random_state::Any = nothing
+# end
 
 RandomForestRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.ensemble")).RandomForestRegressor
 @sklmodel mutable struct RandomForestRegressor <: MLJBase.Deterministic
