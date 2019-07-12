@@ -22,7 +22,7 @@ end
 end
 
 @testset "GLM" begin
-    @test include("GLM.jl")
+    include("GLM.jl")
 end
 
 @testset "SVM" begin

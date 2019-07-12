@@ -1,52 +1,49 @@
-module TestGLM
-
-# using Revise
-using Test
-
-using MLJBase
-import MLJModels
-import GLM
+using Test, MLJBase, Distributions
+using Random: seed!
+import MLJModels, GLM
 using MLJModels.GLM_
 
-###
-### OLSREGRESSOR
-###
+# ----------------------------------------------------------------------------
+# OLS Regression
+# ----------------------------------------------------------------------------
 
 task = load_boston()
 X, y = task();
-
 train, test = partition(eachindex(y), 0.7)
 
-atom_ols = OLSRegressor()
+ols = OLSRegressor()
 
 Xtrain = selectrows(X, train)
 ytrain = selectrows(y, train)
 Xtest  = selectrows(X, test)
 
-fitresult, _, report = fit(atom_ols, 1, Xtrain, ytrain)
-MLJBase.fitted_params(atom_ols, fitresult)
+fitresult, _, report = fit(ols, 1, Xtrain, ytrain)
 
-p = predict_mean(atom_ols, fitresult, Xtest)
+fitparams = MLJBase.fitted_params(ols, fitresult)
+
+@test isa(fitparams.coef, Vector{Float64})
+@test isa(fitparams.intercept, Float64)
+
+p = predict_mean(ols, fitresult, Xtest)
 
 # hand made regression to compare
 
-Xa = MLJBase.matrix(X) # convert(Matrix{Float64}, X)
-Xa1 = hcat(Xa, ones(size(Xa, 1)))
+Xa    = MLJBase.matrix(X) # convert(Matrix{Float64}, X)
+Xa1   = hcat(Xa, ones(size(Xa, 1)))
 coefs = Xa1[train, :] \ y[train]
-p2 = Xa1[test, :] * coefs
+p2    = Xa1[test, :] * coefs
 
 @test p ≈ p2
 
-info(atom_ols)
+info(ols)
 
-p_distr = predict(atom_ols, fitresult, selectrows(X, test))
+p_distr = predict(ols, fitresult, selectrows(X, test))
 
-###
-### GLMCOUNT
-###
+@test isa(p_distr, Vector{Normal{Float64}})
 
-using Random: seed!
-using Distributions
+# ----------------------------------------------------------------------------
+# GLM COUNT (poisson link)
+# ----------------------------------------------------------------------------
 
 seed!(0)
 
@@ -59,13 +56,14 @@ Xtable = table(X)
 
 y = [rand(Poisson(λᵢ)) for λᵢ ∈ λ]
 
-atom_glmcount = GLMCount()
+glmcount = GLMCount()
 
-fitresult, _, _ = fit(atom_glmcount, 1, Xtable, y)
+fitresult, _, _ = fit(glmcount, 1, Xtable, y)
 
-p = predict_mean(atom_glmcount, fitresult, Xtable)
+p = predict_mean(glmcount, fitresult, Xtable)
 
-p_distr = predict(atom_glmcount, fitresult, Xtable)
+@test isa(p, Vector{Float64})
 
-end # module
-true
+p_distr = predict(glmcount, fitresult, Xtable)
+
+@test isa(p_distr, Vector{Poisson{Float64}})
