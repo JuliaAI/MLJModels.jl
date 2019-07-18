@@ -2,6 +2,7 @@ module TestClustering
 
 # using Revise
 using MLJBase
+using CSV
 using Test
 using Random:seed!
 import LinearAlgebra: norm
