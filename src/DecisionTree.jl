@@ -271,7 +271,7 @@ end
 
 ## METADATA
 
-DTTypes=Union{DecisionTreeClassifier,DecisionTreeRegressor}
+const DTTypes = Union{DecisionTreeClassifier,DecisionTreeRegressor}
 
 MLJBase.package_name(::Type{<:DTTypes}) = "DecisionTree"
 MLJBase.package_uuid(::Type{<:DTTypes}) = "7806a523-6efd-50cb-b5f6-3fa6f1930dbb"

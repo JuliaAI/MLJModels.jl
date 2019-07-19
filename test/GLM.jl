@@ -3,13 +3,15 @@ using Random: seed!
 import MLJModels, GLM
 using MLJModels.GLM_
 
-# ----------------------------------------------------------------------------
-# OLS Regression
-# ----------------------------------------------------------------------------
+using RDatasets
 
 task = load_boston()
-X, y = task();
+X, y = task()
 train, test = partition(eachindex(y), 0.7)
+
+# -----------
+#  💡 OLS 💡
+# -----------
 
 ols = OLSRegressor()
 
@@ -18,6 +20,10 @@ ytrain = selectrows(y, train)
 Xtest  = selectrows(X, test)
 
 fitresult, _, report = fit(ols, 1, Xtrain, ytrain)
+
+n = size(Xtrain, 1)
+p = size(Xtrain, 2)
+@test report.dof_residual == n - (p + 1)
 
 fitparams = MLJBase.fitted_params(ols, fitresult)
 
@@ -35,35 +41,40 @@ p2    = Xa1[test, :] * coefs
 
 @test p ≈ p2
 
-info(ols)
+infos = info(ols)
+
+@test infos[:is_pure_julia]
+@test infos[:input_is_multivariate]
+@test !infos[:is_wrapper]
+@test infos[:target_scitype_union] == Union{MLJBase.Continuous, MLJBase.Count}
+@test infos[:package_name] == "GLM"
 
 p_distr = predict(ols, fitresult, selectrows(X, test))
 
 @test isa(p_distr, Vector{Normal{Float64}})
 
-# ----------------------------------------------------------------------------
-# GLM COUNT (poisson link)
-# ----------------------------------------------------------------------------
+Distributions.mean(p_distr[1]) ≈ p2[1]
 
-seed!(0)
+# --------------------------
+#  💡 Logistic Regression 💡
+# --------------------------
 
-X = randn(100, 3) .* randn(3)'
-Xtable = table(X)
+# data drawn from https://stats.idre.ucla.edu/r/dae/poisson-regression/
 
-α = 0.1
-β = [-0.3, 0.2, -0.1]
-λ = exp.(α .+ X * β)
+data = dataset("MASS", "Melanoma")
 
-y = [rand(Poisson(λᵢ)) for λᵢ ∈ λ]
+X = data[[:Status, :Sex, :Age, :Year, :Thickness]]
+y = data[:Ulcer]
 
-glmcount = GLMCount()
+n = length(y)
 
-fitresult, _, _ = fit(glmcount, 1, Xtable, y)
+# MSE is not the right metric here but gives an idea that something is recovered
+baseline_mse = sum((0.5ones(n) - y).^2)/n
 
-p = predict_mean(glmcount, fitresult, Xtable)
-
-@test isa(p, Vector{Float64})
-
-p_distr = predict(glmcount, fitresult, Xtable)
-
-@test isa(p_distr, Vector{Poisson{Float64}})
+for model ∈ (LogitRegressor, ProbitRegressor, CauchitRegressor, CloglogRegressor)
+    m = model()
+    fitresult, _, _ = fit(m, 1, X, y)
+    p_mean = predict_mean(m, fitresult, X)
+    mse = sum((p_mean.-y).^2)/n
+    @test mse < baseline_mse
+end
