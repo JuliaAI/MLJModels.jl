@@ -3,6 +3,7 @@ module TestMultivariateStats
 # using Revise
 using Test
 using MLJBase
+using CSV
 import MultivariateStats
 using MLJModels.MultivariateStats_
 

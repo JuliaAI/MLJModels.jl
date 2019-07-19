@@ -1,6 +1,7 @@
 module TestLIBSVM
 
 using MLJBase
+using CSV
 using Test
 using LinearAlgebra
 

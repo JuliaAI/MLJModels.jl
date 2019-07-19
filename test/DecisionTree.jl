@@ -4,6 +4,7 @@ module TestDecisionTree
 using Test
 import CategoricalArrays
 using MLJBase
+using CSV
 
 # load code to be tested:
 import MLJModels

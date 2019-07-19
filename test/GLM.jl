@@ -4,6 +4,7 @@ module TestGLM
 using Test
 
 using MLJBase
+using CSV
 import MLJModels
 import GLM
 using MLJModels.GLM_

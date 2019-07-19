@@ -2,6 +2,7 @@ module TestGaussianProcesses
 
 # using Revise
 using MLJBase
+using CSV
 using Test
 using Random:seed!
 import CategoricalArrays
