@@ -2,6 +2,7 @@ module TestNaiveBayes
 
 # using Revise
 using MLJBase
+using CSV
 using Test
 import Random.seed!
 

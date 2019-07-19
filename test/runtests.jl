@@ -4,6 +4,8 @@
 # eg, `module TestDatasets` for code testing `datasets.jl`.
 
 using Test
+using MLJBase
+using CSV
 
 @testset "MultivariateStats" begin
   @test include("MultivariateStats.jl")
