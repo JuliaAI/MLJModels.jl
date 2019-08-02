@@ -2,7 +2,6 @@ module TestNaiveBayes
 
 # using Revise
 using MLJBase
-using CSV
 using Test
 import Random.seed!
 
@@ -19,8 +18,11 @@ gaussian_classifier = GaussianNBClassifier()
 info(gaussian_classifier)
 
 # gaussian classifier takes continuous features
-task = load_iris()
-X, y = X_and_y(task)
+using RDatasets
+iris = dataset("datasets", "iris")
+X = iris[:, 1:4]
+y = iris[:, 5]
+
 train, test = partition(eachindex(y), 0.6)
 
 fitresultG, cacheG, reportG = fit(gaussian_classifier, 1,

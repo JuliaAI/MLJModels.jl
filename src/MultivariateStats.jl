@@ -3,6 +3,8 @@ module MultivariateStats_
 export RidgeRegressor, PCA, KernelPCA, ICA
 
 import MLJBase
+using ScientificTypes
+
 import ..MultivariateStats # lazy loading
 
 const MS = MultivariateStats
@@ -77,8 +79,8 @@ MLJBase.package_name(::Type{<:RidgeRegressor}) = "MultivariateStats"
 MLJBase.package_uuid(::Type{<:RidgeRegressor}) = "6f286f6a-111f-5878-ab1e-185364afe411"
 MLJBase.package_url(::Type{<:RidgeRegressor})  = "https://github.com/JuliaStats/MultivariateStats.jl"
 MLJBase.is_pure_julia(::Type{<:RidgeRegressor}) = true
-MLJBase.input_scitype_union(::Type{<:RidgeRegressor}) = MLJBase.Continuous
-MLJBase.target_scitype_union(::Type{<:RidgeRegressor}) = MLJBase.Continuous
+MLJBase.input_scitype(::Type{<:RidgeRegressor}) = Table(Continuous)
+MLJBase.target_scitype(::Type{<:RidgeRegressor}) = AbstractVector{Continuous}
 
 ####
 #### PCA
@@ -348,24 +350,24 @@ MLJBase.package_name(::Type{<:PCA})  = MLJBase.package_name(RidgeRegressor)
 MLJBase.package_uuid(::Type{<:PCA})  = MLJBase.package_uuid(RidgeRegressor)
 MLJBase.package_url(::Type{<:PCA})  = MLJBase.package_url(RidgeRegressor)
 MLJBase.is_pure_julia(::Type{<:PCA}) = true
-MLJBase.input_scitype_union(::Type{<:PCA}) = MLJBase.Continuous
-MLJBase.output_scitype_union(::Type{<:PCA}) = MLJBase.Continuous
+MLJBase.input_scitype(::Type{<:PCA}) = Table(Continuous)
+MLJBase.output_scitype(::Type{<:PCA}) = Table(Continuous)
 
 MLJBase.load_path(::Type{<:KernelPCA})  = "MLJModels.MultivariateStats_.KernelPCA"
 MLJBase.package_name(::Type{<:KernelPCA})  = MLJBase.package_name(RidgeRegressor)
 MLJBase.package_uuid(::Type{<:KernelPCA})  = MLJBase.package_uuid(RidgeRegressor)
 MLJBase.package_url(::Type{<:KernelPCA})  = MLJBase.package_url(RidgeRegressor)
 MLJBase.is_pure_julia(::Type{<:KernelPCA}) = true
-MLJBase.input_scitype_union(::Type{<:KernelPCA}) = MLJBase.Continuous
-MLJBase.output_scitype_union(::Type{<:KernelPCA}) = MLJBase.Continuous
+MLJBase.input_scitype(::Type{<:KernelPCA}) = Table(Continuous)
+MLJBase.output_scitype(::Type{<:KernelPCA}) = Table(Continuous)
 
 MLJBase.load_path(::Type{<:ICA})  = "MLJModels.MultivariateStats_.ICA"
 MLJBase.package_name(::Type{<:ICA})  = MLJBase.package_name(RidgeRegressor)
 MLJBase.package_uuid(::Type{<:ICA})  = MLJBase.package_uuid(RidgeRegressor)
 MLJBase.package_url(::Type{<:ICA})  = MLJBase.package_url(RidgeRegressor)
 MLJBase.is_pure_julia(::Type{<:ICA}) = true
-MLJBase.input_scitype_union(::Type{<:ICA}) = MLJBase.Continuous
-MLJBase.output_scitype_union(::Type{<:ICA}) = MLJBase.Continuous
+MLJBase.input_scitype(::Type{<:ICA}) = Table(Continuous)
+MLJBase.output_scitype(::Type{<:ICA}) = Table(Continuous)
 
 end # of module
 

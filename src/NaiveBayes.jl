@@ -3,7 +3,9 @@ module NaiveBayes_
 export GaussianNBClassifier, MultinomialNBClassifier, HybridNBClassifier
 
 import MLJBase
+using ScientificTypes
 using CategoricalArrays
+
 import ..NaiveBayes
 
 mutable struct GaussianNBClassifier <: MLJBase.Probabilistic
@@ -117,17 +119,15 @@ MLJBase.package_name(::Type{<:GaussianNBClassifier}) = "NaiveBayes"
 MLJBase.package_uuid(::Type{<:GaussianNBClassifier}) = "9bbee03b-0db5-5f46-924f-b5c9c21b8c60"
 MLJBase.package_url(::Type{<:GaussianNBClassifier}) = "https://github.com/dfdx/NaiveBayes.jl"
 MLJBase.is_pure_julia(::Type{<:GaussianNBClassifier}) = true
-MLJBase.input_scitype_union(::Type{<:GaussianNBClassifier}) = MLJBase.Continuous
-MLJBase.target_scitype_union(::Type{<:GaussianNBClassifier}) = MLJBase.Finite
-MLJBase.input_is_multivariate(::Type{<:GaussianNBClassifier}) = true
+MLJBase.input_scitype(::Type{<:GaussianNBClassifier}) = Table(Continuous)
+MLJBase.target_scitype(::Type{<:GaussianNBClassifier}) = AbstractVector{<:Finite}
 
 MLJBase.load_path(::Type{<:MultinomialNBClassifier}) = "MLJModels.NaiveBayes_.MultinomialNBClassifier"
 MLJBase.package_name(::Type{<:MultinomialNBClassifier}) = "NaiveBayes"
 MLJBase.package_uuid(::Type{<:MultinomialNBClassifier}) = "9bbee03b-0db5-5f46-924f-b5c9c21b8c60"
 MLJBase.package_url(::Type{<:MultinomialNBClassifier}) = "https://github.com/dfdx/NaiveBayes.jl"
 MLJBase.is_pure_julia(::Type{<:MultinomialNBClassifier}) = true
-MLJBase.input_scitype_union(::Type{<:MultinomialNBClassifier}) = MLJBase.Count
-MLJBase.target_scitype_union(::Type{<:MultinomialNBClassifier}) = MLJBase.Finite
-MLJBase.input_is_multivariate(::Type{<:MultinomialNBClassifier}) = true
+MLJBase.input_scitype(::Type{<:MultinomialNBClassifier}) = Table(Count)
+MLJBase.target_scitype(::Type{<:MultinomialNBClassifier}) = AbstractVector{<:Finite}
 
 end     #module

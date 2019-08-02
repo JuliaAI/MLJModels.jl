@@ -120,13 +120,11 @@ MLJBase.package_url(::GLM_REGS)   = "https://github.com/JuliaStats/GLM.jl"
 MLJBase.is_pure_julia(::GLM_REGS) = true
 
 MLJBase.load_path(::Type{<:OLS})       = "MLJModels.GLM_.OLSRegressor"
-MLJBase.input_scitype_union(::Type{<:OLS})     = MLJBase.Continuous
-MLJBase.target_scitype_union(::Type{<:OLS})     = MLJBase.Continuous
-MLJBase.input_is_multivariate(::Type{<:OLS}) = true
+MLJBase.input_scitype(::Type{<:OLS})     = MLJBase.Table(MLJBase.Continuous)
+MLJBase.target_scitype(::Type{<:OLS})     = AbstractVector{MLJBase.Continuous}
 
 MLJBase.load_path(::Type{<:GLMCount})       = "MLJModels.GLM_.GLMCountRegressor"
-MLJBase.input_scitype_union(::Type{<:GLMCount})     = MLJBase.Continuous
-MLJBase.target_scitype_union(::Type{<:GLMCount})     = MLJBase.Count
-MLJBase.input_is_multivariate(::Type{<:GLMCount}) = true
+MLJBase.input_scitype(::Type{<:GLMCount})     = MLJBase.Table(MLJBase.Continuous)
+MLJBase.target_scitype(::Type{<:GLMCount})     = AbstractVector{MLJBase.Count}
 
 end # module

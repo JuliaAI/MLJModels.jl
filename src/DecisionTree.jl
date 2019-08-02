@@ -15,6 +15,9 @@ export DecisionTreeClassifier, DecisionTreeRegressor
 
 import MLJBase
 
+#> needed for metadata:
+using ScientificTypes
+
 #> needed for classifiers:
 using CategoricalArrays
 
@@ -281,14 +284,11 @@ MLJBase.is_pure_julia(::Type{<:DTTypes}) = true
 MLJBase.load_path(::Type{<:DecisionTreeClassifier}) = "MLJModels.DecisionTree_.DecisionTreeClassifier"
 MLJBase.load_path(::Type{<:DecisionTreeRegressor}) = "MLJModels.DecisionTree_.DecisionTreeRegressor"
 
-MLJBase.input_scitype_union(::Type{<:DecisionTreeClassifier}) = MLJBase.Continuous
-MLJBase.input_scitype_union(::Type{<:DecisionTreeRegressor}) = MLJBase.Continuous
+MLJBase.input_scitype(::Type{<:DecisionTreeClassifier}) = Table(Continuous)
+MLJBase.input_scitype(::Type{<:DecisionTreeRegressor}) = Table(Continuous)
 
-MLJBase.target_scitype_union(::Type{<:DecisionTreeClassifier}) = MLJBase.Finite
-MLJBase.target_scitype_union(::Type{<:DecisionTreeRegressor}) = MLJBase.Continuous
-
-MLJBase.input_is_multivariate(::Type{<:DecisionTreeClassifier}) = true
-MLJBase.input_is_multivariate(::Type{<:DecisionTreeRegressor}) = true
+MLJBase.target_scitype(::Type{<:DecisionTreeClassifier}) = AbstractVector{<:Finite}
+MLJBase.target_scitype(::Type{<:DecisionTreeRegressor}) = AbstractVector{<:Finite}
 
 
 end # module

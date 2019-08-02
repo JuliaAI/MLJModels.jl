@@ -2,16 +2,16 @@ module TestGaussianProcesses
 
 # using Revise
 using MLJBase
-using CSV
+using RDatasets
 using Test
 using Random:seed!
 import CategoricalArrays
 
 seed!(113355)
 
-task = load_crabs()
-
-X, y = X_and_y(task)
+data = dataset("MASS", "crabs")
+X = MLJBase.selectcols(data, [:FL, :RW, :CL, :CW, :BD])   
+y = MLJBase.selectcols(data, :Sp)
 
 # load code to be tested:
 import MLJModels 
