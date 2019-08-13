@@ -27,8 +27,8 @@ import ..DecisionTree # strange syntax b/s we are lazy-loading
 """
     DecisionTreeClassifer(; kwargs...)
 
-A variationn on the CART decision tree classifier from
-    [https://github.com/bensadeghi/DecisionTree.jl/blob/master/README.md](https://github.com/bensadeghi/DecisionTree.jl/blob/master/README.md). 
+A variation on the CART decision tree classifier from
+    [https://github.com/bensadeghi/DecisionTree.jl/blob/master/README.md](https://github.com/bensadeghi/DecisionTree.jl/blob/master/README.md).
 
 Instead of predicting the mode class at each leaf, a UnivariateFinite
 distribution is fit to the leaf training classes, with smoothing
@@ -120,7 +120,7 @@ function MLJBase.fit(model::DecisionTreeClassifier
 
     yplain = identity.(y) # y as plain not abstact vector
     classes_seen = unique(yplain)
-    
+
     tree = DecisionTree.build_tree(yplain,
                                    Xmatrix,
                                    model.n_subfeatures,
@@ -271,7 +271,7 @@ end
 
 ## METADATA
 
-DTTypes=Union{DecisionTreeClassifier,DecisionTreeRegressor}
+const DTTypes = Union{DecisionTreeClassifier, DecisionTreeRegressor}
 
 MLJBase.package_name(::Type{<:DTTypes}) = "DecisionTree"
 MLJBase.package_uuid(::Type{<:DTTypes}) = "7806a523-6efd-50cb-b5f6-3fa6f1930dbb"

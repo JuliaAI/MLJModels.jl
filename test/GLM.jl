@@ -1,12 +1,14 @@
 module TestGLM
 
-# using Revise
 using Test
 
 using MLJBase
 import MLJModels
+import Distributions
 import GLM
 using MLJModels.GLM_
+using Random: seed!
+using RDatasets
 
 ###
 ### OLSREGRESSOR
@@ -24,7 +26,7 @@ ytrain = selectrows(y, train)
 Xtest  = selectrows(X, test)
 
 fitresult, _, report = fit(atom_ols, 1, Xtrain, ytrain)
-MLJBase.fitted_params(atom_ols, fitresult)
+θ = MLJBase.fitted_params(atom_ols, fitresult)
 
 p = predict_mean(atom_ols, fitresult, Xtest)
 
@@ -37,35 +39,46 @@ p2 = Xa1[test, :] * coefs
 
 @test p ≈ p2
 
-info(atom_ols)
+infos = info(atom_ols)
+
+@test infos[:package_name] == "GLM"
+@test infos[:is_pure_julia]
+@test infos[:is_probabilistic]
+@test infos[:target_scitype_union] == MLJBase.Continuous
 
 p_distr = predict(atom_ols, fitresult, selectrows(X, test))
 
-###
-### GLMCOUNT
-###
+@test p_distr[1] == Distributions.Normal(p[1], GLM.dispersion(fitresult))
 
-using Random: seed!
-using Distributions
+###
+### Logistic regression
+###
 
 seed!(0)
 
-X = randn(100, 3) .* randn(3)'
-Xtable = table(X)
+# data drawn from https://stats.idre.ucla.edu/r/dae/poisson-regression/
+data = dataset("MASS", "Melanoma")
 
-α = 0.1
-β = [-0.3, 0.2, -0.1]
-λ = exp.(α .+ X * β)
+X = data[[:Status, :Sex, :Age, :Year, :Thickness]]
+y = data[:Ulcer]
 
-y = [rand(Poisson(λᵢ)) for λᵢ ∈ λ]
+n = length(y)
 
-atom_glmcount = GLMCount()
+baseline_y = convert.(Int, rand(n) .> 0.5)
+baseline_mse = sum((baseline_y - y).^2)/n
 
-fitresult, _, _ = fit(atom_glmcount, 1, Xtable, y)
+lr = BinaryClassifier()
+fitresult, _, report = fit(lr, 1, X, y)
+p_mode = predict_mode(lr, fitresult, X)
+# rough test
+mse = sum((p_mode .- y).^2)/n
+@test mse < baseline_mse
 
-p = predict_mean(atom_glmcount, fitresult, Xtable)
-
-p_distr = predict(atom_glmcount, fitresult, Xtable)
+pr = BinaryClassifier(link=GLM.ProbitLink())
+fitresult, _, report = fit(pr, 1, X, y)
+p_mode = predict_mode(pr, fitresult, X)
+mse = sum((p_mode .- y).^2)/n
+@test mse < baseline_mse
 
 end # module
 true
