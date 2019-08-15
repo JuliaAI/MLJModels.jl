@@ -16,6 +16,7 @@ ScientificTypes = "321657f4-b219-11e9-178b-2701a2544e81"
 
 [compat]
 MLJBase = "0.2.3, 0.3"
+julia = "1"
 
 [extras]
 Clustering = "aaaa29a8-35af-508c-8bc3-b662a17a0fe5"
