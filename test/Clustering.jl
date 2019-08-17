@@ -1,6 +1,5 @@
 module TestClustering
 
-# using Revise
 using MLJBase
 using CSV
 using Test
@@ -9,7 +8,7 @@ import LinearAlgebra: norm
 import Distances: evaluate
 
 # load code to be tested:
-import MLJModels 
+import MLJModels
 import Clustering # MLJModels.Clustering_ now available for loading
 using MLJModels.Clustering_
 
@@ -18,7 +17,6 @@ seed!(132442)
 task = load_crabs()
 
 X, y = X_and_y(task)
-
 
 ####
 #### KMEANS

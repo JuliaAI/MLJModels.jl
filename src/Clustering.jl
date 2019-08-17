@@ -75,7 +75,7 @@ function MLJBase.transform(model::KMeans
     Xarray = MLJBase.matrix(X)
     (n, p), k = size(Xarray), model.k
     # pairwise distance from samples to centers
-    X̃ = pairwise(model.metric, transpose(Xarray), fitresult)
+    X̃ = pairwise(model.metric, transpose(Xarray), fitresult, dims=2)
     return MLJBase.table(X̃, prototype=X)
 end
 
@@ -97,7 +97,7 @@ function MLJBase.fit(model::KMedoids
 
     Xarray = MLJBase.matrix(X)
     # cost matrix: all the pairwise distances
-    Carray = pairwise(model.metric, transpose(Xarray)) # n x n
+    Carray = pairwise(model.metric, transpose(Xarray), dims=2) # n x n
 
     result    = C.kmedoids(Carray, model.k)
     fitresult = permutedims(view(Xarray, result.medoids, :)) # medoids (p x k)
@@ -117,7 +117,7 @@ function MLJBase.transform(model::KMedoids
     Xarray = MLJBase.matrix(X)
     (n, p), k = size(Xarray), model.k
     # pairwise distance from samples to medoids
-    X̃ = pairwise(model.metric, transpose(Xarray), fitresult)
+    X̃ = pairwise(model.metric, transpose(Xarray), fitresult, dims=2)
     return MLJBase.table(X̃, prototype=X)
 end
 
@@ -169,4 +169,3 @@ MLJBase.output_scitype_union(::Type{<:KMedoids}) = MLJBase.Continuous
 MLJBase.output_is_multivariate(::Type{<:KMedoids}) = true
 
 end # module
-
