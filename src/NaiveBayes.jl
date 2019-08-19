@@ -20,14 +20,14 @@ function MLJBase.fit(model::GaussianNBClassifier, verbosity::Int
     classes_seen = unique(yplain)
 
     # initiates dictionaries keyed on classes_seen:
-    res = NaiveBayes.GaussianNB(classes_seen, p) 
+    res = NaiveBayes.GaussianNB(classes_seen, p)
 
     fitresult = NaiveBayes.fit(res, Xmatrix, yplain)
 
     report = NamedTuple{}()
-    
+
     return fitresult, nothing, report
-    
+
 end
 
 function MLJBase.fitted_params(model::GaussianNBClassifier, fitresult)
@@ -37,7 +37,7 @@ function MLJBase.fitted_params(model::GaussianNBClassifier, fitresult)
             gaussians=res.gaussians,
             n_obs=res.n_obs)
 end
-    
+
 function MLJBase.predict(model::GaussianNBClassifier, fitresult, Xnew)
 
     Xmatrix = MLJBase.matrix(Xnew)' |> collect
@@ -55,7 +55,7 @@ function MLJBase.predict(model::GaussianNBClassifier, fitresult, Xnew)
     # classes with zero probability:
     return [MLJBase.UnivariateFinite(classes_observed, probs[:,i])
             for i in 1:n]
-    
+
 end
 
 # MultinomialNBClassifier
@@ -82,7 +82,7 @@ function MLJBase.fit(model::MultinomialNBClassifier, verbosity::Int
     fitresult = NaiveBayes.fit(res, Xmatrix, yplain)
 
     report = NamedTuple()
-    
+
     return fitresult, nothing, report
 end
 
@@ -93,7 +93,7 @@ function MLJBase.fitted_params(model::MultinomialNBClassifier, fitresult)
             x_totals=res.x_totals,
             n_obs=res.n_obs)
 end
-    
+
 function MLJBase.predict(model::MultinomialNBClassifier, fitresult, Xnew)
 
     Xmatrix = MLJBase.matrix(Xnew) |> collect |> permutedims
@@ -117,17 +117,15 @@ MLJBase.package_name(::Type{<:GaussianNBClassifier}) = "NaiveBayes"
 MLJBase.package_uuid(::Type{<:GaussianNBClassifier}) = "9bbee03b-0db5-5f46-924f-b5c9c21b8c60"
 MLJBase.package_url(::Type{<:GaussianNBClassifier}) = "https://github.com/dfdx/NaiveBayes.jl"
 MLJBase.is_pure_julia(::Type{<:GaussianNBClassifier}) = true
-MLJBase.input_scitype_union(::Type{<:GaussianNBClassifier}) = MLJBase.Continuous
-MLJBase.target_scitype_union(::Type{<:GaussianNBClassifier}) = MLJBase.Finite
-MLJBase.input_is_multivariate(::Type{<:GaussianNBClassifier}) = true
+MLJBase.input_scitype(::Type{<:GaussianNBClassifier}) = MLJBase.Continuous
+MLJBase.target_scitype(::Type{<:GaussianNBClassifier}) = MLJBase.Finite
 
 MLJBase.load_path(::Type{<:MultinomialNBClassifier}) = "MLJModels.NaiveBayes_.MultinomialNBClassifier"
 MLJBase.package_name(::Type{<:MultinomialNBClassifier}) = "NaiveBayes"
 MLJBase.package_uuid(::Type{<:MultinomialNBClassifier}) = "9bbee03b-0db5-5f46-924f-b5c9c21b8c60"
 MLJBase.package_url(::Type{<:MultinomialNBClassifier}) = "https://github.com/dfdx/NaiveBayes.jl"
 MLJBase.is_pure_julia(::Type{<:MultinomialNBClassifier}) = true
-MLJBase.input_scitype_union(::Type{<:MultinomialNBClassifier}) = MLJBase.Count
-MLJBase.target_scitype_union(::Type{<:MultinomialNBClassifier}) = MLJBase.Finite
-MLJBase.input_is_multivariate(::Type{<:MultinomialNBClassifier}) = true
+MLJBase.input_scitype(::Type{<:MultinomialNBClassifier}) = MLJBase.Count
+MLJBase.target_scitype(::Type{<:MultinomialNBClassifier}) = MLJBase.Finite
 
 end     #module

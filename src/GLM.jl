@@ -3,11 +3,12 @@ module GLM_
 # -------------------------------------------------------------------
 # TODO
 # - return feature names in the report
+# - return feature importance curve to report using `features`
 # - handle binomial case properly, needs MLJ API change for weighted
 # samples (y/N ~ Be(p) with weights N)
 # - handle levels properly (see GLM.jl/issues/240); if feed something
 # with levels, the fit will fail.
-# - revisit and test Poisson and Negbin regrssion once there's a clear
+# - revisit and test Poisson and Negbin regression once there's a clear
 # example we can test on (requires handling levels which deps upon GLM)
 # - test Logit, Probit etc on Binomial once binomial case is handled
 # -------------------------------------------------------------------
@@ -36,7 +37,7 @@ function augment_X(X::Matrix, b::Bool)::Matrix
     return X
 end
 
-## TODO: add feature importance curve to report using `features`
+
 """
 glm_report(fitresult)
 
@@ -95,12 +96,14 @@ function MLJBase.fit(model::BinaryClassifier, verbosity::Int, X, y)
 	# apply the model
 	features  = MLJBase.schema(X).names
 	Xmatrix   = augment_X(MLJBase.matrix(X), model.fit_intercept)
-	fitresult = GLM.glm(Xmatrix, y, Distributions.Bernoulli(), model.link)
+	decode    = y[1]
+	y_plain   = MLJBase.int(y) .- 1 # 0, 1 of type Int
+	fitresult = GLM.glm(Xmatrix, y_plain, Distributions.Bernoulli(), model.link)
 	# form the report
 	report    = glm_report(fitresult)
 	cache     = nothing
 	# return
-	return fitresult, cache, report
+	return (fitresult, decode), cache, report
 end
 
 function MLJBase.fitted_params(model::GLM_MODELS, fitresult)
@@ -113,47 +116,49 @@ end
 #### PREDICT FUNCTIONS
 ####
 
+# more efficient than MLJBase fallback
 function MLJBase.predict_mean(model::OLS, fitresult, Xnew)
     Xmatrix = augment_X(MLJBase.matrix(Xnew), model.fit_intercept)
     return GLM.predict(fitresult, Xmatrix)
 end
 
-function MLJBase.predict_mode(model::BC, fitresult, Xnew)
+function MLJBase.predict_mean(model::BC, (fitresult, _), Xnew)
     Xmatrix = augment_X(MLJBase.matrix(Xnew), model.fit_intercept)
-    return convert.(Int, GLM.predict(fitresult, Xmatrix) .> 0.5)
+    return GLM.predict(fitresult, Xmatrix)
 end
 
 function MLJBase.predict(model::OLS, fitresult, Xnew)
-    Xmatrix = augment_X(MLJBase.matrix(Xnew), model.fit_intercept)
-    μ = GLM.predict(fitresult, Xmatrix)
+    μ = MLJBase.predict_mean(model, fitresult, Xnew)
     σ̂ = GLM.dispersion(fitresult)
     return [GLM.Normal(μᵢ, σ̂) for μᵢ ∈ μ]
 end
 
-function MLJBase.predict(model::BinaryClassifier, fitresult, Xnew)
-    Xmatrix = augment_X(MLJBase.matrix(Xnew), model.fit_intercept)
-    π = GLM.predict(fitresult, Xmatrix)
-    return GLM.Bernoulli.(π)
+function MLJBase.predict(model::BC, (fitresult, decode), Xnew)
+	π = MLJBase.predict_mean(model, (fitresult, decode), Xnew)
+	return [MLJBase.UnivariateFinite(MLJBase.classes(decode), [1-πᵢ, πᵢ]) for πᵢ in π]
 end
+
+# NOTE: predict_mode uses MLJBase's fallback
 
 ####
 #### METADATA
 ####
 
 # shared metadata
-MLJBase.package_name(::Type{<:GLM_MODELS})  = "GLM"
-MLJBase.package_uuid(::Type{<:GLM_MODELS})  = "38e38edf-8417-5370-95a0-9cbb8c7f171a"
-MLJBase.package_url(::Type{<:GLM_MODELS})   = "https://github.com/JuliaStats/GLM.jl"
-MLJBase.is_pure_julia(::Type{<:GLM_MODELS}) = true
+MLJBase.package_name(::Type{<:GLM_MODELS})     = "GLM"
+MLJBase.package_url(::Type{<:GLM_MODELS})      = "https://github.com/JuliaStats/GLM.jl"
+MLJBase.package_license(::Type{<:GLM_MODELS})  = "MIT"
+MLJBase.package_uuid(::Type{<:GLM_MODELS})     = "38e38edf-8417-5370-95a0-9cbb8c7f171a"
+MLJBase.is_pure_julia(::Type{<:GLM_MODELS})    = true
+MLJBase.is_wrapper(::Type{<:GLM_MODELS})       = false
+MLJBase.supports_weights(::Type{<:GLM_MODELS}) = false #  for now
 
-MLJBase.load_path(::Type{<:OLS})             = "MLJModels.GLM_.NormalRegressor"
-MLJBase.input_scitype_union(::Type{<:OLS})   = MLJBase.Continuous
-MLJBase.target_scitype_union(::Type{<:OLS})  = MLJBase.Continuous
-MLJBase.input_is_multivariate(::Type{<:OLS}) = true
+MLJBase.load_path(::Type{<:OLS})      = "MLJModels.GLM_.NormalRegressor"
+MLJBase.input_scitype(::Type{<:OLS})  = MLJBase.Continuous
+MLJBase.target_scitype(::Type{<:OLS}) = MLJBase.Continuous
 
-MLJBase.load_path(::Type{<:BC})             = "MLJModels.GLM_.BinaryClassifier"
-MLJBase.input_scitype_union(::Type{<:BC})   = MLJBase.Continuous
-MLJBase.target_scitype_union(::Type{<:BC})  = MLJBase.Finite
-MLJBase.input_is_multivariate(::Type{<:BC}) = true
+MLJBase.load_path(::Type{<:BC})       = "MLJModels.GLM_.BinaryClassifier"
+MLJBase.input_scitype(::Type{<:BC})   = MLJBase.Continuous
+MLJBase.target_scitype(::Type{<:BC})  = MLJBase.Finite
 
 end # module

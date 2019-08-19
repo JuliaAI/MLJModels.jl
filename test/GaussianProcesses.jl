@@ -1,7 +1,7 @@
 module TestGaussianProcesses
 
-# using Revise
 using MLJBase
+using CSV
 using Test
 using Random:seed!
 import CategoricalArrays
@@ -13,8 +13,8 @@ task = load_crabs()
 X, y = X_and_y(task)
 
 # load code to be tested:
-import MLJModels 
-import GaussianProcesses 
+import MLJModels
+import GaussianProcesses
 using MLJModels.GaussianProcesses_
 
 baregp = GPClassifier()

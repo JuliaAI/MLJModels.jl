@@ -58,7 +58,7 @@ deterministic (point) predictions. Admissible values for `objective` are
 "linear", "gamma" or "tweedie". For other `kwargs`, see
 [https://xgboost.readthedocs.io/en/latest/parameter.html](https://xgboost.readthedocs.io/en/latest/parameter.html).
 
-For a time-dependent random seed, use `seed=-1`. 
+For a time-dependent random seed, use `seed=-1`.
 
 See also: XGBoostCount, XGBoostClassifier
 
@@ -177,7 +177,7 @@ function MLJBase.fit(model::XGBoostRegressor
 
     seed =
         model.seed == -1 ? generate_seed() : model.seed
-    
+
     fitresult = XGBoost.xgboost(dm
                                , model.num_round
                                , booster = model.booster
@@ -284,7 +284,7 @@ The XGBoost model for targets with `Count` scitype. Gives
 deterministic (point) predictions. For admissible `kwargs`, see
 [https://xgboost.readthedocs.io/en/latest/parameter.html](https://xgboost.readthedocs.io/en/latest/parameter.html).
 
-For a time-dependent random seed, use `seed=-1`. 
+For a time-dependent random seed, use `seed=-1`.
 
 See also: XGBoostRegressor, XGBoostClassifier
 
@@ -363,8 +363,8 @@ function XGBoostCount(
     ,eval_metric
     ,seed)
 
-     message = MLJBase.clean!(model)    
-     isempty(message) || @warn message 
+     message = MLJBase.clean!(model)
+     isempty(message) || @warn message
 
     return model
 end
@@ -497,7 +497,7 @@ The XGBoost model for targets with `Finite` scitype (including
 admissible `kwargs`, see
 [https://xgboost.readthedocs.io/en/latest/parameter.html](https://xgboost.readthedocs.io/en/latest/parameter.html).
 
-For a time-dependent random seed, use `seed=-1`. 
+For a time-dependent random seed, use `seed=-1`.
 
 See also: XGBoostCount, XGBoostRegressor
 
@@ -615,7 +615,7 @@ function MLJBase.fit(model::XGBoostClassifier
     if(num_class==2)
         objective="binary:logistic"
         y_plain = convert(Array{Bool}, y_plain)
-        num_class = 1 
+        num_class = 1
     else
         objective="multi:softprob"
     end
@@ -625,7 +625,7 @@ function MLJBase.fit(model::XGBoostClassifier
 
     seed =
         model.seed == -1 ? generate_seed() : model.seed
-    
+
     result = XGBoost.xgboost(Xmatrix, label=y_plain
                                , model.num_round
                                , booster = model.booster
@@ -682,21 +682,21 @@ function MLJBase.predict(model::XGBoostClassifier
     result, a_target_element = fitresult
     decode = MLJBase.decoder(a_target_element)
     classes = MLJBase.classes(a_target_element)
-    
+
     Xmatrix = MLJBase.matrix(Xnew)
     XGBpredictions = XGBoost.predict(result, Xmatrix)
 
     nlevels = length(classes)
     npatterns = MLJBase.nrows(Xnew)
 
-    if nlevels == 2 
+    if nlevels == 2
         true_class_probabilities = reshape(XGBpredictions, 1, npatterns)
         false_class_probabilities = 1 .- true_class_probabilities
         XGBpredictions = vcat(false_class_probabilities, true_class_probabilities)
     end
 
     prediction_probabilities = reshape(XGBpredictions, nlevels, npatterns)
-    
+
     predictions = [MLJBase.UnivariateFinite(classes,
                                              prediction_probabilities[:,i])
                    for i in 1:npatterns]
@@ -715,15 +715,15 @@ MLJBase.package_url(::Type{<:XGTypes}) = "https://github.com/dmlc/XGBoost.jl"
 MLJBase.is_pure_julia(::Type{<:XGTypes}) = false
 
 MLJBase.load_path(::Type{<:XGBoostRegressor}) = "MLJModels.XGBoost_.XGBoostRegressor"
-MLJBase.input_scitype_union(::Type{<:XGBoostRegressor}) = MLJBase.Continuous
-MLJBase.target_scitype_union(::Type{<:XGBoostRegressor}) = MLJBase.Continuous
+MLJBase.input_scitype(::Type{<:XGBoostRegressor}) = MLJBase.Continuous
+MLJBase.target_scitype(::Type{<:XGBoostRegressor}) = MLJBase.Continuous
 
 MLJBase.load_path(::Type{<:XGBoostCount}) = "MLJModels.XGBoost_.XGBoostCount"
-MLJBase.input_scitype_union(::Type{<:XGBoostCount}) = MLJBase.Continuous
-MLJBase.target_scitype_union(::Type{<:XGBoostCount}) = MLJBase.Count
+MLJBase.input_scitype(::Type{<:XGBoostCount}) = MLJBase.Continuous
+MLJBase.target_scitype(::Type{<:XGBoostCount}) = MLJBase.Count
 
 MLJBase.load_path(::Type{<:XGBoostClassifier}) = "MLJModels.XGBoost_.XGBoostClassifier"
-MLJBase.input_scitype_union(::Type{<:XGBoostClassifier}) = MLJBase.Continuous
-MLJBase.target_scitype_union(::Type{<:XGBoostClassifier}) = MLJBase.Finite
+MLJBase.input_scitype(::Type{<:XGBoostClassifier}) = MLJBase.Continuous
+MLJBase.target_scitype(::Type{<:XGBoostClassifier}) = MLJBase.Finite
 
 end

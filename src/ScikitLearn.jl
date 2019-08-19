@@ -624,11 +624,9 @@ MLJBase.package_name(::Type{<:SVM}) = "ScikitLearn"
 MLJBase.package_uuid(::Type{<:SVM}) = "3646fa90-6ef7-5e7e-9f22-8aca16db6324"
 MLJBase.is_pure_julia(::Type{<:SVM}) = false
 MLJBase.package_url(::Type{<:SVM}) = "https://github.com/cstjean/ScikitLearn.jl"
-MLJBase.input_scitype_union(::Type{<:SVM}) = MLJBase.Continuous
-MLJBase.input_is_multivariate(::Type{<:SVM}) = true
-MLJBase.target_scitype_union(::Type{<:SVMC}) = MLJBase.Finite
-MLJBase.target_scitype_union(::Type{<:SVMR}) = MLJBase.Continuous
-MLJBase.input_is_multivariate(::Type{<:SVM}) = true
+MLJBase.input_scitype(::Type{<:SVM}) = MLJBase.Continuous
+MLJBase.target_scitype(::Type{<:SVMC}) = MLJBase.Finite
+MLJBase.target_scitype(::Type{<:SVMR}) = MLJBase.Continuous
 
 
 ################
@@ -638,10 +636,10 @@ MLJBase.input_is_multivariate(::Type{<:SVM}) = true
 # to avoid name conflicts we use this instead of @sk_import:
 (ScikitLearn.Skcore).import_sklearn()
 ElasticNet_ =
-    (ScikitLearn.Skcore.pyimport)("sklearn.linear_model")[:ElasticNet]
+    (ScikitLearn.Skcore.pyimport)("sklearn.linear_model").ElasticNet
 ElasticNetCV_ =
-    (ScikitLearn.Skcore.pyimport)("sklearn.linear_model")[:ElasticNetCV]
- 
+    (ScikitLearn.Skcore.pyimport)("sklearn.linear_model").ElasticNetCV
+
 
 ## ELASTIC NET
 
@@ -759,7 +757,7 @@ function MLJBase.predict(model::ElasticNet
 end
 
 
-## ELASTIC NET CV 
+## ELASTIC NET CV
 
 """
    ElasticNetCV(; kwargs...)
@@ -882,18 +880,16 @@ MLJBase.package_name(::Type{<:ElasticNet}) = "ScikitLearn"
 MLJBase.package_uuid(::Type{<:ElasticNet}) = "3646fa90-6ef7-5e7e-9f22-8aca16db6324"
 MLJBase.is_pure_julia(::Type{<:ElasticNet}) = false
 MLJBase.package_url(::Type{<:ElasticNet}) = "https://github.com/cstjean/ScikitLearn.jl"
-MLJBase.input_scitype_union(::Type{<:ElasticNet}) = MLJBase.Continuous
-MLJBase.target_scitype_union(::Type{<:ElasticNet}) = MLJBase.Continuous
-MLJBase.input_is_multivariate(::Type{<:ElasticNet}) = true
+MLJBase.input_scitype(::Type{<:ElasticNet}) = MLJBase.Continuous
+MLJBase.target_scitype(::Type{<:ElasticNet}) = MLJBase.Continuous
 
 MLJBase.load_path(::Type{<:ElasticNetCV}) = "MLJModels.ScikitLearn_.ElasticNetCV"
 MLJBase.package_name(::Type{<:ElasticNetCV}) = "ScikitLearn"
 MLJBase.package_uuid(::Type{<:ElasticNetCV}) = "3646fa90-6ef7-5e7e-9f22-8aca16db6324"
 MLJBase.is_pure_julia(::Type{<:ElasticNetCV}) = false
 MLJBase.package_url(::Type{<:ElasticNetCV}) = "https://github.com/cstjean/ScikitLearn.jl"
-MLJBase.input_scitype_union(::Type{<:ElasticNetCV}) = MLJBase.Continuous
-MLJBase.target_scitype_union(::Type{<:ElasticNetCV}) = MLJBase.Continuous
-MLJBase.input_is_multivariate(::Type{<:ElasticNetCV}) = true
+MLJBase.input_scitype(::Type{<:ElasticNetCV}) = MLJBase.Continuous
+MLJBase.target_scitype(::Type{<:ElasticNetCV}) = MLJBase.Continuous
 
 
 end # module

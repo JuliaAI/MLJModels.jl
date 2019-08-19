@@ -2,6 +2,7 @@ module TestScikitLearn
 
 # using Revise
 using MLJBase
+using CSV
 using Test
 using LinearAlgebra
 import Random.seed!

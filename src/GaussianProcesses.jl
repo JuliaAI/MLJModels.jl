@@ -37,7 +37,7 @@ function MLJBase.fit(model::GPClassifier{M,K}
             , y) where {M,K}
 
     Xmatrix = MLJBase.matrix(X)
-    
+
     y_plain = MLJBase.int(y)
 
     a_target_element = y[1]
@@ -60,10 +60,10 @@ end
 
 function MLJBase.predict(model::GPClassifier
                        , fitresult
-                       , Xnew) 
+                       , Xnew)
 
     Xmatrix = MLJBase.matrix(Xnew)
-    
+
     gp, nclasses, decode = fitresult
 
     pred = GP.predict_y(gp, transpose(Xmatrix))[1] # Float
@@ -79,9 +79,7 @@ MLJBase.package_name(::Type{<:GPClassifier}) = "GaussianProcesses"
 MLJBase.package_uuid(::Type{<:GPClassifier}) = "891a1506-143c-57d2-908e-e1f8e92e6de9"
 MLJBase.package_url(::Type{<:GPClassifier}) = "https://github.com/STOR-i/GaussianProcesses.jl"
 MLJBase.is_pure_julia(::Type{<:GPClassifier}) = true
-MLJBase.input_scitype_union(::Type{<:GPClassifier}) = MLJBase.Continuous
-MLJBase.target_scitype_union(::Type{<:GPClassifier}) = MLJBase.Finite
-MLJBase.input_is_multivariate(::Type{<:GPClassifier}) = true
+MLJBase.input_scitype(::Type{<:GPClassifier}) = MLJBase.Continuous
+MLJBase.target_scitype(::Type{<:GPClassifier}) = MLJBase.Finite
 
 end # module
-

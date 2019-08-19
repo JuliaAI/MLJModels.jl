@@ -3,6 +3,7 @@ module TestGLM
 using Test
 
 using MLJBase
+using CSV
 import MLJModels
 import Distributions
 import GLM
@@ -15,7 +16,7 @@ using RDatasets
 ###
 
 task = load_boston()
-X, y = task();
+X, y = task()
 
 train, test = partition(eachindex(y), 0.7)
 
@@ -41,10 +42,14 @@ p2 = Xa1[test, :] * coefs
 
 infos = info(atom_ols)
 
+@test infos[:name] == "NormalRegressor"
 @test infos[:package_name] == "GLM"
 @test infos[:is_pure_julia]
+@test infos[:is_supervised]
+@test infos[:package_license] == "MIT"
 @test infos[:is_probabilistic]
-@test infos[:target_scitype_union] == MLJBase.Continuous
+@test infos[:target_scitype] == MLJBase.Continuous
+@test infos[:input_scitype] == MLJBase.Continuous
 
 p_distr = predict(atom_ols, fitresult, selectrows(X, test))
 
@@ -60,25 +65,31 @@ seed!(0)
 data = dataset("MASS", "Melanoma")
 
 X = data[[:Status, :Sex, :Age, :Year, :Thickness]]
-y = data[:Ulcer]
+y_plain = data[:Ulcer]
+y = categorical(y_plain)
 
 n = length(y)
 
 baseline_y = convert.(Int, rand(n) .> 0.5)
-baseline_mse = sum((baseline_y - y).^2)/n
+baseline_mse = sum((baseline_y - y_plain).^2)/n
+
+@test baseline_mse ≤ 0.55
 
 lr = BinaryClassifier()
 fitresult, _, report = fit(lr, 1, X, y)
+
+p_mean  = predict_mean(lr, fitresult, X)
+p_mode1 = convert.(Int, p_mean .> 0.5)
+@test sum((p_mode1 - y_plain).^2)/n < 0.26
+
 p_mode = predict_mode(lr, fitresult, X)
-# rough test
-mse = sum((p_mode .- y).^2)/n
-@test mse < baseline_mse
+
+@test p_mode1 == convert.(Int, p_mode)
 
 pr = BinaryClassifier(link=GLM.ProbitLink())
 fitresult, _, report = fit(pr, 1, X, y)
-p_mode = predict_mode(pr, fitresult, X)
-mse = sum((p_mode .- y).^2)/n
-@test mse < baseline_mse
+p_mode = convert.(Int, predict_mode(pr, fitresult, X))
+@test sum((p_mode - y_plain).^2)/n < 0.26
 
 end # module
 true
