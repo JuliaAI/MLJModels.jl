@@ -151,15 +151,15 @@ MLJBase.package_url(::Type{<:GLM_MODELS})      = "https://github.com/JuliaStats/
 #MLJBase.package_license(::Type{<:GLM_MODELS})  = "MIT"
 MLJBase.package_uuid(::Type{<:GLM_MODELS})     = "38e38edf-8417-5370-95a0-9cbb8c7f171a"
 MLJBase.is_pure_julia(::Type{<:GLM_MODELS})    = true
-MLJBase.is_wrapper(::Type{<:GLM_MODELS})       = false
-MLJBase.supports_weights(::Type{<:GLM_MODELS}) = false #  for now
 
 MLJBase.load_path(::Type{<:OLS})      = "MLJModels.GLM_.NormalRegressor"
 MLJBase.load_path(::Type{<:BC})       = "MLJModels.GLM_.BinaryClassifier"
 
 using Pkg
 if Pkg.installed()["MLJBase"] > v"0.3"
-    MLJBase.package_license(::Type{<:GLM_MODELS}) = "MIT"
+    MLJBase.package_license(::Type{<:GLM_MODELS})  = "MIT"
+	MLJBase.is_wrapper(::Type{<:GLM_MODELS})       = false
+	MLJBase.supports_weights(::Type{<:GLM_MODELS}) = false #  for now
 	MLJBase.input_scitype(::Type{<:OLS})  = MLJBase.Continuous
 	MLJBase.target_scitype(::Type{<:OLS}) = MLJBase.Continuous
     MLJBase.input_scitype(::Type{<:BC})   = MLJBase.Continuous
