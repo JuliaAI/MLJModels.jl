@@ -281,10 +281,18 @@ MLJBase.is_pure_julia(::Type{<:DTTypes}) = true
 MLJBase.load_path(::Type{<:DecisionTreeClassifier}) = "MLJModels.DecisionTree_.DecisionTreeClassifier"
 MLJBase.load_path(::Type{<:DecisionTreeRegressor}) = "MLJModels.DecisionTree_.DecisionTreeRegressor"
 
-MLJBase.input_scitype(::Type{<:DecisionTreeClassifier}) = MLJBase.Continuous
-MLJBase.input_scitype(::Type{<:DecisionTreeRegressor}) = MLJBase.Continuous
-
-MLJBase.target_scitype(::Type{<:DecisionTreeClassifier}) = MLJBase.Finite
-MLJBase.target_scitype(::Type{<:DecisionTreeRegressor}) = MLJBase.Continuous
+using Pkg
+if Pkg.installed()["MLJBase"] > v"0.3"
+    MLJBase.package_license(::Type{<:DTTypes}) = "MIT"
+    MLJBase.input_scitype(::Type{<:DecisionTreeClassifier}) = MLJBase.Continuous
+	MLJBase.input_scitype(::Type{<:DecisionTreeRegressor}) = MLJBase.Continuous
+	MLJBase.target_scitype(::Type{<:DecisionTreeClassifier}) = MLJBase.Finite
+	MLJBase.target_scitype(::Type{<:DecisionTreeRegressor}) = MLJBase.Continuous
+else
+    MLJBase.input_scitype_union(::Type{<:DecisionTreeClassifier}) = MLJBase.Continuous
+	MLJBase.input_scitype_union(::Type{<:DecisionTreeRegressor}) = MLJBase.Continuous
+	MLJBase.target_scitype_union(::Type{<:DecisionTreeClassifier}) = MLJBase.Finite
+	MLJBase.target_scitype_union(::Type{<:DecisionTreeRegressor}) = MLJBase.Continuous
+end
 
 end # module

@@ -117,15 +117,24 @@ MLJBase.package_name(::Type{<:GaussianNBClassifier}) = "NaiveBayes"
 MLJBase.package_uuid(::Type{<:GaussianNBClassifier}) = "9bbee03b-0db5-5f46-924f-b5c9c21b8c60"
 MLJBase.package_url(::Type{<:GaussianNBClassifier}) = "https://github.com/dfdx/NaiveBayes.jl"
 MLJBase.is_pure_julia(::Type{<:GaussianNBClassifier}) = true
-MLJBase.input_scitype(::Type{<:GaussianNBClassifier}) = MLJBase.Continuous
-MLJBase.target_scitype(::Type{<:GaussianNBClassifier}) = MLJBase.Finite
 
 MLJBase.load_path(::Type{<:MultinomialNBClassifier}) = "MLJModels.NaiveBayes_.MultinomialNBClassifier"
 MLJBase.package_name(::Type{<:MultinomialNBClassifier}) = "NaiveBayes"
 MLJBase.package_uuid(::Type{<:MultinomialNBClassifier}) = "9bbee03b-0db5-5f46-924f-b5c9c21b8c60"
 MLJBase.package_url(::Type{<:MultinomialNBClassifier}) = "https://github.com/dfdx/NaiveBayes.jl"
 MLJBase.is_pure_julia(::Type{<:MultinomialNBClassifier}) = true
-MLJBase.input_scitype(::Type{<:MultinomialNBClassifier}) = MLJBase.Count
-MLJBase.target_scitype(::Type{<:MultinomialNBClassifier}) = MLJBase.Finite
+
+using Pkg
+if Pkg.installed()["MLJBase"] > v"0.3"
+    MLJBase.input_scitype(::Type{<:GaussianNBClassifier}) = MLJBase.Continuous
+    MLJBase.target_scitype(::Type{<:GaussianNBClassifier}) = MLJBase.Finite
+    MLJBase.input_scitype(::Type{<:MultinomialNBClassifier}) = MLJBase.Count
+    MLJBase.target_scitype(::Type{<:MultinomialNBClassifier}) = MLJBase.Finite
+else
+    MLJBase.input_scitype_union(::Type{<:GaussianNBClassifier}) = MLJBase.Continuous
+    MLJBase.target_scitype_union(::Type{<:GaussianNBClassifier}) = MLJBase.Finite
+    MLJBase.input_scitype_union(::Type{<:MultinomialNBClassifier}) = MLJBase.Count
+    MLJBase.target_scitype_union(::Type{<:MultinomialNBClassifier}) = MLJBase.Finite
+end
 
 end     #module

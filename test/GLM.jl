@@ -46,10 +46,8 @@ infos = info(atom_ols)
 @test infos[:package_name] == "GLM"
 @test infos[:is_pure_julia]
 @test infos[:is_supervised]
-@test infos[:package_license] == "MIT"
+#@test infos[:package_license] == "MIT"
 @test infos[:is_probabilistic]
-@test infos[:target_scitype] == MLJBase.Continuous
-@test infos[:input_scitype] == MLJBase.Continuous
 
 p_distr = predict(atom_ols, fitresult, selectrows(X, test))
 

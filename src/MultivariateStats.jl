@@ -77,8 +77,6 @@ MLJBase.package_name(::Type{<:RidgeRegressor}) = "MultivariateStats"
 MLJBase.package_uuid(::Type{<:RidgeRegressor}) = "6f286f6a-111f-5878-ab1e-185364afe411"
 MLJBase.package_url(::Type{<:RidgeRegressor})  = "https://github.com/JuliaStats/MultivariateStats.jl"
 MLJBase.is_pure_julia(::Type{<:RidgeRegressor}) = true
-MLJBase.input_scitype(::Type{<:RidgeRegressor}) = MLJBase.Continuous
-MLJBase.target_scitype(::Type{<:RidgeRegressor}) = MLJBase.Continuous
 
 ####
 #### PCA
@@ -343,28 +341,51 @@ end
 #### METADATA
 ####
 
+# TODO add license field from ridge when MLJBase 0.4 is used
+
 MLJBase.load_path(::Type{<:PCA})  = "MLJModels.MultivariateStats_.PCA"
 MLJBase.package_name(::Type{<:PCA})  = MLJBase.package_name(RidgeRegressor)
 MLJBase.package_uuid(::Type{<:PCA})  = MLJBase.package_uuid(RidgeRegressor)
 MLJBase.package_url(::Type{<:PCA})  = MLJBase.package_url(RidgeRegressor)
 MLJBase.is_pure_julia(::Type{<:PCA}) = true
-MLJBase.input_scitype(::Type{<:PCA}) = MLJBase.Continuous
-MLJBase.output_scitype(::Type{<:PCA}) = MLJBase.Continuous
 
 MLJBase.load_path(::Type{<:KernelPCA})  = "MLJModels.MultivariateStats_.KernelPCA"
 MLJBase.package_name(::Type{<:KernelPCA})  = MLJBase.package_name(RidgeRegressor)
 MLJBase.package_uuid(::Type{<:KernelPCA})  = MLJBase.package_uuid(RidgeRegressor)
 MLJBase.package_url(::Type{<:KernelPCA})  = MLJBase.package_url(RidgeRegressor)
 MLJBase.is_pure_julia(::Type{<:KernelPCA}) = true
-MLJBase.input_scitype(::Type{<:KernelPCA}) = MLJBase.Continuous
-MLJBase.output_scitype(::Type{<:KernelPCA}) = MLJBase.Continuous
+
 
 MLJBase.load_path(::Type{<:ICA})  = "MLJModels.MultivariateStats_.ICA"
 MLJBase.package_name(::Type{<:ICA})  = MLJBase.package_name(RidgeRegressor)
 MLJBase.package_uuid(::Type{<:ICA})  = MLJBase.package_uuid(RidgeRegressor)
 MLJBase.package_url(::Type{<:ICA})  = MLJBase.package_url(RidgeRegressor)
 MLJBase.is_pure_julia(::Type{<:ICA}) = true
-MLJBase.input_scitype(::Type{<:ICA}) = MLJBase.Continuous
-MLJBase.output_scitype(::Type{<:ICA}) = MLJBase.Continuous
+
+
+using Pkg
+if Pkg.installed()["MLJBase"] > v"0.3"
+    MLJBase.package_license(::Type{<:RidgeRegressor}) = "MIT"
+    MLJBase.package_license(::Type{<:PCA}) = "MIT"
+    MLJBase.package_license(::Type{<:KernelPCA}) = "MIT"
+    MLJBase.package_license(::Type{<:ICA}) = "MIT"
+	MLJBase.input_scitype(::Type{<:RidgeRegressor}) = MLJBase.Continuous
+    MLJBase.target_scitype(::Type{<:RidgeRegressor}) = MLJBase.Continuous
+    MLJBase.input_scitype(::Type{<:PCA}) = MLJBase.Continuous
+    MLJBase.output_scitype(::Type{<:PCA}) = MLJBase.Continuous
+    MLJBase.input_scitype(::Type{<:KernelPCA}) = MLJBase.Continuous
+    MLJBase.output_scitype(::Type{<:KernelPCA}) = MLJBase.Continuous
+    MLJBase.input_scitype(::Type{<:ICA})  = MLJBase.Continuous
+    MLJBase.output_scitype(::Type{<:ICA}) = MLJBase.Continuous
+else
+    MLJBase.input_scitype_union(::Type{<:RidgeRegressor}) = MLJBase.Continuous
+    MLJBase.target_scitype_union(::Type{<:RidgeRegressor}) = MLJBase.Continuous
+    MLJBase.input_scitype_union(::Type{<:PCA}) = MLJBase.Continuous
+    MLJBase.output_scitype_union(::Type{<:PCA}) = MLJBase.Continuous
+    MLJBase.input_scitype_union(::Type{<:KernelPCA}) = MLJBase.Continuous
+    MLJBase.output_scitype_union(::Type{<:KernelPCA}) = MLJBase.Continuous
+    MLJBase.input_scitype_union(::Type{<:ICA}) = MLJBase.Continuous
+    MLJBase.output_scitype_union(::Type{<:ICA}) = MLJBase.Continuous
+end
 
 end # of module

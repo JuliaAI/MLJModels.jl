@@ -441,9 +441,20 @@ MLJBase.package_name(::Type{<:SVM}) = "LIBSVM"
 MLJBase.package_uuid(::Type{<:SVM}) = "b1bec4e5-fd48-53fe-b0cb-9723c09d164b"
 MLJBase.is_pure_julia(::Type{<:SVM}) = false
 MLJBase.package_url(::Type{<:SVM}) = "https://github.com/mpastell/LIBSVM.jl"
-MLJBase.input_scitype(::Type{<:SVM}) = MLJBase.Continuous
-MLJBase.target_scitype(::Type{<:Union{LinearSVC, SVC, NuSVC}}) = MLJBase.Finite
-MLJBase.target_scitype(::Type{<:Union{NuSVR, EpsilonSVR}}) = MLJBase.Continuous
-MLJBase.output_scitype(::Type{<:OneClassSVM}) = MLJBase.Finite{2} # Bool (true means inlier)
+
+using Pkg
+if Pkg.installed()["MLJBase"] > v"0.3"
+    MLJBase.package_license(::Type{<:SVM}) = "BSD-3"
+    MLJBase.is_wrapper(::Type{<:SVM}) = true
+    MLJBase.input_scitype(::Type{<:SVM}) = MLJBase.Continuous
+    MLJBase.target_scitype(::Type{<:Union{LinearSVC, SVC, NuSVC}}) = MLJBase.Finite
+    MLJBase.target_scitype(::Type{<:Union{NuSVR, EpsilonSVR}}) = MLJBase.Continuous
+    MLJBase.output_scitype(::Type{<:OneClassSVM}) = MLJBase.Finite{2} # Bool (true means inlier)
+else
+    MLJBase.input_scitype_union(::Type{<:SVM}) = MLJBase.Continuous
+    MLJBase.target_scitype_union(::Type{<:Union{LinearSVC, SVC, NuSVC}}) = MLJBase.Finite
+    MLJBase.target_scitype_union(::Type{<:Union{NuSVR, EpsilonSVR}}) = MLJBase.Continuous
+    MLJBase.output_scitype_union(::Type{<:OneClassSVM}) = MLJBase.Finite{2} # Bool (true means inlier)
+end
 
 end # module

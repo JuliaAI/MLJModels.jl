@@ -624,10 +624,6 @@ MLJBase.package_name(::Type{<:SVM}) = "ScikitLearn"
 MLJBase.package_uuid(::Type{<:SVM}) = "3646fa90-6ef7-5e7e-9f22-8aca16db6324"
 MLJBase.is_pure_julia(::Type{<:SVM}) = false
 MLJBase.package_url(::Type{<:SVM}) = "https://github.com/cstjean/ScikitLearn.jl"
-MLJBase.input_scitype(::Type{<:SVM}) = MLJBase.Continuous
-MLJBase.target_scitype(::Type{<:SVMC}) = MLJBase.Finite
-MLJBase.target_scitype(::Type{<:SVMR}) = MLJBase.Continuous
-
 
 ################
 # LINEAR MODEL #
@@ -880,16 +876,32 @@ MLJBase.package_name(::Type{<:ElasticNet}) = "ScikitLearn"
 MLJBase.package_uuid(::Type{<:ElasticNet}) = "3646fa90-6ef7-5e7e-9f22-8aca16db6324"
 MLJBase.is_pure_julia(::Type{<:ElasticNet}) = false
 MLJBase.package_url(::Type{<:ElasticNet}) = "https://github.com/cstjean/ScikitLearn.jl"
-MLJBase.input_scitype(::Type{<:ElasticNet}) = MLJBase.Continuous
-MLJBase.target_scitype(::Type{<:ElasticNet}) = MLJBase.Continuous
 
 MLJBase.load_path(::Type{<:ElasticNetCV}) = "MLJModels.ScikitLearn_.ElasticNetCV"
 MLJBase.package_name(::Type{<:ElasticNetCV}) = "ScikitLearn"
 MLJBase.package_uuid(::Type{<:ElasticNetCV}) = "3646fa90-6ef7-5e7e-9f22-8aca16db6324"
 MLJBase.is_pure_julia(::Type{<:ElasticNetCV}) = false
 MLJBase.package_url(::Type{<:ElasticNetCV}) = "https://github.com/cstjean/ScikitLearn.jl"
-MLJBase.input_scitype(::Type{<:ElasticNetCV}) = MLJBase.Continuous
-MLJBase.target_scitype(::Type{<:ElasticNetCV}) = MLJBase.Continuous
 
+using Pkg
+if Pkg.installed()["MLJBase"] > v"0.3"
+	MLJBase.input_scitype(::Type{<:SVM}) = MLJBase.Continuous
+	MLJBase.target_scitype(::Type{<:SVMC}) = MLJBase.Finite
+	MLJBase.target_scitype(::Type{<:SVMR}) = MLJBase.Continuous
+
+	MLJBase.input_scitype(::Type{<:ElasticNet}) = MLJBase.Continuous
+	MLJBase.target_scitype(::Type{<:ElasticNet}) = MLJBase.Continuous
+    MLJBase.input_scitype(::Type{<:ElasticNetCV}) = MLJBase.Continuous
+	MLJBase.target_scitype(::Type{<:ElasticNetCV}) = MLJBase.Continuous
+else
+	MLJBase.input_scitype_union(::Type{<:SVM}) = MLJBase.Continuous
+	MLJBase.target_scitype_union(::Type{<:SVMC}) = MLJBase.Finite
+	MLJBase.target_scitype_union(::Type{<:SVMR}) = MLJBase.Continuous
+
+	MLJBase.input_scitype_union(::Type{<:ElasticNet}) = MLJBase.Continuous
+	MLJBase.target_scitype_union(::Type{<:ElasticNet}) = MLJBase.Continuous
+    MLJBase.input_scitype_union(::Type{<:ElasticNetCV}) = MLJBase.Continuous
+	MLJBase.target_scitype_union(::Type{<:ElasticNetCV}) = MLJBase.Continuous
+end
 
 end # module
