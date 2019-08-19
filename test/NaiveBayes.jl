@@ -1,5 +1,6 @@
 module TestNaiveBayes
 
+using Pkg
 using MLJBase
 using CSV
 using Test
@@ -26,8 +27,13 @@ fitresultG, cacheG, reportG = fit(gaussian_classifier, 1,
 
 gaussian_pred = predict(gaussian_classifier, fitresultG, selectrows(X, test));
 
-@test_broken Set(levels(keys(gaussian_pred[1].prob_given_level))) ==
-    Set(classes(y[train][1]))
+if Pkg.installed()["MLJBase"] > v"0.3"
+    @test_broken Set(levels(keys(gaussian_pred[1].prob_given_level))) ==
+        Set(classes(y[train][1]))
+else
+    @test Set(levels(keys(gaussian_pred[1].prob_given_level))) ==
+        Set(classes(y[train][1]))
+end
 
 # test with linear data:
 seed!(1234)
