@@ -15,7 +15,7 @@ Requires = "ae029012-a4dd-5104-9daa-d747884805df"
 ScientificTypes = "321657f4-b219-11e9-178b-2701a2544e81"
 
 [compat]
-MLJBase = "0.2.3, 0.3"
+MLJBase = "0.4"
 julia = "1"
 
 [extras]
