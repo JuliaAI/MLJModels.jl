@@ -288,7 +288,7 @@ MLJBase.input_scitype(::Type{<:DecisionTreeClassifier}) = Table(Continuous)
 MLJBase.input_scitype(::Type{<:DecisionTreeRegressor}) = Table(Continuous)
 
 MLJBase.target_scitype(::Type{<:DecisionTreeClassifier}) = AbstractVector{<:Finite}
-MLJBase.target_scitype(::Type{<:DecisionTreeRegressor}) = AbstractVector{<:Finite}
+MLJBase.target_scitype(::Type{<:DecisionTreeRegressor}) = AbstractVector{<:Continuous}
 
 
 end # module
