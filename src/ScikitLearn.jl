@@ -632,10 +632,10 @@ MLJBase.target_scitype(::Type{<:SVMR}) = AbstractVector{Continuous}
 # to avoid name conflicts we use this instead of @sk_import:
 (ScikitLearn.Skcore).import_sklearn()
 ElasticNet_ =
-    (ScikitLearn.Skcore.pyimport)("sklearn.linear_model")[:ElasticNet]
+    (ScikitLearn.Skcore.pyimport)("sklearn.linear_model").ElasticNet
 ElasticNetCV_ =
-    (ScikitLearn.Skcore.pyimport)("sklearn.linear_model")[:ElasticNetCV]
- 
+    (ScikitLearn.Skcore.pyimport)("sklearn.linear_model").ElasticNetCV
+
 
 ## ELASTIC NET
 
@@ -753,7 +753,7 @@ function MLJBase.predict(model::ElasticNet
 end
 
 
-## ELASTIC NET CV 
+## ELASTIC NET CV
 
 """
    ElasticNetCV(; kwargs...)

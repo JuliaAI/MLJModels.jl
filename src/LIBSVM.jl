@@ -41,10 +41,10 @@ function LinearSVC(
         ,tolerance
         ,cost
         ,p
-        ,bias 
+        ,bias
     )
 
-    message = MLJBase.clean!(model)   #> future proof by including these 
+    message = MLJBase.clean!(model)   #> future proof by including these
     isempty(message) || @warn message #> two lines even if no clean! defined below
 
     return model
@@ -95,7 +95,7 @@ function SVC(
         ,probability
     )
 
-    message = MLJBase.clean!(model)   #> future proof by including these 
+    message = MLJBase.clean!(model)   #> future proof by including these
     isempty(message) || @warn message #> two lines even if no clean! defined below
 
     return model
@@ -146,7 +146,7 @@ function NuSVC(
         ,shrinking
     )
 
-    message = MLJBase.clean!(model)   #> future proof by including these 
+    message = MLJBase.clean!(model)   #> future proof by including these
     isempty(message) || @warn message #> two lines even if no clean! defined below
 
     return model
@@ -184,7 +184,7 @@ function OneClassSVM(
         ,shrinking
     )
 
-    message = MLJBase.clean!(model)   #> future proof by including these 
+    message = MLJBase.clean!(model)   #> future proof by including these
     isempty(message) || @warn message #> two lines even if no clean! defined below
 
     return model
@@ -229,7 +229,7 @@ function NuSVR(
         ,shrinking
     )
 
-    message = MLJBase.clean!(model)   #> future proof by including these 
+    message = MLJBase.clean!(model)   #> future proof by including these
     isempty(message) || @warn message #> two lines even if no clean! defined below
 
     return model
@@ -274,7 +274,7 @@ function EpsilonSVR(
         ,shrinking
     )
 
-    message = MLJBase.clean!(model)   #> future proof by including these 
+    message = MLJBase.clean!(model)   #> future proof by including these
     isempty(message) || @warn message #> two lines even if no clean! defined below
 
     return model
@@ -335,13 +335,13 @@ function MLJBase.fit(model::LinearSVC, verbosity::Int, X, y)
     result = LIBSVM.LIBLINEAR.linear_train(y_plain, Xmatrix,
         weights = model.weights, solver_type = Int32(model.solver),
         C = model.cost, p = model.p, bias = model.bias,
-        eps = model.tolerance, verbose = ifelse(verbosity > 0, true, false)
+        eps = model.tolerance, verbose = ifelse(verbosity > 1, true, false)
     )
 
     fitresult = (result, decode)
     report = nothing
 
-    return fitresult, cache, report 
+    return fitresult, cache, report
 end
 
 function MLJBase.fit(model::Union{SVC, NuSVC}, verbosity::Int, X, y)
@@ -354,15 +354,15 @@ function MLJBase.fit(model::Union{SVC, NuSVC}, verbosity::Int, X, y)
 
     model = deepcopy(model)
     model.gamma == -1.0 && (model.gamma = 1.0/size(Xmatrix, 1))
-    result = LIBSVM.svmtrain(Xmatrix, y_plain; 
-        get_svm_parameters(model)..., 
-        verbose = ifelse(verbosity > 0, true, false)
+    result = LIBSVM.svmtrain(Xmatrix, y_plain;
+        get_svm_parameters(model)...,
+        verbose = ifelse(verbosity > 1, true, false)
     )
 
     fitresult = (result, decode)
     report = (gamma=model.gamma,)
 
-    return fitresult, cache, report 
+    return fitresult, cache, report
 end
 
 function MLJBase.fit(model::Union{NuSVR, EpsilonSVR}, verbosity::Int, X, y)
@@ -374,13 +374,13 @@ function MLJBase.fit(model::Union{NuSVR, EpsilonSVR}, verbosity::Int, X, y)
     model = deepcopy(model)
     model.gamma == -1.0 && (model.gamma = 1.0/size(Xmatrix, 1))
     fitresult = LIBSVM.svmtrain(Xmatrix, y;
-        get_svm_parameters(model)..., 
-        verbose = ifelse(verbosity > 0, true, false)
+        get_svm_parameters(model)...,
+        verbose = ifelse(verbosity > 1, true, false)
     )
 
     report = (gamma=model.gamma,)
 
-    return fitresult, cache, report 
+    return fitresult, cache, report
 end
 
 function MLJBase.fit(model::OneClassSVM, verbosity::Int, X)
@@ -391,14 +391,14 @@ function MLJBase.fit(model::OneClassSVM, verbosity::Int, X)
 
     model = deepcopy(model)
     model.gamma == -1.0 && (model.gamma = 1.0/size(Xmatrix, 1))
-    fitresult = LIBSVM.svmtrain(Xmatrix; 
-        get_svm_parameters(model)..., 
-        verbose = ifelse(verbosity > 0, true, false)
+    fitresult = LIBSVM.svmtrain(Xmatrix;
+        get_svm_parameters(model)...,
+        verbose = ifelse(verbosity > 1, true, false)
     )
 
     report = (gamma=model.gamma,)
 
-    return fitresult, cache, report 
+    return fitresult, cache, report
 end
 
 

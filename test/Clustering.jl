@@ -1,6 +1,5 @@
 module TestClustering
 
-# using Revise
 using MLJBase
 using Test
 using Random:seed!
@@ -9,7 +8,7 @@ import Distances: evaluate
 using RDatasets
 
 # load code to be tested:
-import MLJModels 
+import MLJModels
 import Clustering # MLJModels.Clustering_ now available for loading
 using MLJModels.Clustering_
 
@@ -18,7 +17,6 @@ seed!(132442)
 data = dataset("MASS", "crabs")
 X = MLJBase.selectcols(data, [:FL, :RW, :CL, :CW, :BD])   
 y = MLJBase.selectcols(data, :Sp)
-
 
 ####
 #### KMEANS
