@@ -3,7 +3,7 @@ module TestMultivariateStats
 # using Revise
 using Test
 using MLJBase
-using CSV
+using RDatasets
 import MultivariateStats
 using MLJModels.MultivariateStats_
 
@@ -41,10 +41,13 @@ seed!(1234)
 
 end
 
+data = dataset("MASS", "crabs")
+X = MLJBase.selectcols(data, [:FL, :RW, :CL, :CW, :BD])   
+y = MLJBase.selectcols(data, :Sp)
+
+
 @testset "PCA" begin
 
-    task = load_crabs()
-    X, y = X_and_y(task)
     X_array = MLJBase.matrix(X)
     pratio = 0.9999
 
@@ -63,8 +66,6 @@ end
 
 @testset "KernelPCA" begin
 
-    task = load_crabs()
-    X, y = X_and_y(task)
     X_array = MLJBase.matrix(X)
 
     # MultivariateStats KernelPCA
@@ -83,8 +84,6 @@ end
 
 @testset "ICA" begin
 
-    task = load_crabs()
-    X, y = X_and_y(task)
     X_array = MLJBase.matrix(X)
     k = 5
     tolerance = 5.0

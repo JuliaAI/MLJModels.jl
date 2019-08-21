@@ -4,7 +4,6 @@ module TestDecisionTree
 using Test
 import CategoricalArrays
 using MLJBase
-using CSV
 
 # load code to be tested:
 import MLJModels
@@ -12,8 +11,10 @@ import DecisionTree
 using MLJModels.DecisionTree_
 
 # get some test data:
-task = load_iris();
-X, y = X_and_y(task)       # a table and CategoricalVector
+using RDatasets
+iris = dataset("datasets", "iris")
+const X = iris[:, 1:4]
+const y = iris[:, 5]
 
 baretree = DecisionTreeClassifier()
 

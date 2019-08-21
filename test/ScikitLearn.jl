@@ -2,7 +2,7 @@ module TestScikitLearn
 
 # using Revise
 using MLJBase
-using CSV
+using RDatasets
 using Test
 using LinearAlgebra
 import Random.seed!
@@ -24,8 +24,10 @@ nu_classifier = SVMNuClassifier()
 linear_classifier = SVMLClassifier(max_iter=10000)
 
 # test preservation of categorical levels:
-task = load_iris();
-X, y = X_and_y(task)
+iris = dataset("datasets", "iris")
+X = iris[:, 1:4]
+y = iris[:, 5]
+
 train, test = partition(eachindex(y), 0.6) # levels of y are split across split
 
 fitresultC, cacheC, reportC = MLJBase.fit(plain_classifier, 1,
@@ -111,7 +113,6 @@ rgsCV = ElasticNetCV(copy_X=true, cv=5, eps=0.001,
        normalize=false, positive=false,
        precompute="auto", selection="cyclic",
        tol=0.0001)
-
 
 fitresult, cache, report = MLJBase.fit(rgsCV, 0,
                                        selectrows(X, train),

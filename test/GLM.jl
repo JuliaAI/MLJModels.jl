@@ -4,17 +4,23 @@ module TestGLM
 using Test
 
 using MLJBase
-using CSV
+using RDatasets
+
 import MLJModels
 import GLM
 using MLJModels.GLM_
+
 
 ###
 ### OLSREGRESSOR
 ###
 
-task = load_boston()
-X, y = task();
+
+boston = dataset("MASS", "Boston")
+X = MLJBase.selectcols(boston, [:Crim, :Zn, :Indus, :NOx, :Rm, :Age,
+                                :Dis, :Rad, :Tax, :PTRatio, :Black,
+                                :LStat])
+y = MLJBase.selectcols(boston, :MedV)   
 
 train, test = partition(eachindex(y), 0.7)
 
@@ -67,6 +73,9 @@ fitresult, _, _ = fit(atom_glmcount, 1, Xtable, y)
 p = predict_mean(atom_glmcount, fitresult, Xtable)
 
 p_distr = predict(atom_glmcount, fitresult, Xtable)
+
+info(atom_glmcount)
+
 
 end # module
 true

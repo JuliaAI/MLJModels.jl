@@ -4,9 +4,11 @@ export XGBoostRegressor, XGBoostClassifier, XGBoostCount
 
 import MLJBase
 using CategoricalArrays
-import ..XGBoost
-# import XGBoost
+using ScientificTypes
 
+import ..XGBoost
+
+# TODO: Why do we need this?
 generate_seed() = mod(round(Int, time()*1e8), 10000)
 
 
@@ -715,15 +717,15 @@ MLJBase.package_url(::Type{<:XGTypes}) = "https://github.com/dmlc/XGBoost.jl"
 MLJBase.is_pure_julia(::Type{<:XGTypes}) = false
 
 MLJBase.load_path(::Type{<:XGBoostRegressor}) = "MLJModels.XGBoost_.XGBoostRegressor"
-MLJBase.input_scitype_union(::Type{<:XGBoostRegressor}) = MLJBase.Continuous
-MLJBase.target_scitype_union(::Type{<:XGBoostRegressor}) = MLJBase.Continuous
+MLJBase.input_scitype(::Type{<:XGBoostRegressor}) = Table(Continuous)
+MLJBase.target_scitype(::Type{<:XGBoostRegressor}) = AbstractVector{Continuous}
 
 MLJBase.load_path(::Type{<:XGBoostCount}) = "MLJModels.XGBoost_.XGBoostCount"
-MLJBase.input_scitype_union(::Type{<:XGBoostCount}) = MLJBase.Continuous
-MLJBase.target_scitype_union(::Type{<:XGBoostCount}) = MLJBase.Count
+MLJBase.input_scitype(::Type{<:XGBoostCount}) = Table(Continuous)
+MLJBase.target_scitype(::Type{<:XGBoostCount}) = AbstractVector{Count}
 
 MLJBase.load_path(::Type{<:XGBoostClassifier}) = "MLJModels.XGBoost_.XGBoostClassifier"
-MLJBase.input_scitype_union(::Type{<:XGBoostClassifier}) = MLJBase.Continuous
-MLJBase.target_scitype_union(::Type{<:XGBoostClassifier}) = MLJBase.Finite
+MLJBase.input_scitype(::Type{<:XGBoostClassifier}) = Table(Continuous)
+MLJBase.target_scitype(::Type{<:XGBoostClassifier}) = AbstractVector{<:Finite}
 
 end

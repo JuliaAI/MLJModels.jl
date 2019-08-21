@@ -1,7 +1,6 @@
 module TestXGBoost
 
 using MLJBase
-using CSV
 using Test
 import MLJModels
 import XGBoost

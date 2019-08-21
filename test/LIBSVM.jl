@@ -1,7 +1,6 @@
 module TestLIBSVM
 
 using MLJBase
-using CSV
 using Test
 using LinearAlgebra
 
@@ -19,8 +18,12 @@ nu_classifier = NuSVC()
 linear_classifier = LinearSVC()
 
 # test preservation of categorical levels:
-task = load_iris();
-X, y = X_and_y(task);
+using RDatasets
+iris = dataset("datasets", "iris")
+X = iris[:, 1:4]
+y = iris[:, 5]
+
+
 train, test = partition(eachindex(y), 0.6); # levels of y are split across split
 
 fitresultC, cacheC, reportC = MLJBase.fit(plain_classifier, 1,
