@@ -145,7 +145,7 @@ end
 ####
 
 # shared metadata
-const GLM_REGS = Union{Type{<:OLS}, Type{<:GLMCount}}
+const GLM_REGS = Union{Type{<:OLS}, Type{<:BinaryClassifier}}
 MLJBase.package_name(::GLM_REGS)  = "GLM"
 MLJBase.package_uuid(::GLM_REGS)  = "38e38edf-8417-5370-95a0-9cbb8c7f171a"
 MLJBase.package_url(::GLM_REGS)   = "https://github.com/JuliaStats/GLM.jl"
@@ -155,8 +155,8 @@ MLJBase.load_path(::Type{<:OLS})       = "MLJModels.GLM_.OLSRegressor"
 MLJBase.input_scitype(::Type{<:OLS})     = MLJBase.Table(MLJBase.Continuous)
 MLJBase.target_scitype(::Type{<:OLS})     = AbstractVector{MLJBase.Continuous}
 
-MLJBase.load_path(::Type{<:GLMCount})       = "MLJModels.GLM_.GLMCountRegressor"
-MLJBase.input_scitype(::Type{<:GLMCount})     = MLJBase.Table(MLJBase.Continuous)
-MLJBase.target_scitype(::Type{<:GLMCount})     = AbstractVector{MLJBase.Count}
+MLJBase.load_path(::Type{<:BinaryClassifier})       = "MLJModels.GLM_.GLMCountRegressor"
+MLJBase.input_scitype(::Type{<:BinaryClassifier})     = MLJBase.Table(MLJBase.Continuous)
+MLJBase.target_scitype(::Type{<:BinaryClassifier})     = AbstractVector{MLJBase.UnivariateFinite}
 
 end # module
