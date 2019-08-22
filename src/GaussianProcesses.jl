@@ -5,6 +5,7 @@ export GPClassifier
 import MLJBase
 
 using CategoricalArrays
+using ScientificTypes
 
 import ..GaussianProcesses # strange lazy-loading syntax
 
@@ -79,15 +80,7 @@ MLJBase.package_name(::Type{<:GPClassifier}) = "GaussianProcesses"
 MLJBase.package_uuid(::Type{<:GPClassifier}) = "891a1506-143c-57d2-908e-e1f8e92e6de9"
 MLJBase.package_url(::Type{<:GPClassifier}) = "https://github.com/STOR-i/GaussianProcesses.jl"
 MLJBase.is_pure_julia(::Type{<:GPClassifier}) = true
-
-using Pkg
-if Pkg.installed()["MLJBase"] > v"0.3"
-    MLJBase.package_license(::Type{<:GPClassifier}) = "MIT"
-    MLJBase.input_scitype(::Type{<:GPClassifier}) = MLJBase.Continuous
-	MLJBase.target_scitype(::Type{<:GPClassifier}) = MLJBase.Finite
-else
-    MLJBase.input_scitype_union(::Type{<:GPClassifier}) = MLJBase.Continuous
-	MLJBase.target_scitype_union(::Type{<:GPClassifier}) = MLJBase.Finite
-end
+MLJBase.input_scitype(::Type{<:GPClassifier}) = Table(Continuous)
+MLJBase.target_scitype(::Type{<:GPClassifier}) = AbstractVector{<:Finite}
 
 end # module

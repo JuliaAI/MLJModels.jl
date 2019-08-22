@@ -9,6 +9,7 @@ export KMeans
 export KMedoids
 
 import MLJBase
+using ScientificTypes
 
 import ..Clustering # strange sytax for lazy-loading
 
@@ -156,25 +157,20 @@ MLJBase.package_uuid(::Type{<:CM}) = "aaaa29a8-35af-508c-8bc3-b662a17a0fe5"
 MLJBase.is_pure_julia(::Type{<:CM}) = true
 
 MLJBase.load_path(::Type{<:KMeans}) = "MLJModels.Clustering_.KMeans" # lazy-loaded from MLJ
+MLJBase.package_url(::Type{<:KMeans}) = "https://github.com/JuliaStats/Clustering.jl"
+MLJBase.package_name(::Type{<:KMeans}) = "Clustering"
+MLJBase.package_uuid(::Type{<:KMeans}) = "aaaa29a8-35af-508c-8bc3-b662a17a0fe5"
+MLJBase.is_pure_julia(::Type{<:KMeans}) = true
+MLJBase.input_scitype(::Type{<:KMeans}) = Table(Continuous)
+MLJBase.output_scitype(::Type{<:KMeans}) = Table(Continuous)
 
 MLJBase.load_path(::Type{<:KMedoids}) = "MLJModels.Clustering_.KMedoids" # lazy-loaded from MLJ
 MLJBase.package_url(::Type{<:KMedoids}) = MLJBase.package_url(KMeans)
 MLJBase.package_name(::Type{<:KMedoids}) = MLJBase.package_name(KMeans)
 MLJBase.package_uuid(::Type{<:KMedoids}) = MLJBase.package_uuid(KMeans)
 MLJBase.is_pure_julia(::Type{<:KMedoids}) = true
+MLJBase.input_scitype(::Type{<:KMedoids}) = Table(Continuous)
+MLJBase.output_scitype(::Type{<:KMedoids}) = Table(Continuous)
 
-using Pkg
-if Pkg.installed()["MLJBase"] > v"0.3"
-    MLJBase.package_license(::Type{<:CM})  = "MIT"
-    MLJBase.input_scitype(::Type{<:KMeans}) = MLJBase.Continuous
-    MLJBase.output_scitype(::Type{<:KMeans}) = MLJBase.Continuous
-    MLJBase.input_scitype(::Type{<:KMedoids}) = MLJBase.Continuous
-    MLJBase.output_scitype(::Type{<:KMedoids}) = MLJBase.Continuous
-else
-    MLJBase.input_scitype_union(::Type{<:KMeans}) = MLJBase.Continuous
-    MLJBase.output_scitype_union(::Type{<:KMeans}) = MLJBase.Continuous
-    MLJBase.input_scitype_union(::Type{<:KMedoids}) = MLJBase.Continuous
-    MLJBase.output_scitype_union(::Type{<:KMedoids}) = MLJBase.Continuous
-end
 
 end # module

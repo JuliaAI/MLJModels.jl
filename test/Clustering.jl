@@ -1,11 +1,11 @@
 module TestClustering
 
 using MLJBase
-using CSV
 using Test
 using Random:seed!
 import LinearAlgebra: norm
 import Distances: evaluate
+using RDatasets
 
 # load code to be tested:
 import MLJModels
@@ -14,9 +14,9 @@ using MLJModels.Clustering_
 
 seed!(132442)
 
-task = load_crabs()
-
-X, y = X_and_y(task)
+data = dataset("MASS", "crabs")
+X = MLJBase.selectcols(data, [:FL, :RW, :CL, :CW, :BD])   
+y = MLJBase.selectcols(data, :Sp)
 
 ####
 #### KMEANS

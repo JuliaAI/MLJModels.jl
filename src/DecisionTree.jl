@@ -15,6 +15,9 @@ export DecisionTreeClassifier, DecisionTreeRegressor
 
 import MLJBase
 
+#> needed for metadata:
+using ScientificTypes
+
 #> needed for classifiers:
 using CategoricalArrays
 
@@ -281,18 +284,11 @@ MLJBase.is_pure_julia(::Type{<:DTTypes}) = true
 MLJBase.load_path(::Type{<:DecisionTreeClassifier}) = "MLJModels.DecisionTree_.DecisionTreeClassifier"
 MLJBase.load_path(::Type{<:DecisionTreeRegressor}) = "MLJModels.DecisionTree_.DecisionTreeRegressor"
 
-using Pkg
-if Pkg.installed()["MLJBase"] > v"0.3"
-    MLJBase.package_license(::Type{<:DTTypes}) = "MIT"
-    MLJBase.input_scitype(::Type{<:DecisionTreeClassifier}) = MLJBase.Continuous
-	MLJBase.input_scitype(::Type{<:DecisionTreeRegressor}) = MLJBase.Continuous
-	MLJBase.target_scitype(::Type{<:DecisionTreeClassifier}) = MLJBase.Finite
-	MLJBase.target_scitype(::Type{<:DecisionTreeRegressor}) = MLJBase.Continuous
-else
-    MLJBase.input_scitype_union(::Type{<:DecisionTreeClassifier}) = MLJBase.Continuous
-	MLJBase.input_scitype_union(::Type{<:DecisionTreeRegressor}) = MLJBase.Continuous
-	MLJBase.target_scitype_union(::Type{<:DecisionTreeClassifier}) = MLJBase.Finite
-	MLJBase.target_scitype_union(::Type{<:DecisionTreeRegressor}) = MLJBase.Continuous
-end
+MLJBase.input_scitype(::Type{<:DecisionTreeClassifier}) = Table(Continuous)
+MLJBase.input_scitype(::Type{<:DecisionTreeRegressor}) = Table(Continuous)
+
+MLJBase.target_scitype(::Type{<:DecisionTreeClassifier}) = AbstractVector{<:Finite}
+MLJBase.target_scitype(::Type{<:DecisionTreeRegressor}) = AbstractVector{<:Continuous}
+
 
 end # module

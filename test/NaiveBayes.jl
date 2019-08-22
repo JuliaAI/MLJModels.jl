@@ -2,7 +2,6 @@ module TestNaiveBayes
 
 using Pkg
 using MLJBase
-using CSV
 using Test
 import Random.seed!
 
@@ -18,8 +17,11 @@ gaussian_classifier = GaussianNBClassifier()
 info(gaussian_classifier)
 
 # gaussian classifier takes continuous features
-task = load_iris()
-X, y = X_and_y(task)
+using RDatasets
+iris = dataset("datasets", "iris")
+X = iris[:, 1:4]
+y = iris[:, 5]
+
 train, test = partition(eachindex(y), 0.6)
 
 fitresultG, cacheG, reportG = fit(gaussian_classifier, 1,
@@ -27,6 +29,7 @@ fitresultG, cacheG, reportG = fit(gaussian_classifier, 1,
 
 gaussian_pred = predict(gaussian_classifier, fitresultG, selectrows(X, test));
 
+<<<<<<< HEAD
 if Pkg.installed()["MLJBase"] > v"0.3"
     @test_broken Set(levels(keys(gaussian_pred[1].prob_given_level))) ==
         Set(classes(y[train][1]))
@@ -34,6 +37,11 @@ else
     @test Set(levels(keys(gaussian_pred[1].prob_given_level))) ==
         Set(classes(y[train][1]))
 end
+=======
+
+yhat1 = gaussian_pred[1]
+@test Set(classes(yhat1)) == Set(classes(y[1]))
+>>>>>>> master
 
 # test with linear data:
 seed!(1234)
@@ -70,6 +78,8 @@ X = (red=red, blue=blue, green=green)
 
 # gender of author:
 y = categorical([:m, :f, :m, :f, :m])
+male = y[1]
+female = y[2]
 
 # Note: The smoothing algorithm is to add to the training data, for
 # each class observed, a row with every feature getting count of
@@ -96,10 +106,16 @@ f(a...) = f_(a...)/normalizer(a...)
 Xnew = (red=[1, 1], blue=[1, 2], green=[1, 3])
 
 # prediction by hand:
+<<<<<<< HEAD
 v = categorical([:m, :f])
 yhand =[MLJBase.UnivariateFinite(v, [m(1, 1, 1), f(1, 1, 1)]),
         MLJBase.UnivariateFinite(v, [m(1, 2, 3), f(1, 2, 3)])]
 
+=======
+yhand =[MLJBase.UnivariateFinite([male, female], [m(1, 1, 1), f(1, 1, 1)]),
+        MLJBase.UnivariateFinite([male, female], [m(1, 2, 3), f(1, 2, 3)])]
+        
+>>>>>>> master
 multinomial_classifier = MultinomialNBClassifier()
 info(multinomial_classifier)
 

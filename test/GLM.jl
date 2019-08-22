@@ -3,7 +3,8 @@ module TestGLM
 using Test
 
 using MLJBase
-using CSV
+using RDatasets
+
 import MLJModels
 import Distributions
 import GLM
@@ -11,12 +12,22 @@ using MLJModels.GLM_
 using Random: seed!
 using RDatasets
 
+
 ###
 ### OLSREGRESSOR
 ###
 
+<<<<<<< HEAD
 task = load_boston()
 X, y = task()
+=======
+
+boston = dataset("MASS", "Boston")
+X = MLJBase.selectcols(boston, [:Crim, :Zn, :Indus, :NOx, :Rm, :Age,
+                                :Dis, :Rad, :Tax, :PTRatio, :Black,
+                                :LStat])
+y = MLJBase.selectcols(boston, :MedV)   
+>>>>>>> master
 
 train, test = partition(eachindex(y), 0.7)
 
@@ -88,6 +99,9 @@ pr = BinaryClassifier(link=GLM.ProbitLink())
 fitresult, _, report = fit(pr, 1, X, y)
 p_mode = convert.(Int, predict_mode(pr, fitresult, X))
 @test sum((p_mode - y_plain).^2)/n < 0.26
+
+info(atom_glmcount)
+
 
 end # module
 true

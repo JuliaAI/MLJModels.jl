@@ -1,7 +1,7 @@
 name = "MLJModels"
 uuid = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
 authors = ["Anthony D. Blaom <anthony.blaom@gmail.com>"]
-version = "0.2.5"
+version = "0.3.0"
 
 [deps]
 CategoricalArrays = "324d7699-5711-5eae-9e2f-1d82baa6b597"
@@ -14,19 +14,18 @@ Parameters = "d96e819e-fc66-5662-9728-84c9c7592b0a"
 Pkg = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
 Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 Requires = "ae029012-a4dd-5104-9daa-d747884805df"
+ScientificTypes = "321657f4-b219-11e9-178b-2701a2544e81"
 
 [compat]
-CSV = "0.5"
-MLJBase = "0.2.3, ≥0.3"
+MLJBase = "0.4"
 julia = "1"
 
 [extras]
-CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
 Clustering = "aaaa29a8-35af-508c-8bc3-b662a17a0fe5"
 DecisionTree = "7806a523-6efd-50cb-b5f6-3fa6f1930dbb"
 GLM = "38e38edf-8417-5370-95a0-9cbb8c7f171a"
 GaussianProcesses = "891a1506-143c-57d2-908e-e1f8e92e6de9"
-MLJBase = "a7f614a8-145f-11e9-1d2a-a57a1082229d"
+LIBSVM = "b1bec4e5-fd48-53fe-b0cb-9723c09d164b"
 MultivariateStats = "6f286f6a-111f-5878-ab1e-185364afe411"
 NaiveBayes = "9bbee03b-0db5-5f46-924f-b5c9c21b8c60"
 Pkg = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
@@ -36,4 +35,8 @@ Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 XGBoost = "009559a3-9522-5dbb-924b-0b6ed2b22bb9"
 
 [targets]
+<<<<<<< HEAD
 test = ["CSV", "Clustering", "DecisionTree", "GLM", "GaussianProcesses", "MLJBase", "MultivariateStats", "NaiveBayes", "Pkg", "RDatasets", "ScikitLearn", "Test", "XGBoost"]
+=======
+test = ["Clustering", "DecisionTree", "GLM", "GaussianProcesses", "LIBSVM", "MultivariateStats", "NaiveBayes", "Pkg", "ScikitLearn", "RDatasets", "Test", "XGBoost"]
+>>>>>>> master

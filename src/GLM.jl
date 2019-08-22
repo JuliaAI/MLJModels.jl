@@ -145,30 +145,18 @@ end
 ####
 
 # shared metadata
-MLJBase.package_name(::Type{<:GLM_MODELS})     = "GLM"
-MLJBase.package_url(::Type{<:GLM_MODELS})      = "https://github.com/JuliaStats/GLM.jl"
-# TODO wait for 0.4 to be merged
-#MLJBase.package_license(::Type{<:GLM_MODELS})  = "MIT"
-MLJBase.package_uuid(::Type{<:GLM_MODELS})     = "38e38edf-8417-5370-95a0-9cbb8c7f171a"
-MLJBase.is_pure_julia(::Type{<:GLM_MODELS})    = true
+const GLM_REGS = Union{Type{<:OLS}, Type{<:GLMCount}}
+MLJBase.package_name(::GLM_REGS)  = "GLM"
+MLJBase.package_uuid(::GLM_REGS)  = "38e38edf-8417-5370-95a0-9cbb8c7f171a"
+MLJBase.package_url(::GLM_REGS)   = "https://github.com/JuliaStats/GLM.jl"
+MLJBase.is_pure_julia(::GLM_REGS) = true
 
-MLJBase.load_path(::Type{<:OLS})      = "MLJModels.GLM_.NormalRegressor"
-MLJBase.load_path(::Type{<:BC})       = "MLJModels.GLM_.BinaryClassifier"
+MLJBase.load_path(::Type{<:OLS})       = "MLJModels.GLM_.OLSRegressor"
+MLJBase.input_scitype(::Type{<:OLS})     = MLJBase.Table(MLJBase.Continuous)
+MLJBase.target_scitype(::Type{<:OLS})     = AbstractVector{MLJBase.Continuous}
 
-using Pkg
-if Pkg.installed()["MLJBase"] > v"0.3"
-    MLJBase.package_license(::Type{<:GLM_MODELS})  = "MIT"
-	MLJBase.is_wrapper(::Type{<:GLM_MODELS})       = false
-	MLJBase.supports_weights(::Type{<:GLM_MODELS}) = false #  for now
-	MLJBase.input_scitype(::Type{<:OLS})  = MLJBase.Continuous
-	MLJBase.target_scitype(::Type{<:OLS}) = MLJBase.Continuous
-    MLJBase.input_scitype(::Type{<:BC})   = MLJBase.Continuous
-	MLJBase.target_scitype(::Type{<:BC})  = MLJBase.Finite
-else
-	MLJBase.input_scitype_union(::Type{<:OLS})  = MLJBase.Continuous
-	MLJBase.target_scitype_union(::Type{<:OLS}) = MLJBase.Continuous
-    MLJBase.input_scitype_union(::Type{<:BC})   = MLJBase.Continuous
-	MLJBase.target_scitype_union(::Type{<:BC})  = MLJBase.Finite
-end
+MLJBase.load_path(::Type{<:GLMCount})       = "MLJModels.GLM_.GLMCountRegressor"
+MLJBase.input_scitype(::Type{<:GLMCount})     = MLJBase.Table(MLJBase.Continuous)
+MLJBase.target_scitype(::Type{<:GLMCount})     = AbstractVector{MLJBase.Count}
 
 end # module
