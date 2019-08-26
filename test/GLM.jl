@@ -12,7 +12,6 @@ using MLJModels.GLM_
 using Random: seed!
 using RDatasets
 
-
 ###
 ### OLSREGRESSOR
 ###
@@ -25,7 +24,7 @@ y = MLJBase.selectcols(boston, :MedV)
 
 train, test = partition(eachindex(y), 0.7)
 
-atom_ols = OLSRegressor()
+atom_ols = LinearRegressor()
 
 Xtrain = selectrows(X, train)
 ytrain = selectrows(y, train)
@@ -47,7 +46,7 @@ p2 = Xa1[test, :] * coefs
 
 infos = info(atom_ols)
 
-@test infos[:name] == "NormalRegressor"
+@test infos[:name] == "LinearRegressor"
 @test infos[:package_name] == "GLM"
 @test infos[:is_pure_julia]
 @test infos[:is_supervised]
@@ -78,7 +77,7 @@ baseline_mse = sum((baseline_y - y_plain).^2)/n
 
 @test baseline_mse ≤ 0.55
 
-lr = BinaryClassifier()
+lr = LinearBinaryClassifier()
 fitresult, _, report = fit(lr, 1, X, y)
 
 p_mean  = predict_mean(lr, fitresult, X)
@@ -89,7 +88,7 @@ p_mode = predict_mode(lr, fitresult, X)
 
 @test p_mode1 == convert.(Int, p_mode)
 
-pr = BinaryClassifier(link=GLM.ProbitLink())
+pr = LinearBinaryClassifier(link=GLM.ProbitLink())
 fitresult, _, report = fit(pr, 1, X, y)
 p_mode = convert.(Int, predict_mode(pr, fitresult, X))
 @test sum((p_mode - y_plain).^2)/n < 0.26
