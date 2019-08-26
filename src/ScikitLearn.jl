@@ -887,6 +887,4 @@ MLJBase.package_url(::Type{<:ElasticNetCV}) = "https://github.com/cstjean/Scikit
 MLJBase.input_scitype(::Type{<:ElasticNetCV}) = Table(Continuous)
 MLJBase.target_scitype(::Type{<:ElasticNetCV}) = AbstractVector{<:Continuous}
 
-
-
 end # module

@@ -38,7 +38,7 @@ function MLJBase.fit(model::GPClassifier{M,K}
             , y) where {M,K}
 
     Xmatrix = MLJBase.matrix(X)
-    
+
     y_plain = MLJBase.int(y)
 
     a_target_element = y[1]
@@ -61,10 +61,10 @@ end
 
 function MLJBase.predict(model::GPClassifier
                        , fitresult
-                       , Xnew) 
+                       , Xnew)
 
     Xmatrix = MLJBase.matrix(Xnew)
-    
+
     gp, nclasses, decode = fitresult
 
     pred = GP.predict_y(gp, transpose(Xmatrix))[1] # Float
@@ -83,6 +83,4 @@ MLJBase.is_pure_julia(::Type{<:GPClassifier}) = true
 MLJBase.input_scitype(::Type{<:GPClassifier}) = Table(Continuous)
 MLJBase.target_scitype(::Type{<:GPClassifier}) = AbstractVector{<:Finite}
 
-
 end # module
-

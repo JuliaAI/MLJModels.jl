@@ -1,6 +1,5 @@
 module TestGaussianProcesses
 
-# using Revise
 using MLJBase
 using RDatasets
 using Test
@@ -14,8 +13,8 @@ X = MLJBase.selectcols(data, [:FL, :RW, :CL, :CW, :BD])
 y = MLJBase.selectcols(data, :Sp)
 
 # load code to be tested:
-import MLJModels 
-import GaussianProcesses 
+import MLJModels
+import GaussianProcesses
 using MLJModels.GaussianProcesses_
 
 baregp = GPClassifier()

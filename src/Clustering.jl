@@ -30,7 +30,9 @@ mutable struct KMedoids{M<:SemiMetric} <: MLJBase.Unsupervised
     metric::M
 end
 
-function MLJBase.clean!(model::Union{KMeans, KMedoids})
+const CM = Union{<:KMeans, <:KMedoids}
+
+function MLJBase.clean!(model::CM)
     warning = ""
     if model.k < 2
         warning *= "Need k >= 2. Resetting k=2.\n"
@@ -148,6 +150,11 @@ end
 ####
 #### METADATA
 ####
+
+MLJBase.package_url(::Type{<:CM}) = "https://github.com/JuliaStats/Clustering.jl"
+MLJBase.package_name(::Type{<:CM}) = "Clustering"
+MLJBase.package_uuid(::Type{<:CM}) = "aaaa29a8-35af-508c-8bc3-b662a17a0fe5"
+MLJBase.is_pure_julia(::Type{<:CM}) = true
 
 MLJBase.load_path(::Type{<:KMeans}) = "MLJModels.Clustering_.KMeans" # lazy-loaded from MLJ
 MLJBase.package_url(::Type{<:KMeans}) = "https://github.com/JuliaStats/Clustering.jl"

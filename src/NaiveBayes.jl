@@ -22,14 +22,14 @@ function MLJBase.fit(model::GaussianNBClassifier, verbosity::Int
     classes_seen = unique(yplain)
 
     # initiates dictionaries keyed on classes_seen:
-    res = NaiveBayes.GaussianNB(classes_seen, p) 
+    res = NaiveBayes.GaussianNB(classes_seen, p)
 
     fitresult = NaiveBayes.fit(res, Xmatrix, yplain)
 
     report = NamedTuple{}()
-    
+
     return fitresult, nothing, report
-    
+
 end
 
 function MLJBase.fitted_params(model::GaussianNBClassifier, fitresult)
@@ -39,7 +39,7 @@ function MLJBase.fitted_params(model::GaussianNBClassifier, fitresult)
             gaussians=res.gaussians,
             n_obs=res.n_obs)
 end
-    
+
 function MLJBase.predict(model::GaussianNBClassifier, fitresult, Xnew)
 
     Xmatrix = MLJBase.matrix(Xnew)' |> collect
@@ -57,7 +57,7 @@ function MLJBase.predict(model::GaussianNBClassifier, fitresult, Xnew)
     # classes with zero probability:
     return [MLJBase.UnivariateFinite(classes_observed, probs[:,i])
             for i in 1:n]
-    
+
 end
 
 # MultinomialNBClassifier
@@ -84,7 +84,7 @@ function MLJBase.fit(model::MultinomialNBClassifier, verbosity::Int
     fitresult = NaiveBayes.fit(res, Xmatrix, yplain)
 
     report = NamedTuple()
-    
+
     return fitresult, nothing, report
 end
 
@@ -95,7 +95,7 @@ function MLJBase.fitted_params(model::MultinomialNBClassifier, fitresult)
             x_totals=res.x_totals,
             n_obs=res.n_obs)
 end
-    
+
 function MLJBase.predict(model::MultinomialNBClassifier, fitresult, Xnew)
 
     Xmatrix = MLJBase.matrix(Xnew) |> collect |> permutedims

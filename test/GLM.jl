@@ -1,37 +1,37 @@
 module TestGLM
 
-# using Revise
 using Test
 
 using MLJBase
 using RDatasets
 
 import MLJModels
+import Distributions
 import GLM
 using MLJModels.GLM_
-
+using Random: seed!
+using RDatasets
 
 ###
 ### OLSREGRESSOR
 ###
 
-
 boston = dataset("MASS", "Boston")
 X = MLJBase.selectcols(boston, [:Crim, :Zn, :Indus, :NOx, :Rm, :Age,
                                 :Dis, :Rad, :Tax, :PTRatio, :Black,
                                 :LStat])
-y = MLJBase.selectcols(boston, :MedV)   
+y = MLJBase.selectcols(boston, :MedV)
 
 train, test = partition(eachindex(y), 0.7)
 
-atom_ols = OLSRegressor()
+atom_ols = LinearRegressor()
 
 Xtrain = selectrows(X, train)
 ytrain = selectrows(y, train)
 Xtest  = selectrows(X, test)
 
 fitresult, _, report = fit(atom_ols, 1, Xtrain, ytrain)
-MLJBase.fitted_params(atom_ols, fitresult)
+θ = MLJBase.fitted_params(atom_ols, fitresult)
 
 p = predict_mean(atom_ols, fitresult, Xtest)
 
@@ -44,37 +44,56 @@ p2 = Xa1[test, :] * coefs
 
 @test p ≈ p2
 
-info(atom_ols)
+infos = info(atom_ols)
+
+@test infos[:name] == "LinearRegressor"
+@test infos[:package_name] == "GLM"
+@test infos[:is_pure_julia]
+@test infos[:is_supervised]
+#@test infos[:package_license] == "MIT"
+@test infos[:is_probabilistic]
 
 p_distr = predict(atom_ols, fitresult, selectrows(X, test))
 
-###
-### GLMCOUNT
-###
+@test p_distr[1] == Distributions.Normal(p[1], GLM.dispersion(fitresult))
 
-using Random: seed!
-using Distributions
+###
+### Logistic regression
+###
 
 seed!(0)
 
-X = randn(100, 3) .* randn(3)'
-Xtable = table(X)
+# data drawn from https://stats.idre.ucla.edu/r/dae/poisson-regression/
+data = dataset("MASS", "Melanoma")
 
-α = 0.1
-β = [-0.3, 0.2, -0.1]
-λ = exp.(α .+ X * β)
+X = data[[:Status, :Sex, :Age, :Year, :Thickness]]
+y_plain = data[:Ulcer]
+y = categorical(y_plain)
 
-y = [rand(Poisson(λᵢ)) for λᵢ ∈ λ]
+n = length(y)
 
-atom_glmcount = GLMCount()
+baseline_y = convert.(Int, rand(n) .> 0.5)
+baseline_mse = sum((baseline_y - y_plain).^2)/n
 
-fitresult, _, _ = fit(atom_glmcount, 1, Xtable, y)
+@test baseline_mse ≤ 0.55
 
-p = predict_mean(atom_glmcount, fitresult, Xtable)
+lr = LinearBinaryClassifier()
+fitresult, _, report = fit(lr, 1, X, y)
 
-p_distr = predict(atom_glmcount, fitresult, Xtable)
+p_mean  = predict_mean(lr, fitresult, X)
+p_mode1 = convert.(Int, p_mean .> 0.5)
+@test sum((p_mode1 - y_plain).^2)/n < 0.26
 
-info(atom_glmcount)
+p_mode = predict_mode(lr, fitresult, X)
+
+@test p_mode1 == convert.(Int, p_mode)
+
+pr = LinearBinaryClassifier(link=GLM.ProbitLink())
+fitresult, _, report = fit(pr, 1, X, y)
+p_mode = convert.(Int, predict_mode(pr, fitresult, X))
+@test sum((p_mode - y_plain).^2)/n < 0.26
+
+# info(atom_glmcount)
 
 
 end # module

@@ -1,6 +1,6 @@
 module TestNaiveBayes
 
-# using Revise
+using Pkg
 using MLJBase
 using Test
 import Random.seed!
@@ -10,7 +10,6 @@ import NaiveBayes
 
 using MLJModels.NaiveBayes_
 using CategoricalArrays
-
 
 ## GAUSSIAN
 
@@ -29,7 +28,6 @@ fitresultG, cacheG, reportG = fit(gaussian_classifier, 1,
                     selectrows(X, train), y[train]);
 
 gaussian_pred = predict(gaussian_classifier, fitresultG, selectrows(X, test));
-
 
 yhat1 = gaussian_pred[1]
 @test Set(classes(yhat1)) == Set(classes(y[1]))
@@ -97,9 +95,10 @@ f(a...) = f_(a...)/normalizer(a...)
 Xnew = (red=[1, 1], blue=[1, 2], green=[1, 3])
 
 # prediction by hand:
+
 yhand =[MLJBase.UnivariateFinite([male, female], [m(1, 1, 1), f(1, 1, 1)]),
         MLJBase.UnivariateFinite([male, female], [m(1, 2, 3), f(1, 2, 3)])]
-        
+
 multinomial_classifier = MultinomialNBClassifier()
 info(multinomial_classifier)
 
@@ -109,10 +108,8 @@ fitresultMLT, cacheMLT, reportMLT =
 yhat = MLJBase.predict(multinomial_classifier, fitresultMLT, Xnew)
 
 # see issue https://github.com/dfdx/NaiveBayes.jl/issues/42
-@test_broken pdf(yhand[1], :m) ≈ pdf(yhat[1], :m) 
+@test_broken pdf(yhand[1], :m) ≈ pdf(yhat[1], :m)
 @test_broken pdf(yhand[1], :f) ≈ pdf(yhat[1], :f)
 
 end # module
 true
-
- 

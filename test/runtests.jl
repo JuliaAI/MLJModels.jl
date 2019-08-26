@@ -5,35 +5,35 @@
 
 using Test
 
-@testset "MultivariateStats" begin
+@testset "MultivariateStats  " begin
   @test include("MultivariateStats.jl")
 end
 
-@testset "DecisionTree" begin
+@testset "DecisionTree       " begin
   @test include("DecisionTree.jl")
 end
 
-@testset "GaussianProcesses" begin
+@testset "GaussianProcesses  " begin
   @test include("GaussianProcesses.jl")
 end
 
-@testset "Clustering" begin
+@testset "Clustering         " begin
     @test include("Clustering.jl")
 end
 
-@testset "GLM" begin
+@testset "GLM                " begin
     @test include("GLM.jl")
 end
 
-@testset "SVM" begin
+@testset "SVM                " begin
     @test include("ScikitLearn.jl")
 end
 
-@testset "LIBSVM" begin
+@testset "LIBSVM             " begin
     @test include("LIBSVM.jl")
 end
 
-@testset "NaiveBayes" begin
+@testset "NaiveBayes         " begin
     @test include("NaiveBayes.jl")
 end
 

@@ -40,7 +40,7 @@ function RidgeRegressor(; lambda=0.0)
     isempty(message) || @warn message
 
     return model
-    
+
 end
 
 function MLJBase.fit(model::RidgeRegressor,
@@ -345,6 +345,8 @@ end
 #### METADATA
 ####
 
+# TODO add license field from ridge when MLJBase 0.4 is used
+
 MLJBase.load_path(::Type{<:PCA})  = "MLJModels.MultivariateStats_.PCA"
 MLJBase.package_name(::Type{<:PCA})  = MLJBase.package_name(RidgeRegressor)
 MLJBase.package_uuid(::Type{<:PCA})  = MLJBase.package_uuid(RidgeRegressor)
@@ -370,5 +372,3 @@ MLJBase.input_scitype(::Type{<:ICA}) = Table(Continuous)
 MLJBase.output_scitype(::Type{<:ICA}) = Table(Continuous)
 
 end # of module
-
-
