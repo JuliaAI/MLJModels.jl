@@ -4,6 +4,7 @@ using Test
 
 using MLJBase
 using RDatasets
+using LinearAlgebra
 
 import MLJModels
 import Distributions
@@ -95,6 +96,24 @@ p_mode = convert.(Int, predict_mode(pr, fitresult, X))
 
 # info(atom_glmcount)
 
+###
+### Count regression
+###
+
+seed!(1512)
+
+X = randn(500, 5)
+θ = randn(5)
+y = rand.(Distributions.Poisson.(exp.(X*θ)))
+
+XTable = MLJBase.table(X)
+
+lcr = LinearCountRegressor(fit_intercept=false)
+fitresult, _, _ = fit(lcr, 1, XTable, y)
+
+θ̂ = fitted_params(lcr, fitresult).coef
+
+@test norm(θ̂ .- θ)/norm(θ) ≤ 5e-3
 
 end # module
 true

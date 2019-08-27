@@ -19,7 +19,7 @@ using Parameters
 
 import ..GLM
 
-export LinearRegressor, LinearBinaryClassifier
+export LinearRegressor, LinearBinaryClassifier, LinearCountRegressor
 
 ###
 ## Helper functions
@@ -67,9 +67,15 @@ end
     link::L             = GLM.LogitLink()
 end
 
+@with_kw mutable struct LinearCountRegressor{D<:Distributions.Distribution,L<:GLM.Link} <: MLJBase.Probabilistic
+	fit_intercept::Bool = true
+	distribution::D     = Distributions.Poisson()
+	link::L 			= GLM.LogLink()
+end
+
 # Short names for convenience here
 
-const GLM_MODELS = Union{<:LinearRegressor, <:LinearBinaryClassifier}
+const GLM_MODELS = Union{<:LinearRegressor, <:LinearBinaryClassifier, <:LinearCountRegressor}
 
 ####
 #### FIT FUNCTIONS
@@ -85,6 +91,18 @@ function MLJBase.fit(model::LinearRegressor, verbosity::Int, X, y)
     cache     = nothing
 	# return
     return fitresult, cache, report
+end
+
+function MLJBase.fit(model::LinearCountRegressor, verbosity::Int, X, y)
+	# apply the model
+	features  = MLJBase.schema(X).names
+	Xmatrix   = augment_X(MLJBase.matrix(X), model.fit_intercept)
+	fitresult = GLM.glm(Xmatrix, y, model.distribution, model.link)
+	# form the report
+	report    = glm_report(fitresult)
+	cache     = nothing
+	# return
+	return fitresult, cache, report
 end
 
 function MLJBase.fit(model::LinearBinaryClassifier, verbosity::Int, X, y)
@@ -112,7 +130,7 @@ end
 ####
 
 # more efficient than MLJBase fallback
-function MLJBase.predict_mean(model::LinearRegressor, fitresult, Xnew)
+function MLJBase.predict_mean(model::Union{LinearRegressor,<:LinearCountRegressor}, fitresult, Xnew)
     Xmatrix = augment_X(MLJBase.matrix(Xnew), model.fit_intercept)
     return GLM.predict(fitresult, Xmatrix)
 end
@@ -128,6 +146,11 @@ function MLJBase.predict(model::LinearRegressor, fitresult, Xnew)
     return [GLM.Normal(μᵢ, σ̂) for μᵢ ∈ μ]
 end
 
+function MLJBase.predict(model::LinearCountRegressor, fitresult, Xnew)
+    λ = MLJBase.predict_mean(model, fitresult, Xnew)
+    return [GLM.Poisson(λᵢ) for λᵢ ∈ λ]
+end
+
 function MLJBase.predict(model::LinearBinaryClassifier, (fitresult, decode), Xnew)
 	π = MLJBase.predict_mean(model, (fitresult, decode), Xnew)
 	return [MLJBase.UnivariateFinite(MLJBase.classes(decode), [1-πᵢ, πᵢ]) for πᵢ in π]
@@ -140,18 +163,27 @@ end
 ####
 
 # shared metadata
-const GLM_REGS = Union{Type{<:LinearRegressor}, Type{<:LinearBinaryClassifier}}
+const GLM_REGS = Union{Type{<:LinearRegressor}, Type{<:LinearBinaryClassifier}, Type{<:LinearCountRegressor}}
+
 MLJBase.package_name(::GLM_REGS)  = "GLM"
 MLJBase.package_uuid(::GLM_REGS)  = "38e38edf-8417-5370-95a0-9cbb8c7f171a"
 MLJBase.package_url(::GLM_REGS)   = "https://github.com/JuliaStats/GLM.jl"
 MLJBase.is_pure_julia(::GLM_REGS) = true
 
-MLJBase.load_path(::Type{<:LinearRegressor})       = "MLJModels.GLM_.LinearRegressorRegressor"
-MLJBase.input_scitype(::Type{<:LinearRegressor})     = MLJBase.Table(MLJBase.Continuous)
-MLJBase.target_scitype(::Type{<:LinearRegressor})     = AbstractVector{MLJBase.Continuous}
+MLJBase.load_path(::Type{<:LinearRegressor})      = "MLJModels.GLM_.LinearRegressor"
+MLJBase.input_scitype(::Type{<:LinearRegressor})  = MLJBase.Table(MLJBase.Continuous)
+MLJBase.target_scitype(::Type{<:LinearRegressor}) = AbstractVector{MLJBase.Continuous}
 
-MLJBase.load_path(::Type{<:LinearBinaryClassifier})       = "MLJModels.GLM_.GLMCountRegressor"
-MLJBase.input_scitype(::Type{<:LinearBinaryClassifier})     = MLJBase.Table(MLJBase.Continuous)
-MLJBase.target_scitype(::Type{<:LinearBinaryClassifier})     = AbstractVector{MLJBase.UnivariateFinite}
+MLJBase.load_path(::Type{<:LinearRegressor})      = "MLJModels.GLM_.LinearRegressor"
+MLJBase.input_scitype(::Type{<:LinearRegressor})  = MLJBase.Table(MLJBase.Continuous)
+MLJBase.target_scitype(::Type{<:LinearRegressor}) = AbstractVector{MLJBase.Continuous}
+
+MLJBase.load_path(::Type{<:LinearCountRegressor})      = "MLJModels.GLM_.LinearCountRegressor"
+MLJBase.input_scitype(::Type{<:LinearCountRegressor})  = MLJBase.Table(MLJBase.Continuous)
+MLJBase.target_scitype(::Type{<:LinearCountRegressor}) = AbstractVector{MLJBase.Count}
+
+MLJBase.load_path(::Type{<:LinearBinaryClassifier})      = "MLJModels.GLM_.LinearBinaryClassifier"
+MLJBase.input_scitype(::Type{<:LinearBinaryClassifier})  = MLJBase.Table(MLJBase.Continuous)
+MLJBase.target_scitype(::Type{<:LinearBinaryClassifier}) = AbstractVector{MLJBase.UnivariateFinite}
 
 end # module
