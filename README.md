@@ -21,7 +21,7 @@ Note that for some of these packages, the interface is incomplete; contributions
 * [GaussianProcesses.jl](https://github.com/STOR-i/GaussianProcesses.jl)
     * `GPClassifier`
 * [GLM.jl](https://github.com/STOR-i/GaussianProcesses.jl)
-    * `LinearRegressor`, `LinearBinaryClassifier`
+    * `LinearRegressor`, `LinearBinaryClassifier`, `LinearCountRegressor`
 * [LIBSVM.jl](https://github.com/mpastell/LIBSVM.jl)
     * `LinearSVC`, `SVC`, `NuSVC`, `NuSVR`, `EpsilonSVR`, `OneClassSVM`
 * [MultivariateStats.jl](https://github.com/mpastell/LIBSVM.jl)
