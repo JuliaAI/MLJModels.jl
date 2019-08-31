@@ -1,12 +1,31 @@
 module ScikitLearn_
 
-export SVMClassifier, SVMRegressor
-export SVMNuClassifier, SVMNuRegressor
-export SVMLClassifier, SVMLRegressor
-export ElasticNet, ElasticNetCV
+#> export the new models you're going to define (and nothing else):
+export SVMClassifier, SVMRegressor,
+       SVMNuClassifier, SVMNuRegressor,
+       SVMLClassifier, SVMLRegressor,
+       LinearRegression, ARDRegression, BayesianRidge,
+       ElasticNet, ElasticNetCV, HuberRegressor,
+       Lars, LarsCV, Lasso, LassoCV, LassoLars, LassoLarsCV,
+       OrthogonalMatchingPursuit, OrthogonalMatchingPursuitCV,
+       Ridge, TheilSenRegressor, GaussianProcessRegressor,
+       MultiTaskElasticNet, MultiTaskElasticNetCV, MultiTaskLassoCV
 
+# NOTE: the following models have an issue (throw "for mono-output use elasticnet") so
+# one of the default variable must have an issue, leaving aside for now
+
+#       GraphicalLassoCV,
+#       RidgeCV
+
+#       AdaBoostRegressor, BaggingRegressor, GradientBoostingRegressor,
+#       RandomForestRegressor, VotingRegressor,
+#       RidgeClassifier, RidgeClassifierCV
+
+#> for all Supervised models:
 import MLJBase
 using ScientificTypes
+
+#> for all classifiers:
 using CategoricalArrays
 
 function _replace_expr!(ex, rep)
@@ -21,12 +40,13 @@ function _replace_expr!(ex, rep)
     return ex
 end
 
+
 """
-    macro sklmodel(ex)
+    macro sk_model(ex)
 
-Helper macro for defining interfaces ot ScikitLearn models. Struct fields require a type annotation and a default value as in the example below. Constraints for parameters (fields) are introduced as for field3 below. The constraint must refer to the parameter as `arg`. If the used parameter does not meet the constraint the default value is used.
+Helper macro for defining interfaces ot ScikitLearn models. Struct fields require a type annotation and a default value as in the example below. Constraints for parameters (fields) are introduced as for field3 below. The constraint must refer to the parameter as `arg`. If the used parameter does not meet a constraint the default value is used.
 
-@sklmodel mutable struct SomeModel <: MLJBase.Deterministic
+@sk_model mutable struct SomeModel <: MLJBase.Deterministic
     field1::Int = 1
     field2::Any = nothing
     field3::Float64 = 0.5::(0 < arg < 0.8)
@@ -34,17 +54,22 @@ end
 
 MLJBase.fit and MLJBase.predict methods are also produced.
 """
-macro sklmodel(ex)
+macro sk_model(ex)
     # pull out defaults and constraints
-    defaults = Dict()
+    defaults 	= Dict()
     constraints = Dict()
-    stname = ex.args[2] isa Symbol ? ex.args[2] : ex.args[2].args[1]
-    fnames = Symbol[]
+    stname 		= ex.args[2] isa Symbol ? ex.args[2] : ex.args[2].args[1]
+    fnames 		= Symbol[]
+
     for i = 1:length(ex.args[3].args)
         f = ex.args[3].args[i]
         f isa LineNumberNode && continue
-        fname, ftype = f.args[1] isa Symbol ? (ff.args[1], :Any) : (f.args[1].args[1], f.args[1].args[2])
+
+        fname, ftype = f.args[1] isa Symbol ?
+                            (ff.args[1], :Any) :
+                            (f.args[1].args[1], f.args[1].args[2])
         push!(fnames, fname)
+
         if f.head == :(=)
             default = f.args[2]
             if default isa Expr
@@ -56,64 +81,82 @@ macro sklmodel(ex)
         end
     end
 
-    # make kw constructor
-    const_ex = Expr(:function,
-        Expr(:call, stname, Expr(:parameters, [Expr(:kw, fname, defaults[fname]) for fname in fnames]...)),
-        Expr(:block,
-            Expr(:(=), :model, Expr(:call, :new, [fname for fname in fnames]...)),
-            :(message = MLJBase.clean!(model)),
-            :(isempty(message) || @warn message),
-            :(return model)
-        )
-    )
+    # make kw constructor which calls the clean! function
+    const_ex = Expr(:function, Expr(:call, stname, Expr(:parameters,
+     	                  [Expr(:kw, fname, defaults[fname]) for fname in fnames]...)),
+                    # body of the function
+                    Expr(:block,
+                         Expr(:(=), :model, Expr(:call, :new, [fname for fname in fnames]...)),
+                         :(message = MLJBase.clean!(model)),
+            			 :(isempty(message) || @warn message),
+            			 :(return model)
+        				 )
+    			 	)
     push!(ex.args[3].args, const_ex)
 
-    # add fit method
+    # add fit function
     fit_ex = :(function MLJBase.fit(model::$stname, verbosity::Int, X, y)
-        Xmatrix = MLJBase.matrix(X)
-        cache = $(Symbol(stname, "_"))($([Expr(:kw, fname, :(model.$fname)) for fname in fnames]...))
-        result = ScikitLearn.fit!(cache, Xmatrix, y)
-        fitresult = result
-        report = NamedTuple{}()
-        return (fitresult, nothing, report)
-    end)
+                   # body of the function
+                   Xmatrix   = MLJBase.matrix(X)
+                   cache     = $(Symbol(stname, "_"))($([Expr(:kw, fname, :(model.$fname))
+                                                            for fname in fnames]...))
+                   result    = ScikitLearn.fit!(cache, Xmatrix, y)
+                   fitresult = result
+                   # TODO: we may want to use the report later on
+                   report    = NamedTuple()
+                   return (fitresult, nothing, report)
+               end)
 
-    clean_ex = Expr(:function,:(MLJBase.clean!(model::$stname)),
-    Expr(:block,
-        :(warning = ""),
-        [Expr(:if, Expr(:call, :!, _replace_expr!(c, :(model.$f))),
-        Expr(:block,
-            :(warning *= $("constraint ($c) failed for $f, using default: $(defaults[f])\n")),
-            :(model.$f = $(defaults[f]))
-            )) for (f,c) in constraints]...,
-        :(return warning)
-        )
-    )
+    # clean function
+    clean_ex = Expr(:function, :(MLJBase.clean!(model::$stname)),
+                    # body of the function
+                    Expr(:block,
+                         :(warning = ""),
+                         # conditions for each constraint
+        				 [Expr(:if, Expr(:call, :!, _replace_expr!(c, :(model.$f))),
+                               # action of the constraing is violated:
+                               # add a message and use default
+        				       Expr(:block,
+                                    :(warning *= $("constraint ($c) failed for $f, using default:
+                                    $(defaults[f])\n")),
+                                    :(model.$f = $(defaults[f]))
+                                    )
+                               ) for (f,c) in constraints]...,
+                         # return full message
+        				 :(return warning)
+                        )
+                    )
+    # predict function
+    predict_ex = Expr(:function, :(MLJBase.predict(model::$stname, fitresult, Xnew)),
+                    # body of the predict function
+        			Expr(:block,
+                         :(xnew 	     = MLJBase.matrix(Xnew)),
+                         :(prediction = ScikitLearn.predict(fitresult, xnew)),
+                         :(return prediction)
+                         )
+                      )
 
-    predict_ex = Expr(:function,
-        :(MLJBase.predict(model::$stname, fitresult, Xnew)),
-        Expr(:block,
-            :(xnew = MLJBase.matrix(Xnew)),
-            :(prediction = ScikitLearn.predict(fitresult, xnew)),
-            :(return prediction)
-        )
-    )
-
+    # model metadata note that it does not assign scitypes etc, these have
+    # to be added manually model by model.
+    # --> input_scitype
+    # --> target_scitype
     quote
         $(esc(ex))
         $(esc(fit_ex))
         $(esc(clean_ex))
         $(esc(predict_ex))
-        MLJBase.load_path(::Type{<:$(esc(stname))}) = string($(stname))
-        MLJBase.package_name(::Type{<:$(esc(stname))}) = "ScikitLearn"
-        MLJBase.package_uuid(::Type{<:$(esc(stname))}) = "3646fa90-6ef7-5e7e-9f22-8aca16db6324"
-        MLJBase.is_pure_julia(::Type{<:$(esc(stname))}) = false
-        MLJBase.package_url(::Type{<:$(esc(stname))}) = "https://github.com/cstjean/ScikitLearn.jl"
+        MLJBase.load_path(::Type{<:$(esc(stname))})       = string($(stname))
+        MLJBase.package_name(::Type{<:$(esc(stname))})    = "ScikitLearn"
+        MLJBase.package_uuid(::Type{<:$(esc(stname))})    = "3646fa90-6ef7-5e7e-9f22-8aca16db6324"
+        MLJBase.is_pure_julia(::Type{<:$(esc(stname))})   = false
+        MLJBase.package_url(::Type{<:$(esc(stname))})     = "https://github.com/cstjean/ScikitLearn.jl"
+        MLJBase.package_license(::Type{<:$(esc(stname))}) = "BSD"
     end
 end
 
-#> import package:
+# NOTE: legacy code for SVM models does not use the @sk_model macro.
 
+#> import package:
 import ..ScikitLearn: @sk_import
 import ..ScikitLearn
 @sk_import svm: SVC
@@ -122,8 +165,6 @@ import ..ScikitLearn
 @sk_import svm: SVR
 @sk_import svm: NuSVR
 @sk_import svm: LinearSVR
-
-
 
 """
     SVMClassifier(; kwargs...)
@@ -149,17 +190,17 @@ end
 # constructor:
 #> all arguments are kwargs with a default value
 function SVMClassifier(
-    ;C=1.0
-    ,kernel="rbf"
-    ,degree=3
-    ,gamma="auto"
-    ,coef0=0.0
-    ,shrinking=true
-    ,tol=1e-3
-    ,cache_size=200
-    ,max_iter=-1
+    ;C          = 1.0
+    ,kernel     = "rbf"
+    ,degree     = 3
+    ,gamma      = "auto"
+    ,coef0      = 0.0
+    ,shrinking  = true
+    ,tol        = 1e-3
+    ,cache_size = 200
+    ,max_iter   = -1
     ,decision_function_shape="ovr"
-    ,random_state=nothing)
+    ,random_state = nothing)
 
     model = SVMClassifier(
         C
@@ -187,16 +228,16 @@ function MLJBase.clean!(model::SVMClassifier)
     if(typeof(model.kernel)==String && (!(model.kernel  in
             ["linear","poly","rbf","sigmoid","precomputed"])))
             warning *="kernel parameter is not valid, setting to default=\"rbf\" \n"
-	    model.kernel="rbf"
+        model.kernel="rbf"
     end
     if(typeof(model.gamma)==String && (!(model.gamma  in
             ["auto","scale"])))
             warning *="gamma parameter is not valid, setting to default=\"auto\" \n"
-	    model.gamma="auto"
+        model.gamma="auto"
     end
     if(!(model.decision_function_shape in ["ovo","ovr"]))
             warning *="decision_function_shape parameter is not valid, setting to default=\"ovr\" \n"
-	    model.decision_function_shape="ovr"
+        model.decision_function_shape="ovr"
     end
     return warning
 end
@@ -225,17 +266,17 @@ end
 # constructor:
 #> all arguments are kwargs with a default value
 function SVMNuClassifier(
-    ;nu=0.5
-    ,kernel="rbf"
-    ,degree=3
-    ,gamma="auto"
-    ,coef0=0.0
-    ,shrinking=true
-    ,tol=1e-3
-    ,cache_size=200
-    ,max_iter=-1
-    ,decision_function_shape="ovr"
-    ,random_state=nothing)
+    ;nu         = 0.5
+    ,kernel     = "rbf"
+    ,degree     = 3
+    ,gamma      = "auto"
+    ,coef0      = 0.0
+    ,shrinking  = true
+    ,tol        = 1e-3
+    ,cache_size = 200
+    ,max_iter   = -1
+    ,decision_function_shape = "ovr"
+    ,random_state = nothing)
 
     model = SVMNuClassifier(
         nu
@@ -262,16 +303,16 @@ function MLJBase.clean!(model::SVMNuClassifier)
     if(typeof(model.kernel)==String && (!(model.kernel  in
             ["linear","poly","rbf","sigmoid","precomputed"])))
             warning *="kernel parameter is not valid, setting to default=\"rbf\" \n"
-	    model.kernel="rbf"
+        model.kernel="rbf"
     end
     if(typeof(model.gamma)==String && (!(model.gamma  in
             ["auto","scale"])))
             warning *="gamma parameter is not valid, setting to default=\"auto\" \n"
-	    model.gamma="auto"
+        model.gamma="auto"
     end
     if(!(model.decision_function_shape in ["ovo","ovr"]))
             warning *="decision_function_shape parameter is not valid, setting to default=\"ovr\" \n"
-	    model.decision_function_shape="ovr"
+        model.decision_function_shape="ovr"
     end
     return warning
 end
@@ -300,23 +341,23 @@ end
 
 
 function SVMLClassifier(
-    ;C=1.0
-    ,loss="squared_hinge"
-    ,dual=true
-    ,penalty="l2"
-    ,tol=1e-3
-    ,max_iter=-1
-    ,intercept_scaling=1.
-    ,random_state=nothing)
+    ;C        = 1.0
+    ,loss     = "squared_hinge"
+    ,dual     = true
+    ,penalty  = "l2"
+    ,tol      = 1e-3
+    ,max_iter = -1
+    ,intercept_scaling = 1.0
+    ,random_state = nothing)
 
     model = SVMLClassifier(
         C
         , loss
-	, dual
-	, penalty
+        , dual
+        , penalty
         , tol
         , max_iter
-	, intercept_scaling
+        , intercept_scaling
         , random_state
         )
 
@@ -330,11 +371,11 @@ function MLJBase.clean!(model::SVMLClassifier)
     warning = ""
     if(!(model.loss in ["hinge","squared_hinge"]))
             warning *="loss parameter is not valid, setting to default=\"squared_hinge\" \n"
-	    model.loss="squared_hinge"
+        model.loss="squared_hinge"
     end
     if(!(model.penalty in ["l1","l2"]))
             warning *="penalty parameter is not valid, setting to default=\"l2\" \n"
-	    model.penalty="l2"
+        model.penalty="l2"
     end
     return warning
 end
@@ -362,16 +403,16 @@ end
 # constructor:
 #> all arguments are kwargs with a default value
 function SVMRegressor(
-    ;C=1.0
-    ,kernel="rbf"
-    ,degree=3
-    ,gamma="auto"
-    ,coef0=0.0
-    ,shrinking=true
-    ,tol=1e-3
-    ,cache_size=200
-    ,max_iter=-1
-    ,epsilon=0.1)
+    ;C          = 1.0
+    ,kernel     = "rbf"
+    ,degree     = 3
+    ,gamma      = "auto"
+    ,coef0      = 0.0
+    ,shrinking  = true
+    ,tol        = 1e-3
+    ,cache_size = 200
+    ,max_iter   = -1
+    ,epsilon    = 0.1)
 
     model = SVMRegressor(
         C
@@ -396,12 +437,12 @@ function MLJBase.clean!(model::SVMRegressor)
     if(typeof(model.kernel)==String && (!(model.kernel  in
             ["linear","poly","rbf","sigmoid","precomputed"])))
             warning *="kernel parameter is not valid, setting to default=\"rbf\" \n"
-	    model.kernel="rbf"
+        model.kernel="rbf"
     end
     if(typeof(model.gamma)==String && (!(model.gamma  in
             ["auto","scale"])))
             warning *="gamma parameter is not valid, setting to default=\"auto\" \n"
-	    model.gamma="auto"
+        model.gamma="auto"
     end
     return warning
 end
@@ -430,20 +471,20 @@ end
 # constructor:
 #> all arguments are kwargs with a default value
 function SVMNuRegressor(
-    ;nu=0.5
-    ,C=1.0
-    ,kernel="rbf"
-    ,degree=3
-    ,gamma="auto"
-    ,coef0=0.0
-    ,shrinking=true
-    ,tol=1e-3
-    ,cache_size=200
-    ,max_iter=-1)
+    ;nu         = 0.5
+    ,C          = 1.0
+    ,kernel     = "rbf"
+    ,degree     = 3
+    ,gamma      = "auto"
+    ,coef0      = 0.0
+    ,shrinking  = true
+    ,tol        = 1e-3
+    ,cache_size = 200
+    ,max_iter   = -1)
 
     model = SVMNuRegressor(
         nu
-	, C
+        , C
         , kernel
         , degree
         , gamma
@@ -464,12 +505,12 @@ function MLJBase.clean!(model::SVMNuRegressor)
     if(typeof(model.kernel)==String && (!(model.kernel  in
             ["linear","poly","rbf","sigmoid","precomputed"])))
             warning *="kernel parameter is not valid, setting to default=\"rbf\" \n"
-	    model.kernel="rbf"
+        model.kernel="rbf"
     end
     if(typeof(model.gamma)==String && (!(model.gamma  in
             ["auto","scale"])))
             warning *="gamma parameter is not valid, setting to default=\"auto\" \n"
-	    model.gamma="auto"
+        model.gamma="auto"
     end
     return warning
 end
@@ -495,19 +536,19 @@ end
 # constructor:
 #> all arguments are kwargs with a default value
 function SVMLRegressor(
-    ;C=1.0
-    ,loss="epsilon_insensitive"
-    ,fit_intercept=true
-    ,dual=true
-    ,tol=1e-3
-    ,max_iter=-1
-    ,epsilon=0.1)
+    ;C        = 1.0
+    ,loss     = "epsilon_insensitive"
+    ,fit_intercept = true
+    ,dual     = true
+    ,tol      = 1e-3
+    ,max_iter = -1
+    ,epsilon  = 0.1)
 
     model = SVMLRegressor(
         C
-	, loss
-	, fit_intercept
-	, dual
+        , loss
+        , fit_intercept
+        , dual
         , tol
         , max_iter
         , epsilon)
@@ -522,100 +563,94 @@ function MLJBase.clean!(model::SVMLRegressor)
     warning = ""
     if(!(model.loss in ["epsilon_insensitive","squared_epsilon_insensitive"]))
             warning *="loss parameter is not valid, setting to default=\"epsilon_insensitive\" \n"
-	    model.loss="epsilon_insensitive"
+        model.loss="epsilon_insensitive"
     end
     return warning
 end
 
 
 function MLJBase.fit(model::SVMClassifier
-             , verbosity::Int   #> must be here (and typed) even if not used (as here)
-             , X
-             , y)
+                     , verbosity::Int   #> must be here (and typed) even if not used (as here)
+                     , X
+                     , y)
 
     Xmatrix = MLJBase.matrix(X)
-
     y_plain = MLJBase.int(y)
     decode  = MLJBase.decoder(y[1]) # for predict method
 
     cache = SVC(C=model.C,
-            kernel=model.kernel,
-            degree=model.degree,
-            coef0=model.coef0,
-            shrinking=model.shrinking,
-            gamma=model.gamma,
-            tol=model.tol,
-            cache_size=model.cache_size,
-            max_iter=model.max_iter,
-            decision_function_shape=model.decision_function_shape,
-            random_state=model.random_state
-    )
+                kernel=model.kernel,
+                degree=model.degree,
+                coef0=model.coef0,
+                shrinking=model.shrinking,
+                gamma=model.gamma,
+                tol=model.tol,
+                cache_size=model.cache_size,
+                max_iter=model.max_iter,
+                decision_function_shape=model.decision_function_shape,
+                random_state=model.random_state
+                )
 
-    result = ScikitLearn.fit!(cache, Xmatrix, y_plain)
+    result    = ScikitLearn.fit!(cache, Xmatrix, y_plain)
     fitresult = (result, decode)
-    report = NamedTuple()
+    report    = NamedTuple()
 
     return fitresult, nothing, report
-
 end
 
 function MLJBase.fit(model::SVMNuClassifier
-             , verbosity::Int   #> must be here (and typed) even if not used (as here)
-             , X
-             , y)
+                     , verbosity::Int   #> must be here (and typed) even if not used (as here)
+                     , X
+                     , y)
 
     Xmatrix = MLJBase.matrix(X)
-
     y_plain = MLJBase.int(y)
     decode  = MLJBase.decoder(y[1]) # for predict method
 
     cache = NuSVC(nu=model.nu,
-            kernel=model.kernel,
-            degree=model.degree,
-            coef0=model.coef0,
-            shrinking=model.shrinking,
-	    gamma=model.gamma,
-            tol=model.tol,
-            cache_size=model.cache_size,
-            max_iter=model.max_iter,
-            decision_function_shape=model.decision_function_shape,
-            random_state=model.random_state
-    )
+                  kernel=model.kernel,
+                  degree=model.degree,
+                  coef0=model.coef0,
+                  shrinking=model.shrinking,
+                  gamma=model.gamma,
+                  tol=model.tol,
+                  cache_size=model.cache_size,
+                  max_iter=model.max_iter,
+                  decision_function_shape=model.decision_function_shape,
+                  random_state=model.random_state
+                  )
 
-    result = ScikitLearn.fit!(cache,Xmatrix,y_plain)
+    result    = ScikitLearn.fit!(cache,Xmatrix,y_plain)
     fitresult = (result, decode)
-    report = NamedTuple()
+    report    = NamedTuple()
 
     return fitresult, nothing, report
-
 end
 
 function MLJBase.fit(model::SVMLClassifier
-             , verbosity::Int   #> must be here (and typed) even if not used (as here)
-             , X
-             , y)
+                     , verbosity::Int   #> must be here (and typed) even if not used (as here)
+                     , X
+                     , y)
 
     Xmatrix = MLJBase.matrix(X)
-
     y_plain = MLJBase.int(y)
     decode  = MLJBase.decoder(y[1]) # for predict method
 
     cache = LinearSVC(C=model.C,
-	    loss = model.loss,
-            dual=model.dual,
-            penalty=model.penalty,
-            intercept_scaling=model.intercept_scaling,
-            tol=model.tol,
-            max_iter=model.max_iter,
-            random_state=model.random_state
-    )
+                      loss = model.loss,
+                      dual=model.dual,
+                      penalty=model.penalty,
+                      intercept_scaling=model.intercept_scaling,
+                      tol=model.tol,
+                      max_iter=model.max_iter,
+                      random_state=model.random_state
+                      )
 
-    result = ScikitLearn.fit!(cache,Xmatrix,y_plain)
+    result    = ScikitLearn.fit!(cache,Xmatrix,y_plain)
     fitresult = (result, decode)
-    report = NamedTuple()
+    report    = NamedTuple()
 
     return fitresult, nothing, report
-
 end
 
 function MLJBase.fit(model::SVMRegressor
@@ -626,63 +661,65 @@ function MLJBase.fit(model::SVMRegressor
     Xmatrix = MLJBase.matrix(X)
 
     cache = SVR(C=model.C,
-            kernel=model.kernel,
-            degree=model.degree,
-            coef0=model.coef0,
-            shrinking=model.shrinking,
-	    gamma=model.gamma,
-            tol=model.tol,
-            cache_size=model.cache_size,
-            max_iter=model.max_iter,
-            epsilon=model.epsilon)
+                kernel=model.kernel,
+                degree=model.degree,
+                coef0=model.coef0,
+                shrinking=model.shrinking,
+                gamma=model.gamma,
+                tol=model.tol,
+                cache_size=model.cache_size,
+                max_iter=model.max_iter,
+                epsilon=model.epsilon)
 
     fitresult = ScikitLearn.fit!(cache,Xmatrix,y)
-    report = NamedTuple()
+    report    = NamedTuple()
 
     return fitresult, nothing, report
 end
 
 function MLJBase.fit(model::SVMNuRegressor
-             , verbosity::Int   #> must be here (and typed) even if not used (as here)
-             , X
-             , y)
+                     , verbosity::Int   #> must be here (and typed) even if not used (as here)
+                     , X
+                     , y)
 
     Xmatrix = MLJBase.matrix(X)
 
     cache = NuSVR(nu=model.nu,
-            C=model.C,
-            kernel=model.kernel,
-            degree=model.degree,
-            coef0=model.coef0,
-            shrinking=model.shrinking,
-	    gamma=model.gamma,
-            tol=model.tol,
-            cache_size=model.cache_size,
-            max_iter=model.max_iter)
+                  C=model.C,
+                  kernel=model.kernel,
+                  degree=model.degree,
+                  coef0=model.coef0,
+                  shrinking=model.shrinking,
+                  gamma=model.gamma,
+                  tol=model.tol,
+                  cache_size=model.cache_size,
+                  max_iter=model.max_iter
+                  )
 
     fitresult = ScikitLearn.fit!(cache,Xmatrix,y)
-    report = NamedTuple()
+    report    = NamedTuple()
 
     return fitresult, nothing, report
 end
 
 function MLJBase.fit(model::SVMLRegressor
-             , verbosity::Int   #> must be here (and typed) even if not used (as here)
-             , X
-             , y)
+                     , verbosity::Int   #> must be here (and typed) even if not used (as here)
+                     , X
+                     , y)
 
     Xmatrix = MLJBase.matrix(X)
 
     cache = LinearSVR(C=model.C,
-            loss=model.loss,
-	    fit_intercept=model.fit_intercept,
-	    dual=model.dual,
-	    tol=model.tol,
-	    max_iter=model.max_iter,
-	    epsilon=model.epsilon)
+                      loss=model.loss,
+                      fit_intercept=model.fit_intercept,
+                      dual=model.dual,
+                      tol=model.tol,
+                      max_iter=model.max_iter,
+                      epsilon=model.epsilon)
+
 
     fitresult = ScikitLearn.fit!(cache,Xmatrix,y)
-    report = NamedTuple()
+    report    = NamedTuple()
 
     return fitresult, nothing, report
 end
@@ -691,464 +728,470 @@ end
 # placeholder types for predict dispatching
 SVMC = Union{SVMClassifier, SVMNuClassifier, SVMLClassifier}
 SVMR = Union{SVMRegressor, SVMNuRegressor, SVMLRegressor}
-SVM = Union{SVMC, SVMR}
+SVM  = Union{SVMC, SVMR}
 
 function MLJBase.predict(model::SVMC
-                         , fitresult
+                         , (fitresult, decode)
                          , Xnew)
 
-    xnew = MLJBase.matrix(Xnew)
-    result, decode = fitresult
-    prediction = ScikitLearn.predict(result, xnew)
+    xnew       = MLJBase.matrix(Xnew)
+    prediction = ScikitLearn.predict(fitresult, xnew)
     return decode(prediction)
 end
 
 function MLJBase.predict(model::SVMR
                          , fitresult
                          , Xnew)
-    xnew = MLJBase.matrix(Xnew)
+
+    xnew       = MLJBase.matrix(Xnew)
     prediction = ScikitLearn.predict(fitresult,xnew)
     return prediction
 end
 
-
 ## METADATA
 
-MLJBase.load_path(::Type{<:SVMClassifier}) = "MLJModels.ScikitLearn_.SVMClassifier"
+MLJBase.load_path(::Type{<:SVMClassifier})   = "MLJModels.ScikitLearn_.SVMClassifier"
 MLJBase.load_path(::Type{<:SVMNuClassifier}) = "MLJModels.ScikitLearn_.SVMNuClassifier"
-MLJBase.load_path(::Type{<:SVMLClassifier}) = "MLJModels.ScikitLearn_.SVMLClassifier"
-MLJBase.load_path(::Type{<:SVMRegressor}) = "MLJModels.ScikitLearn_.SVMRegressor"
-MLJBase.load_path(::Type{<:SVMNuRegressor}) = "MLJModels.ScikitLearn_.SVMNuRegressor"
-MLJBase.load_path(::Type{<:SVMRegressor}) = "MLJModels.ScikitLearn_.SVMRegressor"
-MLJBase.load_path(::Type{<:SVMLRegressor}) = "MLJModels.ScikitLearn_.SVMLRegressor"
+MLJBase.load_path(::Type{<:SVMLClassifier})  = "MLJModels.ScikitLearn_.SVMLClassifier"
+MLJBase.load_path(::Type{<:SVMRegressor})    = "MLJModels.ScikitLearn_.SVMRegressor"
+MLJBase.load_path(::Type{<:SVMNuRegressor})  = "MLJModels.ScikitLearn_.SVMNuRegressor"
+MLJBase.load_path(::Type{<:SVMRegressor})    = "MLJModels.ScikitLearn_.SVMRegressor"
+MLJBase.load_path(::Type{<:SVMLRegressor})   = "MLJModels.ScikitLearn_.SVMLRegressor"
 
-MLJBase.package_name(::Type{<:SVM}) = "ScikitLearn"
-MLJBase.package_uuid(::Type{<:SVM}) = "3646fa90-6ef7-5e7e-9f22-8aca16db6324"
-MLJBase.is_pure_julia(::Type{<:SVM}) = false
-MLJBase.package_url(::Type{<:SVM}) = "https://github.com/cstjean/ScikitLearn.jl"
-MLJBase.input_scitype(::Type{<:SVM}) = Table(Continuous)
+MLJBase.package_name(::Type{<:SVM})    = "ScikitLearn"
+MLJBase.package_uuid(::Type{<:SVM})    = "3646fa90-6ef7-5e7e-9f22-8aca16db6324"
+MLJBase.is_pure_julia(::Type{<:SVM})   = false
+MLJBase.package_url(::Type{<:SVM})     = "https://github.com/cstjean/ScikitLearn.jl"
+MLJBase.input_scitype(::Type{<:SVM})   = Table(Continuous)
 MLJBase.target_scitype(::Type{<:SVMC}) = AbstractVector{<:Finite}
 MLJBase.target_scitype(::Type{<:SVMR}) = AbstractVector{Continuous}
 
 
-################
-# LINEAR MODEL #
-################
+# NOTE: The rest of the module uses the @sk_model macro
+# For each model, a struct needs to be given along with
+# a specific metadata for target and input scitype
+# and possibly an adapted clean! method
 
-<<<<<<< HEAD
-# to avoid name conflicts we use this instead of @sk_import:
-(ScikitLearn.Skcore).import_sklearn()
-ElasticNet_ =
-    (ScikitLearn.Skcore.pyimport)("sklearn.linear_model").ElasticNet
-ElasticNetCV_ =
-    (ScikitLearn.Skcore.pyimport)("sklearn.linear_model").ElasticNetCV
+#################
+# LINEAR MODELS #
+# > LinearRegression: params (✅) fitted_params (✅) clean (none ✅) metadata 🚫
+# > ARDRegression   : params (✅) fitted_params (✅) clean (none ✅) metadata 🚫
+# > BayesianRidge   : params (✅) fitted_params (✅) clean (none ✅) metadata 🚫
+# > ElasticNet      : params (✅) fitted_params (✅) clean (none ✅) metadata 🚫
+#################
 
-=======
->>>>>>> b9bd4544a15f6df5cb09756c3cf7b9c3bcced15d
-
+LinearRegression_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).LinearRegression
+@sk_model mutable struct LinearRegression <: MLJBase.Deterministic
+    fit_intercept::Bool    = true
+    normalize::Bool        = false
+    copy_X::Bool           = true
+    n_jobs::Union{Int,Any} = nothing
+end
 
 ARDRegression_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).ARDRegression
-@sklmodel mutable struct ARDRegression <: MLJBase.Deterministic
-    n_iter::Int = 300::(arg>0)
-    tol::Float64 = 0.001
-    alpha_1::Float64 = 1e-6
-    alpha_2::Float64 = 1e-6
-    lambda_1::Float64 = 1e-6
-    lambda_2::Float64 = 1e-6
-    compute_score::Bool = false
-    threshold_lambda::Float64 = 1.0e4
-    fit_intercept::Bool = true
-    normalize::Bool = false
-    copy_X::Bool = true
-    verbose::Bool = false
+@sk_model mutable struct ARDRegression <: MLJBase.Deterministic
+    n_iter::Int               = 300::(arg>0)
+    tol::Float64              = 1e-3::(arg>0)
+    alpha_1::Float64          = 1e-6::(arg>0)
+    alpha_2::Float64          = 1e-6::(arg>0)
+    lambda_1::Float64         = 1e-6::(arg>0)
+    lambda_2::Float64         = 1e-6::(arg>0)
+    compute_score::Bool       = false
+    threshold_lambda::Float64 = 1e4::(arg>0)
+    fit_intercept::Bool       = true
+    normalize::Bool           = false
+    copy_X::Bool              = true
+    verbose::Bool             = false
 end
 
 BayesianRidge_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).BayesianRidge
-@sklmodel mutable struct BayesianRidge <: MLJBase.Deterministic
-    n_iter::Int = 300::(arg>0)
-    tol::Float64 = 0.001
-    alpha_1::Float64 = 1e-6
-    alpha_2::Float64 = 1e-6
-    lambda_1::Float64 = 1e-6
-    lambda_2::Float64 = 1e-6
-    compute_score::Bool = false
+@sk_model mutable struct BayesianRidge <: MLJBase.Deterministic
+    n_iter::Int         = 300::(arg≥1)
+    tol::Float64        = 1e-3::(arg>0)
+    alpha_1::Float64    = 1e-6::(arg>0)
+    alpha_2::Float64    = 1e-6::(arg>0)
+    lambda_1::Float64   = 1e-6::(arg>0)
+    lambda_2::Float64   = 1e-6::(arg>0)
+    compute_score::Bool = false::(arg>0)
     fit_intercept::Bool = true
-    normalize::Bool = false
-    copy_X::Bool = true
-    verbose::Bool = false
+    normalize::Bool     = false
+    copy_X::Bool        = true
+    verbose::Bool       = false
 end
 
 ElasticNet_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).ElasticNet
-@sklmodel mutable struct ElasticNet <: MLJBase.Deterministic
-    alpha::Float64 = 1.0
-    l1_ratio::Float64 = 0.5
+@sk_model mutable struct ElasticNet <: MLJBase.Deterministic
+    alpha::Float64      = 1.0::(arg>=0)   # 0 is OLS
+    l1_ratio::Float64   = 0.5::(0≤arg<=1)
     fit_intercept::Bool = true
-    normalize::Bool = false
-    precompute::Any = false
-    max_iter::Int = 1000
-    copy_X::Bool = true
-    tol::Float64 = 0.0001
-    warm_start::Bool = false
-    positive::Bool = false
-    random_state::Any = nothing
-    selection::String = "cyclic"
+    normalize::Bool     = false
+    precompute::Any     = false     # can pass a precomputed Gram matrix
+    max_iter::Int       = 1_000
+    copy_X::Bool        = true
+    tol::Float64        = 1e-4
+    warm_start::Bool    = false
+    positive::Bool      = false
+    random_state::Any   = nothing   # Int, random state, or nothing
+    selection::String   = "cyclic"::(arg in ("cyclic","random"))
 end
 
 ElasticNetCV_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).ElasticNetCV
-@sklmodel mutable struct ElasticNetCV <: MLJBase.Deterministic
-    l1_ratio::Union{Float64, Any} = 0.5
-    eps::Float64 = 0.001
-    n_alphas::Int = 100
-    alphas::Any = nothing
+@sk_model mutable struct ElasticNetCV <: MLJBase.Deterministic
+    l1_ratio::Union{Float64, Any} = 0.5::(0<=arg<=1)
+    eps::Float64        = 0.001
+    n_alphas::Int       = 100
+    alphas::Any         = nothing
     fit_intercept::Bool = true
-    normalize::Bool = false
-    precompute::Any = "auto"
-    max_iter::Int = 1000
-    tol::Float64 = 0.0001
-    cv::Any = 5
-    copy_X::Bool = true
+    normalize::Bool     = false
+    precompute::Any     = "auto"
+    max_iter::Int       = 1_000
+    tol::Float64        = 1e-4
+    cv::Int             = 5
+    copy_X::Bool        = true
     verbose::Union{Bool, Int} = 0
-    n_jobs::Union{Int, Any} = nothing
-    positive::Bool = false
+    n_jobs::Union{Int, Any}   = nothing
+    positive::Bool      = false
     random_state::Union{Int, Nothing} = nothing
-    selection::String = "cyclic"
+    selection::String   = "cyclic"
 end
 
 HuberRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).HuberRegressor
-@sklmodel mutable struct HuberRegressor <: MLJBase.Deterministic
-    epsilon::Float64 = 1.35::(arg>1.0)
-    max_iter::Int = 1000
-    alpha::Float64 = 0.0001
-    warm_start::Bool = false
+@sk_model mutable struct HuberRegressor <: MLJBase.Deterministic
+    epsilon::Float64    = 1.35::(arg>1.0)
+    max_iter::Int       = 1_000
+    alpha::Float64      = 1e-4
+    warm_start::Bool    = false
     fit_intercept::Bool = true
-    tol::Float64 = 1e-5
+    tol::Float64        = 1e-5
 end
 
 Lars_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).Lars
-@sklmodel mutable struct Lars <: MLJBase.Deterministic
-    fit_intercept::Bool = true
+@sk_model mutable struct Lars <: MLJBase.Deterministic
+    fit_intercept::Bool      = true
     verbose::Union{Bool,Int} = 0
     normalize::Bool = true
-    eps::Float64 = 1e-8
-    copy_X::Bool = true
-    fit_path::Bool = true
-    positive::Bool = false
+    eps::Float64    = 1e-8
+    copy_X::Bool    = true
+    fit_path::Bool  = true
+    positive::Bool  = false
 end
 
 LarsCV_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).LarsCV
-@sklmodel mutable struct LarsCV <: MLJBase.Deterministic
-    fit_intercept::Bool = true
+@sk_model mutable struct LarsCV <: MLJBase.Deterministic
+    fit_intercept::Bool      = true
     verbose::Union{Bool,Int} = 0
-    max_iter::Int = 500
-    normalize::Bool = true
-    precompute::Any = "auto"
-    cv::Any = 5
-    max_n_alphas::Int = 1000
+    max_iter::Int     = 500
+    normalize::Bool   = true
+    precompute::Any   = "auto"
+    cv::Int           = 5
+    max_n_alphas::Int = 1_000
     n_jobs::Union{Nothing,Int} = nothing
-    eps::Float64 = 1e-8
-    copy_X::Bool = true
-    positive::Bool = false
+    eps::Float64      = 1e-8
+    copy_X::Bool      = true
+    positive::Bool    = false
 end
 
 Lasso_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).Lasso
-@sklmodel mutable struct Lasso <: MLJBase.Deterministic
-    alpha::Float64 = 1.0
+@sk_model mutable struct Lasso <: MLJBase.Deterministic
+    alpha::Float64      = 1.0
     fit_intercept::Bool = true
-    normalize::Bool = false
-    precompute::Any = false
-    copy_X::Bool = true
-    max_iter::Int = 1000
-    tol::Float64 = 0.0001
-    warm_start::Bool = false
-    positive::Bool = false
-    random_state::Any = nothing
-    selection::String = "cyclic"
+    normalize::Bool     = false
+    precompute::Any     = false
+    copy_X::Bool        = true
+    max_iter::Int       = 1_000
+    tol::Float64        = 0.0001
+    warm_start::Bool    = false
+    positive::Bool      = false
+    random_state::Any   = nothing
+    selection::String   = "cyclic"
 end
 
 LassoCV_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).LassoCV
-@sklmodel mutable struct LassoCV <: MLJBase.Deterministic
-    eps::Float64 = 0.001
-    n_alphas::Int = 100
-    alphas::Any = nothing
+@sk_model mutable struct LassoCV <: MLJBase.Deterministic
+    eps::Float64        = 0.001
+    n_alphas::Int       = 100
+    alphas::Any         = nothing
     fit_intercept::Bool = true
-    normalize::Bool = false
-    precompute::Any = "auto"
-    max_iter::Int = 1000
-    tol::Float64 = 0.0001
-    copy_X::Bool = true
-    cv::Any = 5
+    normalize::Bool     = false
+    precompute::Any     = "auto"
+    max_iter::Int       = 1_000
+    tol::Float64        = 1e-4
+    copy_X::Bool        = true
+    cv::Int             = 5
     verbose::Union{Bool, Int} = 0
-    n_jobs::Union{Int, Any} = nothing
-    positive::Bool = false
-    random_state::Int = nothing
-    selection::String = "cyclic"
+    n_jobs::Union{Int, Any}   = nothing
+    positive::Bool      = false
+    random_state::Int   = nothing
+    selection::String   = "cyclic"
 end
 
 LassoLars_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).LassoLars
-@sklmodel mutable struct LassoLars <: MLJBase.Deterministic
-    alpha::Float64 = 1.0
+@sk_model mutable struct LassoLars <: MLJBase.Deterministic
+    alpha::Float64      = 1.0
     fit_intercept::Bool = true
     verbose::Union{Bool, Int} = false
-    normalize::Bool = true
-    precompute::Any = "auto"
-    max_iter::Int = 500
-    eps::Float64 = 2.220446049250313e-16::(arg>0.0)
-    copy_X::Bool = true
-    fit_path::Bool = true
-    positive::Any = false
+    normalize::Bool     = true
+    precompute::Any     = "auto"
+    max_iter::Int       = 500
+    eps::Float64        = 2.220446049250313e-16::(arg>0.0)
+    copy_X::Bool        = true
+    fit_path::Bool      = true
+    positive::Any       = false
 end
 
 LassoLarsCV_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).LassoLarsCV
-@sklmodel mutable struct LassoLarsCV <: MLJBase.Deterministic
+@sk_model mutable struct LassoLarsCV <: MLJBase.Deterministic
     fit_intercept::Bool = true
     verbose::Union{Bool, Int} = false
-    max_iter::Int = 500
-    normalize::Bool = true
-    precompute::Any = "auto"
-    cv::Any = 5
-    max_n_alphas::Int = 1000
+    max_iter::Int       = 500
+    normalize::Bool     = true
+    precompute::Any     = "auto"
+    cv::Int             = 5
+    max_n_alphas::Int   = 1_000
     n_jobs::Union{Nothing,Int} = nothing
-    eps::Float64 = 2.220446049250313e-16::(arg>0.0)
-    copy_X::Bool = true
-    positive::Any = false
+    eps::Float64        = 2.220446049250313e-16::(arg>0.0)
+    copy_X::Bool        = true
+    positive::Any       = false
 end
 
-LinearRegression_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).LinearRegression
-@sklmodel mutable struct LinearRegression <: MLJBase.Deterministic
-    fit_intercept::Bool = true
-    normalize::Bool = false
-    copy_X::Bool = true
-    n_jobs::Union{Int, Any} = nothing
-end
+# GraphicalLassoCV_ = ((ScikitLearn.Skcore).pyimport("sklearn.covariance")).GraphicalLassoCV
+# @sk_model mutable struct GraphicalLassoCV <: MLJBase.Deterministic
+#     alphas::Union{Nothing,Int,Vector{Int}} = nothing
+#     n_refinements::Int    = 5::(arg>0)
+#     cv::Int               = 5
+#     tol::Union{Nothing,Float64}      = nothing
+#     enet_tol::Union{Nothing,Float64} = nothing
+#     max_iter::Union{Nothing,Int}     = nothing
+#     mode::String = "cd"::(arg in ("cd","lars"))
+#     n_jobs::Union{Nothing,Int}       = nothing
+#     verbose::Bool         = false
+#     assume_centered::Bool = false
+# end
 
 MultiTaskElasticNet_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).MultiTaskElasticNet
-@sklmodel mutable struct MultiTaskElasticNet <: MLJBase.Deterministic
-    alpha::Float64 = 1.0
+@sk_model mutable struct MultiTaskElasticNet <: MLJBase.Deterministic
+    alpha::Float64     = 1.0
     l1_ratio::Union{Float64, Vector{Float64}} = 0.5::(0<=arg<=1)
     fit_intercept::Bool = true
-    normalize::Bool = true
-    copy_X::Bool = true
-    max_iter::Int = 1000
-    tol::Float64 = 0.0001
-    warm_start::Bool = false
-    random_state::Any = nothing
-    selection::String = "cyclic"
+    normalize::Bool    = true
+    copy_X::Bool       = true
+    max_iter::Int      = 1_000
+    tol::Float64       = 1e-4
+    warm_start::Bool   = false
+    random_state::Any  = nothing
+    selection::String  = "cyclic"
 end
 
 MultiTaskElasticNetCV_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).MultiTaskElasticNetCV
-@sklmodel mutable struct MultiTaskElasticNetCV <: MLJBase.Deterministic
-    l1_ratio::Union{Float64, Vector{Float64}} = 0.5
-    eps::Float64 = 1e-3
-    n_alphas::Int = 100
-    alphas::Any = nothing
+@sk_model mutable struct MultiTaskElasticNetCV <: MLJBase.Deterministic
+    l1_ratio::Union{Float64, Vector{Float64}} = 0.5::(0<=arg<=1)
+    eps::Float64        = 1e-3
+    n_alphas::Int       = 100
+    alphas::Any         = nothing
     fit_intercept::Bool = true
-    normalize::Bool = false
-    max_iter::Int = 1000
-    tol::Float64 = 0.0001
-    cv::Int = 5
-    copy_X::Bool = true
+    normalize::Bool     = false
+    max_iter::Int       = 1_000
+    tol::Float64        = 0.0001
+    cv::Int             = 5
+    copy_X::Bool        = true
     verbose::Union{Bool, Int} = 0
-    n_jobs::Union{Int, Any} = nothing
-    random_state::Any = nothing
-    selection::String = "cyclic"
+    n_jobs::Union{Int, Any}   = nothing
+    random_state::Any   = nothing
+    selection::String   = "cyclic"
 end
 
 MultiTaskLassoCV_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).MultiTaskLassoCV
-@sklmodel mutable struct MultiTaskLassoCV <: MLJBase.Deterministic
-    eps::Float64 = 1e-3
-    n_alphas::Int = 100
-    alphas::Any = nothing
+@sk_model mutable struct MultiTaskLassoCV <: MLJBase.Deterministic
+    eps::Float64        = 1e-3
+    n_alphas::Int       = 100
+    alphas::Any         = nothing
     fit_intercept::Bool = true
-    normalize::Bool = false
-    max_iter::Int = 300
-    tol::Float64 = 1e-5
-    copy_X::Bool = true
-    cv::Any = 5
+    normalize::Bool     = false
+    max_iter::Int       = 300
+    tol::Float64        = 1e-5
+    copy_X::Bool        = true
+    cv::Int             = 5
     verbose::Union{Bool, Int} = false
     n_jobs::Union{Int, Any} = 1
-    random_state::Any = nothing
-    selection::String = "cyclic"
+    random_state::Any   = nothing
+    selection::String   = "cyclic"
 end
 
 OrthogonalMatchingPursuit_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).OrthogonalMatchingPursuit
-@sklmodel mutable struct OrthogonalMatchingPursuit <: MLJBase.Deterministic
+@sk_model mutable struct OrthogonalMatchingPursuit <: MLJBase.Deterministic
     n_nonzero_coefs::Union{Nothing,Int} = nothing
-    tol::Union{Nothing,Float64} = nothing
+    tol::Union{Nothing,Float64}         = nothing
     fit_intercept::Bool = true
-    normalize::Bool = false
-    precompute::Any = "auto"
+    normalize::Bool     = false
+    precompute::Any     = "auto"
 end
 
 OrthogonalMatchingPursuitCV_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).OrthogonalMatchingPursuitCV
-@sklmodel mutable struct OrthogonalMatchingPursuitCV <: MLJBase.Deterministic
-    copy::Bool = true
+@sk_model mutable struct OrthogonalMatchingPursuitCV <: MLJBase.Deterministic
+    copy::Bool          = true
     fit_intercept::Bool = true
-    normalize::Bool = false
+    normalize::Bool     = false
     max_iter::Union{Nothing,Int} = nothing
-    cv::Any = 5
-    n_jobs::Int = 1
-    verbose::Union{Bool, Int} = false
+    cv::Int             = 5
+    n_jobs::Int         = 1
+    verbose::Union{Bool, Int}    = false
 end
 
-<<<<<<< HEAD
-## ELASTIC NET CV
-=======
 Ridge_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).Ridge
-@sklmodel mutable struct Ridge <: MLJBase.Deterministic
+@sk_model mutable struct Ridge <: MLJBase.Deterministic
     alpha::Union{Float64,Vector{Float64}} = 1.0
     fit_intercept::Bool = true
-    normalize::Bool = false
-    copy_X::Bool = true
-    max_iter::Int = 1000
-    tol::Float64 = 1e-4
-    solver::Any = "auto"
-    random_state::Any = nothing
+    normalize::Bool     = false
+    copy_X::Bool        = true
+    max_iter::Int       = 1_000
+    tol::Float64        = 1e-4
+    solver::Any         = "auto"
+    random_state::Any   = nothing
 end
->>>>>>> b9bd4544a15f6df5cb09756c3cf7b9c3bcced15d
+
+# RidgeCV_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).RidgeCV
+# @sk_model mutable struct RidgeCV <: MLJBase.Deterministic
+#     alphas::Any           = nothing
+#     fit_intercept::Bool   = true
+#     normalize::Bool       = false
+#     scoring::Any          = nothing
+#     cv::Int               = 5
+#     gcv_mode::Any         = "auto"
+#     store_cv_values::Bool = false
+# end
 
 RidgeClassifier_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).RidgeClassifier
-@sklmodel mutable struct RidgeClassifier <: MLJBase.Deterministic
-    alpha::Float64 = 1.0
+@sk_model mutable struct RidgeClassifier <: MLJBase.Deterministic
+    alpha::Float64      = 1.0
     fit_intercept::Bool = true
-    normalize::Bool = false
-    copy_X::Bool = true
-    max_iter::Int = 300
-    tol::Float64 = 1e-6
+    normalize::Bool     = false
+    copy_X::Bool        = true
+    max_iter::Int       = 300
+    tol::Float64        = 1e-6
     class_weight::Union{Any, Any} = nothing
-    solver::String = "auto"::(arg in ("auto","svg","cholesky","lsqr","sparse_cg","sag","saga"))
-    random_state::Any = nothing
-end
-
-RidgeCV_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).RidgeCV
-@sklmodel mutable struct RidgeCV <: MLJBase.Deterministic
-    alphas::Any = nothing
-    fit_intercept::Bool = true
-    normalize::Bool = false
-    scoring::Any = Nothing
-    cv::Any = 5
-    gcv_mode::Any = "auto"
-    store_cv_values::Bool = false
+    solver::String      = "auto"::(arg in ("auto","svg","cholesky","lsqr","sparse_cg","sag","saga"))
+    random_state::Any   = nothing
 end
 
 RidgeClassifierCV_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).RidgeClassifierCV
-@sklmodel mutable struct RidgeClassifierCV <: MLJBase.Deterministic
-    alphas::Any = nothing
-    fit_intercept::Bool = true
-    normalize::Bool = false
+@sk_model mutable struct RidgeClassifierCV <: MLJBase.Deterministic
+    alphas::Any           = nothing
+    fit_intercept::Bool   = true
+    normalize::Bool       = false
     scoring::Union{Nothing,String} = nothing
-    cv::Any = nothing
-    class_weight::Any = nothing
+    cv::Int               = 5
+    class_weight::Any     = nothing
     store_cv_values::Bool = false
 end
 
 TheilSenRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).TheilSenRegressor
-@sklmodel mutable struct TheilSenRegressor <: MLJBase.Deterministic
+@sk_model mutable struct TheilSenRegressor <: MLJBase.Deterministic
     fit_intercept::Bool = true
-    copy_X::Bool = true
-    max_subpopulation::Int = 1000
+    copy_X::Bool        = true
+    max_subpopulation::Int = 1_000
     n_subsamples::Union{Nothing,Int} = nothing
-    max_iter::Int = 300
-    tol::Float64 = 1e-3
-    random_state::Any = nothing
-    n_jobs::Int= 1
-    verbose::Bool = false
+    max_iter::Int       = 300
+    tol::Float64        = 1e-3
+    random_state::Any   = nothing
+    n_jobs::Int         = 1
+    verbose::Bool       = false
 end
 
 ## hand crafted methods
+
 function MLJBase.clean!(model::T) where T <: Union{ElasticNet,ElasticNetCV}
     warning = ""
-	if(model.alpha<0.0)
-		warning *="alpha must be stricly positive, set to 1"
-		model.alpha=1
-	end
-	if(model.l1_ratio!=nothing)
-		for (iter,val) in enumerate(model.l1_ratio)
-			if(!(0<val<=1))
-				warning *="l1 must be in (0,1], set to 1"
-				model.l1_ratio[iter]=1
-			end
-		end
-	end
-	return warning
+    if model.alpha<0.0
+        warning *="alpha must be stricly positive, set to 1"
+        model.alpha = 1
+    end
+    if model.l1_ratio !== nothing
+        for (iter,val) in enumerate(model.l1_ratio)
+            if !(0 < val <= 1)
+                warning *="l1 must be in (0,1], set to 1"
+                model.l1_ratio[iter] = 1
+            end
+        end
+    end
+    return warning
 end
 
-
-function MLJBase.fitted_params(model::ElasticNet, fitresult)
-	 return NamedTuple{(:intercept,:coef)}((fitresult.intercept_,fitresult.coef_))
+function MLJBase.fitted_params(model::T, fitresult) where T <: Union{LinearRegression, ARDRegression, BayesianRidge, ElasticNet, ElasticNetCV, HuberRegressor, Lars, LarsCV, Lasso, LassoCV, LassoLars, LassoLarsCV, OrthogonalMatchingPursuit, OrthogonalMatchingPursuitCV, Ridge, RidgeClassifier, RidgeClassifierCV, TheilSenRegressor} # GraphicalLassoCV, RidgeCV
+     return (coef     = fitresult.coef_,
+            intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing))
 end
 
-function MLJBase.fitted_params(model::ElasticNetCV, fitresult)
-	 return NamedTuple{(:intercept,:coef)}((fitresult.intercept_,fitresult.coef_))
-end
-
-
-
+####################
+# GAUSSIAN PROCESS #
+####################
 
 GaussianProcessRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.gaussian_process")).GaussianProcessRegressor
-@sklmodel mutable struct GaussianProcessRegressor <: MLJBase.Deterministic
-    kernel::Any = nothing
-    alpha::Union{Float64, Any} = 1.0e-10
+@sk_model mutable struct GaussianProcessRegressor <: MLJBase.Deterministic
+    kernel::Any        = nothing
+    alpha::Union{Float64, Any}    = 1.0e-10
     optimizer::Union{String, Any} = "fmin_l_bfgs_b"
     n_restarts_optimizer::Int = 0
-    normalize_y::Bool = false
+    normalize_y::Bool  = false
     copy_X_train::Bool = true
-    random_state::Any = nothing
+    random_state::Any  = nothing
 end
 
-#### Ensemble
+###################
+# ENSEMBLE MODELS #
+###################
 
 AdaBoostRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.ensemble")).AdaBoostRegressor
-@sklmodel mutable struct AdaBoostRegressor <: MLJBase.Deterministic
-    base_estimator::Any = nothing
-    n_estimators::Int = 50
+@sk_model mutable struct AdaBoostRegressor <: MLJBase.Deterministic
+    base_estimator::Any    = nothing
+    n_estimators::Int      = 50
     learning_rate::Float64 = 1.0
-    loss::Any = "linear"::(arg in ("linear","square","exponential"))
+    loss::Any              = "linear"::(arg in ("linear","square","exponential"))
     random_state::Union{Nothing,Int} = nothing
 end
 
 BaggingRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.ensemble")).BaggingRegressor
-@sklmodel mutable struct BaggingRegressor <: MLJBase.Deterministic
+@sk_model mutable struct BaggingRegressor <: MLJBase.Deterministic
     base_estimator::Any = nothing
-    n_estimators::Int = 10
-    max_samples::Union{Int, Float64} = 1.0
+    n_estimators::Int   = 10
+    max_samples::Union{Int, Float64}  = 1.0
     max_features::Union{Int, Float64} = 1.0
-    bootstrap::Bool = true
+    bootstrap::Bool     = true
     bootstrap_features::Bool = false
-    oob_score::Bool = false
-    warm_start::Bool = false
+    oob_score::Bool     = false
+    warm_start::Bool    = false
     n_jobs::Union{Int, Any} = nothing
-    random_state::Any = nothing
-    verbose::Int = 0
+    random_state::Any   = nothing
+    verbose::Int        = 0
 end
 
 GradientBoostingRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.ensemble")).GradientBoostingRegressor
-@sklmodel mutable struct GradientBoostingRegressor <: MLJBase.Deterministic
+@sk_model mutable struct GradientBoostingRegressor <: MLJBase.Deterministic
     loss::String = "ls"::(arg in ("ls","lad","huber","quantile"))
     learning_rate::Float64 = 0.1
-    n_estimators::Int = 100
-    subsample::Float64 = 1.0
-    criterion::String = "friedman_mse"
-    min_samples_split::Union{Int, Float64} = 2
-    min_samples_leaf::Union{Int, Float64} = 1
-    min_weight_fraction_leaf::Float64 = 0.0
-    max_depth::Int = 3
+    n_estimators::Int      = 100
+    subsample::Float64     = 1.0
+    criterion::String      = "friedman_mse"
+    min_samples_split::Union{Int,Float64} = 2
+    min_samples_leaf::Union{Int,Float64}  = 1
+    min_weight_fraction_leaf::Float64     = 0.0
+    max_depth::Int         = 3
     min_impurity_decrease::Float64 = 0.0
-    min_impurity_split::Float64 = 1e-7
+    min_impurity_split::Float64    = 1e-7
     init::Union{Any, Any} = nothing
-    random_state::Any = nothing
-    max_features::Any = Nothing
-    alpha::Float64 = 0.9
-    verbose::Int =0
+    random_state::Any     = nothing
+    max_features::Any     = nothing
+    alpha::Float64        = 0.9
+    verbose::Int          = 0
     max_leaf_nodes::Union{Int, Any} = nothing
-    warm_start::Bool = false
-    presort::Union{Bool, Any} = "auto"
-    validation_fraction::Float64 = 0.1
+    warm_start::Bool      = false
+    presort::Union{Bool, Any}       = "auto"
+    validation_fraction::Float64    = 0.1
     n_iter_no_change::Union{Nothing,Int} = nothing
-    tol::Float64 = 1e-4
+    tol::Float64          = 1e-4
 end
 
 # HistGradientBoostingRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.ensemble")).HistGradientBoostingRegressor
-# @sklmodel mutable struct HistGradientBoostingRegressor <: MLJBase.Deterministic
+# @sk_model mutable struct HistGradientBoostingRegressor <: MLJBase.Deterministic
 #     loss::Any = "least_squares"
 #     learning_rate::Float64 = 0.1
 #     max_iter::Int = 100
@@ -1165,54 +1208,33 @@ end
 # end
 
 RandomForestRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.ensemble")).RandomForestRegressor
-@sklmodel mutable struct RandomForestRegressor <: MLJBase.Deterministic
-    n_estimators::Int = 10::(arg>0)
-    criterion::String = "mse"
-    max_depth::Union{Int, Nothing} = nothing
-    min_samples_split::Union{Int, Float64} = 2
-    min_samples_leaf::Union{Int, Float64} = 1
-    min_weight_fraction_leaf::Float64 = 0.0
+@sk_model mutable struct RandomForestRegressor <: MLJBase.Deterministic
+    n_estimators::Int   = 10::(arg>0)
+    criterion::String   = "mse"
+    max_depth::Union{Int, Nothing}          = nothing
+    min_samples_split::Union{Int, Float64}  = 2
+    min_samples_leaf::Union{Int, Float64}   = 1
+    min_weight_fraction_leaf::Float64       = 0.0
     max_features::Union{Int, Float64, String, Nothing} = "auto"
-    max_leaf_nodes::Union{Int, Nothing} = nothing
-    min_impurity_decrease::Float64 = 0.0
-    min_impurity_split::Float64 = 1e-7
-    bootstrap::Bool = true
-    oob_score::Bool = false
+    max_leaf_nodes::Union{Int, Nothing}     = nothing
+    min_impurity_decrease::Float64          = 0.0
+    min_impurity_split::Float64             = 1e-7
+    bootstrap::Bool     = true
+    oob_score::Bool     = false
     n_jobs::Union{Int, Nothing} = nothing
-    random_state::Any = nothing
-    verbose::Int = 0
-    warm_start::Bool = false
+    random_state::Any   = nothing
+    verbose::Int        = 0
+    warm_start::Bool    = false
 end
 
 VotingRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.ensemble")).VotingRegressor
-@sklmodel mutable struct VotingRegressor <: MLJBase.Deterministic
+@sk_model mutable struct VotingRegressor <: MLJBase.Deterministic
     estimators::Any = nothing
-    weights::Any = nothing
+    weights::Any    = nothing
     n_jobs::Union{Int, Any} = nothing
 end
 
-
-
-
-
-GraphicalLassoCV_ = ((ScikitLearn.Skcore).pyimport("sklearn.covariance")).GraphicalLassoCV
-@sklmodel mutable struct GraphicalLassoCV <: MLJBase.Deterministic
-    alphas::Union{Nothing,Int,Vector{Int}} = nothing
-    n_refinements::Int = 5::(arg>0)
-    cv::Any = nothing
-    tol::Union{Nothing,Float64} = nothing
-    enet_tol::Union{Nothing,Float64} = nothing
-    max_iter::Union{Nothing,Int} = nothing
-    mode::String = "cd"::(arg in ("cd","lars"))
-    n_jobs::Union{Nothing,Int} = nothing
-    verbose::Bool = false
-    assume_centered::Bool = false
-end
-
-
-
 # needs sense check on defaults
-
 
 # RANSACRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).RANSACRegressor
 # mutable struct RANSACRegressor <: MLJBase.Deterministic
@@ -1229,24 +1251,5 @@ end
 #     loss::String = "absolute_loss"::(arg in ("absolute_loss","squared_loss"))
 #     random_state::Any = nothing
 # end
-
-
-## METATDATA
-
-MLJBase.load_path(::Type{<:ElasticNet}) = "MLJModels.ScikitLearn_.ElasticNet"
-MLJBase.package_name(::Type{<:ElasticNet}) = "ScikitLearn"
-MLJBase.package_uuid(::Type{<:ElasticNet}) = "3646fa90-6ef7-5e7e-9f22-8aca16db6324"
-MLJBase.is_pure_julia(::Type{<:ElasticNet}) = false
-MLJBase.package_url(::Type{<:ElasticNet}) = "https://github.com/cstjean/ScikitLearn.jl"
-MLJBase.input_scitype(::Type{<:ElasticNet}) = Table(Continuous)
-MLJBase.target_scitype(::Type{<:ElasticNet}) = AbstractVector{Continuous}
-
-MLJBase.load_path(::Type{<:ElasticNetCV}) = "MLJModels.ScikitLearn_.ElasticNetCV"
-MLJBase.package_name(::Type{<:ElasticNetCV}) = "ScikitLearn"
-MLJBase.package_uuid(::Type{<:ElasticNetCV}) = "3646fa90-6ef7-5e7e-9f22-8aca16db6324"
-MLJBase.is_pure_julia(::Type{<:ElasticNetCV}) = false
-MLJBase.package_url(::Type{<:ElasticNetCV}) = "https://github.com/cstjean/ScikitLearn.jl"
-MLJBase.input_scitype(::Type{<:ElasticNetCV}) = Table(Continuous)
-MLJBase.target_scitype(::Type{<:ElasticNetCV}) = AbstractVector{<:Continuous}
 
 end # module
