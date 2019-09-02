@@ -25,8 +25,8 @@ end
     @test include("GLM.jl")
 end
 
-@testset "SVM                " begin
-    @test include("ScikitLearn.jl")
+@testset "ScikitLearn        " begin
+    @test include("ScikitLearn/ScikitLearn.jl")
 end
 
 @testset "LIBSVM             " begin
