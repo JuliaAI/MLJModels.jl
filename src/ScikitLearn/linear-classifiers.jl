@@ -1,3 +1,6 @@
+# XXX wait a bit to work out how to deal with predict_proba
+
+
 # | model                  | build  | fitted_params | report | metadata | tests 1 | tests 2 |
 # | ---------------------- | ------ | ------------- | ------ | -------- | ------- | ------- |
 # | Logistic               | ✗      | ✗             | ✗      | ✗        |  ✗      | ✗       |

@@ -89,6 +89,13 @@ end
     @test isapprox(norm(predict(m, f, X) .- y)/norm(y), 0.0326918, rtol=1e-5)
 end
 
+@testset "LassoLarsIC" begin
+    m = LassoLarsICRegressor()
+    f, _, _ = fit(m, 1, X, y)
+    @test isapprox(f.score(X, y), 0.9920703, rtol=1e-5)
+    @test isapprox(norm(predict(m, f, X) .- y)/norm(y), 0.08619978, rtol=1e-5)
+end
+
 @testset "LinReg" begin
     m = LinearRegressor()
     f, _, _ = fit(m, 1, X, y)

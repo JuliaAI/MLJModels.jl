@@ -13,7 +13,7 @@
 # | LassoCVRegressor       | ✓      | ✓             | ✗      | ✗        |  ✓      | ✗       |
 # | LassoLarsRegressor     | ✓      | ✓             | ✗      | ✗        |  ✓      | ✗       |
 # | LassoLarsCVRegressor   | ✓      | ✓             | ✗      | ✗        |  ✓      | ✗       |
-# | LassoLarsICRegressor   | ✗      | ✗             | ✗      | ✗        |  ✗      | ✗       |
+# | LassoLarsICRegressor   | ✓      | ✓             | ✗      | ✗        |  ✓      | ✗       |
 # | LinearRegressor        | ✓      | ✓             | ✗      | ✗        |  ✓      | ✗       |
 # | OMPRegressor           | ✓      | ✓             | ✗      | ✗        |  ✓      | ✗       |
 # | OMPCVRegressor         | ✓      | ✓             | ✗      | ✗        |  ✓      | ✗       |
@@ -41,8 +41,7 @@ export  ARDRegressor,
         HuberRegressor,
         LarsRegressor, LarsCVRegressor,
         LassoRegressor, LassoCVRegressor,
-        LassoLarsRegressor, LassoLarsCVRegressor,
-        #LassoLarsICRegressor,
+        LassoLarsRegressor, LassoLarsCVRegressor, LassoLarsICRegressor,
         LinearRegressor,
         OrthogonalMatchingPursuitRegressor, OrthogonalMatchingPursuitCVRegressor,
         # PassiveAgressiveRegressor,
@@ -312,9 +311,23 @@ MLJBase.fitted_params(model::LassoLarsCVRegressor, fitresult) = (
     mse_path  = fitresult.mse_path_
     )
 
-# --------------------------------
-## XXX LassoLarsICRegressor (TODO)
-# --------------------------------
+LassoLarsICRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).LassoLarsIC
+@sk_model mutable struct LassoLarsICRegressor <: MLJBase.Deterministic
+    criterion::String   = "aic"::(arg in ("aic","bic"))
+    fit_intercept::Bool = true
+    verbose::Union{Bool, Int} = false
+    normalize::Bool     = true
+    precompute::Union{Bool,String,AbstractMatrix} = "auto"
+    max_iter::Int       = 500::(arg>0)
+    eps::Float64        = eps(Float64)::(arg>0.0)
+    copy_X::Bool        = true
+    positive::Any       = false
+end
+MLJBase.fitted_params(model::LassoLarsICRegressor, fitresult) = (
+    coef = fitresult.coef_,
+    intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing),
+    alpha = fitresult.alpha_
+    )
 
 # ==============================================================================
 LinearRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).LinearRegression
