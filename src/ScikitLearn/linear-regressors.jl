@@ -1,5 +1,5 @@
 # SINGLE TASKS
-
+#
 # | model                  | build  | fitted_params | report | metadata | tests 1 | tests 2 |
 # | ---------------------- | ------ | ------------- | ------ | -------- | ------- | ------- |
 # | ARDRegressor           | ✓      | ✓             | ✗      | ✗        |  ✓      | ✗       |
@@ -132,7 +132,7 @@ ElasticNetCVRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model"))
     l1_ratio::Union{Float64,Vector{Float64}} = 0.5::(all(0 .≤ arg .≤ 1))
     eps::Float64        = 1e-3::(arg>0)
     n_alphas::Int       = 100::(arg>0)
-    alphas::Any         = nothing::(isnothing(arg) || all(0 .≤ arg .≤ 1))
+    alphas::Any         = nothing::(arg === nothing || all(0 .≤ arg .≤ 1))
     fit_intercept::Bool = true
     normalize::Bool     = false
     precompute::Union{Bool,String,AbstractMatrix} = "auto"
@@ -242,7 +242,7 @@ LassoCVRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).Lass
 @sk_model mutable struct LassoCVRegressor <: MLJBase.Deterministic
     eps::Float64        = 1e-3::(arg>0)
     n_alphas::Int       = 100::(arg>0)
-    alphas::Any         = nothing::(isnothing(arg) || all(0 .≤ arg .≤ 1))
+    alphas::Any         = nothing::(arg === nothing || all(0 .≤ arg .≤ 1))
     fit_intercept::Bool = true
     normalize::Bool     = false
     precompute::Union{Bool,String,AbstractMatrix} = "auto"
@@ -349,7 +349,7 @@ OrthogonalMatchingPursuitCVRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.
     copy::Bool          = true
     fit_intercept::Bool = true
     normalize::Bool     = false
-    max_iter::Union{Nothing,Int} = nothing::(isnothing(arg)||arg>0)
+    max_iter::Union{Nothing,Int} = nothing::(arg === nothing||arg>0)
     cv::Any             = 5
     n_jobs::Union{Nothing,Int} = 1
     verbose::Union{Bool,Int}   = false
@@ -401,12 +401,12 @@ MLJBase.fitted_params(model::RidgeRegressor, fitresult) = (
 # ==============================================================================
 RidgeCVRegresssor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).RidgeCV
 @sk_model mutable struct RidgeCVRegressor <: MLJBase.Deterministic
-    alphas::Any            = nothing::(isnothing(arg) || all(arg .> 0))
+    alphas::Any            = nothing::(arg === nothing || all(arg .> 0))
     fit_intercept::Bool    = true
     normalize::Bool        = false
     scoring::Any           = nothing
     cv::Any                = 5
-    gcv_mode::Union{Nothing,String} = nothing::(isnothing(arg) || arg in ("auto","svd","eigen"))
+    gcv_mode::Union{Nothing,String} = nothing::(arg === nothing || arg in ("auto","svd","eigen"))
     store_cv_values::Bool  = false
 end
 MLJBase.fitted_params(model::RidgeCVRegressor, fitresult) = (
@@ -425,7 +425,7 @@ TheilSenRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).The
     fit_intercept::Bool = true
     copy_X::Bool        = true
     max_subpopulation::Int = 10_000::(arg>0)
-    n_subsamples::Union{Nothing,Int} = nothing::(isnothing(arg)||arg>0)
+    n_subsamples::Union{Nothing,Int} = nothing::(arg === nothing||arg>0)
     max_iter::Int       = 300::(arg>0)
     tol::Float64        = 1e-3::(arg>0)
     random_state::Any   = nothing
@@ -465,7 +465,7 @@ MultiTaskLassoCVRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_mode
 @sk_model mutable struct MultiTaskLassoCVRegressor <: MLJBase.Deterministic
     eps::Float64        = 1e-3::(arg>0)
     n_alphas::Int       = 100::(arg>0)
-    alphas::Any         = nothing::(isnothing(arg) || all(0 .≤ arg .≤ 1))
+    alphas::Any         = nothing::(arg === nothing || all(0 .≤ arg .≤ 1))
     fit_intercept::Bool = true
     normalize::Bool     = false
     max_iter::Int       = 300::(arg>0)
@@ -510,7 +510,7 @@ MultiTaskElasticNetCVRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear
     l1_ratio::Union{Float64, Vector{Float64}} = 0.5::(0<=arg<=1)
     eps::Float64        = 1e-3::(arg>0)
     n_alphas::Int       = 100::(arg>0)
-    alphas::Any         = nothing::(isnothing(arg) || all(0 .≤ arg .≤ 1))
+    alphas::Any         = nothing::(arg === nothing || all(0 .≤ arg .≤ 1))
     fit_intercept::Bool = true
     normalize::Bool     = false
     max_iter::Int       = 1_000::(arg>0)
