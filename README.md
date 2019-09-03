@@ -29,7 +29,9 @@ Note that for some of these packages, the interface is incomplete; contributions
 * [NaiveBayes.jl](https://github.com/dfdx/NaiveBayes.jl)
     * `GaussianNBClassifier`, `MultinomialNBClassifier`, `HybridNBClassifier`
 * [ScikitLearn.jl](https://github.com/cstjean/ScikitLearn.jl)
-    * `SVMClassifier`, `SVMRegressor`, `SVMNuClassifier`, `SVMNuRegressor`, `SVMLClassifier`, `SVMLRegressor`
-    `ElasticNet`, `ElasticNetCV`
+    * **SVM**: `SVMClassifier`, `SVMRegressor`, `SVMNuClassifier`, `SVMNuRegressor`, `SVMLClassifier`, `SVMLRegressor`,
+    * **Linear Models** (regressors): `ARDRegressor`, `BayesianRidgeRegressor`, `ElasticNetRegressor`, `ElasticNetCVRegressor`, `HuberRegressor`, `LarsRegressor`, `LarsCVRegressor`, `LassoRegressor`, `LassoCVRegressor`, `LassoLarsRegressor`, `LassoLarsCVRegressor`, `LassoLarsICRegressor`, `LinearRegressor`, `OrthogonalMatchingPursuitRegressor`, `OrthogonalMatchingPursuitCVRegressor`, `PassiveAggressiveRegressor`, `RidgeRegressor`, `RidgeCVRegressor`, `SGDRegressor`, `TheilSenRegressor`
+    * **Gaussian Processes**: `GaussianProcessRegressor`
+    * **Ensemble**: `AdaBoostRegressor`, `BaggingRegressor`, `GradientBoostingRegressor`, `RandomForestRegressor`
 * [XGBoost.jl](https://github.com/dmlc/XGBoost.jl)
     * `XGBoostRegressor`, `XGBoostClassifier`, `XGBoostCount`
