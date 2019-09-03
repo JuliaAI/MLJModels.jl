@@ -21,7 +21,7 @@ end
     m = BaggingRegressor(random_state=0)
     f, _, _ = fit(m, 1, X, y)
     @test 0.9 ≤ f.score(X, y) ≤ 0.999
-    @test 0.2 ≤ norm(predict(m, f, X) .- y)/norm(y) ≤ 0.25
+    @test 0.15 ≤ norm(predict(m, f, X) .- y)/norm(y) ≤ 0.25
     # testing that the fitted params is proper
     fp = fitted_params(m, f)
     @test keys(fp) == (:estimators, :estimators_samples, :estimators_features, :oob_score, :oob_prediction)
