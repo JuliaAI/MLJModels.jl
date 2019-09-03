@@ -2,36 +2,35 @@
 #
 # | model                  | build  | fitted_params | report | metadata | tests 1 | tests 2 |
 # | ---------------------- | ------ | ------------- | ------ | -------- | ------- | ------- |
-# | ARDRegressor           | ✓      | ✓             | ✗      | ✗        |  ✓      | ✗       |
-# | BayesianRidgeRegressor | ✓      | ✓             | ✗      | ✗        |  ✓      | ✗       |
-# | ElasticNetRegressor    | ✓      | ✓             | ✗      | ✗        |  ✓      | ✗       |
-# | ElasticNetCVRegressor  | ✓      | ✓             | ✗      | ✗        |  ✓      | ✗       |
-# | HuberRegresssor        | ✓      | ✓             | ✗      | ✗        |  ✓      | ✗       |
-# | LarsRegressor          | ✓      | ✓             | ✗      | ✗        |  ✓      | ✗       |
-# | LarsCVRegressor        | ✓      | ✓             | ✗      | ✗        |  ✓      | ✗       |
-# | LassoRegressor         | ✓      | ✓             | ✗      | ✗        |  ✗      | ✗       |
-# | LassoCVRegressor       | ✓      | ✓             | ✗      | ✗        |  ✓      | ✗       |
-# | LassoLarsRegressor     | ✓      | ✓             | ✗      | ✗        |  ✓      | ✗       |
-# | LassoLarsCVRegressor   | ✓      | ✓             | ✗      | ✗        |  ✓      | ✗       |
-# | LassoLarsICRegressor   | ✓      | ✓             | ✗      | ✗        |  ✓      | ✗       |
-# | LinearRegressor        | ✓      | ✓             | ✗      | ✗        |  ✓      | ✗       |
-# | OMPRegressor           | ✓      | ✓             | ✗      | ✗        |  ✓      | ✗       |
-# | OMPCVRegressor         | ✓      | ✓             | ✗      | ✗        |  ✓      | ✗       |
-# | PassiveAgressiveReg    | ✗      | ✗             | ✗      | ✗        |  ✗      | ✗       |
-# | RANSACRegressor        | ✗      | ✗             | ✗      | ✗        |  ✗      | ✗       |
-# | RidgeRegressor         | ✓      | ✓             | ✗      | ✗        |  ✓      | ✗       |
-# | RidgeCVRegressor       | ✗      | ✗             | ✗      | ✗        |  ✗      | ✗       |
-# | SGDRegressor           | ✗      | ✗             | ✗      | ✗        |  ✗      | ✗       |
-# | TheilSenRegressor      | ✓      | ✓             | ✗      | ✗        |  ✗      | ✗       |
+# | ARDRegressor           | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
+# | BayesianRidgeRegressor | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
+# | ElasticNetRegressor    | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
+# | ElasticNetCVRegressor  | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
+# | HuberRegresssor        | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
+# | LarsRegressor          | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
+# | LarsCVRegressor        | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
+# | LassoRegressor         | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
+# | LassoCVRegressor       | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
+# | LassoLarsRegressor     | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
+# | LassoLarsCVRegressor   | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
+# | LassoLarsICRegressor   | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
+# | LinearRegressor        | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
+# | OMPRegressor           | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
+# | OMPCVRegressor         | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
+# | PassiveAgressiveReg    | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
+# | RidgeRegressor         | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
+# | RidgeCVRegressor       | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
+# | SGDRegressor           | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
+# | TheilSenRegressor      | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
 
 # MULTI TASK
 
 # | model                   | build  | fitted_params | report | metadata | tests 1 | tests 2 |
 # | ----------------------- | ------ | ------------- | ------ | -------- | ------- | ------- |
-# | MutliTaskLassoRegress   | ✓      | ✓             | ✗      | ✗        |  ✓      |  ✗      |
-# | MutliTaskLassoCVRegress | ✓      | ✓             | ✗      | ✗        |  ✓      |  ✗      |
-# | MutliTaskElNetRegress   | ✓      | ✓             | ✗      | ✗        |  ✓      |  ✗      |
-# | MutliTaskElNetCVRegress | ✓      | ✓             | ✗      | ✗        |  ✓      |  ✗      |
+# | MutliTaskLassoRegress   | ✓      | ✓             | ✗      | ✓        |  ✓      |  ✓      |
+# | MutliTaskLassoCVRegress | ✓      | ✓             | ✗      | ✓        |  ✓      |  ✓      |
+# | MutliTaskElNetRegress   | ✓      | ✓             | ✗      | ✓        |  ✓      |  ✓      |
+# | MutliTaskElNetCVRegress | ✓      | ✓             | ✗      | ✓        |  ✓      |  ✓      |
 
 # ------------------------------------------------------------------------------
 
@@ -44,11 +43,10 @@ export  ARDRegressor,
         LassoLarsRegressor, LassoLarsCVRegressor, LassoLarsICRegressor,
         LinearRegressor,
         OrthogonalMatchingPursuitRegressor, OrthogonalMatchingPursuitCVRegressor,
-        # PassiveAgressiveRegressor,
+        PassiveAggressiveRegressor,
         # RANSACRegressor,
         RidgeRegressor, RidgeCVRegressor,
-        # SGDRegressor,
-        TheilSenRegressor
+        SGDRegressor, TheilSenRegressor
 
 # Multi-Task
 
@@ -373,10 +371,28 @@ MLJBase.fitted_params(model::OrthogonalMatchingPursuitCVRegressor, fitresult) = 
     n_nonzero_coefs = fitresult.n_nonzero_coefs_
     )
 
-# ----------------------------
-## XXX PassiveAgressive (TODO)
-## XXX RANSAC (TODO)
-# ----------------------------
+# ==============================================================================
+PassiveAggressiveRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).PassiveAggressiveRegressor
+@sk_model mutable struct PassiveAggressiveRegressor <: MLJBase.Deterministic
+    C::Float64                   = 1.0::(arg>0)
+    fit_intercept::Bool          = true
+    max_iter::Int                = 1_000::(arg>0)
+    tol::Float64                 = 1e-4::(arg>0)
+    early_stopping::Bool         = false
+    validation_fraction::Float64 = 0.1::(arg>0)
+    n_iter_no_change::Int        = 5::(arg>0)
+    shuffle::Bool                = true
+    verbose::Union{Bool,Int}     = 0
+    loss::String                 = "epsilon_insensitive"::(arg in ("epsilon_insensitive","squared_epsilon_insensitive"))
+    epsilon::Float64             = 0.1::(arg>0)
+    random_state::Any            = nothing
+    warm_start::Bool             = false
+    average::Union{Bool,Int}     = false
+end
+MLJBase.fitted_params(model::PassiveAggressiveRegressor, fitresult) = (
+    coef      = fitresult.coef_,
+    intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing)
+    )
 
 # RANSACRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).RANSACRegressor
 # mutable struct RANSACRegressor <: MLJBase.Deterministic
@@ -412,9 +428,9 @@ MLJBase.fitted_params(model::RidgeRegressor, fitresult) = (
     )
 
 # ==============================================================================
-RidgeCVRegresssor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).RidgeCV
+RidgeCVRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).RidgeCV
 @sk_model mutable struct RidgeCVRegressor <: MLJBase.Deterministic
-    alphas::Any            = nothing::(arg === nothing || all(arg .> 0))
+    alphas::Any            = (0.1, 1.0, 10.0)::(all(arg .> 0))
     fit_intercept::Bool    = true
     normalize::Bool        = false
     scoring::Any           = nothing
@@ -426,13 +442,40 @@ MLJBase.fitted_params(model::RidgeCVRegressor, fitresult) = (
     coef      = fitresult.coef_,
     intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing),
     alpha     = fitresult.alpha_,
-    cv_values = fitresult.cv_values_
+    cv_values = model.store_cv_values ? fitresult.cv_values_ : nothing
     )
 
-# ------------------------
-## XXX SGDRegressor (TODO)
-# ------------------------
+# ==============================================================================
+SGDRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).SGDRegressor
+@sk_model mutable struct SGDRegressor <: MLJBase.Deterministic
+    loss::String             = "squared_loss"::(arg in ("squared_loss","huber","epsilon_insensitive","squared_epsilon_insensitive"))
+    penalty::String          = "l2"::(arg in ("none","l2","l1","elasticnet"))
+    alpha::Float64           = 1e-4::(arg>0)
+    l1_ratio::Float64        = 0.15::(arg>0)
+    fit_intercept::Bool      = true
+    max_iter::Int            = 1_000::(arg>0)
+    tol::Float64             = 1e-3::(arg>0)
+    shuffle::Bool            = true
+    verbose::Union{Int,Bool} = 0
+    epsilon::Float64         = 0.1
+    random_state::Any        = nothing
+    learning_rate::String    = "invscaling"::(arg in ("constant","optimal","invscaling","adaptive"))
+    eta0::Float64            = 0.01::(arg>0)
+    power_t::Float64         = 0.25::(arg>0)
+    early_stopping::Bool     = false
+    validation_fraction::Float64 = 0.1::(arg>0)
+    n_iter_no_change::Int    = 5::(arg>0)
+    warm_start::Bool         = false
+    average::Union{Int,Bool} = false
+end
+MLJBase.fitted_params(model::SGDRegressor, fitresult) = (
+    coef      = fitresult.coef_,
+    intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing),
+    average_coef      = model.average ? fitresult.average_coef_ : nothing,
+    average_intercept = model.average ? ifelse(model.fit_intercept, fitresult.average_intercept_, nothing) : nothing
+    )
 
+# ==============================================================================
 TheilSenRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).TheilSenRegressor
 @sk_model mutable struct TheilSenRegressor <: MLJBase.Deterministic
     fit_intercept::Bool = true
@@ -451,6 +494,12 @@ MLJBase.fitted_params(model::TheilSenRegressor, fitresult) = (
     breakdown       = fitresult.breakdown_,
     n_subpopulation = fitresult.n_subpopulation_
     )
+
+# Metadata for Continuous -> Vector{Continuous}
+const SKL_REGS_SINGLE = Union{Type{<:ARDRegressor},Type{<:BayesianRidgeRegressor},        Type{<:ElasticNetRegressor},Type{<:ElasticNetCVRegressor},Type{<:HuberRegressor},Type{<:LarsRegressor},Type{<:LarsCVRegressor},Type{<:LassoRegressor},Type{<:LassoCVRegressor},Type{<:LassoLarsRegressor},Type{<:LassoLarsCVRegressor},Type{<:LassoLarsICRegressor},Type{<:LinearRegressor},Type{<:OrthogonalMatchingPursuitRegressor},Type{<:OrthogonalMatchingPursuitCVRegressor},Type{<:PassiveAggressiveRegressor},Type{<:RidgeRegressor},Type{<:RidgeCVRegressor},Type{<:SGDRegressor},Type{<:TheilSenRegressor}}
+
+MLJBase.input_scitype(::SKL_REGS_SINGLE)  = MLJBase.Table(MLJBase.Continuous)
+MLJBase.target_scitype(::SKL_REGS_SINGLE) = AbstractVector{MLJBase.Continous}
 
 ##############
 # MULTI TASK #
@@ -495,7 +544,7 @@ MLJBase.fitted_params(model::MultiTaskLassoCVRegressor, fitresult) = (
     intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing),
     alpha     = fitresult.alpha_,
     mse_path  = fitresult.mse_path_,
-    l1_ratio  = fitresult.l1_ratio_
+    alphas    = fitresult.alphas_
     )
 
 # ==============================================================================
@@ -535,10 +584,16 @@ MultiTaskElasticNetCVRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear
     random_state::Any   = nothing
     selection::String   = "cyclic"::(arg in ("cyclic","random"))
 end
-MLJBase.fitted_params(model::MultiTaskElasticNetRegressor, fitresult) = (
+MLJBase.fitted_params(model::MultiTaskElasticNetCVRegressor, fitresult) = (
     coef      = fitresult.coef_,
     intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing),
     alpha     = fitresult.alpha_,
     mse_path  = fitresult.mse_path_,
     l1_ratio  = fitresult.l1_ratio_
     )
+
+const SKL_REGS_MULTI = Union{Type{<:MultiTaskLassoRegressor}, Type{<:MultiTaskLassoCVRegressor},
+       Type{<:MultiTaskElasticNetRegressor}, Type{<:MultiTaskElasticNetCVRegressor}}
+
+MLJBase.input_scitype(::SKL_REGS_MULTI)  = MLJBase.Table(MLJBase.Continuous)
+MLJBase.target_scitype(::SKL_REGS_MULTI) = MLJBase.Table(MLJBase.Continuous)

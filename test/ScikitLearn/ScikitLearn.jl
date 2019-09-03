@@ -14,8 +14,8 @@ using RDatasets
 include("svm.jl")
 include("linear-regressors.jl")
 # include("linear-classifiers.jl")
-# include("gaussian-process.jl")
-# include("ensemble.jl")
+include("gaussian-process.jl")
+include("ensemble.jl")
 
 end
 true

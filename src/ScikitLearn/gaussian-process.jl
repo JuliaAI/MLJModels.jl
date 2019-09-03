@@ -1,6 +1,6 @@
 # | model                  | build  | fitted_params | report | metadata | tests 1 | tests 2 |
 # | ---------------------- | ------ | ------------- | ------ | -------- | ------- | ------- |
-# | GPRegressor            | ✗      | ✗             | ✗      | ✗        |  ✗      | ✗       |
+# | GPRegressor            | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
 # | GPClassif              | ✗      | ✗             | ✗      | ✗        |  ✗      | ✗       |
 
 export GaussianProcessRegressor #, GaussianProcesseClassifier
@@ -15,3 +15,14 @@ GaussianProcessRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.gaussian_pro
     copy_X_train::Bool = true
     random_state::Any  = nothing
 end
+MLJBase.fitted_params(model::GaussianProcessRegressor, fitresult) = (
+    X_train = fitresult.X_train_,
+    y_train = fitresult.y_train_,
+    kernel  = fitresult.kernel_,
+    L       = fitresult.L_,
+    alpha   = fitresult.alpha_,
+    log_marginal_likelihood_value = fitresult.log_marginal_likelihood_value_
+    )
+
+MLJBase.input_scitype(::Type{<:GaussianProcessRegressor})  = MLJBase.Table(MLJBase.Continuous)
+MLJBase.target_scitype(::Type{<:GaussianProcessRegressor}) = AbstractVector{MLJBase.Continuous}

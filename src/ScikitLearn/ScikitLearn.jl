@@ -164,8 +164,9 @@ end
 
 include("linear-regressors.jl")
 #include("linear-classifiers.jl")
-#include("gaussian-process.jl")
-#include("ensemble.jl")
+
+include("gaussian-process.jl")
+include("ensemble.jl")
 
 
 end # module

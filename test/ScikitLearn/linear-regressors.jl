@@ -17,6 +17,9 @@ y  = X1 * θ .+ 0.1 .* randn(n)
     f, _, _ = fit(m, 1, X, y)
     @test isapprox(f.score(X, y), 0.998859, rtol=1e-5)
     @test isapprox(norm(predict(m, f, X) .- y)/norm(y),  0.032693, rtol=1e-5)
+    # testing that the fitted params is proper
+    fp = fitted_params(m, f)
+    @test keys(fp) == (:coef, :intercept, :alpha, :lambda, :sigma, :scores)
 end
 
 @testset "BayesianRidge" begin
@@ -24,6 +27,9 @@ end
     f, _, _ = fit(m, 1, X, y)
     @test isapprox(f.score(X, y), 0.998859, rtol=1e-5)
     @test isapprox(norm(predict(m, f, X) .- y)/norm(y), 0.0326918, rtol=1e-5)
+    # testing that the fitted params is proper
+    fp = fitted_params(m, f)
+    @test keys(fp) == (:coef, :intercept, :alpha, :lambda, :sigma, :scores)
 end
 
 @testset "ElasticNet" begin
@@ -31,6 +37,9 @@ end
     f, _, _ = fit(m, 1, X, y)
     @test isapprox(f.score(X, y), 0.769795, rtol=1e-5)
     @test isapprox(norm(predict(m, f, X) .- y)/norm(y), 0.464447, rtol=1e-5)
+    # testing that the fitted params is proper
+    fp = fitted_params(m, f)
+    @test keys(fp) == (:coef, :intercept)
 end
 
 @testset "ElasticNetCV" begin
@@ -38,6 +47,9 @@ end
     f, _, _ = fit(m, 1, X, y)
     @test isapprox(f.score(X, y), 0.99884, rtol=1e-5)
     @test isapprox(norm(predict(m, f, X) .- y)/norm(y), 0.0328523, rtol=1e-5)
+    # testing that the fitted params is proper
+    fp = fitted_params(m, f)
+    @test keys(fp) == (:coef, :intercept, :l1_ratio, :mse_path, :alphas)
 end
 
 @testset "Huber" begin
@@ -45,6 +57,9 @@ end
     f, _, _ = fit(m, 1, X, y)
     @test isapprox(f.score(X, y), 0.99884, rtol=1e-5)
     @test isapprox(norm(predict(m, f, X) .- y)/norm(y), 0.032935, rtol=1e-5)
+    # testing that the fitted params is proper
+    fp = fitted_params(m, f)
+    @test keys(fp) == (:coef, :intercept, :scale, :outliers)
 end
 
 @testset "Lars" begin
@@ -52,6 +67,9 @@ end
     f, _, _ = fit(m, 1, X, y)
     @test isapprox(f.score(X, y), 0.998859, rtol=1e-5)
     @test isapprox(norm(predict(m, f, X) .- y)/norm(y), 0.0326918, rtol=1e-5)
+    # testing that the fitted params is proper
+    fp = fitted_params(m, f)
+    @test keys(fp) == (:coef, :intercept, :alphas, :active, :coef_path)
 end
 
 @testset "LarsCV" begin
@@ -59,6 +77,9 @@ end
     f, _, _ = fit(m, 1, X, y)
     @test isapprox(f.score(X, y), 0.998859, rtol=1e-5)
     @test isapprox(norm(predict(m, f, X) .- y)/norm(y), 0.0326918, rtol=1e-5)
+    # testing that the fitted params is proper
+    fp = fitted_params(m, f)
+    @test keys(fp) == (:coef, :intercept, :alpha, :alphas, :cv_alphas, :mse_path, :coef_path)
 end
 
 @testset "Lasso" begin
@@ -66,6 +87,9 @@ end
     f, _, _ = fit(m, 1, X, y)
     @test isapprox(f.score(X, y), 0.9946343, rtol=1e-5)
     @test isapprox(norm(predict(m, f, X) .- y)/norm(y), 0.0709070, rtol=1e-5)
+    # testing that the fitted params is proper
+    fp = fitted_params(m, f)
+    @test keys(fp) == (:coef, :intercept)
 end
 
 @testset "LassoCV" begin
@@ -73,6 +97,9 @@ end
     f, _, _ = fit(m, 1, X, y)
     @test isapprox(f.score(X, y), 0.998857, rtol=1e-5)
     @test isapprox(norm(predict(m, f, X) .- y)/norm(y), 0.03272594, rtol=1e-5)
+    # testing that the fitted params is proper
+    fp = fitted_params(m, f)
+    @test keys(fp) == (:coef, :intercept, :alpha, :alphas, :mse_path, :dual_gap)
 end
 
 @testset "LassoLars" begin
@@ -80,6 +107,9 @@ end
     f, _, _ = fit(m, 1, X, y)
     @test isapprox(f.score(X, y), 0.994317, rtol=1e-5)
     @test isapprox(norm(predict(m, f, X) .- y)/norm(y), 0.072973, rtol=1e-5)
+    # testing that the fitted params is proper
+    fp = fitted_params(m, f)
+    @test keys(fp) == (:coef, :intercept, :alphas, :active, :coef_path)
 end
 
 @testset "LassoLarsCV" begin
@@ -87,6 +117,9 @@ end
     f, _, _ = fit(m, 1, X, y)
     @test isapprox(f.score(X, y), 0.998859, rtol=1e-5)
     @test isapprox(norm(predict(m, f, X) .- y)/norm(y), 0.0326918, rtol=1e-5)
+    # testing that the fitted params is proper
+    fp = fitted_params(m, f)
+    @test keys(fp) == (:coef, :intercept, :coef_path, :alpha, :alphas, :cv_alphas, :mse_path)
 end
 
 @testset "LassoLarsIC" begin
@@ -94,6 +127,9 @@ end
     f, _, _ = fit(m, 1, X, y)
     @test isapprox(f.score(X, y), 0.9920703, rtol=1e-5)
     @test isapprox(norm(predict(m, f, X) .- y)/norm(y), 0.08619978, rtol=1e-5)
+    # testing that the fitted params is proper
+    fp = fitted_params(m, f)
+    @test keys(fp) == (:coef, :intercept, :alpha)
 end
 
 @testset "LinReg" begin
@@ -105,6 +141,9 @@ end
     fp = fitted_params(m, f)
     @test fp.coef      ≈ θ_ls[1:p]
     @test fp.intercept ≈ θ_ls[end]
+    # testing that the fitted params is proper
+    fp = fitted_params(m, f)
+    @test keys(fp) == (:coef, :intercept)
 end
 
 @testset "OMP" begin
@@ -112,6 +151,9 @@ end
     f, _, _ = fit(m, 1, X, y)
     @test isapprox(f.score(X, y), 0.4593868, rtol=1e-5)
     @test isapprox(norm(predict(m, f, X) .- y)/norm(y), 0.711741, rtol=1e-5)
+    # testing that the fitted params is proper
+    fp = fitted_params(m, f)
+    @test keys(fp) == (:coef, :intercept)
 end
 
 @testset "OMPCV" begin
@@ -119,6 +161,29 @@ end
     f, _, _ = fit(m, 1, X, y)
     @test isapprox(f.score(X, y), 0.998859, rtol=1e-5)
     @test isapprox(norm(predict(m, f, X) .- y)/norm(y), 0.0326918, rtol=1e-5)
+    # testing that the fitted params is proper
+    fp = fitted_params(m, f)
+    @test keys(fp) == (:coef, :intercept, :n_nonzero_coefs)
+end
+
+@testset "OMPCV" begin
+    m = OrthogonalMatchingPursuitCVRegressor(cv = 5)
+    f, _, _ = fit(m, 1, X, y)
+    @test isapprox(f.score(X, y), 0.998859, rtol=1e-5)
+    @test isapprox(norm(predict(m, f, X) .- y)/norm(y), 0.0326918, rtol=1e-5)
+    # testing that the fitted params is proper
+    fp = fitted_params(m, f)
+    @test keys(fp) == (:coef, :intercept, :n_nonzero_coefs)
+end
+
+@testset "PassAggr" begin
+    m = PassiveAggressiveRegressor()
+    f, _, _ = fit(m, 1, X, y)
+    @test 0.980 ≤ f.score(X, y) ≤ 0.999
+    @test norm(predict(m, f, X) .- y)/norm(y) ≤ 0.1
+    # testing that the fitted params is proper
+    fp = fitted_params(m, f)
+    @test keys(fp) == (:coef, :intercept)
 end
 
 @testset "Ridge" begin
@@ -126,15 +191,41 @@ end
     f, _, _ = fit(m, 1, X, y)
     @test isapprox(f.score(X, y), 0.998793, rtol=1e-5)
     @test isapprox(norm(predict(m, f, X) .- y)/norm(y), 0.0336254, rtol=1e-5)
+    # testing that the fitted params is proper
+    fp = fitted_params(m, f)
+    @test keys(fp) == (:coef, :intercept)
 end
 
-# @testset "RidgeCV" begin
-#     m = RidgeCV()
-#     f, _, _ = fit(m, 1, X, y)
-#     @test isapprox(f.score(X, y), 0.998793, rtol=1e-5)
-#     @test isapprox(norm(predict(m, f, X) .- y)/norm(y), 0.0336254, rtol=1e-5)
-# end
+@testset "RidgeCV" begin
+    m = RidgeCVRegressor(cv=nothing, store_cv_values=true)
+    f, _, _ = fit(m, 1, X, y)
+    @test isapprox(f.score(X, y), 0.998858, rtol=1e-5)
+    @test isapprox(norm(predict(m, f, X) .- y)/norm(y), 0.0327014, rtol=1e-5)
+    # testing that the fitted params is proper
+    fp = fitted_params(m, f)
+    @test keys(fp) == (:coef, :intercept, :alpha, :cv_values)
+    @test fp[:cv_values] isa Matrix
+end
 
+@testset "SGDReg" begin
+    m = SGDRegressor()
+    f, _, _ = fit(m, 1, X, y)
+    @test 0.980 ≤ f.score(X, y) ≤ 0.999
+    @test norm(predict(m, f, X) .- y)/norm(y) ≤ 0.1
+    # testing that the fitted params is proper
+    fp = fitted_params(m, f)
+    @test keys(fp) == (:coef, :intercept, :average_coef, :average_intercept)
+end
+
+@testset "TheilSen" begin
+    m = TheilSenRegressor()
+    f, _, _ = fit(m, 1, X, y)
+    @test 0.980 ≤ f.score(X, y) ≤ 0.999
+    @test norm(predict(m, f, X) .- y)/norm(y) ≤ 0.1
+    # testing that the fitted params is proper
+    fp = fitted_params(m, f)
+    @test keys(fp) == (:coef, :intercept, :breakdown, :n_subpopulation)
+end
 
 ##############
 # MULTI TASK #
@@ -146,22 +237,34 @@ y2 = hcat(y, y)
     m = MultiTaskLassoRegressor()
     f, _, _ = fit(m, 1, X, y2)
     @test f.coef_ isa Matrix
+    # testing that the fitted params is proper
+    fp = fitted_params(m, f)
+    @test keys(fp) == (:coef, :intercept)
 end
 
 @testset "MTLassoCV" begin
     m = MultiTaskLassoCVRegressor(cv = 5, random_state = 0)
     f, _, _ = fit(m, 1, X, y2)
     @test f.coef_ isa Matrix
+    # testing that the fitted params is proper
+    fp = fitted_params(m, f)
+    @test keys(fp) == (:coef, :intercept, :alpha, :mse_path, :alphas)
 end
 
 @testset "MTElNet" begin
     m = MultiTaskElasticNetRegressor(alpha = 0.1, l1_ratio = 0.5)
     f, _, _ = fit(m, 1, [0 0; 1 1; 2 2], [0 0; 1 1; 2 2])
     @test f.coef_ isa Matrix
+    # testing that the fitted params is proper
+    fp = fitted_params(m, f)
+    @test keys(fp) == (:coef, :intercept)
 end
 
 @testset "MTElNetCV" begin
     m = MultiTaskElasticNetCVRegressor(cv = 3, n_alphas = 100, l1_ratio = 0.5)
     f, _, _ = fit(m, 1, [0 0; 1 1; 2 2], [0 0; 1 1; 2 2])
     @test f.coef_ isa Matrix
+    # testing that the fitted params is proper
+    fp = fitted_params(m, f)
+    @test keys(fp) == (:coef, :intercept, :alpha, :mse_path, :l1_ratio)
 end
