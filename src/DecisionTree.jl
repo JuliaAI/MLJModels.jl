@@ -151,7 +151,8 @@ function MLJBase.fit(model::DecisionTreeClassifier
 
 end
 
-MLJBase.fitted_params(::DecisionTreeClassifier, fitresult) = fitresult[1]
+MLJBase.fitted_params(::DecisionTreeClassifier, fitresult) = (tree_or_leaf =
+fitresult[1],)
 
 function smooth(prob_vector, smoothing)
     threshold = smoothing/length(prob_vector)
@@ -262,7 +263,8 @@ function MLJBase.fit(model::DecisionTreeRegressor
     return fitresult, cache, report
 end
 
-MLJBase.fitted_params(::DecisionTreeRegressor, fitresult) = fitresult
+MLJBase.fitted_params(::DecisionTreeRegressor, fitresult) =
+    (tree_or_leaf = fitresult,)
 
 function MLJBase.predict(model::DecisionTreeRegressor
                      , fitresult
