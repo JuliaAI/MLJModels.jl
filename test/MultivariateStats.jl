@@ -42,7 +42,7 @@ seed!(1234)
 end
 
 data = dataset("MASS", "crabs")
-X = MLJBase.selectcols(data, [:FL, :RW, :CL, :CW, :BD])   
+X = MLJBase.selectcols(data, [:FL, :RW, :CL, :CW, :BD])
 y = MLJBase.selectcols(data, :Sp)
 
 
