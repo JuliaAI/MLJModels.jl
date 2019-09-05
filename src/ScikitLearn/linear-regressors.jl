@@ -499,7 +499,7 @@ MLJBase.fitted_params(model::TheilSenRegressor, fitresult) = (
 const SKL_REGS_SINGLE = Union{Type{<:ARDRegressor},Type{<:BayesianRidgeRegressor},        Type{<:ElasticNetRegressor},Type{<:ElasticNetCVRegressor},Type{<:HuberRegressor},Type{<:LarsRegressor},Type{<:LarsCVRegressor},Type{<:LassoRegressor},Type{<:LassoCVRegressor},Type{<:LassoLarsRegressor},Type{<:LassoLarsCVRegressor},Type{<:LassoLarsICRegressor},Type{<:LinearRegressor},Type{<:OrthogonalMatchingPursuitRegressor},Type{<:OrthogonalMatchingPursuitCVRegressor},Type{<:PassiveAggressiveRegressor},Type{<:RidgeRegressor},Type{<:RidgeCVRegressor},Type{<:SGDRegressor},Type{<:TheilSenRegressor}}
 
 MLJBase.input_scitype(::SKL_REGS_SINGLE)  = MLJBase.Table(MLJBase.Continuous)
-MLJBase.target_scitype(::SKL_REGS_SINGLE) = AbstractVector{MLJBase.Continous}
+MLJBase.target_scitype(::SKL_REGS_SINGLE) = AbstractVector{MLJBase.Continuous}
 
 ##############
 # MULTI TASK #

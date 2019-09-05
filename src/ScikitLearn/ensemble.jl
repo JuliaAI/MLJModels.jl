@@ -186,4 +186,4 @@ MLJBase.fitted_params(model::RandomForestRegressor, fitresult) = (
 const ENSEMBLE_REG = Union{Type{<:AdaBoostRegressor}, Type{<:BaggingRegressor}, Type{<:GradientBoostingRegressor}, Type{<:RandomForestRegressor}}
 
 MLJBase.input_scitype(::ENSEMBLE_REG)  = MLJBase.Table(MLJBase.Continuous)
-MLJBase.target_scitype(::ENSEMBLE_REG) = AbstractVector{MLJBase.Continous}
+MLJBase.target_scitype(::ENSEMBLE_REG) = AbstractVector{MLJBase.Continuous}
