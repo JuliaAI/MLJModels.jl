@@ -148,6 +148,7 @@ macro sk_model(ex)
     # to be added manually model by model.
     # --> input_scitype
     # --> target_scitype
+    stname_str = string(stname)
     esc(
         quote
         export $stname
@@ -155,7 +156,7 @@ macro sk_model(ex)
         $fit_ex
         $clean_ex
         $predict_ex
-        MLJBase.load_path(::Type{<:$stname})       = string("MLJModels.ScikitLearn_.", :($stname))
+        MLJBase.load_path(::Type{<:$stname})       = string("MLJModels.ScikitLearn_.", $stname_str)
         MLJBase.package_name(::Type{<:$stname})    = "ScikitLearn"
         MLJBase.package_uuid(::Type{<:$stname})    = "3646fa90-6ef7-5e7e-9f22-8aca16db6324"
         MLJBase.is_pure_julia(::Type{<:$stname})   = false
