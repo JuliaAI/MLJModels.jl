@@ -148,18 +148,21 @@ macro sk_model(ex)
     # to be added manually model by model.
     # --> input_scitype
     # --> target_scitype
-    quote
-        $(esc(ex))
-        $(esc(fit_ex))
-        $(esc(clean_ex))
-        $(esc(predict_ex))
-        MLJBase.load_path(::Type{<:$(esc(stname))})       = string($(stname))
-        MLJBase.package_name(::Type{<:$(esc(stname))})    = "ScikitLearn"
-        MLJBase.package_uuid(::Type{<:$(esc(stname))})    = "3646fa90-6ef7-5e7e-9f22-8aca16db6324"
-        MLJBase.is_pure_julia(::Type{<:$(esc(stname))})   = false
-        MLJBase.package_url(::Type{<:$(esc(stname))})     = "https://github.com/cstjean/ScikitLearn.jl"
-        MLJBase.package_license(::Type{<:$(esc(stname))}) = "BSD"
-    end
+    esc(
+        quote
+        export $stname
+        $ex
+        $fit_ex
+        $clean_ex
+        $predict_ex
+        MLJBase.load_path(::Type{<:$stname})       = string("MLJModels.ScikitLearn_.", :($stname))
+        MLJBase.package_name(::Type{<:$stname})    = "ScikitLearn"
+        MLJBase.package_uuid(::Type{<:$stname})    = "3646fa90-6ef7-5e7e-9f22-8aca16db6324"
+        MLJBase.is_pure_julia(::Type{<:$stname})   = false
+        MLJBase.package_url(::Type{<:$stname})     = "https://github.com/cstjean/ScikitLearn.jl"
+        MLJBase.package_license(::Type{<:$stname}) = "BSD"
+        end
+    )
 end
 
 include("linear-regressors.jl")
