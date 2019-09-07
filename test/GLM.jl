@@ -51,8 +51,11 @@ infos = info(atom_ols)
 @test infos[:package_name] == "GLM"
 @test infos[:is_pure_julia]
 @test infos[:is_supervised]
-#@test infos[:package_license] == "MIT"
-@test infos[:is_probabilistic]
+@test infos[:package_license] == "MIT"
+@test infos[:prediction_type] == :probabilistic
+@test infos[:hyperparameters] == [:fit_intercept, :allowrankdeficient]
+@test infos[:hyperparameter_types] == [:Bool, :Bool]
+#@test infos[:hyperparameter_defaults] == [true, false]
 
 p_distr = predict(atom_ols, fitresult, selectrows(X, test))
 
