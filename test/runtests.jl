@@ -5,38 +5,74 @@
 
 using Test
 
-@testset "MultivariateStats  " begin
-  @test include("MultivariateStats.jl")
+@testset "metadata" begin
+    
+    @testset "reading and extracting model metadata" begin
+        @test include("metadata.jl")
+    end
+
+    @testset "model search" begin
+        @test include("model_search.jl")
+    end
+
+    @testset "loading model code" begin
+        @test include("loading.jl")
+    end
+
 end
 
-@testset "DecisionTree       " begin
-  @test include("DecisionTree.jl")
+@testset "built-in models" begin
+
+    @testset "Constant" begin
+        @test include("Constant.jl")
+    end
+    
+    @testset "Transformers" begin
+        @test include("Transformers.jl")
+    end
+    
+    @testset "KNN" begin
+        @test include("KNN.jl")
+    end
+    
 end
 
-@testset "GaussianProcesses  " begin
-  @test include("GaussianProcesses.jl")
-end
+@testset "strap-on model interfaces for external packages" begin
 
-@testset "Clustering         " begin
-    @test include("Clustering.jl")
-end
+    @testset "MultivariateStats  " begin
+        @test include("MultivariateStats.jl")
+    end
+    
+    @testset "DecisionTree       " begin
+        @test include("DecisionTree.jl")
+    end
+    
+    @testset "GaussianProcesses  " begin
+        @test include("GaussianProcesses.jl")
+    end
+    
+    @testset "Clustering         " begin
+        @test include("Clustering.jl")
+    end
 
-@testset "GLM                " begin
-    @test include("GLM.jl")
-end
+    @testset "GLM                " begin
+        @test include("GLM.jl")
+    end
 
-@testset "ScikitLearn        " begin
-    @test include("ScikitLearn/ScikitLearn.jl")
-end
+    @testset "ScikitLearn        " begin
+        @test include("ScikitLearn/ScikitLearn.jl")
+    end
 
-@testset "LIBSVM             " begin
-    @test include("LIBSVM.jl")
-end
+    @testset "LIBSVM             " begin
+        @test include("LIBSVM.jl")
+    end
 
-@testset "NaiveBayes         " begin
-    @test include("NaiveBayes.jl")
-end
+    @testset "NaiveBayes         " begin
+        @test include("NaiveBayes.jl")
+    end
+    
+    @testset "XGBoost" begin
+        @test include("XGBoost.jl")
+    end
 
-@testset "XGBoost" begin
-    @test include("XGBoost.jl")
- end
+end
