@@ -1,5 +1,7 @@
 module MLJModels
+__precompile__(false)
 
+# for administrators to update Metadata.toml:
 export @update
 
 # from builtins/Transformers.jl:
