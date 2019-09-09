@@ -90,7 +90,7 @@ function _update(mod, test_env_only)
         end
         for M in modeltypes
             print("\r", M, "               ")
-            _info = MLJBase.info(M)
+            _info = MLJBase.info_dict(M)
             pkg = _info[:package_name]
             if !(pkg in ["unknown",])
                 modelname = _info[:name]

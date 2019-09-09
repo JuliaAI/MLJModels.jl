@@ -46,7 +46,7 @@ function Base.show(stream::IO, ::MIME"text/plain", p::ModelProxy)
     MLJBase.pretty_nt(stream, p)
 end
 
-# returns named tuple version of the dictionary i=info(SomeModelType):
+# returns named tuple version of the dictionary i=info_dict(SomeModelType):
 function info_as_named_tuple(i) 
     propertynames = ifelse(i[:is_supervised], SUPERVISED_PROPERTYNAMES,
                            UNSUPERVISED_PROPERTYNAMES)
@@ -54,17 +54,17 @@ function info_as_named_tuple(i)
     return NamedTuple{propertynames}(propertyvalues)
 end
 
-MLJBase.traits(handle::Handle) = info_as_named_tuple(INFO_GIVEN_HANDLE[handle])
+MLJBase.info(handle::Handle) = info_as_named_tuple(INFO_GIVEN_HANDLE[handle])
     
 """
-    traits(name::String; pkg=nothing)
+    info(name::String; pkg=nothing)
 
 Returns the metadata for the registered model type with specified
 `name`. The key-word argument `pkg` is required in the case of
 duplicate names.
 
 """
-function MLJBase.traits(name::String; pkg=nothing)
+function MLJBase.info(name::String; pkg=nothing)
     name in NAMES ||
         throw(ArgumentError("There is no model named \"$name\" in "*
                             "the registry. \n Run `models()` to view all "*
@@ -84,21 +84,21 @@ function MLJBase.traits(name::String; pkg=nothing)
             throw(ArgumentError("$handle does not exist in the registry. \n"*
                   "Use models() to list all models. "))
     end
-    return traits(handle)
+    return info(handle)
 
 end
 
 
 """
-   traits(model::Model)
+   info(model::Model)
 
 Return the traits associated with the specified `model`. Equivalent to
-`traits(name; pkg=pkg)` where `name::String` is the name of the model type, and
+`info(name; pkg=pkg)` where `name::String` is the name of the model type, and
 `pkg::String` the name of the package containing it.
  
 """
-MLJBase.traits(M::Type{<:Model}) = info_as_named_tuple(MLJBase.info(M))
-MLJBase.traits(model::Model) = traits(typeof(model))
+MLJBase.info(M::Type{<:Model}) = info_as_named_tuple(MLJBase.info_dict(M))
+MLJBase.info(model::Model) = info(typeof(model))
 
 """
     models()
@@ -128,7 +128,7 @@ See also: [`localmodels`](@ref).
 
 """
 function models(conditions...)
-    unsorted = filter(traits.(keys(INFO_GIVEN_HANDLE))) do model
+    unsorted = filter(info.(keys(INFO_GIVEN_HANDLE))) do model
         all(c(model) for c in conditions)
     end
     return sort!(unsorted)
@@ -150,7 +150,7 @@ models() = models(x->true)
 # function models(task::UnsupervisedTask)
 #     ret = Dict{String, Any}()
 #     function condition(handle)
-#         t = traits(handle)
+#         t = info(handle)
 #         return task.input_scitype <: t.input_scitype
 #     end
 #     return models(condition)
@@ -172,7 +172,7 @@ See also [models](@ref)
 function localmodels(args...; modl=Main)
     modeltypes = localmodeltypes(modl)
     names = map(modeltypes) do M
-        traits(M).name
+        info(M).name
     end
     return filter(models(args...)) do handle
         handle.name in names

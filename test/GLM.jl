@@ -45,7 +45,7 @@ p2 = Xa1[test, :] * coefs
 
 @test p ≈ p2
 
-infos = info(atom_ols)
+infos = info_dict(atom_ols)
 
 @test infos[:name] == "LinearRegressor"
 @test infos[:package_name] == "GLM"
@@ -97,7 +97,7 @@ fitresult, _, report = fit(pr, 1, X, y)
 p_mode = convert.(Int, predict_mode(pr, fitresult, X))
 @test sum((p_mode - y_plain).^2)/n < 0.26
 
-# info(atom_glmcount)
+# info_dict(atom_glmcount)
 
 ###
 ### Count regression

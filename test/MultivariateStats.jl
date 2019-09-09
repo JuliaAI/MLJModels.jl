@@ -37,7 +37,7 @@ seed!(1234)
     @test abs(fr.bias) < 1e-10
     @test norm(fr.coefficients - coefficients) < 1e-10
 
-    info(ridge)
+    info_dict(ridge)
 
 end
 

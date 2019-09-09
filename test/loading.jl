@@ -10,7 +10,7 @@ using MLJModels
     @test tree == DecisionTreeClassifier()
     @test_logs((:info, r"^A model"),
                load("DecisionTreeClassifier", modl=TestLoading))
-    @test(MLJModels.traits("DecisionTreeClassifier")
+    @test(MLJModels.info("DecisionTreeClassifier")
           in localmodels(modl=TestLoading))
     @load PCA
 end

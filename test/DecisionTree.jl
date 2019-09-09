@@ -39,7 +39,7 @@ yhat = MLJBase.predict(baretree, fitresult, X);
 yyhat = predict_mode(baretree, fitresult, MLJBase.selectrows(X, 1:3))
 @test MLJBase.classes(yyhat[1]) == MLJBase.classes(y[1])
 
-info(baretree)
+info_dict(baretree)
 
 # # testing machine interface:
 # tree = machine(baretree, X, y)
@@ -70,7 +70,7 @@ model2, = MLJBase.fit(R2Tree, 1, features, labels)
 vals2 = MLJBase.predict(R2Tree, model2, features)
 @test DecisionTree.R2(labels, vals2) > 0.8
 
-info(R1Tree)
+info_dict(R1Tree)
 
 end
 true

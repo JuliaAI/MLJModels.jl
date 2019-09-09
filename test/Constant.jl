@@ -22,8 +22,8 @@ d=Distributions.Normal(1.5, 0.5)
 @test MLJBase.predict(model, fitresult, X) == fill(d, 10)
 @test MLJBase.predict_mean(model, fitresult, X) == fill(1.5, 10)
 
-MLJBase.info(model)
-MLJBase.info(MLJModels.DeterministicConstantRegressor)
+MLJBase.info_dict(model)
+MLJBase.info_dict(MLJModels.DeterministicConstantRegressor)
 
 
 ## CLASSIFIER
@@ -44,8 +44,8 @@ yhat = MLJBase.predict_mode(model, fitresult, X)
 yhat = MLJBase.predict(model, fitresult, X)
 @test yhat == fill(d, 10)
 
-MLJBase.info(model)
-MLJBase.info(MLJModels.DeterministicConstantClassifier)
+MLJBase.info_dict(model)
+MLJBase.info_dict(MLJModels.DeterministicConstantClassifier)
 
 end # module
 true

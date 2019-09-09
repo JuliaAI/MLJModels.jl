@@ -110,7 +110,7 @@ function localmodeltypes(modl)
                  ProbabilisticNetwork, UnsupervisedNetwork]
             return false
         else
-            i = MLJBase.info(M)
+            i = MLJBase.info_dict(M)
             name = i[:name]
             return isdefined(modl, Symbol(name)) &&
                 !i[:is_wrapper] 
@@ -126,7 +126,7 @@ function info_given_handle(metadata_file)
     modeltypes = localmodeltypes(MLJModels)
     info_given_name = Dict()
     for M in modeltypes
-        i = MLJBase.info(M)
+        i = MLJBase.info_dict(M)
         info_given_name[i[:name]] = i
     end
         

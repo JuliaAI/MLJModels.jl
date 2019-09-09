@@ -14,7 +14,7 @@ using CategoricalArrays
 ## GAUSSIAN
 
 gaussian_classifier = GaussianNBClassifier()
-info(gaussian_classifier)
+info_dict(gaussian_classifier)
 
 # gaussian classifier takes continuous features
 using RDatasets
@@ -100,7 +100,7 @@ yhand =[MLJBase.UnivariateFinite([male, female], [m(1, 1, 1), f(1, 1, 1)]),
         MLJBase.UnivariateFinite([male, female], [m(1, 2, 3), f(1, 2, 3)])]
 
 multinomial_classifier = MultinomialNBClassifier()
-info(multinomial_classifier)
+info_dict(multinomial_classifier)
 
 fitresultMLT, cacheMLT, reportMLT =
     MLJBase.fit(multinomial_classifier, 1, X, y)

@@ -3,18 +3,18 @@ module TestModelSearch
 # using Revise
 using Test
 using MLJModels
-import MLJBase.traits
+import MLJBase.info
 
-pca = traits("PCA", pkg="MultivariateStats")
-cnst = traits("ConstantRegressor", pkg="MLJModels")
+pca = info("PCA", pkg="MultivariateStats")
+cnst = info("ConstantRegressor", pkg="MLJModels")
 
-@test_throws ArgumentError traits("Julia")
+@test_throws ArgumentError info("Julia")
 
-@test traits(ConstantRegressor) == cnst
-@test traits(Standardizer()) == traits("Standardizer", pkg="MLJModels")
+@test info(ConstantRegressor) == cnst
+@test info(Standardizer()) == info("Standardizer", pkg="MLJModels")
 
 @testset "localmodels" begin
-    tree = traits("DecisionTreeRegressor")
+    tree = info("DecisionTreeRegressor")
     @test cnst in localmodels(modl=TestModelSearch)
     @test !(tree in localmodels(modl=TestModelSearch))
     import MLJModels
@@ -28,7 +28,7 @@ end
     mods = models(t)
     @test pca in mods
     @test cnst in mods
-    @test !(traits("SVC") in mods)
+    @test !(info("SVC") in mods)
     mods = localmodels(t, modl=TestModelSearch)
     @test cnst in mods
     @test !(pca in mods)

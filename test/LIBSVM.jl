@@ -97,12 +97,12 @@ ocpred = MLJBase.transform(oneclasssvm, fitresultoc, selectrows(X, test)); # out
 
 ## INFO
 
-info(LinearSVC)
-info(SVC)
-info(NuSVC)
-info(NuSVR)
-info(EpsilonSVR)
-info(OneClassSVM)
+info_dict(LinearSVC)
+info_dict(SVC)
+info_dict(NuSVC)
+info_dict(NuSVR)
+info_dict(EpsilonSVR)
+info_dict(OneClassSVM)
 
 end
 true

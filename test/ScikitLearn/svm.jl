@@ -10,7 +10,7 @@ plain_regressor  = SVMRegressor()
 nu_regressor     = SVMNuRegressor()
 linear_regressor = SVMLRegressor(max_iter=10_000)
 
-i = info(plain_classifier)
+i = info_dict(plain_classifier)
 
 @testset "SVM-infos" begin
     @test i[:name]          == "SVMClassifier"
@@ -23,7 +23,7 @@ i = info(plain_classifier)
 
     for m in (nu_classifier, linear_classifier, plain_regressor, nu_regressor,
               linear_regressor)
-        info(m)
+        info_dict(m)
     end
 end
 

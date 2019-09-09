@@ -70,7 +70,7 @@ function load(proxy::ModelProxy; modl=Main, verbosity=0)
 end
 
 load(name::String; pkg=nothing, kwargs...) =
-    load(traits(name; pkg=pkg); kwargs...)
+    load(info(name; pkg=pkg); kwargs...)
     
 """
     @load name pkg=nothing verbosity=0
