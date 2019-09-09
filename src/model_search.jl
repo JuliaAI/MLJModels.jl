@@ -74,15 +74,16 @@ function MLJBase.info(name::String; pkg=nothing)
         handle  = Handle(name)
         if ismissing(handle.pkg)
             pkgs = PKGS_GIVEN_NAME[name]
-            message = "Ambiguous model name. Use pkg=...\n"*
-            "The model $model is provided by these packages: $pkgs.\n"
+            message = "Ambiguous model name. Use pkg=... .\n"*
+            "The model $name is provided by these packages:\n $pkgs.\n"
             throw(ArgumentError(message))
         end
     else
         handle = Handle(name, pkg)
         haskey(INFO_GIVEN_HANDLE, handle) ||
-            throw(ArgumentError("$handle does not exist in the registry. \n"*
-                  "Use models() to list all models. "))
+            throw(ArgumentError("The package \"$pkg\" does not appear to "*
+                                "provide the model \"$name\". \n"*
+                                "Use models() to list all models. "))
     end
     return info(handle)
 

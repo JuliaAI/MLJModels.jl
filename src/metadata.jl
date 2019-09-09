@@ -86,7 +86,7 @@ end
 #     print(stream, "\"$(h.name)\"\t (from \"$(h.pkg)\")")
 
 Handle = NamedTuple{(:name, :pkg), Tuple{String,String}}
-(::Type{Handle})(name,string) = Handle((name, string))
+(::Type{Handle})(name,string) = NamedTuple{(:name, :pkg)}((name, string))
 
 function Base.isless(h1::Handle, h2::Handle)
     if isless(h1.name, h2.name)

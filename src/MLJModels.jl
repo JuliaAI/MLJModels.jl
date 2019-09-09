@@ -17,7 +17,7 @@ export ConstantRegressor, ConstantClassifier
 export KNNRegressor
 
 # from loading.jl:
-export load, @load
+export load, @load, info
 
 # from model_search:
 export models, localmodels
