@@ -11,6 +11,10 @@ pca = MLJModels.Handle("PCA", "MultivariateStats")
 cnst = MLJModels.Handle("ConstantRegressor", "MLJModels")
 i = MLJModels.info_given_handle(metadata_file)[pca]
 
+@testset "Handle constructors" begin
+    @test MLJModels.Handle("PCA") == MLJModels.Handle("PCA", "MultivariateStats")
+    # TODO: add tests here when duplicate model names enter registry
+end
 
 @testset "building INFO_GIVEN_HANDLE" begin
     @test isempty(MLJModels.localmodeltypes(MLJBase))
@@ -54,11 +58,6 @@ end
 @testset "building NAMES" begin
     model_names = MLJModels.model_names(info_given_handle)
     @test Set(model_names) == Set(["1", "2", "3", "4", "5"])
-end
-
-@testset "Handle constructors" begin
-    @test MLJModels.Handle("PCA") == MLJModels.Handle("PCA", "MultivariateStats")
-    # TODO: add tests here when duplicate model names enter registry
 end
 
 end
