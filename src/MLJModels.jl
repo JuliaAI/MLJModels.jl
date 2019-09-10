@@ -37,7 +37,7 @@ const srcdir = dirname(@__FILE__) # the directory containing this file
 include("metadata.jl")
 include("model_search.jl")
 include("loading.jl")
-include("registry/src/registry.jl")
+include("registry/src/Registry.jl")
 import .Registry.@update
 
 # load built-in models:
