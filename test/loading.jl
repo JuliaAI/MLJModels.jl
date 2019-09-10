@@ -13,6 +13,8 @@ using MLJModels
     @test(MLJModels.info("DecisionTreeClassifier")
           in localmodels(modl=TestLoading))
     @load PCA
+    @test_throws(ArgumentError, load("RidgeRegressor", modl=TestLoading))
+    @load RidgeRegressor pkg=MultivariateStats
 end
 
 end # module
