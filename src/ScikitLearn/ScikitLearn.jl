@@ -3,6 +3,7 @@ module ScikitLearn_
 #> for all Supervised models:
 import MLJBase
 using ScientificTypes
+using Tables
 
 #> for all classifiers:
 using CategoricalArrays
@@ -100,14 +101,21 @@ macro sk_model(ex)
     # add fit function
     fit_ex = :(function MLJBase.fit(model::$stname, verbosity::Int, X, y)
                    # body of the function
-                   Xmatrix   = MLJBase.matrix(X)
+                   Xmatrix    = MLJBase.matrix(X)
+                   yplain     = y
+                   targ_names = nothing
+                   # in multi-target case
+                   if Tables.istable(y)
+                       yplain     = MLJBase.matrix(y)
+                       targ_names = MLJBase.schema(y).names
+                   end
                    cache     = $(Symbol(stname, "_"))($([Expr(:kw, fname, :(model.$fname))
                                                             for fname in fnames]...))
-                   result    = ScikitLearn.fit!(cache, Xmatrix, y)
+                   result    = ScikitLearn.fit!(cache, Xmatrix, yplain)
                    fitresult = result
                    # TODO: we may want to use the report later on
                    report    = NamedTuple()
-                   return (fitresult, nothing, report)
+                   return ((fitresult, targ_names), nothing, report)
                end)
 
     # clean function
@@ -135,12 +143,13 @@ macro sk_model(ex)
                         )
                     )
     # predict function
-    predict_ex = Expr(:function, :(MLJBase.predict(model::$stname, fitresult, Xnew)),
+    predict_ex = Expr(:function, :(MLJBase.predict(model::$stname, (fitresult, targ_names), Xnew)),
                     # body of the predict function
         			Expr(:block,
-                         :(xnew 	     = MLJBase.matrix(Xnew)),
-                         :(prediction = ScikitLearn.predict(fitresult, xnew)),
-                         :(return prediction)
+                         :(xnew  = MLJBase.matrix(Xnew)),
+                         :(preds = ScikitLearn.predict(fitresult, xnew)),
+                         :(isa(preds, Matrix) && (preds = MLJBase.table(preds, names=targ_names))),
+                         :(return preds)
                          )
                       )
 

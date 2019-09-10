@@ -8,7 +8,7 @@ y  = X1 * θ .+ 0.1 .* randn(n)
 @testset "GPRegressor" begin
     gpr = GaussianProcessRegressor(random_state = 1)
     res, _, _ = fit(gpr, 1, X, y)
-    @test res.score(X,y) ≈ 1.0
+    @test res[1].score(X,y) ≈ 1.0
     @test norm(predict(gpr, res, X) .- y) / norm(y) ≤ 1e-10 # overfitting to the max
     fp = fitted_params(gpr, res)
     @test keys(fp) == (:X_train, :y_train, :kernel, :L, :alpha, :log_marginal_likelihood_value)
