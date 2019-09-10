@@ -39,7 +39,7 @@ yhat2 = predict(baregp, fitresult, MLJBase.selectrows(X, test));
 
 @test sum(yhat2 .== y[test]) / length(y[test]) >= 0.7
 
-info(baregp)
+info_dict(baregp)
 
 end # module
 true

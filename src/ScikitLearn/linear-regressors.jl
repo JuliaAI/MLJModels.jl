@@ -69,7 +69,7 @@ ARDRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).ARDRegre
     copy_X::Bool              = true
     verbose::Bool             = false
 end
-MLJBase.fitted_params(model::ARDRegressor, fitresult) = (
+MLJBase.fitted_params(model::ARDRegressor, (fitresult, _)) = (
     coef      = fitresult.coef_,
     intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing),
     alpha     = fitresult.alpha_,
@@ -93,7 +93,7 @@ BayesianRidgeRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")
     copy_X::Bool        = true
     verbose::Bool       = false
 end
-MLJBase.fitted_params(model::BayesianRidgeRegressor, fitresult) = (
+MLJBase.fitted_params(model::BayesianRidgeRegressor, (fitresult, _)) = (
     coef      = fitresult.coef_,
     intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing),
     alpha     = fitresult.alpha_,
@@ -118,7 +118,7 @@ ElasticNetRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).E
     random_state::Any   = nothing  # Int, random state, or nothing
     selection::String   = "cyclic"::(arg in ("cyclic","random"))
 end
-MLJBase.fitted_params(model::ElasticNetRegressor, fitresult) = (
+MLJBase.fitted_params(model::ElasticNetRegressor, (fitresult, _)) = (
     coef      = fitresult.coef_,
     intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing),
     )
@@ -143,7 +143,7 @@ ElasticNetCVRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model"))
     random_state::Any   = nothing
     selection::String   = "cyclic"::(arg in ("cyclic","random"))
 end
-MLJBase.fitted_params(model::ElasticNetCVRegressor, fitresult) = (
+MLJBase.fitted_params(model::ElasticNetCVRegressor, (fitresult, _)) = (
     coef      = fitresult.coef_,
     intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing),
     l1_ratio  = fitresult.l1_ratio_,
@@ -161,7 +161,7 @@ HuberRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).HuberR
     fit_intercept::Bool = true
     tol::Float64        = 1e-5::(arg>0)
 end
-MLJBase.fitted_params(model::HuberRegressor, fitresult) = (
+MLJBase.fitted_params(model::HuberRegressor, (fitresult, _)) = (
     coef      = fitresult.coef_,
     intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing),
     scale     = fitresult.scale_,
@@ -181,7 +181,7 @@ LarsRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).Lars
     fit_path::Bool  = true
 #    positive::Bool  = false  # this option is deprecated
 end
-MLJBase.fitted_params(model::LarsRegressor, fitresult) = (
+MLJBase.fitted_params(model::LarsRegressor, (fitresult, _)) = (
     coef      = fitresult.coef_,
     intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing),
     alphas    = fitresult.alphas_,
@@ -204,7 +204,7 @@ LarsCVRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).LarsC
     copy_X::Bool      = true
 #    positive::Bool    = false # deprecated
 end
-MLJBase.fitted_params(model::LarsCVRegressor, fitresult) = (
+MLJBase.fitted_params(model::LarsCVRegressor, (fitresult, _)) = (
     coef      = fitresult.coef_,
     intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing),
     alpha     = fitresult.alpha_,
@@ -229,7 +229,7 @@ LassoRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).Lasso
     random_state::Any   = nothing
     selection::String   = "cyclic"::(arg in ("cyclic","random"))
 end
-MLJBase.fitted_params(model::LassoRegressor, fitresult) = (
+MLJBase.fitted_params(model::LassoRegressor, (fitresult, _)) = (
     coef      = fitresult.coef_,
     intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing),
     )
@@ -253,7 +253,7 @@ LassoCVRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).Lass
     random_state::Int   = nothing
     selection::String   = "cyclic"::(arg in ("cyclic","random"))
 end
-MLJBase.fitted_params(model::LassoCVRegressor, fitresult) = (
+MLJBase.fitted_params(model::LassoCVRegressor, (fitresult, _)) = (
     coef      = fitresult.coef_,
     intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing),
     alpha    = fitresult.alpha_,
@@ -276,7 +276,7 @@ LassoLarsRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).La
     fit_path::Bool      = true
     positive::Any       = false
 end
-MLJBase.fitted_params(model::LassoLarsRegressor, fitresult) = (
+MLJBase.fitted_params(model::LassoLarsRegressor, (fitresult, _)) = (
     coef      = fitresult.coef_,
     intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing),
     alphas    = fitresult.alphas_,
@@ -299,7 +299,7 @@ LassoLarsCVRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).
     copy_X::Bool        = true
     positive::Any       = false
 end
-MLJBase.fitted_params(model::LassoLarsCVRegressor, fitresult) = (
+MLJBase.fitted_params(model::LassoLarsCVRegressor, (fitresult, _)) = (
     coef      = fitresult.coef_,
     intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing),
     coef_path = fitresult.coef_path_,
@@ -321,7 +321,7 @@ LassoLarsICRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).
     copy_X::Bool        = true
     positive::Any       = false
 end
-MLJBase.fitted_params(model::LassoLarsICRegressor, fitresult) = (
+MLJBase.fitted_params(model::LassoLarsICRegressor, (fitresult, _)) = (
     coef = fitresult.coef_,
     intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing),
     alpha = fitresult.alpha_
@@ -335,7 +335,7 @@ LinearRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).Linea
     copy_X::Bool           = true
     n_jobs::Union{Nothing,Int} = nothing
 end
-MLJBase.fitted_params(model::LinearRegressor, fitresult) = (
+MLJBase.fitted_params(model::LinearRegressor, (fitresult, _)) = (
     coef      = fitresult.coef_,
     intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing)
     )
@@ -349,7 +349,7 @@ OrthogonalMatchingPursuitRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.li
     normalize::Bool     = true
     precompute::Union{Bool,String,AbstractMatrix} = "auto"
 end
-MLJBase.fitted_params(model::OrthogonalMatchingPursuitRegressor, fitresult) = (
+MLJBase.fitted_params(model::OrthogonalMatchingPursuitRegressor, (fitresult, _)) = (
     coef      = fitresult.coef_,
     intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing)
     )
@@ -365,7 +365,7 @@ OrthogonalMatchingPursuitCVRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.
     n_jobs::Union{Nothing,Int} = 1
     verbose::Union{Bool,Int}   = false
 end
-MLJBase.fitted_params(model::OrthogonalMatchingPursuitCVRegressor, fitresult) = (
+MLJBase.fitted_params(model::OrthogonalMatchingPursuitCVRegressor, (fitresult, _)) = (
     coef      = fitresult.coef_,
     intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing),
     n_nonzero_coefs = fitresult.n_nonzero_coefs_
@@ -389,7 +389,7 @@ PassiveAggressiveRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_mod
     warm_start::Bool             = false
     average::Union{Bool,Int}     = false
 end
-MLJBase.fitted_params(model::PassiveAggressiveRegressor, fitresult) = (
+MLJBase.fitted_params(model::PassiveAggressiveRegressor, (fitresult, _)) = (
     coef      = fitresult.coef_,
     intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing)
     )
@@ -422,7 +422,7 @@ RidgeRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).Ridge
     solver::String      = "auto"::(arg in ("auto","svd","cholesky","lsqr","sparse_cg","sag","saga"))
     random_state::Any   = nothing
 end
-MLJBase.fitted_params(model::RidgeRegressor, fitresult) = (
+MLJBase.fitted_params(model::RidgeRegressor, (fitresult, _)) = (
     coef      = fitresult.coef_,
     intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing)
     )
@@ -438,7 +438,7 @@ RidgeCVRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).Ridg
     gcv_mode::Union{Nothing,String} = nothing::(arg === nothing || arg in ("auto","svd","eigen"))
     store_cv_values::Bool  = false
 end
-MLJBase.fitted_params(model::RidgeCVRegressor, fitresult) = (
+MLJBase.fitted_params(model::RidgeCVRegressor, (fitresult, _)) = (
     coef      = fitresult.coef_,
     intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing),
     alpha     = fitresult.alpha_,
@@ -468,7 +468,7 @@ SGDRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).SGDRegre
     warm_start::Bool         = false
     average::Union{Int,Bool} = false
 end
-MLJBase.fitted_params(model::SGDRegressor, fitresult) = (
+MLJBase.fitted_params(model::SGDRegressor, (fitresult, _)) = (
     coef      = fitresult.coef_,
     intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing),
     average_coef      = model.average ? fitresult.average_coef_ : nothing,
@@ -488,7 +488,7 @@ TheilSenRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).The
     n_jobs::Union{Nothing,Int} = nothing
     verbose::Bool       = false
 end
-MLJBase.fitted_params(model::TheilSenRegressor, fitresult) = (
+MLJBase.fitted_params(model::TheilSenRegressor, (fitresult, _)) = (
     coef      = fitresult.coef_,
     intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing),
     breakdown       = fitresult.breakdown_,
@@ -498,8 +498,8 @@ MLJBase.fitted_params(model::TheilSenRegressor, fitresult) = (
 # Metadata for Continuous -> Vector{Continuous}
 const SKL_REGS_SINGLE = Union{Type{<:ARDRegressor},Type{<:BayesianRidgeRegressor},        Type{<:ElasticNetRegressor},Type{<:ElasticNetCVRegressor},Type{<:HuberRegressor},Type{<:LarsRegressor},Type{<:LarsCVRegressor},Type{<:LassoRegressor},Type{<:LassoCVRegressor},Type{<:LassoLarsRegressor},Type{<:LassoLarsCVRegressor},Type{<:LassoLarsICRegressor},Type{<:LinearRegressor},Type{<:OrthogonalMatchingPursuitRegressor},Type{<:OrthogonalMatchingPursuitCVRegressor},Type{<:PassiveAggressiveRegressor},Type{<:RidgeRegressor},Type{<:RidgeCVRegressor},Type{<:SGDRegressor},Type{<:TheilSenRegressor}}
 
-MLJBase.input_scitype(::SKL_REGS_SINGLE)  = MLJBase.Table(MLJBase.Continuous)
-MLJBase.target_scitype(::SKL_REGS_SINGLE) = AbstractVector{MLJBase.Continuous}
+MLJBase.input_scitype(::SKL_REGS_SINGLE)  = MLJBase.Table(Continuous)
+MLJBase.target_scitype(::SKL_REGS_SINGLE) = AbstractVector{Continuous}
 
 ##############
 # MULTI TASK #
@@ -517,7 +517,7 @@ MultiTaskLassoRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model"
     random_state::Any   = nothing
     selection::String   = "cyclic"::(arg in ("cyclic","random"))
 end
-MLJBase.fitted_params(model::MultiTaskLassoRegressor, fitresult) = (
+MLJBase.fitted_params(model::MultiTaskLassoRegressor, (fitresult, _)) = (
     coef      = fitresult.coef_,
     intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing)
     )
@@ -539,7 +539,7 @@ MultiTaskLassoCVRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_mode
     random_state::Any   = nothing
     selection::String   = "cyclic"::(arg in ("cyclic","random"))
 end
-MLJBase.fitted_params(model::MultiTaskLassoCVRegressor, fitresult) = (
+MLJBase.fitted_params(model::MultiTaskLassoCVRegressor, (fitresult, _)) = (
     coef      = fitresult.coef_,
     intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing),
     alpha     = fitresult.alpha_,
@@ -561,7 +561,7 @@ MultiTaskElasticNetRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_m
     random_state::Any   = nothing
     selection::String   = "cyclic"::(arg in ("cyclic","random"))
 end
-MLJBase.fitted_params(model::MultiTaskElasticNetRegressor, fitresult) = (
+MLJBase.fitted_params(model::MultiTaskElasticNetRegressor, (fitresult, _)) = (
     coef      = fitresult.coef_,
     intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing)
     )
@@ -584,7 +584,7 @@ MultiTaskElasticNetCVRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear
     random_state::Any   = nothing
     selection::String   = "cyclic"::(arg in ("cyclic","random"))
 end
-MLJBase.fitted_params(model::MultiTaskElasticNetCVRegressor, fitresult) = (
+MLJBase.fitted_params(model::MultiTaskElasticNetCVRegressor, (fitresult, _)) = (
     coef      = fitresult.coef_,
     intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing),
     alpha     = fitresult.alpha_,
@@ -595,5 +595,5 @@ MLJBase.fitted_params(model::MultiTaskElasticNetCVRegressor, fitresult) = (
 const SKL_REGS_MULTI = Union{Type{<:MultiTaskLassoRegressor}, Type{<:MultiTaskLassoCVRegressor},
        Type{<:MultiTaskElasticNetRegressor}, Type{<:MultiTaskElasticNetCVRegressor}}
 
-MLJBase.input_scitype(::SKL_REGS_MULTI)  = MLJBase.Table(MLJBase.Continuous)
-MLJBase.target_scitype(::SKL_REGS_MULTI) = MLJBase.Table(MLJBase.Continuous)
+MLJBase.input_scitype(::SKL_REGS_MULTI)  = MLJBase.Table(Continuous)
+MLJBase.target_scitype(::SKL_REGS_MULTI) = MLJBase.Table(Continuous)

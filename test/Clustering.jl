@@ -42,7 +42,7 @@ p = MLJBase.predict(barekm, fitresult, X)
 # km = machine(barekm, X)
 # fit!(km)
 
-info(barekm)
+info_dict(barekm)
 
 ####
 #### KMEDOIDS
@@ -64,7 +64,7 @@ p = MLJBase.predict(barekm, fitresult, X)
 # km = machine(barekm, X)
 # fit!(km)
 
-info(barekm)
+info_dict(barekm)
 
 end # module
 true

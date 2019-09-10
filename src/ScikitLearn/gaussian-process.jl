@@ -15,7 +15,7 @@ GaussianProcessRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.gaussian_pro
     copy_X_train::Bool = true
     random_state::Any  = nothing
 end
-MLJBase.fitted_params(model::GaussianProcessRegressor, fitresult) = (
+MLJBase.fitted_params(model::GaussianProcessRegressor, (fitresult, _)) = (
     X_train = fitresult.X_train_,
     y_train = fitresult.y_train_,
     kernel  = fitresult.kernel_,

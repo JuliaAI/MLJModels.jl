@@ -5,16 +5,48 @@
 
 using Test
 
+@testset "metadata" begin
+    
+    @testset "reading and extracting model metadata" begin
+        @test include("metadata.jl")
+    end
+
+    @testset "model search" begin
+        @test include("model_search.jl")
+    end
+
+    @testset "loading model code" begin
+        @test include("loading.jl")
+    end
+
+end
+
+@testset "built-in models" begin
+
+    @testset "Constant" begin
+        @test include("Constant.jl")
+    end
+    
+    @testset "Transformers" begin
+        @test include("Transformers.jl")
+    end
+    
+    @testset "KNN" begin
+        @test include("KNN.jl")
+    end
+    
+end
+
 @testset "MultivariateStats  " begin
-  @test include("MultivariateStats.jl")
+    @test include("MultivariateStats.jl")
 end
 
 @testset "DecisionTree       " begin
-  @test include("DecisionTree.jl")
+    @test include("DecisionTree.jl")
 end
 
 @testset "GaussianProcesses  " begin
-  @test include("GaussianProcesses.jl")
+    @test include("GaussianProcesses.jl")
 end
 
 @testset "Clustering         " begin
@@ -39,4 +71,6 @@ end
 
 @testset "XGBoost" begin
     @test include("XGBoost.jl")
- end
+end
+
+

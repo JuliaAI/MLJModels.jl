@@ -45,14 +45,17 @@ p2 = Xa1[test, :] * coefs
 
 @test p ≈ p2
 
-infos = info(atom_ols)
+infos = info_dict(atom_ols)
 
 @test infos[:name] == "LinearRegressor"
 @test infos[:package_name] == "GLM"
 @test infos[:is_pure_julia]
 @test infos[:is_supervised]
-#@test infos[:package_license] == "MIT"
-@test infos[:is_probabilistic]
+@test infos[:package_license] == "MIT"
+@test infos[:prediction_type] == :probabilistic
+@test infos[:hyperparameters] == [:fit_intercept, :allowrankdeficient]
+@test infos[:hyperparameter_types] == ["Bool", "Bool"]
+#@test infos[:hyperparameter_defaults] == [true, false]
 
 p_distr = predict(atom_ols, fitresult, selectrows(X, test))
 
@@ -94,7 +97,7 @@ fitresult, _, report = fit(pr, 1, X, y)
 p_mode = convert.(Int, predict_mode(pr, fitresult, X))
 @test sum((p_mode - y_plain).^2)/n < 0.26
 
-# info(atom_glmcount)
+# info_dict(atom_glmcount)
 
 ###
 ### Count regression

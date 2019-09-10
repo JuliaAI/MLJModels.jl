@@ -169,6 +169,7 @@ MLJBase.package_name(::GLM_REGS)  = "GLM"
 MLJBase.package_uuid(::GLM_REGS)  = "38e38edf-8417-5370-95a0-9cbb8c7f171a"
 MLJBase.package_url(::GLM_REGS)   = "https://github.com/JuliaStats/GLM.jl"
 MLJBase.is_pure_julia(::GLM_REGS) = true
+MLJBase.package_license(::GLM_REGS) = "MIT"
 
 MLJBase.load_path(::Type{<:LinearRegressor})      = "MLJModels.GLM_.LinearRegressor"
 MLJBase.input_scitype(::Type{<:LinearRegressor})  = MLJBase.Table(MLJBase.Continuous)
