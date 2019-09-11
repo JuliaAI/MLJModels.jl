@@ -43,7 +43,13 @@ knn = KNNClassifier()
 
 f,_,_ = fit(knn, 1, x, y)
 
-p = predict_mean(knn, f, xtest)
+p = predict(knn, f, xtest)
+
+@test p[1] isa UnivariateFinite
+
+p = predict_mode(knn, f, xtest)
+
+@test sum(p .== ytest)/length(ytest) ≥ 0.9
 
 end
 true

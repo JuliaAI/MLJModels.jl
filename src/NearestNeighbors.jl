@@ -70,7 +70,7 @@ end
 function MLJBase.predict(m::KNNClassifier, (tree, y), X)
     Xmatrix     = permutedims(MLJBase.matrix(X))
     idxs, dists = NN.knn(tree, Xmatrix, m.k)
-    preds       = Vector{UnivariateFinite}(undef, length(idxs))
+    preds       = Vector{MLJBase.UnivariateFinite}(undef, length(idxs))
     classes     = MLJBase.classes(y[1])
     probas      = zeros(length(classes))
     for i in eachindex(idxs)
@@ -89,7 +89,7 @@ function MLJBase.predict(m::KNNClassifier, (tree, y), X)
             # normalize so that sum to 1
             probas ./ sum(probas)
         end
-        preds[i] = UnivariateFinite(classes, probas)
+        preds[i] = MLJBase.UnivariateFinite(classes, probas)
     end
     return preds
 end
