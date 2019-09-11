@@ -37,7 +37,7 @@ AdaBoostRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.ensemble")).AdaBoos
     loss::String           = "linear"::(arg in ("linear","square","exponential"))
     random_state::Any      = nothing
 end
-MLJBase.fitted_params(model::AdaBoostRegressor, fitresult) = (
+MLJBase.fitted_params(model::AdaBoostRegressor, (fitresult, _)) = (
     estimators           = fitresult.estimators_,
     estimator_weights    = fitresult.estimator_weights_,
     estimator_errors     = fitresult.estimator_errors_,
@@ -59,7 +59,7 @@ BaggingRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.ensemble")).BaggingR
     random_state::Any   = nothing
     verbose::Int        = 0
 end
-MLJBase.fitted_params(model::BaggingRegressor, fitresult) = (
+MLJBase.fitted_params(model::BaggingRegressor, (fitresult, _)) = (
     estimators           = fitresult.estimators_,
     estimators_samples   = fitresult.estimators_samples_,
     estimators_features  = fitresult.estimators_features_,
@@ -93,7 +93,7 @@ GradientBoostingRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.ensemble"))
     n_iter_no_change::Union{Nothing,Int} = nothing
     tol::Float64          = 1e-4::(arg>0)
 end
-MLJBase.fitted_params(model::GradientBoostingRegressor, fitresult) = (
+MLJBase.fitted_params(model::GradientBoostingRegressor, (fitresult, _)) = (
     feature_importances = fitresult.feature_importances_,
 #    oob_improvement     = fitresult.oob_improvement_, # not found ?
     train_score         = fitresult.train_score_,
@@ -119,7 +119,7 @@ MLJBase.fitted_params(model::GradientBoostingRegressor, fitresult) = (
 #     tol::Float64           = 1e-7::(arg>0)
 #     random_state::Any      = nothing
 # end
-# MLJBase.fitted_params(model::HistGradientBoostingRegressor, fitresult) = (
+# MLJBase.fitted_params(model::HistGradientBoostingRegressor, (fitresult, _)) = (
 #     n_trees_per_iteration = fitresult.n_trees_per_iteration_,
 #     train_score           = fitresult.train_score_,
 #     validation_score      = fitresult.validation_score_
@@ -145,7 +145,7 @@ RandomForestRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.ensemble")).Ran
     verbose::Int        = 0
     warm_start::Bool    = false
 end
-MLJBase.fitted_params(model::RandomForestRegressor, fitresult) = (
+MLJBase.fitted_params(model::RandomForestRegressor, (fitresult, _)) = (
     estimators     = fitresult.estimators_,
     feature_importances = fitresult.feature_importances_,
     n_features     = fitresult.n_features_,
@@ -174,7 +174,7 @@ MLJBase.fitted_params(model::RandomForestRegressor, fitresult) = (
 #     verbose::Int        = 0
 #     warm_start::Bool    = false
 # end
-# MLJBase.fitted_params(model::ExtraTreeRegressor, fitresult) = (
+# MLJBase.fitted_params(model::ExtraTreeRegressor, (fitresult, _)) = (
 #     estimators     = fitresult.estimators_,
 #     feature_importances = fitresult.feature_importances_,
 #     n_features     = fitresult.n_features_,

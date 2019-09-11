@@ -1,6 +1,7 @@
 module TestScikitLearn
 
 using MLJBase
+using Tables
 using Test
 using LinearAlgebra
 using Random
