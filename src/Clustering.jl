@@ -58,10 +58,7 @@ function MLJBase.fit(model::KMeans
 
     Xarray = MLJBase.matrix(X)
 
-    # NOTE see https://github.com/JuliaStats/Clustering.jl/issues/136
-    # this has been updated but only on #master, in the future replace permutedims
-    # with transpose (lazy)
-    result    = C.kmeans(permutedims(Xarray), model.k; distance=model.metric)
+    result    = C.kmeans(transpose(Xarray), model.k; distance=model.metric)
     fitresult = result.centers # centers (p x k)
     cache     = nothing
     report    = (assignments=result.assignments,) # size n
@@ -74,11 +71,8 @@ MLJBase.fitted_params(::KMeans, fitresult) = (centers=fitresult,)
 function MLJBase.transform(model::KMeans
                          , fitresult
                          , X)
-
-    Xarray = MLJBase.matrix(X)
-    (n, p), k = size(Xarray), model.k
     # pairwise distance from samples to centers
-    X̃ = pairwise(model.metric, transpose(Xarray), fitresult, dims=2)
+    X̃ = pairwise(model.metric, transpose(MLJBase.matrix(X)), fitresult, dims=2)
     return MLJBase.table(X̃, prototype=X)
 end
 
@@ -103,6 +97,8 @@ function MLJBase.fit(model::KMedoids
     Carray = pairwise(model.metric, transpose(Xarray), dims=2) # n x n
 
     result    = C.kmedoids(Carray, model.k)
+    # NOTE: kmedoids does not yet take transpose, so have to use permutedims which
+    # makes a copy of the data which is not great
     fitresult = permutedims(view(Xarray, result.medoids, :)) # medoids (p x k)
     cache     = nothing
     report    = (assignments=result.assignments,) # size n
@@ -116,11 +112,8 @@ MLJBase.fitted_params(::KMedoids, fitresult) = (medoids=fitresult,)
 function MLJBase.transform(model::KMedoids
                          , fitresult
                          , X)
-
-    Xarray = MLJBase.matrix(X)
-    (n, p), k = size(Xarray), model.k
     # pairwise distance from samples to medoids
-    X̃ = pairwise(model.metric, transpose(Xarray), fitresult, dims=2)
+    X̃ = pairwise(model.metric, transpose(MLJBase.matrix(X)), fitresult, dims=2)
     return MLJBase.table(X̃, prototype=X)
 end
 

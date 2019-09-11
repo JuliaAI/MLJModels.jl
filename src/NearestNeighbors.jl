@@ -8,7 +8,15 @@ import ..NearestNeighbors
 
 const NN = NearestNeighbors
 
+export KNNRegressor, KNNClassifier
+
 @with_kw mutable struct KNNRegressor <: MLJBase.Deterministic
+    k::Int            = 5           # > 0
+    algorithm::Symbol = :kdtree     # (:kdtree, :brutetree, :balltree)
+    metric::Metric    = Euclidean() #
+    leafsize::Int     = 10          # > 0
+    reorder::Bool     = true
+    weights::Symbol   = :uniform    # (:uniform, :distance)
 end
 
 @with_kw mutable struct KNNClassifier <: MLJBase.Probabilistic
@@ -47,7 +55,7 @@ function MLJBase.clean!(m::KNNClassifier)
 end
 
 function MLJBase.fit(m::KNNClassifier, verbosity::Int, X, y)
-    Xmatrix = MLJBase.matrix(X)
+    Xmatrix = permutedims(MLJBase.matrix(X))
     if m.algorithm == :kdtree
         tree = NN.KDTree(Xmatrix; leafsize=m.leafsize, reorder=m.reorder)
     elseif m.algorithm == :balltree
@@ -60,7 +68,7 @@ function MLJBase.fit(m::KNNClassifier, verbosity::Int, X, y)
 end
 
 function MLJBase.predict(m::KNNClassifier, (tree, y), X)
-    Xmatrix     = MLJBase.matrix(X)
+    Xmatrix     = permutedims(MLJBase.matrix(X))
     idxs, dists = NN.knn(tree, Xmatrix, m.k)
     preds       = Vector{UnivariateFinite}(undef, length(idxs))
     classes     = MLJBase.classes(y[1])
