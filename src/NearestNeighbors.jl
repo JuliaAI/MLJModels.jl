@@ -28,7 +28,9 @@ end
     weights::Symbol   = :uniform    # (:uniform, :distance)
 end
 
-function MLJBase.clean!(m::KNNClassifier)
+const KNN = Union{KNNRegressor, KNNClassifier}
+
+function MLJBase.clean!(m::KNN)
     warning = ""
     if m.k < 1
         warning *= "Number of neighbors 'k' needs to be larger than 0. Setting to 1.\n"
@@ -54,7 +56,7 @@ function MLJBase.clean!(m::KNNClassifier)
     return warning
 end
 
-function MLJBase.fit(m::KNNClassifier, verbosity::Int, X, y)
+function MLJBase.fit(m::KNN, verbosity::Int, X, y)
     Xmatrix = permutedims(MLJBase.matrix(X))
     if m.algorithm == :kdtree
         tree = NN.KDTree(Xmatrix; leafsize=m.leafsize, reorder=m.reorder)
@@ -66,6 +68,8 @@ function MLJBase.fit(m::KNNClassifier, verbosity::Int, X, y)
     report = NamedTuple{}()
     return (tree, y), nothing, report
 end
+
+MLJBase.fitted_params(model::KNN, (tree, _)) = (tree=tree,)
 
 function MLJBase.predict(m::KNNClassifier, (tree, y), X)
     Xmatrix     = permutedims(MLJBase.matrix(X))
@@ -84,12 +88,29 @@ function MLJBase.predict(m::KNNClassifier, (tree, y), X)
             end
         else
             for (i, label) in enumerate(labels)
-                probas[classes .== label] .+= 1.0 / dists[i]
+                probas[classes .== label] .+= 1.0 / dists_[i]
             end
             # normalize so that sum to 1
-            probas ./ sum(probas)
+            probas ./= sum(probas)
         end
         preds[i] = MLJBase.UnivariateFinite(classes, probas)
+    end
+    return preds
+end
+
+function MLJBase.predict(m::KNNRegressor, (tree, y), X)
+    Xmatrix     = permutedims(MLJBase.matrix(X))
+    idxs, dists = NN.knn(tree, Xmatrix, m.k)
+    preds       = zeros(length(idxs))
+    for i in eachindex(idxs)
+        idxs_  = idxs[i]
+        dists_ = dists[i]
+        values = y[idxs_]
+        if m.weights == :uniform
+            preds[i] = sum(values) / m.k
+        else
+            preds[i] = sum(values .* (1.0 .- dists_ ./ sum(dists_))) / (m.k-1)
+        end
     end
     return preds
 end
