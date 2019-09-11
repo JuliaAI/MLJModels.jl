@@ -59,7 +59,7 @@ function __init__()
         @warn "Problem loading registry from $metadata_file. "*
         "Model search and model code loading disabled. "
     end
-    
+
     # lazily load in strap-on model interfaces for external packages:
     @require MultivariateStats="6f286f6a-111f-5878-ab1e-185364afe411" include("MultivariateStats.jl")
     @require DecisionTree="7806a523-6efd-50cb-b5f6-3fa6f1930dbb" include("DecisionTree.jl")
@@ -70,7 +70,8 @@ function __init__()
     @require ScikitLearn="3646fa90-6ef7-5e7e-9f22-8aca16db6324" include("ScikitLearn/ScikitLearn.jl")
     @require XGBoost = "009559a3-9522-5dbb-924b-0b6ed2b22bb9" include("XGBoost.jl")
     @require LIBSVM="b1bec4e5-fd48-53fe-b0cb-9723c09d164b" include("LIBSVM.jl")
-    
+    @require NearestNeighbors="b8a86587-4115-5ab1-83bc-aa920d37bbce" include("NearestNeighbors.jl")
+
 end
 
 end # module
