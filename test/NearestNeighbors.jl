@@ -59,15 +59,35 @@ y3 = fill(-2.0, n)
 
 y = vcat(y1, y2, y3)
 
-knn = KNNRegressor(weights=:distance)
+knnr = KNNRegressor(weights=:distance)
 
-f,_,_ = fit(knn, 1, x, y)
+f,_,_ = fit(knnr, 1, x, y)
 
-p = predict(knn, f, xtest)
+p = predict(knnr, f, xtest)
 
 @test all(p[1:ntest] .≈ 0.0)
 @test all(p[ntest+1:2*ntest] .≈ 2.0)
 @test all(p[2*ntest+1:end] .≈ -2.0)
+
+
+# test metadata
+
+infos = info_dict(knn)
+
+# PKG
+@test infos[:package_name] == "NearestNeighbors"
+
+@test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
+@test infos[:target_scitype] == AbstractVector{<:MLJBase.Finite}
+
+infos[:docstring]
+
+infos = info_dict(knnr)
+
+@test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
+@test infos[:target_scitype] == AbstractVector{MLJBase.Continuous}
+
+infos[:docstring]
 
 end
 true

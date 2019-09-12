@@ -57,7 +57,7 @@ function MLJBase.clean!(m::KNN)
 end
 
 function MLJBase.fit(m::KNN, verbosity::Int, X, y)
-    Xmatrix = permutedims(MLJBase.matrix(X))
+    Xmatrix = MLJBase.matrix(X, transpose=true) # NOTE: copies the data
     if m.algorithm == :kdtree
         tree = NN.KDTree(Xmatrix; leafsize=m.leafsize, reorder=m.reorder)
     elseif m.algorithm == :balltree
@@ -72,7 +72,7 @@ end
 MLJBase.fitted_params(model::KNN, (tree, _)) = (tree=tree,)
 
 function MLJBase.predict(m::KNNClassifier, (tree, y), X)
-    Xmatrix     = permutedims(MLJBase.matrix(X))
+    Xmatrix     = MLJBase.matrix(X, transpose=true) # NOTE: copies the data
     idxs, dists = NN.knn(tree, Xmatrix, m.k)
     preds       = Vector{MLJBase.UnivariateFinite}(undef, length(idxs))
     classes     = MLJBase.classes(y[1])
@@ -99,7 +99,7 @@ function MLJBase.predict(m::KNNClassifier, (tree, y), X)
 end
 
 function MLJBase.predict(m::KNNRegressor, (tree, y), X)
-    Xmatrix     = permutedims(MLJBase.matrix(X))
+    Xmatrix     = MLJBase.matrix(X, transpose=true) # NOTE: copies the data
     idxs, dists = NN.knn(tree, Xmatrix, m.k)
     preds       = zeros(length(idxs))
     for i in eachindex(idxs)
@@ -117,18 +117,31 @@ end
 
 # ====
 
-const KNNModels = Union{Type{<:KNNRegressor},Type{<:KNNClassifier}}
+import ..metadata_pkg, ..metadata_mod
 
-MLJBase.package_name(::KNNModels)    = "NearestNeighbors"
-MLJBase.package_uuid(::KNNModels)    = "b8a86587-4115-5ab1-83bc-aa920d37bbce"
-MLJBase.is_pure_julia(::KNNModels)   = true
-MLJBase.package_license(::KNNModels) = "MIT"
-MLJBase.input_scitype(::KNNModels)   = MLJBase.Table(Continuous)
+metadata_pkg.((KNNRegressor, KNNClassifier),
+    name="NearestNeighbors",
+    uuid="b8a86587-4115-5ab1-83bc-aa920d37bbce",
+    url="https://github.com/KristofferC/NearestNeighbors.jl",
+    julia=true,
+    license="MIT",
+    wrapper=false
+    )
 
-MLJBase.load_path(::Type{<:KNNRegressor})      = "MLJModels.NearestNeighbors_.KNNRegressor"
-MLJBase.target_scitype(::Type{<:KNNRegressor}) = AbstractVector{Continuous}
+metadata_mod(KNNRegressor,
+    input=MLJBase.Table(MLJBase.Continuous),
+    target=AbstractVector{MLJBase.Continuous},
+    weights=false,
+    descr="K-Nearest Neighbors regressor: predicts the response associated with a new point\n" *
+          "by taking an average of the response of the K-nearest points."
+    )
 
-MLJBase.load_path(KNNClassifier) = "MLJModels.NearestNeighbors_.KNNClassifier"
-MLJBase.target_scitype(::Type{<:KNNRegressor}) = AbstractVector{<:Finite}
+metadata_mod(KNNClassifier,
+    input=MLJBase.Table(MLJBase.Continuous),
+    target=AbstractVector{<:MLJBase.Finite},
+    weights=false,
+    descr="K-Nearest Neighbors classifier: predicts the class associated with a new point\n" *
+          "by taking a vote over the classes of the K-nearest points."
+    )
 
 end # module

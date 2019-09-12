@@ -15,7 +15,7 @@ using MLJModels.Clustering_
 seed!(132442)
 
 data = dataset("MASS", "crabs")
-X = MLJBase.selectcols(data, [:FL, :RW, :CL, :CW, :BD])   
+X = MLJBase.selectcols(data, [:FL, :RW, :CL, :CW, :BD])
 y = MLJBase.selectcols(data, :Sp)
 
 ####
@@ -42,7 +42,16 @@ p = MLJBase.predict(barekm, fitresult, X)
 # km = machine(barekm, X)
 # fit!(km)
 
-info_dict(barekm)
+infos = info_dict(barekm)
+
+@test infos[:package_name] == "Clustering"
+@test infos[:is_pure_julia]
+@test infos[:package_license] == "MIT"
+
+@test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
+@test infos[:output_scitype] == MLJBase.Table(MLJBase.Continuous)
+
+infos[:docstring]
 
 ####
 #### KMEDOIDS
@@ -64,7 +73,10 @@ p = MLJBase.predict(barekm, fitresult, X)
 # km = machine(barekm, X)
 # fit!(km)
 
-info_dict(barekm)
+infos = info_dict(barekm)
+
+@test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
+@test infos[:output_scitype] == MLJBase.Table(MLJBase.Continuous)
 
 end # module
 true

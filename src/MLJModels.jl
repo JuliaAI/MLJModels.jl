@@ -34,6 +34,8 @@ using Pkg.TOML
 
 const srcdir = dirname(@__FILE__) # the directory containing this file
 
+include("metadata_utils.jl")
+
 include("metadata.jl")
 include("model_search.jl")
 include("loading.jl")
