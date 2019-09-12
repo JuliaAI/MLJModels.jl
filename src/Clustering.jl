@@ -9,6 +9,7 @@ export KMeans, KMedoids
 
 import MLJBase
 using ScientificTypes
+using Parameters
 
 import ..Clustering # strange sytax for lazy-loading
 
@@ -17,16 +18,51 @@ using LinearAlgebra: norm
 
 const C = Clustering
 
-# ----------------------------------
+const KMeansDescription =
+    """
+    K-Means algorithm: find K centroids corresponding to K clusters in the data.
+    """
 
-mutable struct KMeans{M<:SemiMetric} <: MLJBase.Unsupervised
-    k::Int
-    metric::M
+const KMedoidsDescription =
+    """
+    K-Medoids algorithm: find K centroids corresponding to K clusters in the data.
+    Unlike K-Means, the centroids are found among data points themselves."
+    """
+
+const KMFields =
+    """
+    ## Keywords
+
+    * `k=3`     : number of centroids
+    * `metric`  : distance metric to use
+    """
+
+"""
+KMeans(; kwargs...)
+
+$KMeansDescription
+
+$KMFields
+
+See also the [package documentation](http://juliastats.github.io/Clustering.jl/latest/kmeans.html).
+"""
+@with_kw mutable struct KMeans{M<:SemiMetric} <: MLJBase.Unsupervised
+    k::Int    = 3
+    metric::M = SqEuclidean()
 end
 
-mutable struct KMedoids{M<:SemiMetric} <: MLJBase.Unsupervised
-    k::Int
-    metric::M
+"""
+KMedoids(; kwargs...)
+
+$KMedoidsDescription
+
+$KMFields
+
+See also the [package documentation](http://juliastats.github.io/Clustering.jl/latest/kmedoids.html).
+"""
+@with_kw mutable struct KMedoids{M<:SemiMetric} <: MLJBase.Unsupervised
+    k::Int    = 3
+    metric::M = SqEuclidean()
 end
 
 const CM = Union{<:KMeans, <:KMedoids}
@@ -34,21 +70,10 @@ const CM = Union{<:KMeans, <:KMedoids}
 function MLJBase.clean!(model::CM)
     warning = ""
     if model.k < 2
-        warning *= "Need k >= 2. Resetting k=2.\n"
+        warning *= "Need k >= 2. Setting k=2.\n"
         model.k = 2
     end
     return warning
-end
-
-####
-#### KMEANS: constructor, fit, transform and predict
-####
-
-function KMeans(; k=3, metric=SqEuclidean())
-    model = KMeans(k, metric)
-    message = MLJBase.clean!(model)
-    isempty(message) || @warn message
-    return model
 end
 
 function MLJBase.fit(model::KMeans
@@ -75,18 +100,6 @@ function MLJBase.transform(model::KMeans
     return MLJBase.table(X̃, prototype=X)
 end
 
-####
-#### KMEDOIDS: constructor, fit and predict
-#### NOTE there is no transform in the sense of kmeans
-####
-
-function KMedoids(; k=3, metric=SqEuclidean())
-    model = KMedoids(k, metric)
-    message = MLJBase.clean!(model)
-    isempty(message) || @warn message
-    return model
-end
-
 function MLJBase.fit(model::KMedoids
                    , verbosity::Int
                    , X)
@@ -105,7 +118,6 @@ function MLJBase.fit(model::KMedoids
 end
 
 MLJBase.fitted_params(::KMedoids, fitresult) = (medoids=fitresult,)
-
 
 function MLJBase.transform(model::KMedoids
                          , fitresult
@@ -157,15 +169,14 @@ metadata_mod(KMeans,
     input=MLJBase.Table(MLJBase.Continuous),
     output=MLJBase.Table(MLJBase.Continuous),
     weights=false,
-    descr="K-Means algorithm: find K centroids corresponding to K clusters in the data."
+    descr=KMeansDescription
     )
 
 metadata_mod(KMedoids,
     input=MLJBase.Table(MLJBase.Continuous),
     output=MLJBase.Table(MLJBase.Continuous),
     weights=false,
-    descr="K-Medoids algorithm: find K centroids corresponding to K clusters in the data.\n"*
-          "Unlike K-Means, the centroids will be data points themselves."
+    descr=KMedoidsDescription
     )
 
 end # module

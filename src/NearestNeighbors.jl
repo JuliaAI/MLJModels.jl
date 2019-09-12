@@ -10,6 +10,41 @@ const NN = NearestNeighbors
 
 export KNNRegressor, KNNClassifier
 
+const KNNRegressorDescription =
+    """
+    K-Nearest Neighbors regressor: predicts the response associated with a new point
+    by taking an average of the response of the K-nearest points.
+    """
+
+const KNNClassifierDescription =
+    """
+    K-Nearest Neighbors classifier: predicts the class associated with a new point
+    by taking a vote over the classes of the K-nearest points.
+    """
+
+const KNNFields =
+    """
+    ## Keywords
+
+    * `k=5`                 : number of neighbors
+    * `algorithm=:kdtree`   : one of `(:kdtree, :brutetree, :balltree)`
+    * `metric=Euclidean()`  : a `Metric` object for the distance between points
+    * `leafsize=10`         : at what number of points to stop splitting the tree
+    * `reorder=true`        : if true puts points close in distance close in memory
+    * `weights=:uniform`    : one of `(:uniform, :distance)` if `:uniform` all neighbors are
+                              considered as equally important, if `:distance`, closer neighbors
+                              are proportionally more important.
+
+    See also the [package documentation](https://github.com/KristofferC/NearestNeighbors.jl).
+    """
+
+"""
+KNNRegressoor(;kwargs...)
+
+$KNNRegressorDescription
+
+$KNNFields
+"""
 @with_kw mutable struct KNNRegressor <: MLJBase.Deterministic
     k::Int            = 5           # > 0
     algorithm::Symbol = :kdtree     # (:kdtree, :brutetree, :balltree)
@@ -19,6 +54,13 @@ export KNNRegressor, KNNClassifier
     weights::Symbol   = :uniform    # (:uniform, :distance)
 end
 
+"""
+KNNRegressoor(;kwargs...)
+
+$KNNClassifierDescription
+
+$KNNFields
+"""
 @with_kw mutable struct KNNClassifier <: MLJBase.Probabilistic
     k::Int            = 5           # > 0
     algorithm::Symbol = :kdtree     # (:kdtree, :brutetree, :balltree)
@@ -132,16 +174,14 @@ metadata_mod(KNNRegressor,
     input=MLJBase.Table(MLJBase.Continuous),
     target=AbstractVector{MLJBase.Continuous},
     weights=false,
-    descr="K-Nearest Neighbors regressor: predicts the response associated with a new point\n" *
-          "by taking an average of the response of the K-nearest points."
+    descr=KNNRegressorDescription
     )
 
 metadata_mod(KNNClassifier,
     input=MLJBase.Table(MLJBase.Continuous),
     target=AbstractVector{<:MLJBase.Finite},
     weights=false,
-    descr="K-Nearest Neighbors classifier: predicts the class associated with a new point\n" *
-          "by taking a vote over the classes of the K-nearest points."
+    descr=KNNClassifierDescription
     )
 
 end # module
