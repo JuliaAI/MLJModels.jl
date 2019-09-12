@@ -56,9 +56,9 @@ function MLJBase.fit(model::KMeans
                    , verbosity::Int
                    , X)
 
-    Xarray = MLJBase.matrix(X)
+    Xarray = MLJBase.matrix(X, transpose=true)
 
-    result    = C.kmeans(transpose(Xarray), model.k; distance=model.metric)
+    result    = C.kmeans(Xarray, model.k; distance=model.metric)
     fitresult = result.centers # centers (p x k)
     cache     = nothing
     report    = (assignments=result.assignments,) # size n
@@ -72,7 +72,7 @@ function MLJBase.transform(model::KMeans
                          , fitresult
                          , X)
     # pairwise distance from samples to centers
-    X̃ = pairwise(model.metric, transpose(MLJBase.matrix(X)), fitresult, dims=2)
+    X̃ = pairwise(model.metric, MLJBase.matrix(X, transpose=true), fitresult, dims=2)
     return MLJBase.table(X̃, prototype=X)
 end
 
@@ -92,14 +92,11 @@ function MLJBase.fit(model::KMedoids
                    , verbosity::Int
                    , X)
 
-    Xarray = MLJBase.matrix(X)
+    Xarray = MLJBase.matrix(X, transpose=true)
     # cost matrix: all the pairwise distances
-    Carray = pairwise(model.metric, transpose(Xarray), dims=2) # n x n
-
+    Carray    = pairwise(model.metric, Xarray, dims=2) # n x n
     result    = C.kmedoids(Carray, model.k)
-    # NOTE: kmedoids does not yet take transpose, so have to use permutedims which
-    # makes a copy of the data which is not great
-    fitresult = permutedims(view(Xarray, result.medoids, :)) # medoids (p x k)
+    fitresult = view(Xarray, :, result.medoids) # medoids
     cache     = nothing
     report    = (assignments=result.assignments,) # size n
 
@@ -113,7 +110,7 @@ function MLJBase.transform(model::KMedoids
                          , fitresult
                          , X)
     # pairwise distance from samples to medoids
-    X̃ = pairwise(model.metric, transpose(MLJBase.matrix(X)), fitresult, dims=2)
+    X̃ = pairwise(model.metric, MLJBase.matrix(X, transpose=true), fitresult, dims=2)
     return MLJBase.table(X̃, prototype=X)
 end
 
