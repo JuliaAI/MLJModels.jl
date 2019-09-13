@@ -33,6 +33,8 @@ using Pkg.TOML
 
 const srcdir = dirname(@__FILE__) # the directory containing this file
 
+include("metadata_utils.jl")
+
 include("metadata.jl")
 include("model_search.jl")
 include("loading.jl")
@@ -56,7 +58,8 @@ function __init__()
     @require ScikitLearn="3646fa90-6ef7-5e7e-9f22-8aca16db6324" include("ScikitLearn/ScikitLearn.jl")
     @require XGBoost = "009559a3-9522-5dbb-924b-0b6ed2b22bb9" include("XGBoost.jl")
     @require LIBSVM="b1bec4e5-fd48-53fe-b0cb-9723c09d164b" include("LIBSVM.jl")
-    
+    @require NearestNeighbors="b8a86587-4115-5ab1-83bc-aa920d37bbce" include("NearestNeighbors.jl")
+
 end
 
 end # module
