@@ -12,7 +12,8 @@ cnst = MLJModels.Handle("ConstantRegressor", "MLJModels")
 i = MLJModels.info_given_handle(metadata_file)[pca]
 
 @testset "Handle constructors" begin
-#    @test MLJModels.Handle("PCA") == MLJModels.Handle("PCA", "MultivariateStats")
+    @test MLJModels.Handle("PCA") ==
+        MLJModels.Handle("PCA", "MultivariateStats")
     # TODO: add tests here when duplicate model names enter registry
 end
 
@@ -27,9 +28,18 @@ end
                         OneHotEncoder,                               
                         Standardizer,                                
                         UnivariateBoxCoxTransformer,
-                        UnivariateStandardizer]), MLJModels.localmodeltypes(MLJModels))
+                        UnivariateStandardizer]),
+                   MLJModels.localmodeltypes(MLJModels))
     @test MLJModels.info_given_handle(metadata_file)[pca][:name] == "PCA"
-    @test MLJModels.info_given_handle(metadata_file)[cnst] == MLJBase.info_dict(ConstantRegressor)
+    d1 = MLJModels.info_given_handle(metadata_file)[cnst]
+    d2 = MLJBase.info_dict(ConstantRegressor)
+    for (k, v) in d1
+        if v isa Vector
+            @test Set(v) == Set(d2[k])
+        else
+            @test v == d2[k]
+        end
+    end
 end
 
 h = Vector{Any}(undef, 7)
