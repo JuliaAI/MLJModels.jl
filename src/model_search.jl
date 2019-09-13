@@ -35,6 +35,23 @@ function Base.isless(p1::ModelProxy, p2::ModelProxy)
     end
 end
 
+import MLJBase.==
+function ==(m1::ModelProxy, m2::ModelProxy)
+    m1.name == m2.name && m1.package_name == m2.package_name
+    # tests = map(keys(m1)) do k
+    #     v1 = getproperty(m1, k)
+    #     v2 = getproperty(m2, k)
+    #     if k isa AbstractVector
+    #         Set(v1) == Set(v2)
+    #     else
+    #         v1 == v2
+    #     end
+    # end
+    # return all(tests)
+end
+
+
+ 
 Base.show(stream::IO, p::ModelProxy) =
     print(stream, "(name = $(p.name), package_name = $(p.package_name), "*
           "... )")

@@ -1,5 +1,4 @@
 module MLJModels
-__precompile__(false)
 
 # for administrators to update Metadata.toml:
 export @update
@@ -48,19 +47,6 @@ include("builtins/Constant.jl")
 include("builtins/KNN.jl")
 
 function __init__()
-
-    # load and extract the registry model metadata from the:
-    try
-        global metadata_file = joinpath(srcdir, "registry", "Metadata.toml")
-        global INFO_GIVEN_HANDLE = info_given_handle(metadata_file)
-        global AMBIGUOUS_NAMES = ambiguous_names(INFO_GIVEN_HANDLE)
-        global PKGS_GIVEN_NAME = pkgs_given_name(INFO_GIVEN_HANDLE)
-        global NAMES = model_names(INFO_GIVEN_HANDLE)
-        @info "Model metadata loaded from registry. "
-    catch
-        @warn "Problem loading registry from $metadata_file. "*
-        "Model search and model code loading disabled. "
-    end
 
     # lazily load in strap-on model interfaces for external packages:
     @require MultivariateStats="6f286f6a-111f-5878-ab1e-185364afe411" include("MultivariateStats.jl")

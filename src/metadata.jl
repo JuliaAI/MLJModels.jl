@@ -97,7 +97,7 @@ function Base.isless(h1::Handle, h2::Handle)
         return false
     end
 end
- 
+
 
 ## FUNCTIONS TO BUILD GLOBAL METADATA CONSTANTS IN MLJMODELS
 ## INITIALIZATION
@@ -121,19 +121,8 @@ end
 # for use in __init__ to define INFO_GIVEN_HANDLE
 function info_given_handle(metadata_file)
 
-    # build the metadata for built-in models:
-    # (so-called "built-in" models):
-    modeltypes = localmodeltypes(MLJModels)
-    info_given_name = Dict()
-    for M in modeltypes
-        i = MLJBase.info_dict(M)
-        info_given_name[i[:name]] = i
-    end
-        
-    # merge with the decoded external metadata:
     metadata = LittleDict(TOML.parsefile(metadata_file))
     metadata_given_pkg = decode_dic(metadata)
-    metadata_given_pkg["MLJModels"] = info_given_name
 
     # build info_given_handle dictionary:
     ret = Dict{Handle}{Any}()
@@ -176,10 +165,10 @@ end
 
 # for use in __init__ to define NAMES
 function model_names(info_given_handle)
-    names_with_duplicates = map(keys(info_given_handle) |> collect) do handle
+    names_allowing_duplicates = map(keys(info_given_handle) |> collect) do handle
         handle.name
     end
-    return unique(names_with_duplicates)
+    return unique(names_allowing_duplicates)
 end
 
 function (::Type{Handle})(name::String)
@@ -189,3 +178,22 @@ function (::Type{Handle})(name::String)
         return Handle(name, first(PKGS_GIVEN_NAME[name]))
     end
 end
+
+
+## METADATA INTITIALIZATION
+
+# Note. This more naturally sits in __init__ but then causes issues
+# with pre-compilation:
+
+try
+    metadata_file = joinpath(srcdir, "registry", "Metadata.toml")
+    global INFO_GIVEN_HANDLE = info_given_handle(metadata_file)
+    global AMBIGUOUS_NAMES = ambiguous_names(INFO_GIVEN_HANDLE)
+    global PKGS_GIVEN_NAME = pkgs_given_name(INFO_GIVEN_HANDLE)
+    global NAMES = model_names(INFO_GIVEN_HANDLE)
+    @info "Model metadata loaded from registry. "
+catch
+    @warn "Problem loading registry from $metadata_file. "*
+    "Model search and model code loading disabled. "
+end
+    
