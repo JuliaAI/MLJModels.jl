@@ -182,7 +182,9 @@ end
 
 ## METADATA INTITIALIZATION
 
-# load and extract the registry model metadata from the:
+# Note. This more naturally sits in __init__ but then causes issues
+# with pre-compilation:
+
 try
     metadata_file = joinpath(srcdir, "registry", "Metadata.toml")
     global INFO_GIVEN_HANDLE = info_given_handle(metadata_file)
