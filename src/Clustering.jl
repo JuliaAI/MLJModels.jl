@@ -162,17 +162,17 @@ metadata_pkg.((KMeans, KMedoids),
     url="https://github.com/JuliaStats/Clustering.jl",
     julia=true,
     license="MIT",
-    wrapper=false
+    is_wrapper=false
     )
 
-metadata_mod(KMeans,
+metadata_model(KMeans,
     input=MLJBase.Table(MLJBase.Continuous),
     output=MLJBase.Table(MLJBase.Continuous),
     weights=false,
     descr=KMeansDescription
     )
 
-metadata_mod(KMedoids,
+metadata_model(KMedoids,
     input=MLJBase.Table(MLJBase.Continuous),
     output=MLJBase.Table(MLJBase.Continuous),
     weights=false,

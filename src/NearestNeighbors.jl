@@ -167,17 +167,17 @@ metadata_pkg.((KNNRegressor, KNNClassifier),
     url="https://github.com/KristofferC/NearestNeighbors.jl",
     julia=true,
     license="MIT",
-    wrapper=false
+    is_wrapper=false
     )
 
-metadata_mod(KNNRegressor,
+metadata_model(KNNRegressor,
     input=MLJBase.Table(MLJBase.Continuous),
     target=AbstractVector{MLJBase.Continuous},
     weights=false,
     descr=KNNRegressorDescription
     )
 
-metadata_mod(KNNClassifier,
+metadata_model(KNNClassifier,
     input=MLJBase.Table(MLJBase.Continuous),
     target=AbstractVector{<:MLJBase.Finite},
     weights=false,

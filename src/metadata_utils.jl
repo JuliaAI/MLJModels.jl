@@ -21,25 +21,25 @@ Helper function to write the metadata for a package.
 """
 function metadata_pkg(T; name::String="unknown", uuid::String="unknown", url::String="unknown",
                          julia::Union{Missing,Bool}=missing, license::String="unknown",
-                         wrapper::Bool=false)
+                         is_wrapper::Bool=false)
     ex = quote
         MLJBase.package_name(::Type{<:$T})    = $name
         MLJBase.package_uuid(::Type{<:$T})    = $uuid
         MLJBase.package_url(::Type{<:$T})     = $url
         MLJBase.is_pure_julia(::Type{<:$T})   = $julia
         MLJBase.package_license(::Type{<:$T}) = $license
-        MLJBase.is_wrapper(::Type{<:$T})      = $wrapper
+        MLJBase.is_wrapper(::Type{<:$T})      = $is_wrapper
     end
     eval(ex)
 end
 
 """
-metadata_mod
+metadata_model
 
 Helper function to write the metadata for a single model of a package (complements
 [`metadata_ext`](@ref)).
 """
-function metadata_mod(T; input=MLJBase.Unknown, target=MLJBase.Unknown,
+function metadata_model(T; input=MLJBase.Unknown, target=MLJBase.Unknown,
                          output=MLJBase.Unknown, weights::Bool=false,
                          descr::String="", path::String="")
     isempty(path) && (path = "MLJModels.$(MLJBase.package_name(T))_.$T")
