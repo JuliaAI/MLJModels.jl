@@ -154,7 +154,7 @@ end
 #### METADATA
 ####
 
-import ..metadata_pkg, ..metadata_mod
+import ..metadata_pkg, ..metadata_model
 
 metadata_pkg.((KMeans, KMedoids),
     name="Clustering",
