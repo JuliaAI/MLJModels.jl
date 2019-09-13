@@ -97,7 +97,7 @@ function Base.isless(h1::Handle, h2::Handle)
         return false
     end
 end
- 
+
 
 ## FUNCTIONS TO BUILD GLOBAL METADATA CONSTANTS IN MLJMODELS
 ## INITIALIZATION
