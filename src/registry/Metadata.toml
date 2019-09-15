@@ -1,312 +1,45 @@
 
-[MultivariateStats.ICA]
+[NearestNeighbors.KNNClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":output_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
+":target_scitype" = "`AbstractArray{_s68,1} where _s68<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`true`"
-":package_name" = "MultivariateStats"
-":package_license" = "unknown"
-":load_path" = "MLJModels.MultivariateStats_.ICA"
-":package_uuid" = "6f286f6a-111f-5878-ab1e-185364afe411"
-":package_url" = "https://github.com/JuliaStats/MultivariateStats.jl"
-":is_wrapper" = "`false`"
-":docstring" = "ICA from MultivariateStats.jl.\n[Documentation](https://github.com/JuliaStats/MultivariateStats.jl)."
-":name" = "ICA"
-":is_supervised" = "`false`"
-":implemented_methods" = [":fit", ":clean!", ":fitted_params", ":transform"]
-":hyperparameters" = [":k", ":alg", ":fun", ":do_whiten", ":maxiter", ":tol", ":mean", ":winit"]
-":hyperparameter_types" = ["Int64", "Union{Nothing, Symbol}", "Union{Nothing, ICAGDeriv{T}} where T<:Real", "Union{Nothing, Bool}", "Union{Nothing, Int64}", "Union{Nothing, Real}", "Union{Nothing, Array{Float64,1}, Real}", "Union{Nothing, Array{Float64,2}}"]
-
-[MultivariateStats.RidgeRegressor]
-":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
-":is_pure_julia" = "`true`"
-":package_name" = "MultivariateStats"
-":package_license" = "unknown"
-":load_path" = "MLJModels.MultivariateStats_.RidgeRegressor"
-":package_uuid" = "6f286f6a-111f-5878-ab1e-185364afe411"
-":package_url" = "https://github.com/JuliaStats/MultivariateStats.jl"
+":package_name" = "NearestNeighbors"
+":package_license" = "MIT"
+":load_path" = "MLJModels.NearestNeighbors_.MLJModels.NearestNeighbors_.KNNClassifier"
+":package_uuid" = "b8a86587-4115-5ab1-83bc-aa920d37bbce"
+":package_url" = "https://github.com/KristofferC/NearestNeighbors.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":docstring" = "RidgeRegressor from MultivariateStats.jl.\n[Documentation](https://github.com/JuliaStats/MultivariateStats.jl)."
-":name" = "RidgeRegressor"
-":is_supervised" = "`true`"
-":prediction_type" = ":deterministic"
-":implemented_methods" = [":fit", ":predict", ":clean!", ":fitted_params"]
-":hyperparameters" = [":lambda"]
-":hyperparameter_types" = ["Float64"]
-
-[MultivariateStats.KernelPCA]
-":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":output_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":is_pure_julia" = "`true`"
-":package_name" = "MultivariateStats"
-":package_license" = "unknown"
-":load_path" = "MLJModels.MultivariateStats_.KernelPCA"
-":package_uuid" = "6f286f6a-111f-5878-ab1e-185364afe411"
-":package_url" = "https://github.com/JuliaStats/MultivariateStats.jl"
-":is_wrapper" = "`false`"
-":docstring" = "KernelPCA from MultivariateStats.jl.\n[Documentation](https://github.com/JuliaStats/MultivariateStats.jl)."
-":name" = "KernelPCA"
-":is_supervised" = "`false`"
-":implemented_methods" = [":fit", ":clean!", ":fitted_params", ":transform"]
-":hyperparameters" = [":maxoutdim", ":kernel", ":solver", ":inverse", ":β", ":tol", ":maxiter"]
-":hyperparameter_types" = ["Union{Nothing, Int64}", "Union{Nothing, Function}", "Union{Nothing, Symbol}", "Union{Nothing, Bool}", "Union{Nothing, Real}", "Union{Nothing, Real}", "Union{Nothing, Int64}"]
-
-[MultivariateStats.PCA]
-":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":output_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":is_pure_julia" = "`true`"
-":package_name" = "MultivariateStats"
-":package_license" = "unknown"
-":load_path" = "MLJModels.MultivariateStats_.PCA"
-":package_uuid" = "6f286f6a-111f-5878-ab1e-185364afe411"
-":package_url" = "https://github.com/JuliaStats/MultivariateStats.jl"
-":is_wrapper" = "`false`"
-":docstring" = "PCA from MultivariateStats.jl.\n[Documentation](https://github.com/JuliaStats/MultivariateStats.jl)."
-":name" = "PCA"
-":is_supervised" = "`false`"
-":implemented_methods" = [":fit", ":clean!", ":fitted_params", ":transform"]
-":hyperparameters" = [":maxoutdim", ":method", ":pratio", ":mean"]
-":hyperparameter_types" = ["Union{Nothing, Int64}", "Symbol", "Float64", "Union{Nothing, Array{Float64,1}, Real}"]
-
-[MLJModels.ConstantClassifier]
-":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:Union{Missing, Found})`"
-":target_scitype" = "`AbstractArray{_s118,1} where _s118<:ScientificTypes.Finite`"
-":is_pure_julia" = "`true`"
-":package_name" = "MLJModels"
-":package_license" = "unknown"
-":load_path" = "MLJModels.ConstantClassifier"
-":package_uuid" = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
-":package_url" = "https://github.com/alan-turing-institute/MLJModels.jl"
-":is_wrapper" = "`false`"
-":supports_weights" = "`false`"
-":docstring" = "ConstantClassifier from MLJModels.jl.\n[Documentation](https://github.com/alan-turing-institute/MLJModels.jl)."
-":name" = "ConstantClassifier"
+":docstring" = "K-Nearest Neighbors classifier: predicts the class associated with a new point\nby taking a vote over the classes of the K-nearest points.\n\n→ based on [NearestNeighbors](https://github.com/KristofferC/NearestNeighbors.jl)\n→ do `@load KNNClassifier` to use the model\n→ do `?KNNClassifier` for documentation."
+":name" = "KNNClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":fit", ":predict", ":fitted_params"]
-":hyperparameters" = []
-":hyperparameter_types" = []
+":implemented_methods" = [":fit", ":predict", ":show", ":clean!", ":fitted_params"]
+":hyperparameters" = [":k", ":algorithm", ":metric", ":leafsize", ":reorder", ":weights"]
+":hyperparameter_types" = ["Int64", "Symbol", "Distances.Metric", "Int64", "Bool", "Symbol"]
 
-[MLJModels.Standardizer]
-":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:Union{Missing, Found})`"
-":output_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:Union{Missing, Found})`"
-":is_pure_julia" = "`true`"
-":package_name" = "MLJModels"
-":package_license" = "unknown"
-":load_path" = "MLJModels.Standardizer"
-":package_uuid" = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
-":package_url" = "https://github.com/alan-turing-institute/MLJModels.jl"
-":is_wrapper" = "`false`"
-":docstring" = "Standardizer from MLJModels.jl.\n[Documentation](https://github.com/alan-turing-institute/MLJModels.jl)."
-":name" = "Standardizer"
-":is_supervised" = "`false`"
-":implemented_methods" = [":fit", ":fitted_params", ":transform"]
-":hyperparameters" = [":features"]
-":hyperparameter_types" = ["Array{Symbol,1}"]
-
-[MLJModels.DeterministicConstantClassifier]
-":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:Union{Missing, Found})`"
-":target_scitype" = "`AbstractArray{_s118,1} where _s118<:ScientificTypes.Finite`"
-":is_pure_julia" = "`true`"
-":package_name" = "MLJModels"
-":package_license" = "unknown"
-":load_path" = "MLJModels.DeterministicConstantClassifier"
-":package_uuid" = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
-":package_url" = "https://github.com/alan-turing-institute/MLJModels.jl"
-":is_wrapper" = "`false`"
-":supports_weights" = "`false`"
-":docstring" = "DeterministicConstantClassifier from MLJModels.jl.\n[Documentation](https://github.com/alan-turing-institute/MLJModels.jl)."
-":name" = "DeterministicConstantClassifier"
-":is_supervised" = "`true`"
-":prediction_type" = ":deterministic"
-":implemented_methods" = [":fit", ":predict"]
-":hyperparameters" = []
-":hyperparameter_types" = []
-
-[MLJModels.OneHotEncoder]
-":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:Union{Missing, Found})`"
-":output_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:Union{Missing, Found})`"
-":is_pure_julia" = "`true`"
-":package_name" = "MLJModels"
-":package_license" = "unknown"
-":load_path" = "MLJModels.OneHotEncoder"
-":package_uuid" = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
-":package_url" = "https://github.com/alan-turing-institute/MLJModels.jl"
-":is_wrapper" = "`false`"
-":docstring" = "OneHotEncoder from MLJModels.jl.\n[Documentation](https://github.com/alan-turing-institute/MLJModels.jl)."
-":name" = "OneHotEncoder"
-":is_supervised" = "`false`"
-":implemented_methods" = [":fit", ":transform"]
-":hyperparameters" = [":features", ":drop_last", ":ordered_factor"]
-":hyperparameter_types" = ["Array{Symbol,1}", "Bool", "Bool"]
-
-[MLJModels.StaticTransformer]
-":input_scitype" = "`ScientificTypes.Unknown`"
-":output_scitype" = "`ScientificTypes.Unknown`"
-":is_pure_julia" = "`true`"
-":package_name" = "MLJModels"
-":package_license" = "unknown"
-":load_path" = "MLJModels.StaticTransformer"
-":package_uuid" = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
-":package_url" = "https://github.com/alan-turing-institute/MLJModels.jl"
-":is_wrapper" = "`false`"
-":docstring" = "StaticTransformer from MLJModels.jl.\n[Documentation](https://github.com/alan-turing-institute/MLJModels.jl)."
-":name" = "StaticTransformer"
-":is_supervised" = "`false`"
-":implemented_methods" = [":fit", ":fitted_params", ":transform"]
-":hyperparameters" = [":f"]
-":hyperparameter_types" = ["Any"]
-
-[MLJModels.KNNRegressor]
+[NearestNeighbors.KNNRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":is_pure_julia" = "`true`"
-":package_name" = "MLJModels"
-":package_license" = "unknown"
-":load_path" = "MLJModels.KNNRegressor"
-":package_uuid" = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
-":package_url" = "https://github.com/alan-turing-institute/MLJModels.jl"
+":package_name" = "NearestNeighbors"
+":package_license" = "MIT"
+":load_path" = "MLJModels.NearestNeighbors_.MLJModels.NearestNeighbors_.KNNRegressor"
+":package_uuid" = "b8a86587-4115-5ab1-83bc-aa920d37bbce"
+":package_url" = "https://github.com/KristofferC/NearestNeighbors.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":docstring" = "KNNRegressor from MLJModels.jl.\n[Documentation](https://github.com/alan-turing-institute/MLJModels.jl)."
+":docstring" = "K-Nearest Neighbors regressor: predicts the response associated with a new point\nby taking an average of the response of the K-nearest points.\n\n→ based on [NearestNeighbors](https://github.com/KristofferC/NearestNeighbors.jl)\n→ do `@load KNNRegressor` to use the model\n→ do `?KNNRegressor` for documentation."
 ":name" = "KNNRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":fit", ":predict", ":clean!"]
-":hyperparameters" = [":K", ":metric", ":kernel"]
-":hyperparameter_types" = ["Int64", "Any", "Any"]
-
-[MLJModels.UnivariateBoxCoxTransformer]
-":input_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
-":output_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
-":is_pure_julia" = "`true`"
-":package_name" = "MLJModels"
-":package_license" = "unknown"
-":load_path" = "MLJModels.UnivariateBoxCoxTransformer"
-":package_uuid" = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
-":package_url" = "https://github.com/alan-turing-institute/MLJModels.jl"
-":is_wrapper" = "`false`"
-":docstring" = "UnivariateBoxCoxTransformer from MLJModels.jl.\n[Documentation](https://github.com/alan-turing-institute/MLJModels.jl)."
-":name" = "UnivariateBoxCoxTransformer"
-":is_supervised" = "`false`"
-":implemented_methods" = [":fit", ":inverse_transform", ":inverse_transform", ":transform"]
-":hyperparameters" = [":n", ":shift"]
-":hyperparameter_types" = ["Int64", "Bool"]
-
-[MLJModels.ConstantRegressor]
-":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:Union{Missing, Found})`"
-":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
-":is_pure_julia" = "`true`"
-":package_name" = "MLJModels"
-":package_license" = "unknown"
-":load_path" = "MLJModels.ConstantRegressor"
-":package_uuid" = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
-":package_url" = "https://github.com/alan-turing-institute/MLJModels.jl"
-":is_wrapper" = "`false`"
-":supports_weights" = "`false`"
-":docstring" = "ConstantRegressor from MLJModels.jl.\n[Documentation](https://github.com/alan-turing-institute/MLJModels.jl)."
-":name" = "ConstantRegressor"
-":is_supervised" = "`true`"
-":prediction_type" = ":probabilistic"
-":implemented_methods" = [":fit", ":predict", ":fitted_params"]
-":hyperparameters" = [":distribution_type"]
-":hyperparameter_types" = ["Type{D} where D"]
-
-[MLJModels.FeatureSelector]
-":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:Union{Missing, Found})`"
-":output_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:Union{Missing, Found})`"
-":is_pure_julia" = "`true`"
-":package_name" = "MLJModels"
-":package_license" = "unknown"
-":load_path" = "MLJModels.FeatureSelector"
-":package_uuid" = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
-":package_url" = "https://github.com/alan-turing-institute/MLJModels.jl"
-":is_wrapper" = "`false`"
-":docstring" = "FeatureSelector from MLJModels.jl.\n[Documentation](https://github.com/alan-turing-institute/MLJModels.jl)."
-":name" = "FeatureSelector"
-":is_supervised" = "`false`"
-":implemented_methods" = [":fit", ":fitted_params", ":transform"]
-":hyperparameters" = [":features"]
-":hyperparameter_types" = ["Array{Symbol,1}"]
-
-[MLJModels.DeterministicConstantRegressor]
-":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:Union{Missing, Found})`"
-":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
-":is_pure_julia" = "`true`"
-":package_name" = "MLJModels"
-":package_license" = "unknown"
-":load_path" = "MLJModels.ConstantRegressor"
-":package_uuid" = "https://github.com/alan-turing-institute/MLJModels.jl"
-":package_url" = "https://github.com/alan-turing-institute/MLJModels.jl"
-":is_wrapper" = "`false`"
-":supports_weights" = "`false`"
-":docstring" = "DeterministicConstantRegressor from MLJModels.jl.\n[Documentation](https://github.com/alan-turing-institute/MLJModels.jl)."
-":name" = "DeterministicConstantRegressor"
-":is_supervised" = "`true`"
-":prediction_type" = ":deterministic"
-":implemented_methods" = [":fit", ":predict"]
-":hyperparameters" = []
-":hyperparameter_types" = []
-
-[MLJModels.UnivariateStandardizer]
-":input_scitype" = "`AbstractArray{_s13,1} where _s13<:Union{Continuous, Count}`"
-":output_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
-":is_pure_julia" = "`true`"
-":package_name" = "MLJModels"
-":package_license" = "unknown"
-":load_path" = "MLJModels.UnivariateStandardizer"
-":package_uuid" = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
-":package_url" = "https://github.com/alan-turing-institute/MLJModels.jl"
-":is_wrapper" = "`false`"
-":docstring" = "UnivariateStandardizer from MLJModels.jl.\n[Documentation](https://github.com/alan-turing-institute/MLJModels.jl)."
-":name" = "UnivariateStandardizer"
-":is_supervised" = "`false`"
-":implemented_methods" = [":fit", ":inverse_transform", ":inverse_transform", ":transform", ":transform"]
-":hyperparameters" = []
-":hyperparameter_types" = []
-
-[DecisionTree.DecisionTreeRegressor]
-":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s1676,1} where _s1676<:ScientificTypes.Continuous`"
-":is_pure_julia" = "`true`"
-":package_name" = "DecisionTree"
-":package_license" = "unknown"
-":load_path" = "MLJModels.DecisionTree_.DecisionTreeRegressor"
-":package_uuid" = "7806a523-6efd-50cb-b5f6-3fa6f1930dbb"
-":package_url" = "https://github.com/bensadeghi/DecisionTree.jl"
-":is_wrapper" = "`false`"
-":supports_weights" = "`false`"
-":docstring" = "DecisionTreeRegressor from DecisionTree.jl.\n[Documentation](https://github.com/bensadeghi/DecisionTree.jl)."
-":name" = "DecisionTreeRegressor"
-":is_supervised" = "`true`"
-":prediction_type" = ":deterministic"
-":implemented_methods" = [":fit", ":predict", ":clean!", ":fitted_params"]
-":hyperparameters" = [":pruning_purity_threshold", ":max_depth", ":min_samples_leaf", ":min_samples_split", ":min_purity_increase", ":n_subfeatures", ":post_prune"]
-":hyperparameter_types" = ["Float64", "Int64", "Int64", "Int64", "Float64", "Int64", "Bool"]
-
-[DecisionTree.DecisionTreeClassifier]
-":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s1676,1} where _s1676<:ScientificTypes.Finite`"
-":is_pure_julia" = "`true`"
-":package_name" = "DecisionTree"
-":package_license" = "unknown"
-":load_path" = "MLJModels.DecisionTree_.DecisionTreeClassifier"
-":package_uuid" = "7806a523-6efd-50cb-b5f6-3fa6f1930dbb"
-":package_url" = "https://github.com/bensadeghi/DecisionTree.jl"
-":is_wrapper" = "`false`"
-":supports_weights" = "`false`"
-":docstring" = "DecisionTreeClassifier from DecisionTree.jl.\n[Documentation](https://github.com/bensadeghi/DecisionTree.jl)."
-":name" = "DecisionTreeClassifier"
-":is_supervised" = "`true`"
-":prediction_type" = ":probabilistic"
-":implemented_methods" = [":fit", ":predict", ":clean!", ":fitted_params"]
-":hyperparameters" = [":pruning_purity", ":max_depth", ":min_samples_leaf", ":min_samples_split", ":min_purity_increase", ":n_subfeatures", ":display_depth", ":post_prune", ":merge_purity_threshold", ":pdf_smoothing"]
-":hyperparameter_types" = ["Float64", "Int64", "Int64", "Int64", "Float64", "Int64", "Int64", "Bool", "Float64", "Float64"]
+":implemented_methods" = [":fit", ":predict", ":show", ":clean!", ":fitted_params"]
+":hyperparameters" = [":k", ":algorithm", ":metric", ":leafsize", ":reorder", ":weights"]
+":hyperparameter_types" = ["Int64", "Symbol", "Distances.Metric", "Int64", "Bool", "Symbol"]
 
 [ScikitLearn.SVMNuClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s678,1} where _s678<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s89,1} where _s89<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "unknown"
@@ -458,7 +191,7 @@
 
 [ScikitLearn.SVMLClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s678,1} where _s678<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s89,1} where _s89<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "unknown"
@@ -895,7 +628,7 @@
 
 [ScikitLearn.SVMClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s678,1} where _s678<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s89,1} where _s89<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "unknown"
@@ -969,212 +702,9 @@
 ":hyperparameters" = [":epsilon", ":max_iter", ":alpha", ":warm_start", ":fit_intercept", ":tol"]
 ":hyperparameter_types" = ["Float64", "Int64", "Float64", "Bool", "Bool", "Float64"]
 
-[LIBSVM.EpsilonSVR]
-":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
-":is_pure_julia" = "`false`"
-":package_name" = "LIBSVM"
-":package_license" = "unknown"
-":load_path" = "MLJModels.LIBSVM_.EpsilonSVR"
-":package_uuid" = "b1bec4e5-fd48-53fe-b0cb-9723c09d164b"
-":package_url" = "https://github.com/mpastell/LIBSVM.jl"
-":is_wrapper" = "`false`"
-":supports_weights" = "`false`"
-":docstring" = "EpsilonSVR from LIBSVM.jl.\n[Documentation](https://github.com/mpastell/LIBSVM.jl)."
-":name" = "EpsilonSVR"
-":is_supervised" = "`true`"
-":prediction_type" = ":deterministic"
-":implemented_methods" = [":fit", ":predict"]
-":hyperparameters" = [":kernel", ":gamma", ":epsilon", ":cost", ":degree", ":coef0", ":tolerance", ":shrinking"]
-":hyperparameter_types" = ["LIBSVM.Kernel.KERNEL", "Float64", "Float64", "Float64", "Int32", "Float64", "Float64", "Bool"]
-
-[LIBSVM.LinearSVC]
-":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s1676,1} where _s1676<:ScientificTypes.Finite`"
-":is_pure_julia" = "`false`"
-":package_name" = "LIBSVM"
-":package_license" = "unknown"
-":load_path" = "MLJModels.LIBSVM_.LinearSVC"
-":package_uuid" = "b1bec4e5-fd48-53fe-b0cb-9723c09d164b"
-":package_url" = "https://github.com/mpastell/LIBSVM.jl"
-":is_wrapper" = "`false`"
-":supports_weights" = "`false`"
-":docstring" = "LinearSVC from LIBSVM.jl.\n[Documentation](https://github.com/mpastell/LIBSVM.jl)."
-":name" = "LinearSVC"
-":is_supervised" = "`true`"
-":prediction_type" = ":deterministic"
-":implemented_methods" = [":fit", ":predict"]
-":hyperparameters" = [":solver", ":weights", ":tolerance", ":cost", ":p", ":bias"]
-":hyperparameter_types" = ["LIBSVM.Linearsolver.LINEARSOLVER", "Union{Nothing, Dict}", "Float64", "Float64", "Float64", "Float64"]
-
-[LIBSVM.NuSVR]
-":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
-":is_pure_julia" = "`false`"
-":package_name" = "LIBSVM"
-":package_license" = "unknown"
-":load_path" = "MLJModels.LIBSVM_.NuSVR"
-":package_uuid" = "b1bec4e5-fd48-53fe-b0cb-9723c09d164b"
-":package_url" = "https://github.com/mpastell/LIBSVM.jl"
-":is_wrapper" = "`false`"
-":supports_weights" = "`false`"
-":docstring" = "NuSVR from LIBSVM.jl.\n[Documentation](https://github.com/mpastell/LIBSVM.jl)."
-":name" = "NuSVR"
-":is_supervised" = "`true`"
-":prediction_type" = ":deterministic"
-":implemented_methods" = [":fit", ":predict"]
-":hyperparameters" = [":kernel", ":gamma", ":nu", ":cost", ":degree", ":coef0", ":tolerance", ":shrinking"]
-":hyperparameter_types" = ["LIBSVM.Kernel.KERNEL", "Float64", "Float64", "Float64", "Int32", "Float64", "Float64", "Bool"]
-
-[LIBSVM.NuSVC]
-":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s1676,1} where _s1676<:ScientificTypes.Finite`"
-":is_pure_julia" = "`false`"
-":package_name" = "LIBSVM"
-":package_license" = "unknown"
-":load_path" = "MLJModels.LIBSVM_.NuSVC"
-":package_uuid" = "b1bec4e5-fd48-53fe-b0cb-9723c09d164b"
-":package_url" = "https://github.com/mpastell/LIBSVM.jl"
-":is_wrapper" = "`false`"
-":supports_weights" = "`false`"
-":docstring" = "NuSVC from LIBSVM.jl.\n[Documentation](https://github.com/mpastell/LIBSVM.jl)."
-":name" = "NuSVC"
-":is_supervised" = "`true`"
-":prediction_type" = ":deterministic"
-":implemented_methods" = [":fit", ":predict"]
-":hyperparameters" = [":kernel", ":gamma", ":weights", ":nu", ":cost", ":degree", ":coef0", ":tolerance", ":shrinking"]
-":hyperparameter_types" = ["LIBSVM.Kernel.KERNEL", "Float64", "Union{Nothing, Dict}", "Float64", "Float64", "Int32", "Float64", "Float64", "Bool"]
-
-[LIBSVM.SVC]
-":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s1676,1} where _s1676<:ScientificTypes.Finite`"
-":is_pure_julia" = "`false`"
-":package_name" = "LIBSVM"
-":package_license" = "unknown"
-":load_path" = "MLJModels.LIBSVM_.SVC"
-":package_uuid" = "b1bec4e5-fd48-53fe-b0cb-9723c09d164b"
-":package_url" = "https://github.com/mpastell/LIBSVM.jl"
-":is_wrapper" = "`false`"
-":supports_weights" = "`false`"
-":docstring" = "SVC from LIBSVM.jl.\n[Documentation](https://github.com/mpastell/LIBSVM.jl)."
-":name" = "SVC"
-":is_supervised" = "`true`"
-":prediction_type" = ":deterministic"
-":implemented_methods" = [":fit", ":predict"]
-":hyperparameters" = [":kernel", ":gamma", ":weights", ":cost", ":degree", ":coef0", ":tolerance", ":shrinking", ":probability"]
-":hyperparameter_types" = ["LIBSVM.Kernel.KERNEL", "Float64", "Union{Nothing, Dict}", "Float64", "Int32", "Float64", "Float64", "Bool", "Bool"]
-
-[LIBSVM.OneClassSVM]
-":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":output_scitype" = "`AbstractArray{_s1676,1} where _s1676<:ScientificTypes.Finite{2}`"
-":is_pure_julia" = "`false`"
-":package_name" = "LIBSVM"
-":package_license" = "unknown"
-":load_path" = "MLJModels.LIBSVM_.OneClassSVM"
-":package_uuid" = "b1bec4e5-fd48-53fe-b0cb-9723c09d164b"
-":package_url" = "https://github.com/mpastell/LIBSVM.jl"
-":is_wrapper" = "`false`"
-":docstring" = "OneClassSVM from LIBSVM.jl.\n[Documentation](https://github.com/mpastell/LIBSVM.jl)."
-":name" = "OneClassSVM"
-":is_supervised" = "`false`"
-":implemented_methods" = [":fit", ":transform"]
-":hyperparameters" = [":kernel", ":gamma", ":nu", ":cost", ":degree", ":coef0", ":tolerance", ":shrinking"]
-":hyperparameter_types" = ["LIBSVM.Kernel.KERNEL", "Float64", "Float64", "Float64", "Int32", "Float64", "Float64", "Bool"]
-
-[Clustering.KMeans]
-":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":output_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":is_pure_julia" = "`true`"
-":package_name" = "Clustering"
-":package_license" = "unknown"
-":load_path" = "MLJModels.Clustering_.KMeans"
-":package_uuid" = "aaaa29a8-35af-508c-8bc3-b662a17a0fe5"
-":package_url" = "https://github.com/JuliaStats/Clustering.jl"
-":is_wrapper" = "`false`"
-":docstring" = "KMeans from Clustering.jl.\n[Documentation](https://github.com/JuliaStats/Clustering.jl)."
-":name" = "KMeans"
-":is_supervised" = "`false`"
-":implemented_methods" = [":fit", ":fitted_params", ":transform"]
-":hyperparameters" = [":k", ":metric"]
-":hyperparameter_types" = ["Int64", "Distances.SemiMetric"]
-
-[Clustering.KMedoids]
-":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":output_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":is_pure_julia" = "`true`"
-":package_name" = "Clustering"
-":package_license" = "unknown"
-":load_path" = "MLJModels.Clustering_.KMedoids"
-":package_uuid" = "aaaa29a8-35af-508c-8bc3-b662a17a0fe5"
-":package_url" = "https://github.com/JuliaStats/Clustering.jl"
-":is_wrapper" = "`false`"
-":docstring" = "KMedoids from Clustering.jl.\n[Documentation](https://github.com/JuliaStats/Clustering.jl)."
-":name" = "KMedoids"
-":is_supervised" = "`false`"
-":implemented_methods" = [":fit", ":fitted_params", ":transform"]
-":hyperparameters" = [":k", ":metric"]
-":hyperparameter_types" = ["Int64", "Distances.SemiMetric"]
-
-[GLM.LinearBinaryClassifier]
-":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{MLJBase.UnivariateFinite,1}`"
-":is_pure_julia" = "`true`"
-":package_name" = "GLM"
-":package_license" = "MIT"
-":load_path" = "MLJModels.GLM_.LinearBinaryClassifier"
-":package_uuid" = "38e38edf-8417-5370-95a0-9cbb8c7f171a"
-":package_url" = "https://github.com/JuliaStats/GLM.jl"
-":is_wrapper" = "`false`"
-":supports_weights" = "`false`"
-":docstring" = "LinearBinaryClassifier from GLM.jl.\n[Documentation](https://github.com/JuliaStats/GLM.jl)."
-":name" = "LinearBinaryClassifier"
-":is_supervised" = "`true`"
-":prediction_type" = ":probabilistic"
-":implemented_methods" = [":fit", ":show", ":predict", ":predict_mean"]
-":hyperparameters" = [":fit_intercept", ":link"]
-":hyperparameter_types" = ["Bool", "GLM.Link01"]
-
-[GLM.LinearCountRegressor]
-":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{ScientificTypes.Count,1}`"
-":is_pure_julia" = "`true`"
-":package_name" = "GLM"
-":package_license" = "MIT"
-":load_path" = "MLJModels.GLM_.LinearCountRegressor"
-":package_uuid" = "38e38edf-8417-5370-95a0-9cbb8c7f171a"
-":package_url" = "https://github.com/JuliaStats/GLM.jl"
-":is_wrapper" = "`false`"
-":supports_weights" = "`false`"
-":docstring" = "LinearCountRegressor from GLM.jl.\n[Documentation](https://github.com/JuliaStats/GLM.jl)."
-":name" = "LinearCountRegressor"
-":is_supervised" = "`true`"
-":prediction_type" = ":probabilistic"
-":implemented_methods" = [":fit", ":show", ":predict"]
-":hyperparameters" = [":fit_intercept", ":distribution", ":link"]
-":hyperparameter_types" = ["Bool", "Distributions.Distribution", "GLM.Link"]
-
-[GLM.LinearRegressor]
-":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
-":is_pure_julia" = "`true`"
-":package_name" = "GLM"
-":package_license" = "MIT"
-":load_path" = "MLJModels.GLM_.LinearRegressor"
-":package_uuid" = "38e38edf-8417-5370-95a0-9cbb8c7f171a"
-":package_url" = "https://github.com/JuliaStats/GLM.jl"
-":is_wrapper" = "`false`"
-":supports_weights" = "`false`"
-":docstring" = "LinearRegressor from GLM.jl.\n[Documentation](https://github.com/JuliaStats/GLM.jl)."
-":name" = "LinearRegressor"
-":is_supervised" = "`true`"
-":prediction_type" = ":probabilistic"
-":implemented_methods" = [":fit", ":show", ":predict"]
-":hyperparameters" = [":fit_intercept", ":allowrankdeficient"]
-":hyperparameter_types" = ["Bool", "Bool"]
-
 [NaiveBayes.GaussianNBClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s1676,1} where _s1676<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s491,1} where _s491<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "NaiveBayes"
 ":package_license" = "unknown"
@@ -1193,7 +723,7 @@
 
 [NaiveBayes.MultinomialNBClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Count)`"
-":target_scitype" = "`AbstractArray{_s1676,1} where _s1676<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s491,1} where _s491<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "NaiveBayes"
 ":package_license" = "unknown"
@@ -1209,6 +739,148 @@
 ":implemented_methods" = [":fit", ":predict", ":fitted_params"]
 ":hyperparameters" = [":alpha"]
 ":hyperparameter_types" = ["Int64"]
+
+[MultivariateStats.ICA]
+":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
+":output_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
+":is_pure_julia" = "`true`"
+":package_name" = "MultivariateStats"
+":package_license" = "unknown"
+":load_path" = "MLJModels.MultivariateStats_.ICA"
+":package_uuid" = "6f286f6a-111f-5878-ab1e-185364afe411"
+":package_url" = "https://github.com/JuliaStats/MultivariateStats.jl"
+":is_wrapper" = "`false`"
+":docstring" = "ICA from MultivariateStats.jl.\n[Documentation](https://github.com/JuliaStats/MultivariateStats.jl)."
+":name" = "ICA"
+":is_supervised" = "`false`"
+":implemented_methods" = [":fit", ":clean!", ":fitted_params", ":transform"]
+":hyperparameters" = [":k", ":alg", ":fun", ":do_whiten", ":maxiter", ":tol", ":mean", ":winit"]
+":hyperparameter_types" = ["Int64", "Union{Nothing, Symbol}", "Union{Nothing, ICAGDeriv{T}} where T<:Real", "Union{Nothing, Bool}", "Union{Nothing, Int64}", "Union{Nothing, Real}", "Union{Nothing, Array{Float64,1}, Real}", "Union{Nothing, Array{Float64,2}}"]
+
+[MultivariateStats.RidgeRegressor]
+":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
+":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
+":is_pure_julia" = "`true`"
+":package_name" = "MultivariateStats"
+":package_license" = "unknown"
+":load_path" = "MLJModels.MultivariateStats_.RidgeRegressor"
+":package_uuid" = "6f286f6a-111f-5878-ab1e-185364afe411"
+":package_url" = "https://github.com/JuliaStats/MultivariateStats.jl"
+":is_wrapper" = "`false`"
+":supports_weights" = "`false`"
+":docstring" = "RidgeRegressor from MultivariateStats.jl.\n[Documentation](https://github.com/JuliaStats/MultivariateStats.jl)."
+":name" = "RidgeRegressor"
+":is_supervised" = "`true`"
+":prediction_type" = ":deterministic"
+":implemented_methods" = [":fit", ":predict", ":clean!", ":fitted_params"]
+":hyperparameters" = [":lambda"]
+":hyperparameter_types" = ["Float64"]
+
+[MultivariateStats.KernelPCA]
+":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
+":output_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
+":is_pure_julia" = "`true`"
+":package_name" = "MultivariateStats"
+":package_license" = "unknown"
+":load_path" = "MLJModels.MultivariateStats_.KernelPCA"
+":package_uuid" = "6f286f6a-111f-5878-ab1e-185364afe411"
+":package_url" = "https://github.com/JuliaStats/MultivariateStats.jl"
+":is_wrapper" = "`false`"
+":docstring" = "KernelPCA from MultivariateStats.jl.\n[Documentation](https://github.com/JuliaStats/MultivariateStats.jl)."
+":name" = "KernelPCA"
+":is_supervised" = "`false`"
+":implemented_methods" = [":fit", ":clean!", ":fitted_params", ":transform"]
+":hyperparameters" = [":maxoutdim", ":kernel", ":solver", ":inverse", ":β", ":tol", ":maxiter"]
+":hyperparameter_types" = ["Union{Nothing, Int64}", "Union{Nothing, Function}", "Union{Nothing, Symbol}", "Union{Nothing, Bool}", "Union{Nothing, Real}", "Union{Nothing, Real}", "Union{Nothing, Int64}"]
+
+[MultivariateStats.PCA]
+":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
+":output_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
+":is_pure_julia" = "`true`"
+":package_name" = "MultivariateStats"
+":package_license" = "unknown"
+":load_path" = "MLJModels.MultivariateStats_.PCA"
+":package_uuid" = "6f286f6a-111f-5878-ab1e-185364afe411"
+":package_url" = "https://github.com/JuliaStats/MultivariateStats.jl"
+":is_wrapper" = "`false`"
+":docstring" = "PCA from MultivariateStats.jl.\n[Documentation](https://github.com/JuliaStats/MultivariateStats.jl)."
+":name" = "PCA"
+":is_supervised" = "`false`"
+":implemented_methods" = [":fit", ":clean!", ":fitted_params", ":transform"]
+":hyperparameters" = [":maxoutdim", ":method", ":pratio", ":mean"]
+":hyperparameter_types" = ["Union{Nothing, Int64}", "Symbol", "Float64", "Union{Nothing, Array{Float64,1}, Real}"]
+
+[DecisionTree.DecisionTreeRegressor]
+":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
+":target_scitype" = "`AbstractArray{_s491,1} where _s491<:ScientificTypes.Continuous`"
+":is_pure_julia" = "`true`"
+":package_name" = "DecisionTree"
+":package_license" = "unknown"
+":load_path" = "MLJModels.DecisionTree_.DecisionTreeRegressor"
+":package_uuid" = "7806a523-6efd-50cb-b5f6-3fa6f1930dbb"
+":package_url" = "https://github.com/bensadeghi/DecisionTree.jl"
+":is_wrapper" = "`false`"
+":supports_weights" = "`false`"
+":docstring" = "DecisionTreeRegressor from DecisionTree.jl.\n[Documentation](https://github.com/bensadeghi/DecisionTree.jl)."
+":name" = "DecisionTreeRegressor"
+":is_supervised" = "`true`"
+":prediction_type" = ":deterministic"
+":implemented_methods" = [":fit", ":predict", ":clean!", ":fitted_params"]
+":hyperparameters" = [":pruning_purity_threshold", ":max_depth", ":min_samples_leaf", ":min_samples_split", ":min_purity_increase", ":n_subfeatures", ":post_prune"]
+":hyperparameter_types" = ["Float64", "Int64", "Int64", "Int64", "Float64", "Int64", "Bool"]
+
+[DecisionTree.DecisionTreeClassifier]
+":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
+":target_scitype" = "`AbstractArray{_s491,1} where _s491<:ScientificTypes.Finite`"
+":is_pure_julia" = "`true`"
+":package_name" = "DecisionTree"
+":package_license" = "unknown"
+":load_path" = "MLJModels.DecisionTree_.DecisionTreeClassifier"
+":package_uuid" = "7806a523-6efd-50cb-b5f6-3fa6f1930dbb"
+":package_url" = "https://github.com/bensadeghi/DecisionTree.jl"
+":is_wrapper" = "`false`"
+":supports_weights" = "`false`"
+":docstring" = "DecisionTreeClassifier from DecisionTree.jl.\n[Documentation](https://github.com/bensadeghi/DecisionTree.jl)."
+":name" = "DecisionTreeClassifier"
+":is_supervised" = "`true`"
+":prediction_type" = ":probabilistic"
+":implemented_methods" = [":fit", ":predict", ":clean!", ":fitted_params"]
+":hyperparameters" = [":pruning_purity", ":max_depth", ":min_samples_leaf", ":min_samples_split", ":min_purity_increase", ":n_subfeatures", ":display_depth", ":post_prune", ":merge_purity_threshold", ":pdf_smoothing"]
+":hyperparameter_types" = ["Float64", "Int64", "Int64", "Int64", "Float64", "Int64", "Int64", "Bool", "Float64", "Float64"]
+
+[Clustering.KMeans]
+":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
+":output_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
+":is_pure_julia" = "`true`"
+":package_name" = "Clustering"
+":package_license" = "MIT"
+":load_path" = "MLJModels.Clustering_.MLJModels.Clustering_.KMeans"
+":package_uuid" = "aaaa29a8-35af-508c-8bc3-b662a17a0fe5"
+":package_url" = "https://github.com/JuliaStats/Clustering.jl"
+":is_wrapper" = "`false`"
+":docstring" = "K-Means algorithm: find K centroids corresponding to K clusters in the data.\n\n→ based on [Clustering](https://github.com/JuliaStats/Clustering.jl)\n→ do `@load KMeans` to use the model\n→ do `?KMeans` for documentation."
+":name" = "KMeans"
+":is_supervised" = "`false`"
+":implemented_methods" = [":fit", ":show", ":fitted_params", ":transform"]
+":hyperparameters" = [":k", ":metric"]
+":hyperparameter_types" = ["Int64", "Distances.SemiMetric"]
+
+[Clustering.KMedoids]
+":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
+":output_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
+":is_pure_julia" = "`true`"
+":package_name" = "Clustering"
+":package_license" = "MIT"
+":load_path" = "MLJModels.Clustering_.MLJModels.Clustering_.KMedoids"
+":package_uuid" = "aaaa29a8-35af-508c-8bc3-b662a17a0fe5"
+":package_url" = "https://github.com/JuliaStats/Clustering.jl"
+":is_wrapper" = "`false`"
+":docstring" = "K-Medoids algorithm: find K centroids corresponding to K clusters in the data.\nUnlike K-Means, the centroids are found among data points themselves.\"\n\n→ based on [Clustering](https://github.com/JuliaStats/Clustering.jl)\n→ do `@load KMedoids` to use the model\n→ do `?KMedoids` for documentation."
+":name" = "KMedoids"
+":is_supervised" = "`false`"
+":implemented_methods" = [":fit", ":show", ":fitted_params", ":transform"]
+":hyperparameters" = [":k", ":metric"]
+":hyperparameter_types" = ["Int64", "Distances.SemiMetric"]
 
 [XGBoost.XGBoostCount]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
@@ -1250,7 +922,7 @@
 
 [XGBoost.XGBoostClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s1676,1} where _s1676<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s491,1} where _s491<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "XGBoost"
 ":package_license" = "unknown"
@@ -1266,3 +938,369 @@
 ":implemented_methods" = [":fit", ":predict", ":clean!"]
 ":hyperparameters" = [":num_round", ":booster", ":disable_default_eval_metric", ":eta", ":gamma", ":max_depth", ":min_child_weight", ":max_delta_step", ":subsample", ":colsample_bytree", ":colsample_bylevel", ":lambda", ":alpha", ":tree_method", ":sketch_eps", ":scale_pos_weight", ":updater", ":refresh_leaf", ":process_type", ":grow_policy", ":max_leaves", ":max_bin", ":predictor", ":sample_type", ":normalize_type", ":rate_drop", ":one_drop", ":skip_drop", ":feature_selector", ":top_k", ":tweedie_variance_power", ":objective", ":base_score", ":eval_metric", ":seed"]
 ":hyperparameter_types" = ["Int64", "String", "Int64", "Float64", "Float64", "Int64", "Float64", "Float64", "Float64", "Float64", "Float64", "Float64", "Float64", "String", "Float64", "Float64", "String", "Union{Bool, Int64}", "String", "String", "Int64", "Int64", "String", "String", "String", "Float64", "Any", "Float64", "String", "Int64", "Float64", "Any", "Float64", "Any", "Int64"]
+
+[MLJModels.ConstantClassifier]
+":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:Union{Missing, Found})`"
+":target_scitype" = "`AbstractArray{_s18,1} where _s18<:ScientificTypes.Finite`"
+":is_pure_julia" = "`true`"
+":package_name" = "MLJModels"
+":package_license" = "unknown"
+":load_path" = "MLJModels.ConstantClassifier"
+":package_uuid" = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
+":package_url" = "https://github.com/alan-turing-institute/MLJModels.jl"
+":is_wrapper" = "`false`"
+":supports_weights" = "`false`"
+":docstring" = "ConstantClassifier from MLJModels.jl.\n[Documentation](https://github.com/alan-turing-institute/MLJModels.jl)."
+":name" = "ConstantClassifier"
+":is_supervised" = "`true`"
+":prediction_type" = ":probabilistic"
+":implemented_methods" = [":fit", ":predict", ":fitted_params"]
+":hyperparameters" = []
+":hyperparameter_types" = []
+
+[MLJModels.Standardizer]
+":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:Union{Missing, Found})`"
+":output_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:Union{Missing, Found})`"
+":is_pure_julia" = "`true`"
+":package_name" = "MLJModels"
+":package_license" = "unknown"
+":load_path" = "MLJModels.Standardizer"
+":package_uuid" = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
+":package_url" = "https://github.com/alan-turing-institute/MLJModels.jl"
+":is_wrapper" = "`false`"
+":docstring" = "Standardizer from MLJModels.jl.\n[Documentation](https://github.com/alan-turing-institute/MLJModels.jl)."
+":name" = "Standardizer"
+":is_supervised" = "`false`"
+":implemented_methods" = [":fit", ":fitted_params", ":transform"]
+":hyperparameters" = [":features"]
+":hyperparameter_types" = ["Array{Symbol,1}"]
+
+[MLJModels.DeterministicConstantClassifier]
+":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:Union{Missing, Found})`"
+":target_scitype" = "`AbstractArray{_s18,1} where _s18<:ScientificTypes.Finite`"
+":is_pure_julia" = "`true`"
+":package_name" = "MLJModels"
+":package_license" = "unknown"
+":load_path" = "MLJModels.DeterministicConstantClassifier"
+":package_uuid" = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
+":package_url" = "https://github.com/alan-turing-institute/MLJModels.jl"
+":is_wrapper" = "`false`"
+":supports_weights" = "`false`"
+":docstring" = "DeterministicConstantClassifier from MLJModels.jl.\n[Documentation](https://github.com/alan-turing-institute/MLJModels.jl)."
+":name" = "DeterministicConstantClassifier"
+":is_supervised" = "`true`"
+":prediction_type" = ":deterministic"
+":implemented_methods" = [":fit", ":predict"]
+":hyperparameters" = []
+":hyperparameter_types" = []
+
+[MLJModels.OneHotEncoder]
+":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:Union{Missing, Found})`"
+":output_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:Union{Missing, Found})`"
+":is_pure_julia" = "`true`"
+":package_name" = "MLJModels"
+":package_license" = "unknown"
+":load_path" = "MLJModels.OneHotEncoder"
+":package_uuid" = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
+":package_url" = "https://github.com/alan-turing-institute/MLJModels.jl"
+":is_wrapper" = "`false`"
+":docstring" = "OneHotEncoder from MLJModels.jl.\n[Documentation](https://github.com/alan-turing-institute/MLJModels.jl)."
+":name" = "OneHotEncoder"
+":is_supervised" = "`false`"
+":implemented_methods" = [":fit", ":transform"]
+":hyperparameters" = [":features", ":drop_last", ":ordered_factor"]
+":hyperparameter_types" = ["Array{Symbol,1}", "Bool", "Bool"]
+
+[MLJModels.StaticTransformer]
+":input_scitype" = "`ScientificTypes.Unknown`"
+":output_scitype" = "`ScientificTypes.Unknown`"
+":is_pure_julia" = "`true`"
+":package_name" = "MLJModels"
+":package_license" = "unknown"
+":load_path" = "MLJModels.StaticTransformer"
+":package_uuid" = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
+":package_url" = "https://github.com/alan-turing-institute/MLJModels.jl"
+":is_wrapper" = "`false`"
+":docstring" = "StaticTransformer from MLJModels.jl.\n[Documentation](https://github.com/alan-turing-institute/MLJModels.jl)."
+":name" = "StaticTransformer"
+":is_supervised" = "`false`"
+":implemented_methods" = [":fit", ":fitted_params", ":transform"]
+":hyperparameters" = [":f"]
+":hyperparameter_types" = ["Any"]
+
+[MLJModels.KNNRegressor]
+":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
+":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
+":is_pure_julia" = "`true`"
+":package_name" = "MLJModels"
+":package_license" = "unknown"
+":load_path" = "MLJModels.KNNRegressor"
+":package_uuid" = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
+":package_url" = "https://github.com/alan-turing-institute/MLJModels.jl"
+":is_wrapper" = "`false`"
+":supports_weights" = "`false`"
+":docstring" = "KNNRegressor from MLJModels.jl.\n[Documentation](https://github.com/alan-turing-institute/MLJModels.jl)."
+":name" = "KNNRegressor"
+":is_supervised" = "`true`"
+":prediction_type" = ":deterministic"
+":implemented_methods" = [":fit", ":predict", ":clean!"]
+":hyperparameters" = [":K", ":metric", ":kernel"]
+":hyperparameter_types" = ["Int64", "Any", "Any"]
+
+[MLJModels.UnivariateBoxCoxTransformer]
+":input_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
+":output_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
+":is_pure_julia" = "`true`"
+":package_name" = "MLJModels"
+":package_license" = "unknown"
+":load_path" = "MLJModels.UnivariateBoxCoxTransformer"
+":package_uuid" = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
+":package_url" = "https://github.com/alan-turing-institute/MLJModels.jl"
+":is_wrapper" = "`false`"
+":docstring" = "UnivariateBoxCoxTransformer from MLJModels.jl.\n[Documentation](https://github.com/alan-turing-institute/MLJModels.jl)."
+":name" = "UnivariateBoxCoxTransformer"
+":is_supervised" = "`false`"
+":implemented_methods" = [":fit", ":inverse_transform", ":inverse_transform", ":transform"]
+":hyperparameters" = [":n", ":shift"]
+":hyperparameter_types" = ["Int64", "Bool"]
+
+[MLJModels.ConstantRegressor]
+":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:Union{Missing, Found})`"
+":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
+":is_pure_julia" = "`true`"
+":package_name" = "MLJModels"
+":package_license" = "unknown"
+":load_path" = "MLJModels.ConstantRegressor"
+":package_uuid" = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
+":package_url" = "https://github.com/alan-turing-institute/MLJModels.jl"
+":is_wrapper" = "`false`"
+":supports_weights" = "`false`"
+":docstring" = "ConstantRegressor from MLJModels.jl.\n[Documentation](https://github.com/alan-turing-institute/MLJModels.jl)."
+":name" = "ConstantRegressor"
+":is_supervised" = "`true`"
+":prediction_type" = ":probabilistic"
+":implemented_methods" = [":fit", ":predict", ":fitted_params"]
+":hyperparameters" = [":distribution_type"]
+":hyperparameter_types" = ["Type{D} where D"]
+
+[MLJModels.FeatureSelector]
+":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:Union{Missing, Found})`"
+":output_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:Union{Missing, Found})`"
+":is_pure_julia" = "`true`"
+":package_name" = "MLJModels"
+":package_license" = "unknown"
+":load_path" = "MLJModels.FeatureSelector"
+":package_uuid" = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
+":package_url" = "https://github.com/alan-turing-institute/MLJModels.jl"
+":is_wrapper" = "`false`"
+":docstring" = "FeatureSelector from MLJModels.jl.\n[Documentation](https://github.com/alan-turing-institute/MLJModels.jl)."
+":name" = "FeatureSelector"
+":is_supervised" = "`false`"
+":implemented_methods" = [":fit", ":fitted_params", ":transform"]
+":hyperparameters" = [":features"]
+":hyperparameter_types" = ["Array{Symbol,1}"]
+
+[MLJModels.DeterministicConstantRegressor]
+":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:Union{Missing, Found})`"
+":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
+":is_pure_julia" = "`true`"
+":package_name" = "MLJModels"
+":package_license" = "unknown"
+":load_path" = "MLJModels.DeterministicConstantRegressor"
+":package_uuid" = "https://github.com/alan-turing-institute/MLJModels.jl"
+":package_url" = "https://github.com/alan-turing-institute/MLJModels.jl"
+":is_wrapper" = "`false`"
+":supports_weights" = "`false`"
+":docstring" = "DeterministicConstantRegressor from MLJModels.jl.\n[Documentation](https://github.com/alan-turing-institute/MLJModels.jl)."
+":name" = "DeterministicConstantRegressor"
+":is_supervised" = "`true`"
+":prediction_type" = ":deterministic"
+":implemented_methods" = [":fit", ":predict"]
+":hyperparameters" = []
+":hyperparameter_types" = []
+
+[MLJModels.UnivariateStandardizer]
+":input_scitype" = "`AbstractArray{_s17,1} where _s17<:Union{Continuous, Count}`"
+":output_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
+":is_pure_julia" = "`true`"
+":package_name" = "MLJModels"
+":package_license" = "unknown"
+":load_path" = "MLJModels.UnivariateStandardizer"
+":package_uuid" = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
+":package_url" = "https://github.com/alan-turing-institute/MLJModels.jl"
+":is_wrapper" = "`false`"
+":docstring" = "UnivariateStandardizer from MLJModels.jl.\n[Documentation](https://github.com/alan-turing-institute/MLJModels.jl)."
+":name" = "UnivariateStandardizer"
+":is_supervised" = "`false`"
+":implemented_methods" = [":fit", ":inverse_transform", ":inverse_transform", ":transform", ":transform"]
+":hyperparameters" = []
+":hyperparameter_types" = []
+
+[LIBSVM.EpsilonSVR]
+":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
+":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
+":is_pure_julia" = "`false`"
+":package_name" = "LIBSVM"
+":package_license" = "unknown"
+":load_path" = "MLJModels.LIBSVM_.EpsilonSVR"
+":package_uuid" = "b1bec4e5-fd48-53fe-b0cb-9723c09d164b"
+":package_url" = "https://github.com/mpastell/LIBSVM.jl"
+":is_wrapper" = "`false`"
+":supports_weights" = "`false`"
+":docstring" = "EpsilonSVR from LIBSVM.jl.\n[Documentation](https://github.com/mpastell/LIBSVM.jl)."
+":name" = "EpsilonSVR"
+":is_supervised" = "`true`"
+":prediction_type" = ":deterministic"
+":implemented_methods" = [":fit", ":predict"]
+":hyperparameters" = [":kernel", ":gamma", ":epsilon", ":cost", ":degree", ":coef0", ":tolerance", ":shrinking"]
+":hyperparameter_types" = ["LIBSVM.Kernel.KERNEL", "Float64", "Float64", "Float64", "Int32", "Float64", "Float64", "Bool"]
+
+[LIBSVM.LinearSVC]
+":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
+":target_scitype" = "`AbstractArray{_s491,1} where _s491<:ScientificTypes.Finite`"
+":is_pure_julia" = "`false`"
+":package_name" = "LIBSVM"
+":package_license" = "unknown"
+":load_path" = "MLJModels.LIBSVM_.LinearSVC"
+":package_uuid" = "b1bec4e5-fd48-53fe-b0cb-9723c09d164b"
+":package_url" = "https://github.com/mpastell/LIBSVM.jl"
+":is_wrapper" = "`false`"
+":supports_weights" = "`false`"
+":docstring" = "LinearSVC from LIBSVM.jl.\n[Documentation](https://github.com/mpastell/LIBSVM.jl)."
+":name" = "LinearSVC"
+":is_supervised" = "`true`"
+":prediction_type" = ":deterministic"
+":implemented_methods" = [":fit", ":predict"]
+":hyperparameters" = [":solver", ":weights", ":tolerance", ":cost", ":p", ":bias"]
+":hyperparameter_types" = ["LIBSVM.Linearsolver.LINEARSOLVER", "Union{Nothing, Dict}", "Float64", "Float64", "Float64", "Float64"]
+
+[LIBSVM.NuSVR]
+":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
+":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
+":is_pure_julia" = "`false`"
+":package_name" = "LIBSVM"
+":package_license" = "unknown"
+":load_path" = "MLJModels.LIBSVM_.NuSVR"
+":package_uuid" = "b1bec4e5-fd48-53fe-b0cb-9723c09d164b"
+":package_url" = "https://github.com/mpastell/LIBSVM.jl"
+":is_wrapper" = "`false`"
+":supports_weights" = "`false`"
+":docstring" = "NuSVR from LIBSVM.jl.\n[Documentation](https://github.com/mpastell/LIBSVM.jl)."
+":name" = "NuSVR"
+":is_supervised" = "`true`"
+":prediction_type" = ":deterministic"
+":implemented_methods" = [":fit", ":predict"]
+":hyperparameters" = [":kernel", ":gamma", ":nu", ":cost", ":degree", ":coef0", ":tolerance", ":shrinking"]
+":hyperparameter_types" = ["LIBSVM.Kernel.KERNEL", "Float64", "Float64", "Float64", "Int32", "Float64", "Float64", "Bool"]
+
+[LIBSVM.NuSVC]
+":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
+":target_scitype" = "`AbstractArray{_s491,1} where _s491<:ScientificTypes.Finite`"
+":is_pure_julia" = "`false`"
+":package_name" = "LIBSVM"
+":package_license" = "unknown"
+":load_path" = "MLJModels.LIBSVM_.NuSVC"
+":package_uuid" = "b1bec4e5-fd48-53fe-b0cb-9723c09d164b"
+":package_url" = "https://github.com/mpastell/LIBSVM.jl"
+":is_wrapper" = "`false`"
+":supports_weights" = "`false`"
+":docstring" = "NuSVC from LIBSVM.jl.\n[Documentation](https://github.com/mpastell/LIBSVM.jl)."
+":name" = "NuSVC"
+":is_supervised" = "`true`"
+":prediction_type" = ":deterministic"
+":implemented_methods" = [":fit", ":predict"]
+":hyperparameters" = [":kernel", ":gamma", ":weights", ":nu", ":cost", ":degree", ":coef0", ":tolerance", ":shrinking"]
+":hyperparameter_types" = ["LIBSVM.Kernel.KERNEL", "Float64", "Union{Nothing, Dict}", "Float64", "Float64", "Int32", "Float64", "Float64", "Bool"]
+
+[LIBSVM.SVC]
+":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
+":target_scitype" = "`AbstractArray{_s491,1} where _s491<:ScientificTypes.Finite`"
+":is_pure_julia" = "`false`"
+":package_name" = "LIBSVM"
+":package_license" = "unknown"
+":load_path" = "MLJModels.LIBSVM_.SVC"
+":package_uuid" = "b1bec4e5-fd48-53fe-b0cb-9723c09d164b"
+":package_url" = "https://github.com/mpastell/LIBSVM.jl"
+":is_wrapper" = "`false`"
+":supports_weights" = "`false`"
+":docstring" = "SVC from LIBSVM.jl.\n[Documentation](https://github.com/mpastell/LIBSVM.jl)."
+":name" = "SVC"
+":is_supervised" = "`true`"
+":prediction_type" = ":deterministic"
+":implemented_methods" = [":fit", ":predict"]
+":hyperparameters" = [":kernel", ":gamma", ":weights", ":cost", ":degree", ":coef0", ":tolerance", ":shrinking", ":probability"]
+":hyperparameter_types" = ["LIBSVM.Kernel.KERNEL", "Float64", "Union{Nothing, Dict}", "Float64", "Int32", "Float64", "Float64", "Bool", "Bool"]
+
+[LIBSVM.OneClassSVM]
+":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
+":output_scitype" = "`AbstractArray{_s491,1} where _s491<:ScientificTypes.Finite{2}`"
+":is_pure_julia" = "`false`"
+":package_name" = "LIBSVM"
+":package_license" = "unknown"
+":load_path" = "MLJModels.LIBSVM_.OneClassSVM"
+":package_uuid" = "b1bec4e5-fd48-53fe-b0cb-9723c09d164b"
+":package_url" = "https://github.com/mpastell/LIBSVM.jl"
+":is_wrapper" = "`false`"
+":docstring" = "OneClassSVM from LIBSVM.jl.\n[Documentation](https://github.com/mpastell/LIBSVM.jl)."
+":name" = "OneClassSVM"
+":is_supervised" = "`false`"
+":implemented_methods" = [":fit", ":transform"]
+":hyperparameters" = [":kernel", ":gamma", ":nu", ":cost", ":degree", ":coef0", ":tolerance", ":shrinking"]
+":hyperparameter_types" = ["LIBSVM.Kernel.KERNEL", "Float64", "Float64", "Float64", "Int32", "Float64", "Float64", "Bool"]
+
+[GLM.LinearBinaryClassifier]
+":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
+":target_scitype" = "`AbstractArray{MLJBase.UnivariateFinite,1}`"
+":is_pure_julia" = "`true`"
+":package_name" = "GLM"
+":package_license" = "MIT"
+":load_path" = "MLJModels.GLM_.LinearBinaryClassifier"
+":package_uuid" = "38e38edf-8417-5370-95a0-9cbb8c7f171a"
+":package_url" = "https://github.com/JuliaStats/GLM.jl"
+":is_wrapper" = "`false`"
+":supports_weights" = "`false`"
+":docstring" = "LinearBinaryClassifier from GLM.jl.\n[Documentation](https://github.com/JuliaStats/GLM.jl)."
+":name" = "LinearBinaryClassifier"
+":is_supervised" = "`true`"
+":prediction_type" = ":probabilistic"
+":implemented_methods" = [":fit", ":predict", ":show", ":predict_mean"]
+":hyperparameters" = [":fit_intercept", ":link"]
+":hyperparameter_types" = ["Bool", "GLM.Link01"]
+
+[GLM.LinearCountRegressor]
+":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
+":target_scitype" = "`AbstractArray{ScientificTypes.Count,1}`"
+":is_pure_julia" = "`true`"
+":package_name" = "GLM"
+":package_license" = "MIT"
+":load_path" = "MLJModels.GLM_.LinearCountRegressor"
+":package_uuid" = "38e38edf-8417-5370-95a0-9cbb8c7f171a"
+":package_url" = "https://github.com/JuliaStats/GLM.jl"
+":is_wrapper" = "`false`"
+":supports_weights" = "`false`"
+":docstring" = "LinearCountRegressor from GLM.jl.\n[Documentation](https://github.com/JuliaStats/GLM.jl)."
+":name" = "LinearCountRegressor"
+":is_supervised" = "`true`"
+":prediction_type" = ":probabilistic"
+":implemented_methods" = [":fit", ":predict", ":show"]
+":hyperparameters" = [":fit_intercept", ":distribution", ":link"]
+":hyperparameter_types" = ["Bool", "Distributions.Distribution", "GLM.Link"]
+
+[GLM.LinearRegressor]
+":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
+":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
+":is_pure_julia" = "`true`"
+":package_name" = "GLM"
+":package_license" = "MIT"
+":load_path" = "MLJModels.GLM_.LinearRegressor"
+":package_uuid" = "38e38edf-8417-5370-95a0-9cbb8c7f171a"
+":package_url" = "https://github.com/JuliaStats/GLM.jl"
+":is_wrapper" = "`false`"
+":supports_weights" = "`false`"
+":docstring" = "LinearRegressor from GLM.jl.\n[Documentation](https://github.com/JuliaStats/GLM.jl)."
+":name" = "LinearRegressor"
+":is_supervised" = "`true`"
+":prediction_type" = ":probabilistic"
+":implemented_methods" = [":fit", ":predict", ":show"]
+":hyperparameters" = [":fit_intercept", ":allowrankdeficient"]
+":hyperparameter_types" = ["Bool", "Bool"]
