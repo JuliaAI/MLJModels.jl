@@ -19,8 +19,7 @@ end
 
 @testset "building INFO_GIVEN_HANDLE" begin
     @test isempty(MLJModels.localmodeltypes(MLJBase))
-    @test issubset(Set([KNNRegressor,                                
-                        MLJModels.Constant.DeterministicConstantClassifier,
+    @test issubset(Set([MLJModels.Constant.DeterministicConstantClassifier,
                         MLJModels.Constant.DeterministicConstantRegressor, 
                         ConstantClassifier,                          
                         ConstantRegressor,                           

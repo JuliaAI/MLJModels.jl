@@ -44,7 +44,6 @@ import .Registry.@update
 # load built-in models:
 include("builtins/Transformers.jl")
 include("builtins/Constant.jl")
-include("builtins/KNN.jl")
 
 function __init__()
 

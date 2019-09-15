@@ -31,10 +31,6 @@ end
         @test include("Transformers.jl")
     end
 
-    @testset "KNN" begin
-        @test include("KNN.jl")
-    end
-
 end
 
 @testset "MultivariateStats  " begin
