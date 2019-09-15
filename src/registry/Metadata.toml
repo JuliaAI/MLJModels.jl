@@ -15,7 +15,7 @@
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
 ":implemented_methods" = [":fit", ":predict", ":show", ":clean!", ":fitted_params"]
-":hyperparameters" = [":k", ":algorithm", ":metric", ":leafsize", ":reorder", ":weights"]
+":hyperparameters" = [":K", ":algorithm", ":metric", ":leafsize", ":reorder", ":weights"]
 ":hyperparameter_types" = ["Int64", "Symbol", "Distances.Metric", "Int64", "Bool", "Symbol"]
 
 [NearestNeighbors.KNNRegressor]
@@ -34,7 +34,7 @@
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
 ":implemented_methods" = [":fit", ":predict", ":show", ":clean!", ":fitted_params"]
-":hyperparameters" = [":k", ":algorithm", ":metric", ":leafsize", ":reorder", ":weights"]
+":hyperparameters" = [":K", ":algorithm", ":metric", ":leafsize", ":reorder", ":weights"]
 ":hyperparameter_types" = ["Int64", "Symbol", "Distances.Metric", "Int64", "Bool", "Symbol"]
 
 [ScikitLearn.SVMNuClassifier]
