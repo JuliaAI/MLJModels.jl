@@ -1,6 +1,6 @@
 module Registry
 
-# for this module  
+# for this module   
 import Pkg.TOML
 using InteractiveUtils
 

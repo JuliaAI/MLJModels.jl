@@ -42,7 +42,9 @@ Helper function to write the metadata for a single model of a package (complemen
 function metadata_model(T; input=MLJBase.Unknown, target=MLJBase.Unknown,
                          output=MLJBase.Unknown, weights::Bool=false,
                          descr::String="", path::String="")
-    isempty(path) && (path = "MLJModels.$(MLJBase.package_name(T))_.$T")
+    if isempty(path)
+        path = "MLJModels.$(MLJBase.package_name(T))_.$(MLJBase.name(T))"
+    end
 
     ex = quote
         MLJBase.input_scitype(::Type{<:$T})    = $input
