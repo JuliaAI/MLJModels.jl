@@ -92,7 +92,7 @@ macro load(name_ex, kw_exs...)
     name_ = string(name_ex)
 
     # parse kwargs:
-    message = "Invalid @load syntax.\n "*
+    warning = "Invalid @load syntax.\n "*
     "Sample usage: @load PCA pkg=\"MultivariateStats\" verbosity=1"
     for ex in kw_exs
         ex.head == :(=) || throw(ArgumentError(warning))
