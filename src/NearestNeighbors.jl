@@ -26,7 +26,7 @@ const KNNFields =
     """
     ## Keywords
 
-    * `k=5`                 : number of neighbors
+    * `K=5`                 : number of neighbors
     * `algorithm=:kdtree`   : one of `(:kdtree, :brutetree, :balltree)`
     * `metric=Euclidean()`  : a `Metric` object for the distance between points
     * `leafsize=10`         : at what number of points to stop splitting the tree
@@ -46,7 +46,7 @@ $KNNRegressorDescription
 $KNNFields
 """
 @with_kw mutable struct KNNRegressor <: MLJBase.Deterministic
-    k::Int            = 5           # > 0
+    K::Int            = 5           # > 0
     algorithm::Symbol = :kdtree     # (:kdtree, :brutetree, :balltree)
     metric::Metric    = Euclidean() #
     leafsize::Int     = 10          # > 0
@@ -62,7 +62,7 @@ $KNNClassifierDescription
 $KNNFields
 """
 @with_kw mutable struct KNNClassifier <: MLJBase.Probabilistic
-    k::Int            = 5           # > 0
+    K::Int            = 5           # > 0
     algorithm::Symbol = :kdtree     # (:kdtree, :brutetree, :balltree)
     metric::Metric    = Euclidean() #
     leafsize::Int     = 10          # > 0
@@ -74,9 +74,9 @@ const KNN = Union{KNNRegressor, KNNClassifier}
 
 function MLJBase.clean!(m::KNN)
     warning = ""
-    if m.k < 1
-        warning *= "Number of neighbors 'k' needs to be larger than 0. Setting to 1.\n"
-        m.k = 1
+    if m.K < 1
+        warning *= "Number of neighbors 'K' needs to be larger than 0. Setting to 1.\n"
+        m.K = 1
     end
     if m.leafsize < 0
         warning *= "Leaf size should be ≥ 0. Setting to 10.\n"
@@ -115,7 +115,7 @@ MLJBase.fitted_params(model::KNN, (tree, _)) = (tree=tree,)
 
 function MLJBase.predict(m::KNNClassifier, (tree, y), X)
     Xmatrix     = MLJBase.matrix(X, transpose=true) # NOTE: copies the data
-    idxs, dists = NN.knn(tree, Xmatrix, m.k)
+    idxs, dists = NN.knn(tree, Xmatrix, m.K)
     preds       = Vector{MLJBase.UnivariateFinite}(undef, length(idxs))
     classes     = MLJBase.classes(y[1])
     probas      = zeros(length(classes))
@@ -126,7 +126,7 @@ function MLJBase.predict(m::KNNClassifier, (tree, y), X)
         probas .*= 0.0
         if m.weights == :uniform
             for label in labels
-                probas[classes .== label] .+= 1.0 / m.k
+                probas[classes .== label] .+= 1.0 / m.K
             end
         else
             for (i, label) in enumerate(labels)
@@ -142,16 +142,16 @@ end
 
 function MLJBase.predict(m::KNNRegressor, (tree, y), X)
     Xmatrix     = MLJBase.matrix(X, transpose=true) # NOTE: copies the data
-    idxs, dists = NN.knn(tree, Xmatrix, m.k)
+    idxs, dists = NN.knn(tree, Xmatrix, m.K)
     preds       = zeros(length(idxs))
     for i in eachindex(idxs)
         idxs_  = idxs[i]
         dists_ = dists[i]
         values = y[idxs_]
         if m.weights == :uniform
-            preds[i] = sum(values) / m.k
+            preds[i] = sum(values) / m.K
         else
-            preds[i] = sum(values .* (1.0 .- dists_ ./ sum(dists_))) / (m.k-1)
+            preds[i] = sum(values .* (1.0 .- dists_ ./ sum(dists_))) / (m.K-1)
         end
     end
     return preds
