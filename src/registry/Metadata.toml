@@ -939,6 +939,59 @@
 ":hyperparameters" = [":num_round", ":booster", ":disable_default_eval_metric", ":eta", ":gamma", ":max_depth", ":min_child_weight", ":max_delta_step", ":subsample", ":colsample_bytree", ":colsample_bylevel", ":lambda", ":alpha", ":tree_method", ":sketch_eps", ":scale_pos_weight", ":updater", ":refresh_leaf", ":process_type", ":grow_policy", ":max_leaves", ":max_bin", ":predictor", ":sample_type", ":normalize_type", ":rate_drop", ":one_drop", ":skip_drop", ":feature_selector", ":top_k", ":tweedie_variance_power", ":objective", ":base_score", ":eval_metric", ":seed"]
 ":hyperparameter_types" = ["Int64", "String", "Int64", "Float64", "Float64", "Int64", "Float64", "Float64", "Float64", "Float64", "Float64", "Float64", "Float64", "String", "Float64", "Float64", "String", "Union{Bool, Int64}", "String", "String", "Int64", "Int64", "String", "String", "String", "Float64", "Any", "Float64", "String", "Int64", "Float64", "Any", "Float64", "Any", "Int64"]
 
+[MLJModels.UnivariateBoxCoxTransformer]
+":input_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
+":output_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
+":is_pure_julia" = "`true`"
+":package_name" = "MLJModels"
+":package_license" = "unknown"
+":load_path" = "MLJModels.UnivariateBoxCoxTransformer"
+":package_uuid" = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
+":package_url" = "https://github.com/alan-turing-institute/MLJModels.jl"
+":is_wrapper" = "`false`"
+":docstring" = "UnivariateBoxCoxTransformer from MLJModels.jl.\n[Documentation](https://github.com/alan-turing-institute/MLJModels.jl)."
+":name" = "UnivariateBoxCoxTransformer"
+":is_supervised" = "`false`"
+":implemented_methods" = [":fit", ":inverse_transform", ":inverse_transform", ":transform"]
+":hyperparameters" = [":n", ":shift"]
+":hyperparameter_types" = ["Int64", "Bool"]
+
+[MLJModels.DeterministicConstantRegressor]
+":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:Union{Missing, Found})`"
+":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
+":is_pure_julia" = "`true`"
+":package_name" = "MLJModels"
+":package_license" = "unknown"
+":load_path" = "MLJModels.DeterministicConstantRegressor"
+":package_uuid" = "https://github.com/alan-turing-institute/MLJModels.jl"
+":package_url" = "https://github.com/alan-turing-institute/MLJModels.jl"
+":is_wrapper" = "`false`"
+":supports_weights" = "`false`"
+":docstring" = "DeterministicConstantRegressor from MLJModels.jl.\n[Documentation](https://github.com/alan-turing-institute/MLJModels.jl)."
+":name" = "DeterministicConstantRegressor"
+":is_supervised" = "`true`"
+":prediction_type" = ":deterministic"
+":implemented_methods" = [":fit", ":predict"]
+":hyperparameters" = []
+":hyperparameter_types" = []
+
+[MLJModels.OneHotEncoder]
+":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:Union{Missing, Found})`"
+":output_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:Union{Missing, Found})`"
+":is_pure_julia" = "`true`"
+":package_name" = "MLJModels"
+":package_license" = "unknown"
+":load_path" = "MLJModels.OneHotEncoder"
+":package_uuid" = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
+":package_url" = "https://github.com/alan-turing-institute/MLJModels.jl"
+":is_wrapper" = "`false`"
+":docstring" = "OneHotEncoder from MLJModels.jl.\n[Documentation](https://github.com/alan-turing-institute/MLJModels.jl)."
+":name" = "OneHotEncoder"
+":is_supervised" = "`false`"
+":implemented_methods" = [":fit", ":transform"]
+":hyperparameters" = [":features", ":drop_last", ":ordered_factor"]
+":hyperparameter_types" = ["Array{Symbol,1}", "Bool", "Bool"]
+
 [MLJModels.ConstantClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:Union{Missing, Found})`"
 ":target_scitype" = "`AbstractArray{_s18,1} where _s18<:ScientificTypes.Finite`"
@@ -974,95 +1027,6 @@
 ":implemented_methods" = [":fit", ":fitted_params", ":transform"]
 ":hyperparameters" = [":features"]
 ":hyperparameter_types" = ["Array{Symbol,1}"]
-
-[MLJModels.DeterministicConstantClassifier]
-":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:Union{Missing, Found})`"
-":target_scitype" = "`AbstractArray{_s18,1} where _s18<:ScientificTypes.Finite`"
-":is_pure_julia" = "`true`"
-":package_name" = "MLJModels"
-":package_license" = "unknown"
-":load_path" = "MLJModels.DeterministicConstantClassifier"
-":package_uuid" = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
-":package_url" = "https://github.com/alan-turing-institute/MLJModels.jl"
-":is_wrapper" = "`false`"
-":supports_weights" = "`false`"
-":docstring" = "DeterministicConstantClassifier from MLJModels.jl.\n[Documentation](https://github.com/alan-turing-institute/MLJModels.jl)."
-":name" = "DeterministicConstantClassifier"
-":is_supervised" = "`true`"
-":prediction_type" = ":deterministic"
-":implemented_methods" = [":fit", ":predict"]
-":hyperparameters" = []
-":hyperparameter_types" = []
-
-[MLJModels.OneHotEncoder]
-":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:Union{Missing, Found})`"
-":output_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:Union{Missing, Found})`"
-":is_pure_julia" = "`true`"
-":package_name" = "MLJModels"
-":package_license" = "unknown"
-":load_path" = "MLJModels.OneHotEncoder"
-":package_uuid" = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
-":package_url" = "https://github.com/alan-turing-institute/MLJModels.jl"
-":is_wrapper" = "`false`"
-":docstring" = "OneHotEncoder from MLJModels.jl.\n[Documentation](https://github.com/alan-turing-institute/MLJModels.jl)."
-":name" = "OneHotEncoder"
-":is_supervised" = "`false`"
-":implemented_methods" = [":fit", ":transform"]
-":hyperparameters" = [":features", ":drop_last", ":ordered_factor"]
-":hyperparameter_types" = ["Array{Symbol,1}", "Bool", "Bool"]
-
-[MLJModels.StaticTransformer]
-":input_scitype" = "`ScientificTypes.Unknown`"
-":output_scitype" = "`ScientificTypes.Unknown`"
-":is_pure_julia" = "`true`"
-":package_name" = "MLJModels"
-":package_license" = "unknown"
-":load_path" = "MLJModels.StaticTransformer"
-":package_uuid" = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
-":package_url" = "https://github.com/alan-turing-institute/MLJModels.jl"
-":is_wrapper" = "`false`"
-":docstring" = "StaticTransformer from MLJModels.jl.\n[Documentation](https://github.com/alan-turing-institute/MLJModels.jl)."
-":name" = "StaticTransformer"
-":is_supervised" = "`false`"
-":implemented_methods" = [":fit", ":fitted_params", ":transform"]
-":hyperparameters" = [":f"]
-":hyperparameter_types" = ["Any"]
-
-[MLJModels.KNNRegressor]
-":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
-":is_pure_julia" = "`true`"
-":package_name" = "MLJModels"
-":package_license" = "unknown"
-":load_path" = "MLJModels.KNNRegressor"
-":package_uuid" = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
-":package_url" = "https://github.com/alan-turing-institute/MLJModels.jl"
-":is_wrapper" = "`false`"
-":supports_weights" = "`false`"
-":docstring" = "KNNRegressor from MLJModels.jl.\n[Documentation](https://github.com/alan-turing-institute/MLJModels.jl)."
-":name" = "KNNRegressor"
-":is_supervised" = "`true`"
-":prediction_type" = ":deterministic"
-":implemented_methods" = [":fit", ":predict", ":clean!"]
-":hyperparameters" = [":K", ":metric", ":kernel"]
-":hyperparameter_types" = ["Int64", "Any", "Any"]
-
-[MLJModels.UnivariateBoxCoxTransformer]
-":input_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
-":output_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
-":is_pure_julia" = "`true`"
-":package_name" = "MLJModels"
-":package_license" = "unknown"
-":load_path" = "MLJModels.UnivariateBoxCoxTransformer"
-":package_uuid" = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
-":package_url" = "https://github.com/alan-turing-institute/MLJModels.jl"
-":is_wrapper" = "`false`"
-":docstring" = "UnivariateBoxCoxTransformer from MLJModels.jl.\n[Documentation](https://github.com/alan-turing-institute/MLJModels.jl)."
-":name" = "UnivariateBoxCoxTransformer"
-":is_supervised" = "`false`"
-":implemented_methods" = [":fit", ":inverse_transform", ":inverse_transform", ":transform"]
-":hyperparameters" = [":n", ":shift"]
-":hyperparameter_types" = ["Int64", "Bool"]
 
 [MLJModels.ConstantRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:Union{Missing, Found})`"
@@ -1100,24 +1064,22 @@
 ":hyperparameters" = [":features"]
 ":hyperparameter_types" = ["Array{Symbol,1}"]
 
-[MLJModels.DeterministicConstantRegressor]
-":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:Union{Missing, Found})`"
-":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
+[MLJModels.StaticTransformer]
+":input_scitype" = "`ScientificTypes.Unknown`"
+":output_scitype" = "`ScientificTypes.Unknown`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "MLJModels"
 ":package_license" = "unknown"
-":load_path" = "MLJModels.DeterministicConstantRegressor"
-":package_uuid" = "https://github.com/alan-turing-institute/MLJModels.jl"
+":load_path" = "MLJModels.StaticTransformer"
+":package_uuid" = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
 ":package_url" = "https://github.com/alan-turing-institute/MLJModels.jl"
 ":is_wrapper" = "`false`"
-":supports_weights" = "`false`"
-":docstring" = "DeterministicConstantRegressor from MLJModels.jl.\n[Documentation](https://github.com/alan-turing-institute/MLJModels.jl)."
-":name" = "DeterministicConstantRegressor"
-":is_supervised" = "`true`"
-":prediction_type" = ":deterministic"
-":implemented_methods" = [":fit", ":predict"]
-":hyperparameters" = []
-":hyperparameter_types" = []
+":docstring" = "StaticTransformer from MLJModels.jl.\n[Documentation](https://github.com/alan-turing-institute/MLJModels.jl)."
+":name" = "StaticTransformer"
+":is_supervised" = "`false`"
+":implemented_methods" = [":fit", ":fitted_params", ":transform"]
+":hyperparameters" = [":f"]
+":hyperparameter_types" = ["Any"]
 
 [MLJModels.UnivariateStandardizer]
 ":input_scitype" = "`AbstractArray{_s17,1} where _s17<:Union{Continuous, Count}`"
@@ -1133,6 +1095,25 @@
 ":name" = "UnivariateStandardizer"
 ":is_supervised" = "`false`"
 ":implemented_methods" = [":fit", ":inverse_transform", ":inverse_transform", ":transform", ":transform"]
+":hyperparameters" = []
+":hyperparameter_types" = []
+
+[MLJModels.DeterministicConstantClassifier]
+":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:Union{Missing, Found})`"
+":target_scitype" = "`AbstractArray{_s18,1} where _s18<:ScientificTypes.Finite`"
+":is_pure_julia" = "`true`"
+":package_name" = "MLJModels"
+":package_license" = "unknown"
+":load_path" = "MLJModels.DeterministicConstantClassifier"
+":package_uuid" = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
+":package_url" = "https://github.com/alan-turing-institute/MLJModels.jl"
+":is_wrapper" = "`false`"
+":supports_weights" = "`false`"
+":docstring" = "DeterministicConstantClassifier from MLJModels.jl.\n[Documentation](https://github.com/alan-turing-institute/MLJModels.jl)."
+":name" = "DeterministicConstantClassifier"
+":is_supervised" = "`true`"
+":prediction_type" = ":deterministic"
+":implemented_methods" = [":fit", ":predict"]
 ":hyperparameters" = []
 ":hyperparameter_types" = []
 
