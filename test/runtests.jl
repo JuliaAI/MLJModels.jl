@@ -33,6 +33,8 @@ end
 
 end
 
+include("parameters_utils.jl")
+
 @testset "MultivariateStats  " begin
     @test include("MultivariateStats.jl")
 end

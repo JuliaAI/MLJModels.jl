@@ -14,33 +14,14 @@ struct LinearFitresult{F} <: MLJBase.MLJType
     bias::F
 end
 
+import ..@mlj_model
+
 ####
 #### RIDGE
 ####
 
-mutable struct RidgeRegressor <: MLJBase.Deterministic
-    lambda::Float64
-end
-
-function MLJBase.clean!(model::RidgeRegressor)
-    warning = ""
-    if model.lambda < 0
-        warning *= "Need lambda ≥ 0. Resetting lambda=0. "
-        model.lambda = 0
-    end
-    return warning
-end
-
-# keyword constructor
-function RidgeRegressor(; lambda=0.0)
-
-    model = RidgeRegressor(lambda)
-
-    message = MLJBase.clean!(model)
-    isempty(message) || @warn message
-
-    return model
-
+@mlj_model mutable struct RidgeRegressor <: MLJBase.Deterministic
+    lambda::Float64 = 0.0::(_ ≥ 0)
 end
 
 function MLJBase.fit(model::RidgeRegressor,
