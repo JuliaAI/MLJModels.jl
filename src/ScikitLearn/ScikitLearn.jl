@@ -70,7 +70,7 @@ macro sk_model(ex)
         f isa LineNumberNode && continue
 
         fname, ftype = f.args[1] isa Symbol ?
-                            (ff.args[1], :Any) :
+                            (f.args[1], :Any) :
                             (f.args[1].args[1], f.args[1].args[2])
         push!(fnames, fname)
 
@@ -150,8 +150,7 @@ macro sk_model(ex)
                          :(preds = ScikitLearn.predict(fitresult, xnew)),
                          :(isa(preds, Matrix) && (preds = MLJBase.table(preds, names=targ_names))),
                          :(return preds)
-                         )
-                      )
+                         ) )
 
     # model metadata note that it does not assign scitypes etc, these have
     # to be added manually model by model.

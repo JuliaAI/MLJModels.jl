@@ -9,7 +9,6 @@ export KMeans, KMedoids
 
 import MLJBase
 using ScientificTypes
-using Parameters
 
 import ..Clustering # strange sytax for lazy-loading
 
@@ -17,6 +16,8 @@ using Distances
 using LinearAlgebra: norm
 
 const C = Clustering
+
+import ..@mlj_model
 
 const KMeansDescription =
     """
@@ -46,9 +47,9 @@ $KMFields
 
 See also the [package documentation](http://juliastats.github.io/Clustering.jl/latest/kmeans.html).
 """
-@with_kw mutable struct KMeans{M<:SemiMetric} <: MLJBase.Unsupervised
-    k::Int    = 3
-    metric::M = SqEuclidean()
+@mlj_model mutable struct KMeans <: MLJBase.Unsupervised
+    k::Int = 3::(_ ≥ 2)
+    metric::SemiMetric = SqEuclidean()
 end
 
 """
@@ -60,20 +61,9 @@ $KMFields
 
 See also the [package documentation](http://juliastats.github.io/Clustering.jl/latest/kmedoids.html).
 """
-@with_kw mutable struct KMedoids{M<:SemiMetric} <: MLJBase.Unsupervised
-    k::Int    = 3
-    metric::M = SqEuclidean()
-end
-
-const CM = Union{<:KMeans, <:KMedoids}
-
-function MLJBase.clean!(model::CM)
-    warning = ""
-    if model.k < 2
-        warning *= "Need k >= 2. Setting k=2.\n"
-        model.k = 2
-    end
-    return warning
+@mlj_model mutable struct KMedoids <: MLJBase.Unsupervised
+    k::Int = 3::(_ ≥ 2)
+    metric::SemiMetric = SqEuclidean()
 end
 
 function MLJBase.fit(model::KMeans

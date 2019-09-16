@@ -1,10 +1,10 @@
 module NearestNeighbors_
 
 import MLJBase
-using Parameters
 using Distances
 
 import ..NearestNeighbors
+import ..@mlj_model
 
 const NN = NearestNeighbors
 
@@ -45,13 +45,13 @@ $KNNRegressorDescription
 
 $KNNFields
 """
-@with_kw mutable struct KNNRegressor <: MLJBase.Deterministic
-    K::Int            = 5           # > 0
-    algorithm::Symbol = :kdtree     # (:kdtree, :brutetree, :balltree)
-    metric::Metric    = Euclidean() #
-    leafsize::Int     = 10          # > 0
+@mlj_model mutable struct KNNRegressor <: MLJBase.Deterministic
+    K::Int            = 5::(_ > 0)
+    algorithm::Symbol = :kdtree::(_ in (:kdtree, :brutetree, :balltree))
+    metric::Metric    = Euclidean()
+    leafsize::Int     = 10::(_ ≥ 0)
     reorder::Bool     = true
-    weights::Symbol   = :uniform    # (:uniform, :distance)
+    weights::Symbol   = :uniform::(_ in (:uniform, :distance))
 end
 
 """
@@ -61,13 +61,13 @@ $KNNClassifierDescription
 
 $KNNFields
 """
-@with_kw mutable struct KNNClassifier <: MLJBase.Probabilistic
-    K::Int            = 5           # > 0
-    algorithm::Symbol = :kdtree     # (:kdtree, :brutetree, :balltree)
-    metric::Metric    = Euclidean() #
-    leafsize::Int     = 10          # > 0
+@mlj_model mutable struct KNNClassifier <: MLJBase.Probabilistic
+    K::Int            = 5::(_ > 0)
+    algorithm::Symbol = :kdtree::(_ in (:kdtree, :brutetree, :balltree))
+    metric::Metric    = Euclidean()
+    leafsize::Int     = 10::(_ ≥ 0)
     reorder::Bool     = true
-    weights::Symbol   = :uniform    # (:uniform, :distance)
+    weights::Symbol   = :uniform::(_ in (:uniform, :distance))
 end
 
 const KNN = Union{KNNRegressor, KNNClassifier}

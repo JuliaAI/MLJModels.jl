@@ -39,7 +39,7 @@ ytest3 = fill("C", ntest)
 
 ytest = vcat(ytest1, ytest2, ytest3)
 
-knn = KNNClassifier(weights=:weights)
+knn = KNNClassifier(weights=:distance)
 
 f,_,_ = fit(knn, 1, x, y)
 
