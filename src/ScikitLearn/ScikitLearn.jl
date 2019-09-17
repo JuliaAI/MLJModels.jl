@@ -22,7 +22,57 @@ import ..ScikitLearn
 
 include("svm.jl")
 
-import .._unpack!
+import .._process_model_def, .._model_constructor, .._model_cleaner
+
+"""
+_skmodel_fit
+
+Called as part of [`@sk_model`](@ref), returns the expression corresponing to the `fit` method
+for the ScikitLearn model.
+"""
+function _skmodel_fit(modelname, params)
+	quote
+		function MLJBase.fit(model::$modelname, verbosity::Int, X, y)
+			# body of the function
+			Xmatrix   = MLJBase.matrix(X)
+			yplain    = y
+			targnames = nothing
+			# in multi-target case
+			if Tables.istable(y)
+			   yplain    = MLJBase.matrix(y)
+			   targnames = MLJBase.schema(y).names
+			end
+			# Call the parent constructor from Sklearn.jl named Model_
+			skmodel = $(Symbol(modelname, "_"))($((Expr(:kw, p, :(model.$p)) for p in params)...))
+			fitres  = ScikitLearn.fit!(skmodel, Xmatrix, yplain)
+			# TODO: we may want to use the report later on
+			report  = NamedTuple()
+			return ((fitres, targnames), nothing, report)
+		end
+	end
+end
+
+
+"""
+_skmodel_predict
+
+Called as part of [`@sk_model`](@ref), returns the expression corresponing to the `predict` method
+for the ScikitLearn model.
+"""
+function _skmodel_predict(modelname)
+	quote
+		function MLJBase.predict(model::$modelname, (fitresult, targnames), Xnew)
+			Xmatrix = MLJBase.matrix(Xnew)
+			preds   = ScikitLearn.predict(fitresult, Xmatrix)
+			if isa(preds, Matrix)
+				# build a table with the appropriate column names
+				preds = MLJBase.table(preds, names=targnames)
+			end
+			return preds
+		end
+	end
+end
+
 
 
 """
@@ -39,119 +89,37 @@ end
 MLJBase.fit and MLJBase.predict methods are also produced.
 """
 macro sk_model(ex)
-    # pull out defaults and constraints
-    defaults 	= Dict()
-    constraints = Dict()
-    Model 		= ex.args[2] isa Symbol ? ex.args[2] : ex.args[2].args[1]
-    fnames 		= Symbol[]
-
-    for i = 1:length(ex.args[3].args)
-        f = ex.args[3].args[i]
-        f isa LineNumberNode && continue
-
-        fname, ftype = f.args[1] isa Symbol ?
-                            (f.args[1], :Any) :
-                            (f.args[1].args[1], f.args[1].args[2])
-        push!(fnames, fname)
-
-        if f.head == :(=)
-            default = f.args[2]
-            if default isa Expr
-                constraints[fname] = default.args[2]
-                default = default.args[1]
-            end
-            defaults[fname] = default
-            ex.args[3].args[i] = f.args[1]
-        end
-    end
-
-    # make kw constructor which calls the clean! function
-    const_ex = Expr(:function, Expr(:call, Model, Expr(:parameters,
-     	                  [Expr(:kw, fname, defaults[fname]) for fname in fnames]...)),
-                    # body of the function
-                    Expr(:block,
-                         Expr(:(=), :model, Expr(:call, :new, [fname for fname in fnames]...)),
-                         :(message = MLJBase.clean!(model)),
-            			 :(isempty(message) || @warn message),
-            			 :(return model)
-        				 )
-    			 	)
+	# similar to @mlj_model
+    ex, modelname, params, defaults, constraints = _process_model_def(ex)
+	# keyword constructor
+    const_ex = _model_constructor(modelname, params, defaults)
+	# associate the constructor with the definition of the struct
     push!(ex.args[3].args, const_ex)
+	# cleaner
+    clean_ex = _model_cleaner(modelname, defaults, constraints)
 
-    # add fit function
-    fit_ex = :(function MLJBase.fit(model::$Model, verbosity::Int, X, y)
-                   # body of the function
-                   Xmatrix    = MLJBase.matrix(X)
-                   yplain     = y
-                   targ_names = nothing
-                   # in multi-target case
-                   if Tables.istable(y)
-                       yplain     = MLJBase.matrix(y)
-                       targ_names = MLJBase.schema(y).names
-                   end
-                   cache     = $(Symbol(Model, "_"))($([Expr(:kw, fname, :(model.$fname))
-                                                            for fname in fnames]...))
-                   result    = ScikitLearn.fit!(cache, Xmatrix, yplain)
-                   fitresult = result
-                   # TODO: we may want to use the report later on
-                   report    = NamedTuple()
-                   return ((fitresult, targ_names), nothing, report)
-               end)
+	# here starts the differences with the `@mlj_model` macro: addition of an
+	# automatically defined `fit` and `predict` method
+	fit_ex 	   = _skmodel_fit(modelname, params)
+	predict_ex = _skmodel_predict(modelname)
 
-    # clean function
-    clean_ex = Expr(:function, :(MLJBase.clean!(model::$Model)),
-                    # body of the function
-                    Expr(:block,
-                         :(warning = ""),
-                         # condition and action for each constraint
-                         # each parameter is given as field::Type = default::constraint
-                         # here we recuperate the constraint and express it as an if statement
-                         # for instance if we had
-                         #     alpha::Real = 0.0::(arg > 0.0)
-                         # this would become
-                         #     if !(alpha > 0.0)
-        				 [Expr(:if, Expr(:call, :!, _unpack!(constr, :(model.$param))),
-                               # action of the constraint is violated:
-                               # add a message and use default for the parameter
-        				       Expr(:block,
-                                    :(warning *= $("constraint ($constr) failed; using default: $param=$(defaults[param]).\n")),
-                                    :(model.$param = $(defaults[param]))
-                                    )
-                               ) for (param, constr) in constraints]...,
-                         # return full message
-        				 :(return warning)
-                        )
-                    )
-    # predict function
-    predict_ex = Expr(:function, :(MLJBase.predict(model::$Model, (fitresult, targ_names), Xnew)),
-                    # body of the predict function
-        			Expr(:block,
-                         :(xnew  = MLJBase.matrix(Xnew)),
-                         :(preds = ScikitLearn.predict(fitresult, xnew)),
-                         :(isa(preds, Matrix) && (preds = MLJBase.table(preds, names=targ_names))),
-                         :(return preds)
-                         ) )
-
-    # model metadata note that it does not assign scitypes etc, these have
-    # to be added manually model by model.
-    # --> input_scitype
-    # --> target_scitype
-    Model_str = string(Model)
+	mdl = modelname
     esc(
-        quote
-        export $Model
-        $ex
-        $fit_ex
-        $clean_ex
-        $predict_ex
-        MLJBase.load_path(::Type{<:$Model})       = string("MLJModels.ScikitLearn_.", $Model_str)
-        MLJBase.package_name(::Type{<:$Model})    = "ScikitLearn"
-        MLJBase.package_uuid(::Type{<:$Model})    = "3646fa90-6ef7-5e7e-9f22-8aca16db6324"
-        MLJBase.is_pure_julia(::Type{<:$Model})   = false
-        MLJBase.package_url(::Type{<:$Model})     = "https://github.com/cstjean/ScikitLearn.jl"
-        MLJBase.package_license(::Type{<:$Model}) = "BSD"
-        end
-    )
+		quote
+			# Base.@__doc__ $ex
+	        export $modelname
+	        $ex
+	        $fit_ex
+	        $clean_ex
+	        $predict_ex
+	        MLJBase.load_path(::Type{<:$mdl}) 		= "MLJModels.ScikitLearn_.$mdl"
+	        MLJBase.package_name(::Type{<:$mdl})    = "ScikitLearn"
+	        MLJBase.package_uuid(::Type{<:$mdl})    = "3646fa90-6ef7-5e7e-9f22-8aca16db6324"
+	        MLJBase.is_pure_julia(::Type{<:$mdl})   = false
+	        MLJBase.package_url(::Type{<:$mdl})     = "https://github.com/cstjean/ScikitLearn.jl"
+	        MLJBase.package_license(::Type{<:$mdl}) = "BSD"
+	    end
+	)
 end
 
 include("linear-regressors.jl")
