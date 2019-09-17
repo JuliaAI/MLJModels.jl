@@ -21,7 +21,7 @@ Then it would transform the `(arg > 0.0)` in `(alpha > 0.0)` which is executable
 function _unpack!(ex, rep)
     if ex isa Expr
         for i in eachindex(ex.args)
-            if ex.args[i] == :_
+            if ex.args[i] ∈ (:_, :arg)
                 ex.args[i] = rep
             end
             _unpack!(ex.args[i], rep)
@@ -88,11 +88,20 @@ macro mlj_model(ex)
                 defaults[fname]    = default    # this will be a value not an expr
                 ex.args[3].args[i] = f.args[1]  # name or name::Type (for the constructor)
             else
+                # these are simple heuristics when no default value is given for the
+                # field but an "obvious" one can be provided implicitly (ideally this
+                # should not be used as it's not very clear that the intention matches the usage)
                 eff_ftype = eval(ftype)
                 if eff_ftype <: Number
                     defaults[fname] = zero(eff_ftype)
                 elseif eff_ftype <: AbstractString
                     defaults[fname] = ""
+                elseif eff_type == Any          # e.g. Any or no type given
+                    defaults[fname] = nothing
+                elseif eff_type >: Nothing      # e.g. Union{Nothing, ...}
+                    defaults[fname] = nothing
+                elseif eff_ftype >: Missing     # e.g. Union{Missing, ...} (unlikely)
+                    defaults[fname] = missing
                 else
                     @error "A default value for parameter '$fname' of type '$ftype' must be " *
                            "provided."

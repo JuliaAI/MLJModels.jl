@@ -22,27 +22,7 @@ import ..ScikitLearn
 
 include("svm.jl")
 
-# NOTE: The rest of the module uses the @sk_model macro
-# For each model, a struct needs to be given along with
-# a specific metadata for target and input scitype
-# and possibly an adapted clean! method
-
-# This is what allows to read the constraint declared in @sk_model structs and
-# transform it in an executable condition
-# For instance if we had
-#   alpha::Int = 0.5::(arg > 0.0)
-# Then it would transform the `(arg > 0.0)` in `(alpha > 0.0)`
-function _replace_expr!(ex, rep)
-    if ex isa Expr
-        for i in eachindex(ex.args)
-            if ex.args[i] == :arg
-                ex.args[i] = rep
-            end
-            _replace_expr!(ex.args[i], rep)
-        end
-    end
-    return ex
-end
+import .._unpack!
 
 
 """
@@ -62,7 +42,7 @@ macro sk_model(ex)
     # pull out defaults and constraints
     defaults 	= Dict()
     constraints = Dict()
-    stname 		= ex.args[2] isa Symbol ? ex.args[2] : ex.args[2].args[1]
+    Model 		= ex.args[2] isa Symbol ? ex.args[2] : ex.args[2].args[1]
     fnames 		= Symbol[]
 
     for i = 1:length(ex.args[3].args)
@@ -86,7 +66,7 @@ macro sk_model(ex)
     end
 
     # make kw constructor which calls the clean! function
-    const_ex = Expr(:function, Expr(:call, stname, Expr(:parameters,
+    const_ex = Expr(:function, Expr(:call, Model, Expr(:parameters,
      	                  [Expr(:kw, fname, defaults[fname]) for fname in fnames]...)),
                     # body of the function
                     Expr(:block,
@@ -99,7 +79,7 @@ macro sk_model(ex)
     push!(ex.args[3].args, const_ex)
 
     # add fit function
-    fit_ex = :(function MLJBase.fit(model::$stname, verbosity::Int, X, y)
+    fit_ex = :(function MLJBase.fit(model::$Model, verbosity::Int, X, y)
                    # body of the function
                    Xmatrix    = MLJBase.matrix(X)
                    yplain     = y
@@ -109,7 +89,7 @@ macro sk_model(ex)
                        yplain     = MLJBase.matrix(y)
                        targ_names = MLJBase.schema(y).names
                    end
-                   cache     = $(Symbol(stname, "_"))($([Expr(:kw, fname, :(model.$fname))
+                   cache     = $(Symbol(Model, "_"))($([Expr(:kw, fname, :(model.$fname))
                                                             for fname in fnames]...))
                    result    = ScikitLearn.fit!(cache, Xmatrix, yplain)
                    fitresult = result
@@ -119,7 +99,7 @@ macro sk_model(ex)
                end)
 
     # clean function
-    clean_ex = Expr(:function, :(MLJBase.clean!(model::$stname)),
+    clean_ex = Expr(:function, :(MLJBase.clean!(model::$Model)),
                     # body of the function
                     Expr(:block,
                          :(warning = ""),
@@ -130,20 +110,20 @@ macro sk_model(ex)
                          #     alpha::Real = 0.0::(arg > 0.0)
                          # this would become
                          #     if !(alpha > 0.0)
-        				 [Expr(:if, Expr(:call, :!, _replace_expr!(constr, :(model.$field))),
+        				 [Expr(:if, Expr(:call, :!, _unpack!(constr, :(model.$param))),
                                # action of the constraint is violated:
                                # add a message and use default for the parameter
         				       Expr(:block,
-                                    :(warning *= $("constraint ($constr) failed for field $field; using default: $(defaults[field]).\n")),
-                                    :(model.$field = $(defaults[field]))
+                                    :(warning *= $("constraint ($constr) failed; using default: $param=$(defaults[param]).\n")),
+                                    :(model.$param = $(defaults[param]))
                                     )
-                               ) for (field, constr) in constraints]...,
+                               ) for (param, constr) in constraints]...,
                          # return full message
         				 :(return warning)
                         )
                     )
     # predict function
-    predict_ex = Expr(:function, :(MLJBase.predict(model::$stname, (fitresult, targ_names), Xnew)),
+    predict_ex = Expr(:function, :(MLJBase.predict(model::$Model, (fitresult, targ_names), Xnew)),
                     # body of the predict function
         			Expr(:block,
                          :(xnew  = MLJBase.matrix(Xnew)),
@@ -156,20 +136,20 @@ macro sk_model(ex)
     # to be added manually model by model.
     # --> input_scitype
     # --> target_scitype
-    stname_str = string(stname)
+    Model_str = string(Model)
     esc(
         quote
-        export $stname
+        export $Model
         $ex
         $fit_ex
         $clean_ex
         $predict_ex
-        MLJBase.load_path(::Type{<:$stname})       = string("MLJModels.ScikitLearn_.", $stname_str)
-        MLJBase.package_name(::Type{<:$stname})    = "ScikitLearn"
-        MLJBase.package_uuid(::Type{<:$stname})    = "3646fa90-6ef7-5e7e-9f22-8aca16db6324"
-        MLJBase.is_pure_julia(::Type{<:$stname})   = false
-        MLJBase.package_url(::Type{<:$stname})     = "https://github.com/cstjean/ScikitLearn.jl"
-        MLJBase.package_license(::Type{<:$stname}) = "BSD"
+        MLJBase.load_path(::Type{<:$Model})       = string("MLJModels.ScikitLearn_.", $Model_str)
+        MLJBase.package_name(::Type{<:$Model})    = "ScikitLearn"
+        MLJBase.package_uuid(::Type{<:$Model})    = "3646fa90-6ef7-5e7e-9f22-8aca16db6324"
+        MLJBase.is_pure_julia(::Type{<:$Model})   = false
+        MLJBase.package_url(::Type{<:$Model})     = "https://github.com/cstjean/ScikitLearn.jl"
+        MLJBase.package_license(::Type{<:$Model}) = "BSD"
         end
     )
 end
