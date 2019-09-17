@@ -18,17 +18,16 @@ For instance if we have
 
 Then it would transform the `(arg > 0.0)` in `(alpha > 0.0)` which is executable.
 """
-function _unpack!(ex, rep)
-    if ex isa Expr
-        for i in eachindex(ex.args)
-            if ex.args[i] ∈ (:_, :arg)
-                ex.args[i] = rep
-            end
-            _unpack!(ex.args[i], rep)
+function _unpack!(ex::Expr, rep)
+    for i in eachindex(ex.args)
+        if ex.args[i] ∈ (:_, :arg)
+            ex.args[i] = rep
         end
+        _unpack!(ex.args[i], rep)
     end
     return ex
 end
+_unpack!(ex, _) = ex # when it's been unpacked, it's not an expression anymore
 
 
 """
