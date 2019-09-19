@@ -3,7 +3,7 @@
 # | BernoulliNB            | ✗      | ✗             | ✗      | ✗        |  ✗      | ✗       |
 # | GaussianNB             | ✓      | ✓             | ✗      | ✓        |  ✓     | ✓       |
 # | MultinomialNB          | ✓      | ✓             | ✗      | ✓        |  ✓     | ✓       |
-# | ComplementNB           | ✗      | ✗             | ✗      | ✗        |  ✗      | ✗       |
+# | ComplementNB           | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
 # | KNeighborsClf          | ✗      | ✗             | ✗      | ✗        |  ✗      | ✗       |
 # | KNeighborsReg          | ✗      | ✗             | ✗      | ✗        |  ✗      | ✗       |
 # | RadiusClf              | ✗      | ✗             | ✗      | ✗        |  ✗      | ✗       |
