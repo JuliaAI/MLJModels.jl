@@ -1,19 +1,52 @@
-# iris = dataset("datasets", "iris")
-# X = iris[:, 1:4]
-# y = iris[:, 5]
-#
-# yplain = ones(length(y))
-# yplain[y .== "setosa"] .= 2
-# yplain[y .== "virginica"] .= 3
-#
-# @testset "RidgeClassifier" begin
-#     m = RidgeClassifier()
-#     f, _, _ = fit(reg, 1, X, yplain)
-#     @test norm(res.score(X, y) - 0.9595) < 1e-4
-# end
-#
-# @testset "RidgeClassifierCV" begin
-#     m = RidgeClassifierCV(alphas = [1e-3, 1e-2, 1e-1, 1])
-#     f, _, _ = fit(reg, 1, X, yplain)
-#     @test norm(res.score(X, y) - 0.9630) < 1e-4
-# end
+Xc1, yc1 = gen_classif(classes=["M", "F"])
+Xc2, yc2 = gen_classif(classes=["A", "B", "C"])
+
+@testset "LogRegClf" begin
+    m, f = simple_test_classif_prob(LogisticClassifier(), Xc2, yc2)
+    fp = fitted_params(m, f)
+    @test keys(fp) == (:classes, :coef, :intercept)
+    infos = info_dict(m)
+    @test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
+    @test infos[:target_scitype] == AbstractVector{<:MLJBase.Finite}
+    @test !isempty(infos[:docstring])
+end
+
+@testset "LogRegCVClf" begin
+    m, f = simple_test_classif_prob(LogisticCVClassifier(), Xc2, yc2)
+    fp = fitted_params(m, f)
+    @test keys(fp) == (:classes, :coef, :intercept, :Cs, :l1_ratios, :coefs_paths, :scores, :C, :l1_ratio)
+    infos = info_dict(m)
+    @test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
+    @test infos[:target_scitype] == AbstractVector{<:MLJBase.Finite}
+    @test !isempty(infos[:docstring])
+end
+
+@testset "PerceptronClf" begin
+    m, f = simple_test_classif(PerceptronClassifier(), Xc2, yc2)
+    fp = fitted_params(m, f)
+    @test keys(fp) == (:coef, :intercept)
+    infos = info_dict(m)
+    @test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
+    @test infos[:target_scitype] == AbstractVector{<:MLJBase.Finite}
+    @test !isempty(infos[:docstring])
+end
+
+@testset "RidgeClf" begin
+    m, f = simple_test_classif(RidgeClassifier(), Xc2, yc2)
+    fp = fitted_params(m, f)
+    @test keys(fp) == (:coef, :intercept)
+    infos = info_dict(m)
+    @test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
+    @test infos[:target_scitype] == AbstractVector{<:MLJBase.Finite}
+    @test !isempty(infos[:docstring])
+end
+
+@testset  "RidgeCVClf" begin
+    m, f = simple_test_classif(RidgeCVClassifier(), Xc1, yc1)
+    fp = fitted_params(m, f)
+    @test keys(fp) == (:coef, :intercept)
+    infos = info_dict(m)
+    @test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
+    @test infos[:target_scitype] == AbstractVector{<:MLJBase.Finite}
+    @test !isempty(infos[:docstring])
+end

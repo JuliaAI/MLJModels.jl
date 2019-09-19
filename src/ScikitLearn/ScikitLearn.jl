@@ -23,6 +23,9 @@ import ..ScikitLearn
 include("svm.jl")
 
 import .._process_model_def, .._model_constructor, .._model_cleaner
+import  ..metadata_model # metadata_pkg is handled by @sk_model
+
+const Option{T} = Union{Nothing, T}
 
 """
 _skmodel_fit
@@ -37,17 +40,24 @@ function _skmodel_fit(modelname, params)
 			Xmatrix   = MLJBase.matrix(X)
 			yplain    = y
 			targnames = nothing
-			# in multi-target case
+			decode    = nothing
+			y1 		  = nothing
+			# in multi-target regression case
 			if Tables.istable(y)
 			   yplain    = MLJBase.matrix(y)
 			   targnames = MLJBase.schema(y).names
+			end
+			if eltype(y) <: CategoricalString
+				yplain = MLJBase.int(y)
+				y1     = y[1]
 			end
 			# Call the parent constructor from Sklearn.jl named Model_
 			skmodel = $(Symbol(modelname, "_"))($((Expr(:kw, p, :(model.$p)) for p in params)...))
 			fitres  = ScikitLearn.fit!(skmodel, Xmatrix, yplain)
 			# TODO: we may want to use the report later on
 			report  = NamedTuple()
-			return ((fitres, targnames), nothing, report)
+			# passing y[1] is useful in the case of a classifier (decoding)
+			return ((fitres, y1, targnames), nothing, report)
 		end
 	end
 end
@@ -57,22 +67,45 @@ end
 _skmodel_predict
 
 Called as part of [`@sk_model`](@ref), returns the expression corresponing to the `predict` method
-for the ScikitLearn model.
+for the ScikitLearn model (for a deterministic model)
 """
 function _skmodel_predict(modelname)
 	quote
-		function MLJBase.predict(model::$modelname, (fitresult, targnames), Xnew)
+		function MLJBase.predict(model::$modelname, (fitresult, y1, targnames), Xnew)
 			Xmatrix = MLJBase.matrix(Xnew)
 			preds   = ScikitLearn.predict(fitresult, Xmatrix)
 			if isa(preds, Matrix)
+				# only regressors are possibly multitarget;
 				# build a table with the appropriate column names
-				preds = MLJBase.table(preds, names=targnames)
+				return MLJBase.table(preds, names=targnames)
+			end
+			if y1 !== nothing
+				# if it's a classifier
+				return preds |> MLJBase.decoder(y1)
 			end
 			return preds
 		end
 	end
 end
 
+
+"""
+_skmodel_predict_prob
+
+Same as `_skmodel_predict` but with probabilities.
+"""
+function _skmodel_predict_prob(modelname)
+	quote
+		# there are no multi-task classifiers in sklearn
+		function MLJBase.predict(model::$modelname, (fitresult, y1, _), Xnew)
+			Xmatrix = MLJBase.matrix(Xnew)
+			# this is an array of size n x c with rows that sum to 1
+			preds   = ScikitLearn.predict_proba(fitresult, Xmatrix)
+			classes = MLJBase.classes(y1)
+			return [MLJBase.UnivariateFinite(classes, preds[i, :]) for i in 1:size(Xmatrix,1)]
+		end
+	end
+end
 
 
 """
@@ -101,9 +134,13 @@ macro sk_model(ex)
 	# here starts the differences with the `@mlj_model` macro: addition of an
 	# automatically defined `fit` and `predict` method
 	fit_ex 	   = _skmodel_fit(modelname, params)
-	predict_ex = _skmodel_predict(modelname)
 
-	mdl = modelname
+	if ex.args[2].args[2] == :(MLJBase.Probabilistic)
+		predict_ex = _skmodel_predict_prob(modelname)
+	else
+		predict_ex = _skmodel_predict(modelname)
+	end
+
     esc(
 		quote
 			# Base.@__doc__ $ex
@@ -112,21 +149,22 @@ macro sk_model(ex)
 	        $fit_ex
 	        $clean_ex
 	        $predict_ex
-	        MLJBase.load_path(::Type{<:$mdl}) 		= "MLJModels.ScikitLearn_.$mdl"
-	        MLJBase.package_name(::Type{<:$mdl})    = "ScikitLearn"
-	        MLJBase.package_uuid(::Type{<:$mdl})    = "3646fa90-6ef7-5e7e-9f22-8aca16db6324"
-	        MLJBase.is_pure_julia(::Type{<:$mdl})   = false
-	        MLJBase.package_url(::Type{<:$mdl})     = "https://github.com/cstjean/ScikitLearn.jl"
-	        MLJBase.package_license(::Type{<:$mdl}) = "BSD"
+	        MLJBase.load_path(::Type{<:$modelname}) 	  = "MLJModels.ScikitLearn_.$($modelname)"
+	        MLJBase.package_name(::Type{<:$modelname})    = "ScikitLearn"
+	        MLJBase.package_uuid(::Type{<:$modelname})    = "3646fa90-6ef7-5e7e-9f22-8aca16db6324"
+	        MLJBase.is_pure_julia(::Type{<:$modelname})   = false
+	        MLJBase.package_url(::Type{<:$modelname})     = "https://github.com/cstjean/ScikitLearn.jl"
+	        MLJBase.package_license(::Type{<:$modelname}) = "BSD"
 	    end
 	)
 end
 
 include("linear-regressors.jl")
-#include("linear-classifiers.jl")
+include("linear-classifiers.jl")
 
 include("gaussian-process.jl")
 include("ensemble.jl")
 
+include("exotic.jl")
 
 end # module
