@@ -50,3 +50,21 @@ end
     @test infos[:target_scitype] == AbstractVector{<:MLJBase.Finite}
     @test !isempty(infos[:docstring])
 end
+
+@testset "SGDClf" begin
+    m, f = simple_test_classif(SGDClassifier(), Xc2, yc2)
+    fp = fitted_params(m, f)
+    @test keys(fp) == (:coef, :intercept)
+    infos = info_dict(m)
+    @test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
+    @test infos[:target_scitype] == AbstractVector{<:MLJBase.Finite}
+    @test !isempty(infos[:docstring])
+
+    m, f = simple_test_classif_prob(ProbabilisticSGDClassifier(), Xc2, yc2)
+    fp = fitted_params(m, f)
+    @test keys(fp) == (:coef, :intercept)
+    infos = info_dict(m)
+    @test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
+    @test infos[:target_scitype] == AbstractVector{<:MLJBase.Finite}
+    @test !isempty(infos[:docstring])
+end

@@ -3,8 +3,8 @@
 # | Logistic               | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
 # | LogisticCV             | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
 # | Perceptron             | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
-# | Ridge                  | ✗      | ✗             | ✗      | ✗        |  ✗      | ✗       |
-# | RidgeCV                | ✗      | ✗             | ✗      | ✗        |  ✗      | ✗       |
+# | Ridge                  | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
+# | RidgeCV                | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
 # | SGDClassifier          | ✗      | ✗             | ✗      | ✗        |  ✗      | ✗       |
 
 LogisticClassifier_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).LogisticRegression
@@ -90,7 +90,7 @@ PerceptronClassifier_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).
     n_jobs::Union{Nothing,Int}     = nothing
     random_state::Any              = 0
     early_stopping::Bool           = false
-    validation_fraction::Float64   = 0.1::(_ > 0)
+    validation_fraction::Float64   = 0.1::(0 < _ < 1)
     n_iter_no_change::Int          = 5::(_ > 0)
     class_weight::Any              = nothing
     warm_start::Bool               = false
@@ -150,4 +150,69 @@ metadata_model(RidgeCVClassifier,
     target=AbstractVector{<:MLJBase.Finite},
     weights=false,
     descr="Ridge regression classifier."
+    )
+
+# ============================================================================
+SGDClassifier_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).SGDClassifier
+@sk_model mutable struct SGDClassifier <: MLJBase.Deterministic
+    loss::String          = "hinge"::(_ in ("hinge", "log", "modified_huber", "squared_hinge", "perceptron", "squared_loss", "huber", "epsilon_insensitive", "squared_epsilon_insensitive"))
+    penalty::String       = "l2"::(_ in ("l1", "l2", "elasticnet", "none"))
+    alpha::Float64        = 1e-4::(_ > 0)
+    l1_ratio::Float64     = 0.15::(0 ≤ _ ≤ 1)
+    fit_intercept::Bool   = true
+    max_iter::Int         = 1_000::(_ > 0)
+    tol::Option{Float64}  = 1e-3::(_ === nothing || _ > 0)
+    shuffle::Bool         = true
+    verbose::Int          = 0
+    epsilon::Float64      = 0.1::(_ > 0)
+    n_jobs::Option{Int}   = nothing
+    random_state::Any     = nothing
+    learning_rate::String = "optimal"::(_ in ("constant", "optimal", "invscaling", "adaptive"))
+    eta0::Float64         = 0.0::(_ ≥ 0)
+    power_t::Float64      = 0.5::(_ > 0)
+    early_stopping::Bool  = false
+    validation_fraction::Float64 = 0.1::(0 < _ < 1)
+    n_iter_no_change::Int = 5::(_ > 0)
+    class_weight::Any     = nothing
+    warm_start::Bool      = false
+    average::Bool         = false
+end
+ProbabilisticSGDClassifier_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).SGDClassifier
+@sk_model mutable struct ProbabilisticSGDClassifier <: MLJBase.Probabilistic
+    loss::String          = "log"::(_ in ("log", "modified_huber")) # only those -> predict proba
+    penalty::String       = "l2"::(_ in ("l1", "l2", "elasticnet", "none"))
+    alpha::Float64        = 1e-4::(_ > 0)
+    l1_ratio::Float64     = 0.15::(0 ≤ _ ≤ 1)
+    fit_intercept::Bool   = true
+    max_iter::Int         = 1_000::(_ > 0)
+    tol::Option{Float64}  = 1e-3::(_ === nothing || _ > 0)
+    shuffle::Bool         = true
+    verbose::Int          = 0
+    epsilon::Float64      = 0.1::(_ > 0)
+    n_jobs::Option{Int}   = nothing
+    random_state::Any     = nothing
+    learning_rate::String = "optimal"::(_ in ("constant", "optimal", "invscaling", "adaptive"))
+    eta0::Float64         = 0.0::(_ ≥ 0)
+    power_t::Float64      = 0.5::(_ > 0)
+    early_stopping::Bool  = false
+    validation_fraction::Float64 = 0.1::(0 < _ < 1)
+    n_iter_no_change::Int = 5::(_ > 0)
+    class_weight::Any     = nothing
+    warm_start::Bool      = false
+    average::Bool         = false
+end
+MLJBase.fitted_params(m::SGDClassifier, (f,_,_)) = (
+    coef      = f.coef_,
+    intercept = ifelse(m.fit_intercept, f.intercept_, nothing)
+    )
+# duplication to avoid ambiguity that julia doesn't like
+MLJBase.fitted_params(m::ProbabilisticSGDClassifier, (f,_,_)) = (
+    coef      = f.coef_,
+    intercept = ifelse(m.fit_intercept, f.intercept_, nothing)
+    )
+metadata_model.((SGDClassifier,ProbabilisticSGDClassifier),
+    input=MLJBase.Table(MLJBase.Continuous),
+    target=AbstractVector{<:MLJBase.Finite},
+    weights=false,
+    descr="Linear classifier with stochastic gradient descent training."
     )
