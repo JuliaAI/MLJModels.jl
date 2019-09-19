@@ -38,6 +38,13 @@ function multi_rand(Mp)
     return y
 end
 
+function simple_test_reg(m, X, y)
+    f, _, _ = fit(m, 1, X, y)
+    p = predict(m, f, X)
+    @test norm(p .- y) / norm(y) < 1
+    m, f
+end
+
 function simple_test_classif(m, X, y)
     f, _, _ = fit(m, 1, X, y)
     p = predict(m, f, X)

@@ -30,6 +30,10 @@ const Option{T} = Union{Nothing, T}
 const SKLM = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model"))
 const SKGP = ((ScikitLearn.Skcore).pyimport("sklearn.gaussian_process"))
 const SKEN = ((ScikitLearn.Skcore).pyimport("sklearn.ensemble"))
+const SKDU = ((ScikitLearn.Skcore).pyimport("sklearn.dummy"))
+const SKNB = ((ScikitLearn.Skcore).pyimport("sklearn.naive_bayes"))
+const SKNE = ((ScikitLearn.Skcore).pyimport("sklearn.neighbors"))
+const SKNN = ((ScikitLearn.Skcore).pyimport("sklearn.neural_network"))
 
 """
 _skmodel_fit
@@ -169,6 +173,6 @@ include("linear-classifiers.jl")
 include("gaussian-process.jl")
 include("ensemble.jl")
 
-include("exotic.jl")
+include("misc.jl")
 
 end # module
