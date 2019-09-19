@@ -41,7 +41,7 @@ end
     @test 0.03 ≤ norm(predict(m, f, X) .- y)/norm(y) ≤ 0.05
     # testing that the fitted params is proper
     fp = fitted_params(m, f)
-    @test keys(fp) == (:feature_importances, :train_score, :loss, :init, :estimators)
+    @test keys(fp) == (:feature_importances, :train_score, :loss, :init, :estimators, :oob_improvement)
 end
 
 @testset "RFReg" begin
@@ -52,4 +52,50 @@ end
     # testing that the fitted params is proper
     fp = fitted_params(m, f)
     @test keys(fp) == (:estimators, :feature_importances, :n_features, :n_outputs, :oob_score, :oob_prediction)
+end
+
+# =================
+# classifiers
+# =================
+
+Xc2, yc2 = gen_classif(classes=["A", "B", "C"])
+
+@testset "AdaboostClf" begin
+    m, f = simple_test_classif_prob(AdaBoostClassifier(), Xc2, yc2)
+    fp = fitted_params(m, f)
+    @test keys(fp) == (:estimators, :estimator_weights, :estimator_errors, :classes, :n_classes)
+    infos = info_dict(m)
+    @test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
+    @test infos[:target_scitype] == AbstractVector{<:MLJBase.Finite}
+    @test !isempty(infos[:docstring])
+end
+
+@testset "BaggingClf" begin
+    m, f = simple_test_classif_prob(BaggingClassifier(), Xc2, yc2)
+    fp = fitted_params(m, f)
+    @test keys(fp) == (:base_estimator, :estimators, :estimators_samples, :estimators_features, :classes, :n_classes, :oob_score, :oob_decision_function)
+    infos = info_dict(m)
+    @test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
+    @test infos[:target_scitype] == AbstractVector{<:MLJBase.Finite}
+    @test !isempty(infos[:docstring])
+end
+
+@testset "GradBoostClf" begin
+    m, f = simple_test_classif_prob(GradientBoostingClassifier(), Xc2, yc2)
+    fp = fitted_params(m, f)
+    @test keys(fp) == (:n_estimators, :feature_importances, :train_score, :loss, :init, :estimators, :oob_improvement)
+    infos = info_dict(m)
+    @test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
+    @test infos[:target_scitype] == AbstractVector{<:MLJBase.Finite}
+    @test !isempty(infos[:docstring])
+end
+
+@testset "RForestClf" begin
+    m, f = simple_test_classif_prob(RandomForestClassifier(), Xc2, yc2)
+    fp = fitted_params(m, f)
+    @test keys(fp) == (:estimators, :classes, :n_classes, :n_features, :n_outputs, :feature_importances, :oob_score, :oob_decision_function)
+    infos = info_dict(m)
+    @test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
+    @test infos[:target_scitype] == AbstractVector{<:MLJBase.Finite}
+    @test !isempty(infos[:docstring])
 end

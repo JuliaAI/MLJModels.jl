@@ -21,6 +21,16 @@ end
     @test !isempty(infos[:docstring])
 end
 
+@testset "PAClf" begin
+    m, f = simple_test_classif(PassiveAggressiveClassifier(), Xc1, yc1)
+    fp = fitted_params(m, f)
+    @test keys(fp) == (:coef, :intercept)
+    infos = info_dict(m)
+    @test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
+    @test infos[:target_scitype] == AbstractVector{<:MLJBase.Finite}
+    @test !isempty(infos[:docstring])
+end
+
 @testset "PerceptronClf" begin
     m, f = simple_test_classif(PerceptronClassifier(), Xc2, yc2)
     fp = fitted_params(m, f)

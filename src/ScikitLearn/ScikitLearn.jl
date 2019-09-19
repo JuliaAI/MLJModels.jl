@@ -27,6 +27,10 @@ import  ..metadata_model # metadata_pkg is handled by @sk_model
 
 const Option{T} = Union{Nothing, T}
 
+const SKLM = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model"))
+const SKGP = ((ScikitLearn.Skcore).pyimport("sklearn.gaussian_process"))
+const SKEN = ((ScikitLearn.Skcore).pyimport("sklearn.ensemble"))
+
 """
 _skmodel_fit
 

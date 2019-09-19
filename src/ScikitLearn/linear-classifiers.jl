@@ -2,12 +2,13 @@
 # | ---------------------- | ------ | ------------- | ------ | -------- | ------- | ------- |
 # | Logistic               | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
 # | LogisticCV             | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
+# | PAClassifier           | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
 # | Perceptron             | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
 # | Ridge                  | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
 # | RidgeCV                | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
-# | SGDClassifier          | ✗      | ✗             | ✗      | ✗        |  ✗      | ✗       |
+# | SGDClassifier          | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
 
-LogisticClassifier_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).LogisticRegression
+LogisticClassifier_ = SKLM.LogisticRegression
 @sk_model mutable struct LogisticClassifier <: MLJBase.Probabilistic
     penalty::String            = "l2"::(_ in ("l1", "l2", "elasticnet", "none"))
     dual::Bool                 = false
@@ -38,7 +39,7 @@ metadata_model(LogisticClassifier,
     )
 
 # ============================================================================
-LogisticCVClassifier_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).LogisticRegressionCV
+LogisticCVClassifier_ = SKLM.LogisticRegressionCV
 @sk_model mutable struct LogisticCVClassifier <: MLJBase.Probabilistic
     Cs::Union{Int,AbstractVector{Float64}} = 10::((_ isa Int && _ > 0) || all(_ .> 0))
     fit_intercept::Bool        = true
@@ -77,23 +78,53 @@ metadata_model(LogisticCVClassifier,
     )
 
 # ============================================================================
-PerceptronClassifier_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).Perceptron
+PassiveAggressiveClassifier_ = SKLM.PassiveAggressiveClassifier
+@sk_model mutable struct PassiveAggressiveClassifier <: MLJBase.Deterministic
+    C::Float64            = 1.0::(_ > 0)
+    fit_intercept::Bool   = true
+    max_iter::Int         = 100::(_ > 0)
+    tol::Float64          = 1e-3::(_ > 0)
+    early_stopping::Bool  = false
+    validation_fraction::Float64 = 0.1::(0 < _ < 1)
+    n_iter_no_change::Int = 5::(_ > 0)
+    shuffle::Bool         = true
+    verbose::Int          = 0
+    loss::String          = "hinge"::(_ in ("hinge", "squared_hinge"))
+    n_jobs::Option{Int}   = nothing
+    random_state::Any     = 0
+    warm_start::Bool      = false
+    class_weight::Any     = nothing
+    average::Bool         = false
+end
+MLJBase.fitted_params(m::PassiveAggressiveClassifier, (f, _, _)) = (
+    coef      = f.coef_,
+    intercept = ifelse(m.fit_intercept, f.intercept_, nothing)
+    )
+metadata_model(PassiveAggressiveClassifier,
+    input=MLJBase.Table(MLJBase.Continuous),
+    target=AbstractVector{<:MLJBase.Finite},
+    weights=false,
+    descr="Passive aggressive classifier."
+    )
+
+# ============================================================================
+PerceptronClassifier_ = SKLM.Perceptron
 @sk_model mutable struct PerceptronClassifier <: MLJBase.Deterministic
-    penalty::Union{Nothing,String} = nothing::(_ === nothing || _ in ("l2", "l1", "elasticnet"))
-    alpha::Float64                 = 1e-4::(_ > 0)
-    fit_intercept::Bool            = true
-    max_iter::Int                  = 1_000::(_ > 0)
-    tol::Union{Nothing,Float64}    = 1e-3
-    shuffle::Bool                  = true
-    verbose::Int                   = 0
-    eta0::Float64                  = 1.0::(_ > 0)
-    n_jobs::Union{Nothing,Int}     = nothing
-    random_state::Any              = 0
-    early_stopping::Bool           = false
-    validation_fraction::Float64   = 0.1::(0 < _ < 1)
-    n_iter_no_change::Int          = 5::(_ > 0)
-    class_weight::Any              = nothing
-    warm_start::Bool               = false
+    penalty::Option{String} = nothing::(_ === nothing || _ in ("l2", "l1", "elasticnet"))
+    alpha::Float64          = 1e-4::(_ > 0)
+    fit_intercept::Bool     = true
+    max_iter::Int           = 1_000::(_ > 0)
+    tol::Option{Float64}    = 1e-3
+    shuffle::Bool           = true
+    verbose::Int            = 0
+    eta0::Float64           = 1.0::(_ > 0)
+    n_jobs::Option{Int}     = nothing
+    random_state::Any       = 0
+    early_stopping::Bool    = false
+    validation_fraction::Float64 = 0.1::(0 < _ < 1)
+    n_iter_no_change::Int   = 5::(_ > 0)
+    class_weight::Any       = nothing
+    warm_start::Bool        = false
 end
 MLJBase.fitted_params(m::PerceptronClassifier, (f, _, _)) = (
     coef      = f.coef_,
@@ -107,7 +138,7 @@ metadata_model(PerceptronClassifier,
     )
 
 # ============================================================================
-RidgeClassifier_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).RidgeClassifier
+RidgeClassifier_ = SKLM.RidgeClassifier
 @sk_model mutable struct RidgeClassifier <: MLJBase.Deterministic
     alpha::Float64    = 1.0
     fit_intercept::Bool = true
@@ -131,7 +162,7 @@ metadata_model(RidgeClassifier,
     )
 
 # ============================================================================
-RidgeCVClassifier_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).RidgeClassifierCV
+RidgeCVClassifier_ = SKLM.RidgeClassifierCV
 @sk_model mutable struct RidgeCVClassifier <: MLJBase.Deterministic
     alphas::AbstractArray{Float64} = [0.1,1.0,10.0]::(all(0 .≤ _))
     fit_intercept::Bool   = true
@@ -153,7 +184,7 @@ metadata_model(RidgeCVClassifier,
     )
 
 # ============================================================================
-SGDClassifier_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).SGDClassifier
+SGDClassifier_ = SKLM.SGDClassifier
 @sk_model mutable struct SGDClassifier <: MLJBase.Deterministic
     loss::String          = "hinge"::(_ in ("hinge", "log", "modified_huber", "squared_hinge", "perceptron", "squared_loss", "huber", "epsilon_insensitive", "squared_epsilon_insensitive"))
     penalty::String       = "l2"::(_ in ("l1", "l2", "elasticnet", "none"))
@@ -177,7 +208,7 @@ SGDClassifier_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).SGDClas
     warm_start::Bool      = false
     average::Bool         = false
 end
-ProbabilisticSGDClassifier_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).SGDClassifier
+ProbabilisticSGDClassifier_ = SKLM.SGDClassifier
 @sk_model mutable struct ProbabilisticSGDClassifier <: MLJBase.Probabilistic
     loss::String          = "log"::(_ in ("log", "modified_huber")) # only those -> predict proba
     penalty::String       = "l2"::(_ in ("l1", "l2", "elasticnet", "none"))
