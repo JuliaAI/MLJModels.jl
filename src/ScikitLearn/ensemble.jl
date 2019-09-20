@@ -14,8 +14,6 @@
 # | VotingReg              | ✗      | ✗             | ✗      | ✗        |  ✗      | ✗       |
 # | HGBClassif             | ✗      | ✗             | ✗      | ✗        |  ✗      | ✗       |
 # | HGBReg                 | ✗      | ✗             | ✗      | ✗        |  ✗      | ✗       |
-# | RANSACClassif          | ✗      | ✗             | ✗      | ✗        |  ✗      | ✗       |
-# | RANSACReg              | ✗      | ✗             | ✗      | ✗        |  ✗      | ✗       |
 
 AdaBoostRegressor_ = SKEN.AdaBoostRegressor
 @sk_model mutable struct AdaBoostRegressor <: MLJBase.Deterministic
