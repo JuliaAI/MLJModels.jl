@@ -27,12 +27,14 @@ end
     @test keys(fp) == (:estimators, :estimators_samples, :estimators_features, :oob_score, :oob_prediction)
 end
 
-# @testset "XTreeReg" begin
-#     m = ExtraTreeRegressor(random_state=0)
-#     f, _, _ = fit(m, 1, X, y)
-#     @test isapprox(f[1].score(X, y), 0.9356045, rtol=1e-5)
-#     @test isapprox(norm(predict(m, f, X) .- y)/norm(y),  0.2352736, rtol=1e-5)
-# end
+@testset "XTreeReg" begin
+    m = ExtraTreesRegressor(random_state=0)
+    f, _, _ = fit(m, 1, X, y)
+    @test 0.9 ≤ f[1].score(X, y) ≤ 0.999
+    @test 0.15 ≤ norm(predict(m, f, X) .- y)/norm(y) ≤ 0.25
+    fp = fitted_params(m, f)
+    @test keys(fp) == (:estimators, :feature_importances, :n_features, :n_outputs, :oob_score, :oob_prediction)
+end
 
 @testset "GBReg" begin
     m = GradientBoostingRegressor(random_state=0)
@@ -98,4 +100,7 @@ end
     @test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
     @test infos[:target_scitype] == AbstractVector{<:MLJBase.Finite}
     @test !isempty(infos[:docstring])
+end
+
+@testset "XTreeClf" begin
 end
