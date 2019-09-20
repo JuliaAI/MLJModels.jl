@@ -103,4 +103,11 @@ end
 end
 
 @testset "XTreeClf" begin
+    m, f = simple_test_classif_prob(ExtraTreesClassifier(), Xc2, yc2)
+    fp = fitted_params(m, f)
+    @test keys(fp) == (:estimators, :classes, :n_classes, :feature_importances, :n_features, :n_outputs, :oob_score, :oob_decision_function)
+    infos = info_dict(m)
+    @test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
+    @test infos[:target_scitype] == AbstractVector{<:MLJBase.Finite}
+    @test !isempty(infos[:docstring])
 end
