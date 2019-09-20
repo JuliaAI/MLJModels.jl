@@ -189,8 +189,8 @@ end
 @testset "RANSAC" begin
     m = RANSACRegressor()
     f, _, _ = fit(m, 1, X, y)
-    @test isapprox(f[1].score(X, y), 0.998859, rtol=1e-5)
-    @test isapprox(norm(predict(m, f, X) .- y)/norm(y), 0.0326918, rtol=1e-5)
+    @test 0.99 ≤ f[1].score(X, y) ≤ 0.999
+    @test 0.02 ≤ norm(predict(m, f, X) .- y)/norm(y) ≤ 0.05
     # testing that the fitted params is proper
     fp = fitted_params(m, f)
     @test keys(fp) == (:estimator, :n_trials, :inlier_mask, :n_skips_no_inliers, :n_skips_invalid_data, :n_skips_invalid_model)
