@@ -1,17 +1,7 @@
 module TestScikitLearn
 
-using MLJBase
-using Tables
-using Test
-using LinearAlgebra
-using Random
-
-import MLJModels
-import ScikitLearn
-using MLJModels.ScikitLearn_
-using CategoricalArrays
-using RDatasets
-
+import MLJModels, ScikitLearn
+using MLJBase, Tables, Test, LinearAlgebra, Random, MLJModels.ScikitLearn_, CategoricalArrays, RDatasets
 include("../testutils.jl")
 
 include("svm.jl")

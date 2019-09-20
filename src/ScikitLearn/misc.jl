@@ -1,6 +1,6 @@
 # | model                  | build  | fitted_params | report | metadata | tests 1 | tests 2 |
 # | ---------------------- | ------ | ------------- | ------ | -------- | ------- | ------- |
-# | BernoulliNB            | ✗      | ✗             | ✗      | ✗        |  ✗      | ✗       |
+# | BernoulliNB            | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
 # | GaussianNB             | ✓      | ✓             | ✗      | ✓        |  ✓     | ✓       |
 # | MultinomialNB          | ✓      | ✓             | ✗      | ✓        |  ✓     | ✓       |
 # | ComplementNB           | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
@@ -75,7 +75,26 @@ metadata_model(GaussianNBClassifier,
     )
 
 # ============================================================================
-#BernoulliNBClassifier_ = SKNB.BernoulliNB
+BernoulliNBClassifier_ = SKNB.BernoulliNB
+@sk_model mutable struct BernoulliNBClassifier <: MLJBase.Probabilistic
+    alpha::Float64            = 1.0::(_ ≥ 0)
+    binarize::Option{Float64} = 0.0
+    fit_prior::Bool           = true
+    class_prior::Option{AbstractVector} = nothing::(_ === nothing || all(_ .≥ 0))
+end
+MLJBase.fitted_params(m::BernoulliNBClassifier, (f, _, _)) = (
+    class_log_prior  = f.class_log_prior_,
+    feature_log_prob = f.feature_log_prob_,
+    class_count      = f.class_count_,
+    feature_count    = f.feature_count_
+    )
+metadata_model(BernoulliNBClassifier,
+    input=MLJBase.Table(MLJBase.Count),      # it expects binary but binarize takes care of that
+    target=AbstractVector{<:MLJBase.Finite},
+    weights=false,
+    descr="Binomial naive bayes classifier. It is suitable for classification with binary features; features will be binarized based on the `binarize` keyword (unless it's `nothing` in which
+    case the features are assumed to be binary)."
+    )
 
 # ============================================================================
 MultinomialNBClassifier_ = SKNB.MultinomialNB
@@ -96,7 +115,7 @@ metadata_model(MultinomialNBClassifier,
     input=MLJBase.Table(MLJBase.Count),        # NOTE: sklearn may also accept continuous (tf-idf)
     target=AbstractVector{<:MLJBase.Finite},
     weights=false,
-    descr="Multinomial naive bayes classifier is suitable for classification with discrete features (e.g. word counts for text classification)."
+    descr="Multinomial naive bayes classifier. It is suitable for classification with discrete features (e.g. word counts for text classification)."
     )
 
 # ============================================================================
@@ -119,4 +138,54 @@ metadata_model(ComplementNBClassifier,
     target=AbstractVector{<:MLJBase.Finite},
     weights=false,
     descr="Similar to Multinomial NB classifier but with more robust assumptions. Suited for imbalanced datasets."
+    )
+
+# ============================================================================
+KNeighborsRegressor_ = SKNE.KNeighborsRegressor
+@sk_model mutable struct KNeighborsRegressor <: MLJBase.Deterministic
+    n_neighbors::Int    = 5::(_ > 0)
+    weights::Union{String,Function} = "uniform"::((_ isa Function) || _ in ("uniform", "distance"))
+    algorithm::String   = "auto"::(_ in ("auto", "ball_tree", "kd_tree", "brute"))
+    leaf_size::Int      = 30::(_ > 0)
+    p::Int              = 2::(_ ≥ 0)
+    metric::Any         = "minkowski"
+    metric_params::Any  = nothing
+    n_jobs::Option{Int} = nothing
+end
+MLJBase.fitted_params(m::KNeighborsRegressor, (f, _, _)) = (
+    effective_metric        = f.effective_metric_,
+    effective_metric_params = f.effective_metric_params_
+    )
+metadata_model(KNeighborsRegressor,
+    input=MLJBase.Table(MLJBase.Continuous),
+    target=AbstractVector{MLJBase.Continuous},
+    weights=false,
+    descr="K-Nearest Neighbors regressor: predicts the response associated with a new point
+    by taking an average of the response of the K-nearest points."
+    )
+
+# ----------------------------------------------------------------------------
+KNeighborsClassifier_ = SKNE.KNeighborsClassifier
+@sk_model mutable struct KNeighborsClassifier <: MLJBase.Probabilistic
+    n_neighbors::Int    = 5::(_ > 0)
+    weights::Union{String,Function} = "uniform"::((_ isa Function) || _ in ("uniform", "distance"))
+    algorithm::String   = "auto"::(_ in ("auto", "ball_tree", "kd_tree", "brute"))
+    leaf_size::Int      = 30::(_ > 0)
+    p::Int              = 2::(_ ≥ 0)
+    metric::Any         = "minkowski"
+    metric_params::Any  = nothing
+    n_jobs::Option{Int} = nothing
+end
+MLJBase.fitted_params(m::KNeighborsClassifier, (f, _, _)) = (
+    classes                 = f.classes_,
+    effective_metric        = f.effective_metric_,
+    effective_metric_params = f.effective_metric_params_,
+    outputs_2d              = f.outputs_2d_
+    )
+metadata_model(KNeighborsClassifier,
+    input=MLJBase.Table(MLJBase.Continuous),
+    target=AbstractVector{<:MLJBase.Finite},
+    weights=false,
+    descr="K-Nearest Neighbors classifier: predicts the class associated with a new point
+    by taking a vote over the classes of the K-nearest points."
     )
