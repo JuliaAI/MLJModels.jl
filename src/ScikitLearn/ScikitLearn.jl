@@ -50,12 +50,15 @@ function _skmodel_fit(modelname, params)
 			targnames = nothing
 			decode    = nothing
 			y1 		  = nothing
-			# in multi-target regression case
+			# check if it's a multi-target regression case, in that case keep
+			# track of the names of the target columns so that the prediction
+			# can be named accordingly
 			if Tables.istable(y)
 			   yplain    = MLJBase.matrix(y)
 			   targnames = MLJBase.schema(y).names
 			end
-			if eltype(y) <: CategoricalString
+			# is this a  classification case? if so, keep track of y[1] for encoding/decoding
+			if eltype(y) <: Union{CategoricalString,CategoricalValue}
 				yplain = MLJBase.int(y)
 				y1     = y[1]
 			end
@@ -64,7 +67,6 @@ function _skmodel_fit(modelname, params)
 			fitres  = ScikitLearn.fit!(skmodel, Xmatrix, yplain)
 			# TODO: we may want to use the report later on
 			report  = NamedTuple()
-			# passing y[1] is useful in the case of a classifier (decoding)
 			return ((fitres, y1, targnames), nothing, report)
 		end
 	end
