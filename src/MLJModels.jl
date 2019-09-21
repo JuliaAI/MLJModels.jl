@@ -59,7 +59,7 @@ function __init__()
     @require XGBoost = "009559a3-9522-5dbb-924b-0b6ed2b22bb9" include("XGBoost.jl")
     @require LIBSVM="b1bec4e5-fd48-53fe-b0cb-9723c09d164b" include("LIBSVM.jl")
     @require NearestNeighbors="b8a86587-4115-5ab1-83bc-aa920d37bbce" include("NearestNeighbors.jl")
-
+    @require Soss="8ce77f84-9b61-11e8-39ff-d17a774bf41c"
 end
 
 end # module
