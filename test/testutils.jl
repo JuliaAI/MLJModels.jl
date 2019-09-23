@@ -83,7 +83,7 @@ function simple_test_reg(m, X, y)
     m, f
 end
 
-function test_dummy_classif(m; seed=5154, binary=false)
+function test_dummy_classif(m; seed=5154, binary=false, thresh=0.75)
     if binary
         X, Xt, y, yt = gen_dummy_classif_binary(seed=seed)
     else
@@ -91,25 +91,25 @@ function test_dummy_classif(m; seed=5154, binary=false)
     end
     f, _, _ = fit(m, 1, X, y)
     p = typeof(m) <: Probabilistic ? predict_mode(m, f, Xt) : predict(m, f, Xt)
-    @test sum(p .== yt) / length(yt) ≥ 0.75
+    @test sum(p .== yt) / length(yt) ≥ thresh
 end
 
-function simple_test_classif(m, X, y; dummybinary=false, nodummy=false)
+function simple_test_classif(m, X, y; dummybinary=false, nodummy=false, thresh=0.75)
     f, _, _ = fit(m, 1, X, y)
     p = predict(m, f, X)
     @test eltype(p) == eltype(y)
     @test Set(unique(p)) == Set(unique(y))
-    nodummy || test_dummy_classif(m; binary=dummybinary)
+    nodummy || test_dummy_classif(m; binary=dummybinary, thresh=thresh)
     m, f
 end
 
-function simple_test_classif_prob(m, X, y; dummybinary=false, nodummy=false)
+function simple_test_classif_prob(m, X, y; dummybinary=false, nodummy=false, thresh=0.75)
     f, _, _ = fit(m, 1, X, y)
     p = predict_mode(m, f, X)
     @test eltype(p) == eltype(y)
     @test Set(unique(p)) == Set(unique(y))
     p = predict(m, f, X)
     @test eltype(p) <: UnivariateFinite
-    nodummy || test_dummy_classif(m; binary=dummybinary)
+    nodummy || test_dummy_classif(m; binary=dummybinary, thresh=thresh)
     m, f
 end
