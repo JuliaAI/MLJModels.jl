@@ -69,9 +69,9 @@ end
     @test !isempty(infos[:docstring])
 end
 
-# NOTE: SGD classifier with few points is tricky which is why we use such low thresholds
+# NOTE: SGD classifier with few points is tricky which is why we remove the dummy test
 @testset "SGDClf" begin
-    m, f = simple_test_classif(SGDClassifier(), Xc2, yc2; dummybinary=true, thresh=0.6)
+    m, f = simple_test_classif(SGDClassifier(), Xc2, yc2; nodummy=true)
     fp = fitted_params(m, f)
     @test keys(fp) == (:coef, :intercept)
     infos = info_dict(m)
@@ -79,7 +79,7 @@ end
     @test infos[:target_scitype] == AbstractVector{<:MLJBase.Finite}
     @test !isempty(infos[:docstring])
 
-    m, f = simple_test_classif_prob(ProbabilisticSGDClassifier(), Xc2, yc2, thresh=0.6)
+    m, f = simple_test_classif_prob(ProbabilisticSGDClassifier(), Xc2, yc2; nodummy=true)
     fp = fitted_params(m, f)
     @test keys(fp) == (:coef, :intercept)
     infos = info_dict(m)
