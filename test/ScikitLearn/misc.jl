@@ -12,7 +12,7 @@ Xr, yr   = gen_reg()
 end
 
 @testset "DummyClf" begin
-    m, f = simple_test_classif_prob(DummyClassifier(), Xc2, yc2)
+    m, f = simple_test_classif_prob(DummyClassifier(), Xc2, yc2; nodummy=true)
     fp = fitted_params(m, f)
     @test keys(fp) == (:classes, :n_classes, :n_outputs)
     infos = info_dict(m)
@@ -57,7 +57,7 @@ X3 .= ceil.(X3)
 Xc3 = MLJBase.table(Int.(X3))
 
 @testset "BernNBClf" begin
-    m, f = simple_test_classif_prob(BernoulliNBClassifier(binarize=2.0), Xc3, yc2)
+    m, f = simple_test_classif_prob(BernoulliNBClassifier(binarize=2.0), Xc3, yc2; nodummy=true)
     fp =  fitted_params(m, f)
     @test keys(fp) == (:class_log_prior, :feature_log_prob, :class_count, :feature_count)
     infos = info_dict(m)
@@ -67,7 +67,7 @@ Xc3 = MLJBase.table(Int.(X3))
 end
 
 @testset "MultiNBClf" begin
-    m, f = simple_test_classif_prob(MultinomialNBClassifier(), Xc3, yc2)
+    m, f = simple_test_classif_prob(MultinomialNBClassifier(), Xc3, yc2; nodummy=true)
     fp =  fitted_params(m, f)
     @test keys(fp) == (:class_log_prior, :intercept, :feature_log_prob, :coef, :class_count, :feature_count)
     infos = info_dict(m)
@@ -77,7 +77,7 @@ end
 end
 
 @testset "ComplNBClf" begin
-    m, f = simple_test_classif_prob(ComplementNBClassifier(), Xc3, yc2)
+    m, f = simple_test_classif_prob(ComplementNBClassifier(), Xc3, yc2; nodummy=true)
     fp =  fitted_params(m, f)
     @test keys(fp) == (:class_log_prior, :feature_log_prob, :class_count, :feature_count, :feature_all)
     infos = info_dict(m)

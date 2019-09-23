@@ -22,7 +22,7 @@ end
 end
 
 @testset "PAClf" begin
-    m, f = simple_test_classif(PassiveAggressiveClassifier(), Xc1, yc1)
+    m, f = simple_test_classif(PassiveAggressiveClassifier(), Xc1, yc1; dummybinary=true)
     fp = fitted_params(m, f)
     @test keys(fp) == (:coef, :intercept)
     infos = info_dict(m)
@@ -32,7 +32,7 @@ end
 end
 
 @testset "PerceptronClf" begin
-    m, f = simple_test_classif(PerceptronClassifier(), Xc2, yc2)
+    m, f = simple_test_classif(PerceptronClassifier(), Xc2, yc2; dummybinary=true)
     fp = fitted_params(m, f)
     @test keys(fp) == (:coef, :intercept)
     infos = info_dict(m)
@@ -62,7 +62,7 @@ end
 end
 
 @testset "SGDClf" begin
-    m, f = simple_test_classif(SGDClassifier(), Xc2, yc2)
+    m, f = simple_test_classif(SGDClassifier(), Xc2, yc2; dummybinary=true)
     fp = fitted_params(m, f)
     @test keys(fp) == (:coef, :intercept)
     infos = info_dict(m)

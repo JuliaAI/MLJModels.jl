@@ -90,7 +90,7 @@ function _skmodel_predict(modelname)
 				return MLJBase.table(preds, names=targnames)
 			end
 			if y1 !== nothing
-				# if it's a classifier
+				# if it's a classifier)
 				return preds |> MLJBase.decoder(y1)
 			end
 			return preds
