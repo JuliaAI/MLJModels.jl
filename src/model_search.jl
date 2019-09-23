@@ -180,9 +180,8 @@ models() = models(x->true)
  
 
 List all models whose names are in the namespace of the specified
-module `modl`, additionally solving the `task`, or meeting the
-`conditions`, if specified. Here a *condition* is a `Bool`-valued
-function on models.
+module `modl`, or meeting the `conditions`, if specified. Here a
+*condition* is a `Bool`-valued function on models.
 
 See also [models](@ref)
 

@@ -135,7 +135,7 @@ function MLJBase.fit(model::DecisionTreeClassifier
         tree = DecisionTree.prune_tree(tree, model.merge_purity_threshold)
     end
 
-    verbosity < 3 || DecisionTree.print_tree(tree, model.display_depth)
+    verbosity < 2 || DecisionTree.print_tree(tree, model.display_depth)
 
     fitresult = (tree, classes_seen)
 
