@@ -52,7 +52,12 @@ end
 end
 
 @testset  "RidgeCVClf" begin
+    # NOTE: this is a hack to prevent getting a bunch of irrelevant sklearn warnings
+    # which are due to version compat when using ridgecv (not relevant for us)
+    old_stdout = stdout
+    _ = redirect_stdout()
     m, f = simple_test_classif(RidgeCVClassifier(), Xc1, yc1)
+    redirect_stdout(old_stdout)
     fp = fitted_params(m, f)
     @test keys(fp) == (:coef, :intercept)
     infos = info_dict(m)
