@@ -1,16 +1,18 @@
 module TestTransformer
 
-# using Revise
+using Revise
 import MLJModels
-import MLJModels.Transformers
+
 using MLJBase
 using Test
 using Statistics
 using CategoricalArrays
 using Tables
+using DataFrames
+using StatsBase
 
 # static transformers:
-t = StaticTransformer(f=log)
+t = MLJModels.StaticTransformer(f=log)
 fitresult, cache, report = MLJBase.fit(t, 1, nothing)
 @test transform(t, fitresult, 5) ≈ log(5)
 
@@ -144,20 +146,21 @@ X = (name=categorical(["Ben", "John", "Mary", "John"], ordered=true),
      gender=categorical(['M', 'M', 'F', 'M']))
 @test_throws Exception transform(t, fitresult, X)
 
-#
+# playgorund
+
 @testset "Imputer" begin
     df=DataFrame(x=vcat([missing,1.0],ones(10)),y=vcat([missing,1.0],ones(10)),z=vcat([missing,1.0],ones(10)))
     scitype(df[:y])
-    imp=FillImputer()
+    imp=MLJModels.FillImputer()
     impRes=fit(imp,df)[1]
     transform(imp,impRes,df)
     @test !ismissing(df[:x])
     df=DataFrame(x=categorical(vcat([missing for i=1:4], [["Old", "Young", "Middle", "Young"] for i=1:4]...)))
-    imp=FillImputer(features=[:x])
+    imp=MLJModels.FillImputer(features=[:x])
     fitresult=fit(imp, df)[1]
     transform(imp,fitresult,df)
     @test !ismissing(df[:x])
-    imp=FillImputer()
+    imp=MLJModels.FillImputer()
     df=DataFrame(x=[missing,missing,1,1,1,1,1,5])
     fitresult=fit(imp, df)[1]
     transform(imp,fitresult,df)

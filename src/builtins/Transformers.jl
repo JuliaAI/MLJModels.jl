@@ -99,7 +99,7 @@ mutable struct FillImputerResult <: Unsupervised
 end
 
 function fit(transformer::FillImputer,X)
-    all_features = Tables.schema(X).names # a tuple not vector
+    all_features = MLJBase.schema(X).names # a tuple not vector
     specified_features =isempty(transformer.features) ? collect(all_features) : transformer.features
 
     features=Symbol[]
@@ -120,28 +120,26 @@ function fit(transformer::FillImputer,X)
     return fitresult, cache, report
 end
 
-using DataFrames
 
 function transform(transformer::FillImputer, fitresult, X)
-    df=DataFrame(X)
-    features = Tables.schema(X).names # tuple not vector
+    features = MLJBase.schema(X).names # tuple not vector
     issubset(Set(fitresult.features), Set(features) ) ||
         error("Attempting to transform table with feature labels not seen in fit. ")
 
     for ftr in fitresult.features
-        mis=ismissing.(df[ftr])
-        mis_ind=findall(x-> ismissing(x),df[ftr])
+        mis=ismissing.(X[ftr])
+        mis_ind=findall(x-> ismissing(x),X[ftr])
         col = MLJBase.selectcols(X,ftr)
         T = scitype_union(col)
         if T<:Union{Continuous,Missing}
-            df[mis_ind,ftr]=transformer.continuous_fill(df[:x][map(!,mis)])
+            X[mis_ind,ftr]=transformer.continuous_fill(X[:x][map(!,mis)])
         elseif T <: Union{Count,Missing}
-            df[mis_ind,ftr]=transformer.count_fill(df[:x][map(!,mis)])
+            X[mis_ind,ftr]=transformer.count_fill(X[:x][map(!,mis)])
         else
-            df[mis_ind,ftr]=transformer.categorical_fill(df[:x][map(!,mis)])
+            X[mis_ind,ftr]=transformer.categorical_fill(X[:x][map(!,mis)])
         end
     end
-    df
+    X
 end
 MLJBase.load_path(::Type{<:FillImputer}) = "MLJModels.FillImputer"
 MLJBase.package_url(::Type{<:FillImputer}) = "https://github.com/alan-turing-institute/MLJModels.jl"
