@@ -8,6 +8,7 @@ export UnivariateStandardizer, Standardizer
 export UnivariateBoxCoxTransformer
 export OneHotEncoder
 export StaticTransformer
+export FillImputer
 
 import MLJBase: MLJType, Unsupervised
 import MLJBase: selectcols, table
@@ -48,7 +49,107 @@ MLJBase.package_name(::Type{<:StaticTransformer}) = "MLJModels"
 MLJBase.package_uuid(::Type{<:StaticTransformer}) = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
 MLJBase.is_pure_julia(::Type{<:StaticTransformer}) = true
 # MLJBase.input_scitype(::Type{<:StaticTransformer}) = Table(Scientific) # anything goes
-# MLJBase.output_scitype(::Type{<:StaticTransformer}) = Table(Scientific) 
+# MLJBase.output_scitype(::Type{<:StaticTransformer}) = Table(Scientific)
+
+## Imputer
+
+## Imputer
+"""
+    FillImputer -   imputes by applying function to non missing values
+                    default for continuous(median), CategoricalArray(most common),
+                        Count (rounded median)
+
+
+"""
+mutable struct FillImputer <: Unsupervised
+    features::Vector{Symbol}
+    continuous_fill::Union{Function}
+    count_fill::Union{Function}
+    categorical_fill::Union{Function}
+    allowed_scitypes::Array{Any}
+
+end
+
+FillImputer(;features=Symbol[], continuous_fill=median,
+    count_fill=basic_count_fill ,categorical_fill=x->common_cat_filler(x),
+    allowed_scitypes=[Union{Continuous,Missing},Union{Count,Missing},Union{Multiclass,Missing}])= FillImputer(features,
+        continuous_fill,count_fill,categorical_fill,allowed_scitypes)
+
+
+function commonCategoryFiller(vec::CategoricalArray)
+    ftab= freqtable(vec)
+    return names(ftab)[1][findmax(ftab)[2]]
+end
+
+
+function common_cat_filler(vec::CategoricalArray)
+    return StatsBase.mode(vec)
+end
+
+
+
+function basic_count_fill(v)
+    round(eltype(v),median(v))
+end
+
+
+
+mutable struct FillImputerResult <: Unsupervised
+    features::Vector{Symbol}
+end
+
+function fit(transformer::FillImputer,X)
+    all_features = Tables.schema(X).names # a tuple not vector
+    specified_features =isempty(transformer.features) ? collect(all_features) : transformer.features
+
+    features=Symbol[]
+    for j in eachindex(all_features)
+        ftr = all_features[j]
+        col = MLJBase.selectcols(X,j)
+        T = scitype_union(col)
+        if any([T <: a for a in transformer.allowed_scitypes]) && ftr in specified_features
+            push!(features,ftr)
+        end
+
+    end
+
+    fitresult = FillImputerResult(collect(features))
+    report = nothing
+    cache = nothing
+
+    return fitresult, cache, report
+end
+
+using DataFrames
+
+function transform(transformer::FillImputer, fitresult, X)
+    df=DataFrame(X)
+    features = Tables.schema(X).names # tuple not vector
+    issubset(Set(fitresult.features), Set(features) ) ||
+        error("Attempting to transform table with feature labels not seen in fit. ")
+
+    for ftr in fitresult.features
+        mis=ismissing.(df[ftr])
+        mis_ind=findall(x-> ismissing(x),df[ftr])
+        col = MLJBase.selectcols(X,ftr)
+        T = scitype_union(col)
+        if T<:Union{Continuous,Missing}
+            df[mis_ind,ftr]=transformer.continuous_fill(df[:x][map(!,mis)])
+        elseif T <: Union{Count,Missing}
+            df[mis_ind,ftr]=transformer.count_fill(df[:x][map(!,mis)])
+        else
+            df[mis_ind,ftr]=transformer.categorical_fill(df[:x][map(!,mis)])
+        end
+    end
+    df
+end
+MLJBase.load_path(::Type{<:FillImputer}) = "MLJModels.FillImputer"
+MLJBase.package_url(::Type{<:FillImputer}) = "https://github.com/alan-turing-institute/MLJModels.jl"
+MLJBase.package_name(::Type{<:FillImputer}) = "MLJModels"
+MLJBase.package_uuid(::Type{<:FillImputer}) = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
+MLJBase.is_pure_julia(::Type{<:FillImputer}) = true
+MLJBase.input_scitype(::Type{<:FillImputer}) = MLJBase.Table(MLJBase.Found)
+MLJBase.output_scitype(::Type{<:FillImputer}) = MLJBase.Table(MLJBase.Found)
 
 
 ## FOR FEATURE (COLUMN) SELECTION
@@ -98,7 +199,7 @@ MLJBase.package_name(::Type{<:FeatureSelector}) = "MLJModels"
 MLJBase.package_uuid(::Type{<:FeatureSelector}) = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
 MLJBase.is_pure_julia(::Type{<:FeatureSelector}) = true
 MLJBase.input_scitype(::Type{<:FeatureSelector}) = Table(Scientific) # anything goes
-MLJBase.output_scitype(::Type{<:FeatureSelector}) = Table(Scientific) 
+MLJBase.output_scitype(::Type{<:FeatureSelector}) = Table(Scientific)
 
 
 ## UNIVARIATE STANDARDIZATION

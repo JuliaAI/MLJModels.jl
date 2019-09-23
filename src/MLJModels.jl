@@ -4,7 +4,7 @@ module MLJModels
 export @update
 
 # from builtins/Transformers.jl:
-export StaticTransformer, FeatureSelector,
+export StaticTransformer, FillImputer, FeatureSelector,
     UnivariateStandardizer, Standardizer,
     UnivariateBoxCoxTransformer,
     OneHotEncoder
@@ -34,7 +34,6 @@ using Pkg.TOML
 const srcdir = dirname(@__FILE__) # the directory containing this file
 
 include("metadata_utils.jl")
-include("parameters_utils.jl")
 
 include("metadata.jl")
 include("model_search.jl")
