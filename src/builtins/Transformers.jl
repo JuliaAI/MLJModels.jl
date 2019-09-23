@@ -18,6 +18,7 @@ import Distributions
 using CategoricalArrays
 using Statistics
 using Tables
+using StatsBase
 
 # to be extended:
 import MLJBase: fit, transform, inverse_transform
@@ -71,34 +72,31 @@ mutable struct FillImputer <: Unsupervised
 end
 
 FillImputer(;features=Symbol[], continuous_fill=median,
-    count_fill=basic_count_fill ,categorical_fill=x->common_cat_filler(x),
+    count_fill=median_count_fill ,categorical_fill=x->mode_cat_fill(x),
     allowed_scitypes=[Union{Continuous,Missing},Union{Count,Missing},Union{Multiclass,Missing}])= FillImputer(features,
         continuous_fill,count_fill,categorical_fill,allowed_scitypes)
 
 
-function commonCategoryFiller(vec::CategoricalArray)
-    ftab= freqtable(vec)
-    return names(ftab)[1][findmax(ftab)[2]]
-end
 
 
-function common_cat_filler(vec::CategoricalArray)
+
+function mode_cat_fill(vec::CategoricalArray)
     return StatsBase.mode(vec)
 end
 
 
 
-function basic_count_fill(v)
+function median_count_fill(v)
     round(eltype(v),median(v))
 end
 
 
 
-mutable struct FillImputerResult <: Unsupervised
+mutable struct FillImputerResult
     features::Vector{Symbol}
 end
 
-function fit(transformer::FillImputer,X)
+function fit(transformer::FillImputer,verbosity::Int,X)
     all_features = MLJBase.schema(X).names # a tuple not vector
     specified_features =isempty(transformer.features) ? collect(all_features) : transformer.features
 
@@ -135,7 +133,7 @@ function transform(transformer::FillImputer, fitresult, X)
             X[mis_ind,ftr]=transformer.continuous_fill(X[:x][map(!,mis)])
         elseif T <: Union{Count,Missing}
             X[mis_ind,ftr]=transformer.count_fill(X[:x][map(!,mis)])
-        else
+        elseif T <: Union{Multiclass,Missing}
             X[mis_ind,ftr]=transformer.categorical_fill(X[:x][map(!,mis)])
         end
     end

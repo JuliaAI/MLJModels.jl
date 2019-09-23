@@ -1,8 +1,8 @@
 module TestTransformer
 
 using Revise
-import MLJModels
-
+using MLJModels
+using TestImages
 using MLJBase
 using Test
 using Statistics
@@ -147,24 +147,30 @@ X = (name=categorical(["Ben", "John", "Mary", "John"], ordered=true),
 @test_throws Exception transform(t, fitresult, X)
 
 # playgorund
+# using TestImages
+# df=DataFrame(x=[testimage("cameraman"),testimage("cameraman"),testimage("cameraman"),missing]);
+
 
 @testset "Imputer" begin
     df=DataFrame(x=vcat([missing,1.0],ones(10)),y=vcat([missing,1.0],ones(10)),z=vcat([missing,1.0],ones(10)))
     scitype(df[:y])
     imp=MLJModels.FillImputer()
-    impRes=fit(imp,df)[1]
+    impRes=fit(imp,1,df)[1]
     transform(imp,impRes,df)
     @test !ismissing(df[:x])
     df=DataFrame(x=categorical(vcat([missing for i=1:4], [["Old", "Young", "Middle", "Young"] for i=1:4]...)))
+
     imp=MLJModels.FillImputer(features=[:x])
-    fitresult=fit(imp, df)[1]
+    fitresult=fit(imp,1, df)[1]
     transform(imp,fitresult,df)
     @test !ismissing(df[:x])
     imp=MLJModels.FillImputer()
     df=DataFrame(x=[missing,missing,1,1,1,1,1,5])
-    fitresult=fit(imp, df)[1]
+    fitresult=fit(imp,1, df)[1]
     transform(imp,fitresult,df)
     @test !ismissing(df[:x])
+
+
 end
 
 
