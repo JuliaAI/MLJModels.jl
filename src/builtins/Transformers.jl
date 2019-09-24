@@ -71,7 +71,7 @@ end
 FeatureSelector(;features=Symbol[]) = FeatureSelector(features)
 
 function fit(transformer::FeatureSelector, verbosity::Int, X)
-    namesX = MLJBase.schema(X).names
+    namesX = Tables.schema(X).names
     issubset(Set(transformer.features), Set(namesX)) ||
         throw(error("Attempting to select non-existent feature(s)."))
     if isempty(transformer.features)
@@ -86,7 +86,7 @@ end
 MLJBase.fitted_params(::FeatureSelector, fitresult) = (features_to_keep=fitresult,)
 
 function transform(transformer::FeatureSelector, features, X)
-    issubset(Set(features), Set(MLJBase.schema(X).names)) ||
+    issubset(Set(features), Set(Tables.schema(X).names)) ||
         throw(error("Supplied frame does not admit previously selected features."))
     return MLJBase.selectcols(X, features)
 end
