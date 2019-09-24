@@ -252,7 +252,7 @@ y2 = (t1=y, t2=y)
     @test keys(fp) == (:coef, :intercept)
     pred = predict(m, f, X)
     @test pred isa Tables.MatrixTable
-    @test MLJBase.schema(pred).names == (:t1, :t2)
+    @test Tables.schema(pred).names == (:t1, :t2)
 end
 
 @testset "MTLassoCV" begin

@@ -7,6 +7,7 @@ using Tables
 
 #> for all classifiers:
 using CategoricalArrays
+using Tables
 
 # NOTE: legacy code for SVM models does not use the @sk_model macro.
 
@@ -53,7 +54,7 @@ function _skmodel_fit_reg(modelname, params)
 			# can be named accordingly
 			if Tables.istable(y)
 			   yplain    = MLJBase.matrix(y)
-			   targnames = MLJBase.schema(y).names
+			   targnames = Tables.schema(y).names
 			end
 			# Call the parent constructor from Sklearn.jl named $modelname_
 			skmodel = $(Symbol(modelname, "_"))($((Expr(:kw, p, :(model.$p)) for p in params)...))

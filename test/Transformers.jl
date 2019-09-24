@@ -71,7 +71,7 @@ fitresult, cache, report = MLJBase.fit(stand, 1, X)
 Xnew = transform(stand, fitresult, X)
 
 fitresult, cache, report = MLJBase.fit(stand, 1, X)
-@test issubset(Set(keys(fitresult)), Set(MLJBase.schema(X).names[[5,]]))
+@test issubset(Set(keys(fitresult)), Set(Tables.schema(X).names[[5,]]))
 transform(stand, fitresult, X)
 @test Xnew[1] == X[1]
 @test Xnew[2] == X[2]
@@ -133,8 +133,8 @@ Xtsmall = transform(t, fitresult_small, X)
 t = OneHotEncoder(ordered_factor=false)
 fitresult, cache, _ = MLJBase.fit(t, 1, X)
 Xt = transform(t, fitresult, X)
-@test :name in MLJBase.schema(Xt).names
-@test :favourite_number__5 in MLJBase.schema(Xt).names
+@test :name in Tables.schema(Xt).names
+@test :favourite_number__5 in Tables.schema(Xt).names
 
 # test that one may not add new columns:
 X = (name=categorical(["Ben", "John", "Mary", "John"], ordered=true),
