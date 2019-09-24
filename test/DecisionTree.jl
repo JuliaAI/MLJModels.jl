@@ -21,7 +21,8 @@ baretree = DecisionTreeClassifier()
 baretree.max_depth = 1
 fitresult, cache, report = MLJBase.fit(baretree, 1, X, y);
 baretree.max_depth = -1 # no max depth
-fitresult, cache, report = MLJBase.update(baretree, 1, fitresult, cache, X, y);
+fitresult, cache, report =
+    MLJBase.update(baretree, 1, fitresult, cache, X, y);
 
 # in this case decision tree is a perfect predictor:
 yhat = MLJBase.predict_mode(baretree, fitresult, X);

@@ -121,8 +121,15 @@ function MLJBase.fit(model::DecisionTreeClassifier
 
     Xmatrix = MLJBase.matrix(X)
 
-    yplain = identity.(y) # y as plain not abstact vector
-    classes_seen = unique(yplain)
+    # Note: Performance might be better if we use MLJBase.int to
+    # transform y to a vector of integers (and use
+    # MLJBase.classes(y[1]) as levels for prediction). However, this
+    # means the fitresult and print_tree outuput are less
+    # interpretable. So, as build_tree does not handle
+    # CategoricalVectors, we use a Vector of categorical elements
+    # instead:
+    yplain = Any[y...] # y as Vector of categorical elements
+    classes_seen = [unique(yplain)...] # a categorical vector
 
     tree = DecisionTree.build_tree(yplain,
                                    Xmatrix,
@@ -169,8 +176,9 @@ function MLJBase.predict(model::DecisionTreeClassifier
     Xmatrix = MLJBase.matrix(Xnew)
 
     tree, classes_seen = fitresult
+    levels_seen = Any[classes_seen...] # a vector of categorical elements
 
-    y_probabilities = DecisionTree.apply_tree_proba(tree, Xmatrix, classes_seen)
+    y_probabilities = DecisionTree.apply_tree_proba(tree, Xmatrix, levels_seen)
     return [MLJBase.UnivariateFinite(classes_seen,
                                      smooth(y_probabilities[i,:],
                                             model.pdf_smoothing))

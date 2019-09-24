@@ -41,8 +41,6 @@ end
 nonmissing = nonmissingtype
 
 include("metadata_utils.jl")
-
->>>>>>> dev
 include("metadata.jl")
 include("model_search.jl")
 include("loading.jl")
