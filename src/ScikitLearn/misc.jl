@@ -19,7 +19,7 @@
 
 
 DummyRegressor_ = SKDU.DummyRegressor
-@sk_model mutable struct DummyRegressor <: MLJBase.Deterministic
+@sk_reg mutable struct DummyRegressor <: MLJBase.Deterministic
     strategy::String = "mean"::(_ in ("mean", "median", "quantile", "constant"))
     constant::Any     = nothing
     quantile::Float64 = 0.5::(0 ≤ _ ≤ 1)
@@ -37,7 +37,7 @@ metadata_model(DummyRegressor,
 
 # ----------------------------------------------------------------------------
 DummyClassifier_ = SKDU.DummyClassifier
-@sk_model mutable struct DummyClassifier <: MLJBase.Probabilistic
+@sk_clf mutable struct DummyClassifier <: MLJBase.Probabilistic
     strategy::String = "stratified"::(_ in ("stratified", "most_frequent", "prior", "uniform", "constant"))
     constant::Any     = nothing
     random_state::Any = nothing
@@ -56,7 +56,7 @@ metadata_model(DummyClassifier,
 
 # ============================================================================
 GaussianNBClassifier_ = SKNB.GaussianNB
-@sk_model mutable struct GaussianNBClassifier <: MLJBase.Probabilistic
+@sk_clf mutable struct GaussianNBClassifier <: MLJBase.Probabilistic
     priors::Option{AbstractVector{Float64}} = nothing::(_ === nothing || all(_ .≥ 0))
     var_smoothing::Float64                  = 1e-9::(_ > 0)
 end
@@ -76,7 +76,7 @@ metadata_model(GaussianNBClassifier,
 
 # ============================================================================
 BernoulliNBClassifier_ = SKNB.BernoulliNB
-@sk_model mutable struct BernoulliNBClassifier <: MLJBase.Probabilistic
+@sk_clf mutable struct BernoulliNBClassifier <: MLJBase.Probabilistic
     alpha::Float64            = 1.0::(_ ≥ 0)
     binarize::Option{Float64} = 0.0
     fit_prior::Bool           = true
@@ -98,7 +98,7 @@ metadata_model(BernoulliNBClassifier,
 
 # ============================================================================
 MultinomialNBClassifier_ = SKNB.MultinomialNB
-@sk_model mutable struct MultinomialNBClassifier <: MLJBase.Probabilistic
+@sk_clf mutable struct MultinomialNBClassifier <: MLJBase.Probabilistic
     alpha::Float64  = 1.0::(_ ≥ 0)
     fit_prior::Bool = true
     class_prior::Option{AbstractVector} = nothing::(_ === nothing || all(_ .≥ 0))
@@ -120,7 +120,7 @@ metadata_model(MultinomialNBClassifier,
 
 # ============================================================================
 ComplementNBClassifier_ = SKNB.ComplementNB
-@sk_model mutable struct ComplementNBClassifier <: MLJBase.Probabilistic
+@sk_clf mutable struct ComplementNBClassifier <: MLJBase.Probabilistic
     alpha::Float64  = 1.0::(_ ≥ 0)
     fit_prior::Bool = true
     class_prior::Option{AbstractVector} = nothing::(_ === nothing || all(_ .≥ 0))
@@ -142,7 +142,7 @@ metadata_model(ComplementNBClassifier,
 
 # ============================================================================
 KNeighborsRegressor_ = SKNE.KNeighborsRegressor
-@sk_model mutable struct KNeighborsRegressor <: MLJBase.Deterministic
+@sk_reg mutable struct KNeighborsRegressor <: MLJBase.Deterministic
     n_neighbors::Int    = 5::(_ > 0)
     weights::Union{String,Function} = "uniform"::((_ isa Function) || _ in ("uniform", "distance"))
     algorithm::String   = "auto"::(_ in ("auto", "ball_tree", "kd_tree", "brute"))
@@ -166,7 +166,7 @@ metadata_model(KNeighborsRegressor,
 
 # ----------------------------------------------------------------------------
 KNeighborsClassifier_ = SKNE.KNeighborsClassifier
-@sk_model mutable struct KNeighborsClassifier <: MLJBase.Probabilistic
+@sk_clf mutable struct KNeighborsClassifier <: MLJBase.Probabilistic
     n_neighbors::Int    = 5::(_ > 0)
     weights::Union{String,Function} = "uniform"::((_ isa Function) || _ in ("uniform", "distance"))
     algorithm::String   = "auto"::(_ in ("auto", "ball_tree", "kd_tree", "brute"))

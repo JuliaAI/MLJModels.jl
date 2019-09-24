@@ -36,7 +36,7 @@
 # ------------------------------------------------------------------------------
 
 ARDRegressor_ = SKLM.ARDRegression
-@sk_model mutable struct ARDRegressor <: MLJBase.Deterministic
+@sk_reg mutable struct ARDRegressor <: MLJBase.Deterministic
     n_iter::Int               = 300::(_ > 0)
     tol::Float64              = 1e-3::(_ > 0)
     alpha_1::Float64          = 1e-6::(_ > 0)
@@ -61,7 +61,7 @@ MLJBase.fitted_params(model::ARDRegressor, (fitresult, _, _)) = (
 
 # ==============================================================================
 BayesianRidgeRegressor_ = SKLM.BayesianRidge
-@sk_model mutable struct BayesianRidgeRegressor <: MLJBase.Deterministic
+@sk_reg mutable struct BayesianRidgeRegressor <: MLJBase.Deterministic
     n_iter::Int         = 300::(_ ≥ 1)
     tol::Float64        = 1e-3::(_ > 0)
     alpha_1::Float64    = 1e-6::(_ > 0)
@@ -85,7 +85,7 @@ MLJBase.fitted_params(model::BayesianRidgeRegressor, (fitresult, _, _)) = (
 
 # ==============================================================================
 ElasticNetRegressor_ = SKLM.ElasticNet
-@sk_model mutable struct ElasticNetRegressor <: MLJBase.Deterministic
+@sk_reg mutable struct ElasticNetRegressor <: MLJBase.Deterministic
     alpha::Float64      = 1.0::(_ ≥ 0)   # 0 is OLS
     l1_ratio::Float64   = 0.5::(0 ≤ _ ≤ 1)
     fit_intercept::Bool = true
@@ -106,7 +106,7 @@ MLJBase.fitted_params(model::ElasticNetRegressor, (fitresult, _, _)) = (
 
 # ==============================================================================
 ElasticNetCVRegressor_ = SKLM.ElasticNetCV
-@sk_model mutable struct ElasticNetCVRegressor <: MLJBase.Deterministic
+@sk_reg mutable struct ElasticNetCVRegressor <: MLJBase.Deterministic
     l1_ratio::Union{Float64,Vector{Float64}} = 0.5::(all(0 .≤ _ .≤ 1))
     eps::Float64        = 1e-3::(_ > 0)
     n_alphas::Int       = 100::(_ > 0)
@@ -134,7 +134,7 @@ MLJBase.fitted_params(model::ElasticNetCVRegressor, (fitresult, _, _)) = (
 
 # ==============================================================================
 HuberRegressor_ = SKLM.HuberRegressor
-@sk_model mutable struct HuberRegressor <: MLJBase.Deterministic
+@sk_reg mutable struct HuberRegressor <: MLJBase.Deterministic
     epsilon::Float64    = 1.35::(_ > 1.0)
     max_iter::Int       = 100::(_ > 0)
     alpha::Float64      = 1e-4::(_ > 0)
@@ -151,7 +151,7 @@ MLJBase.fitted_params(model::HuberRegressor, (fitresult, _, _)) = (
 
 # ==============================================================================
 LarsRegressor_ = SKLM.Lars
-@sk_model mutable struct LarsRegressor <: MLJBase.Deterministic
+@sk_reg mutable struct LarsRegressor <: MLJBase.Deterministic
     fit_intercept::Bool      = true
     verbose::Union{Bool,Int} = false
     normalize::Bool = true
@@ -172,7 +172,7 @@ MLJBase.fitted_params(model::LarsRegressor, (fitresult, _, _)) = (
 
 # ==============================================================================
 LarsCVRegressor_ = SKLM.LarsCV
-@sk_model mutable struct LarsCVRegressor <: MLJBase.Deterministic
+@sk_reg mutable struct LarsCVRegressor <: MLJBase.Deterministic
     fit_intercept::Bool      = true
     verbose::Union{Bool,Int} = false
     max_iter::Int     = 500::(_ > 0)
@@ -197,7 +197,7 @@ MLJBase.fitted_params(model::LarsCVRegressor, (fitresult, _, _)) = (
 
 # ==============================================================================
 LassoRegressor_ = SKLM.Lasso
-@sk_model mutable struct LassoRegressor <: MLJBase.Deterministic
+@sk_reg mutable struct LassoRegressor <: MLJBase.Deterministic
     alpha::Float64      = 1.0::(_ ≥ 0) # not recommended to use alpha=0 (use OLS)
     fit_intercept::Bool = true
     normalize::Bool     = false
@@ -217,7 +217,7 @@ MLJBase.fitted_params(model::LassoRegressor, (fitresult, _, _)) = (
 
 # ==============================================================================
 LassoCVRegressor_ = SKLM.LassoCV
-@sk_model mutable struct LassoCVRegressor <: MLJBase.Deterministic
+@sk_reg mutable struct LassoCVRegressor <: MLJBase.Deterministic
     eps::Float64        = 1e-3::(_ > 0)
     n_alphas::Int       = 100::(_ > 0)
     alphas::Any         = nothing::(_ === nothing || all(0 .≤ _ .≤ 1))
@@ -245,7 +245,7 @@ MLJBase.fitted_params(model::LassoCVRegressor, (fitresult, _, _)) = (
 
 # ==============================================================================
 LassoLarsRegressor_ = SKLM.LassoLars
-@sk_model mutable struct LassoLarsRegressor <: MLJBase.Deterministic
+@sk_reg mutable struct LassoLarsRegressor <: MLJBase.Deterministic
     alpha::Float64      = 1.0::(_ ≥ 0) # 0 should be OLS
     fit_intercept::Bool = true
     verbose::Union{Bool, Int} = false
@@ -267,7 +267,7 @@ MLJBase.fitted_params(model::LassoLarsRegressor, (fitresult, _, _)) = (
 
 # ==============================================================================
 LassoLarsCVRegressor_ = SKLM.LassoLarsCV
-@sk_model mutable struct LassoLarsCVRegressor <: MLJBase.Deterministic
+@sk_reg mutable struct LassoLarsCVRegressor <: MLJBase.Deterministic
     fit_intercept::Bool = true
     verbose::Union{Bool, Int} = false
     max_iter::Int       = 500::(_ > 0)
@@ -291,7 +291,7 @@ MLJBase.fitted_params(model::LassoLarsCVRegressor, (fitresult, _, _)) = (
     )
 
 LassoLarsICRegressor_ = SKLM.LassoLarsIC
-@sk_model mutable struct LassoLarsICRegressor <: MLJBase.Deterministic
+@sk_reg mutable struct LassoLarsICRegressor <: MLJBase.Deterministic
     criterion::String   = "aic"::(_ in ("aic","bic"))
     fit_intercept::Bool = true
     verbose::Union{Bool, Int} = false
@@ -310,7 +310,7 @@ MLJBase.fitted_params(model::LassoLarsICRegressor, (fitresult, _, _)) = (
 
 # ==============================================================================
 LinearRegressor_ = SKLM.LinearRegression
-@sk_model mutable struct LinearRegressor <: MLJBase.Deterministic
+@sk_reg mutable struct LinearRegressor <: MLJBase.Deterministic
     fit_intercept::Bool = true
     normalize::Bool     = false
     copy_X::Bool        = true
@@ -323,7 +323,7 @@ MLJBase.fitted_params(model::LinearRegressor, (fitresult, _, _)) = (
 
 # ==============================================================================
 OrthogonalMatchingPursuitRegressor_ = SKLM.OrthogonalMatchingPursuit
-@sk_model mutable struct OrthogonalMatchingPursuitRegressor <: MLJBase.Deterministic
+@sk_reg mutable struct OrthogonalMatchingPursuitRegressor <: MLJBase.Deterministic
     n_nonzero_coefs::Option{Int} = nothing
     tol::Option{Float64} = nothing
     fit_intercept::Bool  = true
@@ -337,7 +337,7 @@ MLJBase.fitted_params(model::OrthogonalMatchingPursuitRegressor, (fitresult, _, 
 
 # ==============================================================================
 OrthogonalMatchingPursuitCVRegressor_ = SKLM.OrthogonalMatchingPursuitCV
-@sk_model mutable struct OrthogonalMatchingPursuitCVRegressor <: MLJBase.Deterministic
+@sk_reg mutable struct OrthogonalMatchingPursuitCVRegressor <: MLJBase.Deterministic
     copy::Bool            = true
     fit_intercept::Bool   = true
     normalize::Bool       = false
@@ -354,7 +354,7 @@ MLJBase.fitted_params(model::OrthogonalMatchingPursuitCVRegressor, (fitresult, _
 
 # ==============================================================================
 PassiveAggressiveRegressor_ = SKLM.PassiveAggressiveRegressor
-@sk_model mutable struct PassiveAggressiveRegressor <: MLJBase.Deterministic
+@sk_reg mutable struct PassiveAggressiveRegressor <: MLJBase.Deterministic
     C::Float64                   = 1.0::(_ > 0)
     fit_intercept::Bool          = true
     max_iter::Int                = 1_000::(_ > 0)
@@ -377,7 +377,7 @@ MLJBase.fitted_params(model::PassiveAggressiveRegressor, (fitresult, _, _)) = (
 
 # ==============================================================================
 RANSACRegressor_ = SKLM.RANSACRegressor
-@sk_model mutable struct RANSACRegressor <: MLJBase.Deterministic
+@sk_reg mutable struct RANSACRegressor <: MLJBase.Deterministic
     base_estimator::Any         = nothing
     min_samples::Union{Int,Float64}     = 5::(_ isa Int ? _ ≥ 1 : (0 ≤ _ ≤ 1))
     residual_threshold::Option{Float64} = nothing
@@ -402,7 +402,7 @@ MLJBase.fitted_params(m::RANSACRegressor, (f, _, _)) = (
 
 # ==============================================================================
 RidgeRegressor_ = SKLM.Ridge
-@sk_model mutable struct RidgeRegressor <: MLJBase.Deterministic
+@sk_reg mutable struct RidgeRegressor <: MLJBase.Deterministic
     alpha::Union{Float64,Vector{Float64}} = 1.0::(all(_ .> 0))
     fit_intercept::Bool = true
     normalize::Bool     = false
@@ -419,7 +419,7 @@ MLJBase.fitted_params(model::RidgeRegressor, (fitresult, _, _)) = (
 
 # ==============================================================================
 RidgeCVRegressor_ = SKLM.RidgeCV
-@sk_model mutable struct RidgeCVRegressor <: MLJBase.Deterministic
+@sk_reg mutable struct RidgeCVRegressor <: MLJBase.Deterministic
     alphas::Any              = (0.1, 1.0, 10.0)::(all(_ .> 0))
     fit_intercept::Bool      = true
     normalize::Bool          = false
@@ -437,7 +437,7 @@ MLJBase.fitted_params(model::RidgeCVRegressor, (fitresult, _, _)) = (
 
 # ==============================================================================
 SGDRegressor_ = SKLM.SGDRegressor
-@sk_model mutable struct SGDRegressor <: MLJBase.Deterministic
+@sk_reg mutable struct SGDRegressor <: MLJBase.Deterministic
     loss::String             = "squared_loss"::(_ in ("squared_loss","huber","epsilon_insensitive","squared_epsilon_insensitive"))
     penalty::String          = "l2"::(_ in ("none","l2","l1","elasticnet"))
     alpha::Float64           = 1e-4::(_ > 0)
@@ -467,7 +467,7 @@ MLJBase.fitted_params(model::SGDRegressor, (fitresult, _, _)) = (
 
 # ==============================================================================
 TheilSenRegressor_ = SKLM.TheilSenRegressor
-@sk_model mutable struct TheilSenRegressor <: MLJBase.Deterministic
+@sk_reg mutable struct TheilSenRegressor <: MLJBase.Deterministic
     fit_intercept::Bool = true
     copy_X::Bool        = true
     max_subpopulation::Int    = 10_000::(_ > 0)
@@ -507,7 +507,7 @@ MLJBase.target_scitype(::SKL_REGS_SINGLE) = AbstractVector{Continuous}
 
 # ==============================================================================
 MultiTaskLassoRegressor_ = SKLM.MultiTaskLasso
-@sk_model mutable struct MultiTaskLassoRegressor <: MLJBase.Deterministic
+@sk_reg mutable struct MultiTaskLassoRegressor <: MLJBase.Deterministic
     alpha::Float64      = 1.0::(_ ≥ 0)
     fit_intercept::Bool = true
     normalize::Bool     = false
@@ -524,7 +524,7 @@ MLJBase.fitted_params(model::MultiTaskLassoRegressor, (fitresult, _, _)) = (
 
 # ==============================================================================
 MultiTaskLassoCVRegressor_ = SKLM.MultiTaskLassoCV
-@sk_model mutable struct MultiTaskLassoCVRegressor <: MLJBase.Deterministic
+@sk_reg mutable struct MultiTaskLassoCVRegressor <: MLJBase.Deterministic
     eps::Float64        = 1e-3::(_ > 0)
     n_alphas::Int       = 100::(_ > 0)
     alphas::Any         = nothing::(_ === nothing || all(0 .≤ _ .≤ 1))
@@ -549,7 +549,7 @@ MLJBase.fitted_params(model::MultiTaskLassoCVRegressor, (fitresult, _, _)) = (
 
 # ==============================================================================
 MultiTaskElasticNetRegressor_ = SKLM.MultiTaskElasticNet
-@sk_model mutable struct MultiTaskElasticNetRegressor <: MLJBase.Deterministic
+@sk_reg mutable struct MultiTaskElasticNetRegressor <: MLJBase.Deterministic
     alpha::Float64      = 1.0::(_ ≥ 0)
     l1_ratio::Union{Float64, Vector{Float64}} = 0.5::(0 ≤ _ ≤ 1)
     fit_intercept::Bool = true
@@ -568,7 +568,7 @@ MLJBase.fitted_params(model::MultiTaskElasticNetRegressor, (fitresult, _, _)) = 
 
 # ==============================================================================
 MultiTaskElasticNetCVRegressor_ = SKLM.MultiTaskElasticNetCV
-@sk_model mutable struct MultiTaskElasticNetCVRegressor <: MLJBase.Deterministic
+@sk_reg mutable struct MultiTaskElasticNetCVRegressor <: MLJBase.Deterministic
     l1_ratio::Union{Float64, Vector{Float64}} = 0.5::(0 ≤ _ ≤ 1)
     eps::Float64        = 1e-3::(_ > 0)
     n_alphas::Int       = 100::(_ > 0)

@@ -4,7 +4,7 @@
 # | GPClassif              | ✗      | ✗             | ✗      | ✗        |  ✗      | ✗       |
 
 GaussianProcessRegressor_ = SKGP.GaussianProcessRegressor
-@sk_model mutable struct GaussianProcessRegressor <: MLJBase.Deterministic
+@sk_reg mutable struct GaussianProcessRegressor <: MLJBase.Deterministic
     kernel::Any        = nothing
     alpha::Union{Float64,AbstractArray} = 1.0e-10
     optimizer::Any     = "fmin_l_bfgs_b"
@@ -27,7 +27,7 @@ MLJBase.target_scitype(::Type{<:GaussianProcessRegressor}) = AbstractVector{MLJB
 
 # ============================================================================
 GaussianProcessClassifier_ = SKGP.GaussianProcessClassifier
-@sk_model mutable struct GaussianProcessClassifier <: MLJBase.Probabilistic
+@sk_clf mutable struct GaussianProcessClassifier <: MLJBase.Probabilistic
     kernel::Any        = nothing
     optimizer::Any     = "fmin_l_bfgs_b"
     n_restarts_optimizer::Int = 0

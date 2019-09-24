@@ -16,7 +16,7 @@
 # | HGBReg                 | ✗      | ✗             | ✗      | ✗        |  ✗      | ✗       |
 
 AdaBoostRegressor_ = SKEN.AdaBoostRegressor
-@sk_model mutable struct AdaBoostRegressor <: MLJBase.Deterministic
+@sk_reg mutable struct AdaBoostRegressor <: MLJBase.Deterministic
     base_estimator::Any    = nothing
     n_estimators::Int      = 50::(_ > 0)
     learning_rate::Float64 = 1.0::(_ > 0)
@@ -32,7 +32,7 @@ MLJBase.fitted_params(model::AdaBoostRegressor, (f, _, _)) = (
 
 # ----------------------------------------------------------------------------
 AdaBoostClassifier_ = SKEN.AdaBoostClassifier
-@sk_model mutable struct AdaBoostClassifier <: MLJBase.Probabilistic
+@sk_clf mutable struct AdaBoostClassifier <: MLJBase.Probabilistic
     base_estimator::Any    = nothing
     n_estimators::Int      = 50::(_ > 0)
     learning_rate::Float64 = 1.0::(_ > 0)
@@ -55,7 +55,7 @@ metadata_model(AdaBoostClassifier,
 
 # ============================================================================
 BaggingRegressor_ = SKEN.BaggingRegressor
-@sk_model mutable struct BaggingRegressor <: MLJBase.Deterministic
+@sk_reg mutable struct BaggingRegressor <: MLJBase.Deterministic
     base_estimator::Any = nothing
     n_estimators::Int   = 10::(_>0)
     max_samples::Union{Int,Float64}  = 1.0::(_>0)
@@ -78,7 +78,7 @@ MLJBase.fitted_params(model::BaggingRegressor, (f, _, _)) = (
 
 # ----------------------------------------------------------------------------
 BaggingClassifier_ = SKEN.BaggingClassifier
-@sk_model mutable struct BaggingClassifier <: MLJBase.Probabilistic
+@sk_clf mutable struct BaggingClassifier <: MLJBase.Probabilistic
     base_estimator::Any = nothing
     n_estimators::Int   = 10::(_>0)
     max_samples::Union{Int,Float64}  = 1.0::(_>0)
@@ -110,7 +110,7 @@ metadata_model(BaggingClassifier,
 
 # ============================================================================
 GradientBoostingRegressor_ = SKEN.GradientBoostingRegressor
-@sk_model mutable struct GradientBoostingRegressor <: MLJBase.Deterministic
+@sk_reg mutable struct GradientBoostingRegressor <: MLJBase.Deterministic
     loss::String           = "ls"::(_ in ("ls","lad","huber","quantile"))
     learning_rate::Float64 = 0.1::(_>0)
     n_estimators::Int      = 100::(_>0)
@@ -145,7 +145,7 @@ MLJBase.fitted_params(m::GradientBoostingRegressor, (f, _, _)) = (
 
 # ----------------------------------------------------------------------------
 GradientBoostingClassifier_ = SKEN.GradientBoostingClassifier
-@sk_model mutable struct GradientBoostingClassifier <: MLJBase.Probabilistic
+@sk_clf mutable struct GradientBoostingClassifier <: MLJBase.Probabilistic
     loss::String           = "deviance"::(_ in ("deviance","exponential"))
     learning_rate::Float64 = 0.1::(_>0)
     n_estimators::Int      = 100::(_>0)
@@ -186,7 +186,7 @@ metadata_model(GradientBoostingClassifier,
 
 # ============================================================================
 # HistGradientBoostingRegressor_ = SKEN.HistGradientBoostingRegressor
-# @sk_model mutable struct HistGradientBoostingRegressor <: MLJBase.Deterministic
+# @sk_reg mutable struct HistGradientBoostingRegressor <: MLJBase.Deterministic
 #     loss::String           = "least_squares"::(_ == "least_squares") # currently the only option
 #     learning_rate::Float64 = 0.1::(_>0)
 #     max_iter::Int          = 100::(_>0)
@@ -209,7 +209,7 @@ metadata_model(GradientBoostingClassifier,
 
 # ============================================================================
 RandomForestRegressor_ = SKEN.RandomForestRegressor
-@sk_model mutable struct RandomForestRegressor <: MLJBase.Deterministic
+@sk_reg mutable struct RandomForestRegressor <: MLJBase.Deterministic
     n_estimators::Int   = 100::(_ > 0)
     criterion::String   = "mse"::(_ in ("mae", "mse"))
     max_depth::Option{Int}                = nothing::(_ === nothing || _ > 0)
@@ -238,7 +238,7 @@ MLJBase.fitted_params(model::RandomForestRegressor, (f, _, _)) = (
 
 # ----------------------------------------------------------------------------
 RandomForestClassifier_ = SKEN.RandomForestClassifier
-@sk_model mutable struct RandomForestClassifier <: MLJBase.Probabilistic
+@sk_clf mutable struct RandomForestClassifier <: MLJBase.Probabilistic
     n_estimators::Int   = 100::(_ > 0)
     criterion::String   = "gini"::(_ in ("gini","entropy"))
     max_depth::Option{Int}                = nothing::(_ === nothing || _ > 0)
@@ -281,7 +281,7 @@ MLJBase.target_scitype(::ENSEMBLE_REG) = AbstractVector{MLJBase.Continuous}
 
 # ============================================================================
 ExtraTreesRegressor_ = SKEN.ExtraTreesRegressor
-@sk_model mutable struct ExtraTreesRegressor <: MLJBase.Deterministic
+@sk_reg mutable struct ExtraTreesRegressor <: MLJBase.Deterministic
     n_estimators::Int   = 100::(_>0)
     criterion::String   = "mse"::(_ in ("mae", "mse"))
     max_depth::Option{Int}                 = nothing::(_ === nothing || _ > 0)
@@ -316,7 +316,7 @@ metadata_model(ExtraTreesRegressor,
 
 # ----------------------------------------------------------------------------
 ExtraTreesClassifier_ = SKEN.ExtraTreesClassifier
-@sk_model mutable struct ExtraTreesClassifier <: MLJBase.Probabilistic
+@sk_clf mutable struct ExtraTreesClassifier <: MLJBase.Probabilistic
     n_estimators::Int   = 100::(_>0)
     criterion::String   = "gini"::(_ in ("gini", "entropy"))
     max_depth::Option{Int}                 = nothing::(_ === nothing || _ > 0)

@@ -9,7 +9,7 @@
 # | SGDClassifier          | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
 
 LogisticClassifier_ = SKLM.LogisticRegression
-@sk_model mutable struct LogisticClassifier <: MLJBase.Probabilistic
+@sk_clf mutable struct LogisticClassifier <: MLJBase.Probabilistic
     penalty::String            = "l2"::(_ in ("l1", "l2", "elasticnet", "none"))
     dual::Bool                 = false
     tol::Float64               = 1e-4::(_ > 0)
@@ -40,7 +40,7 @@ metadata_model(LogisticClassifier,
 
 # ============================================================================
 LogisticCVClassifier_ = SKLM.LogisticRegressionCV
-@sk_model mutable struct LogisticCVClassifier <: MLJBase.Probabilistic
+@sk_clf mutable struct LogisticCVClassifier <: MLJBase.Probabilistic
     Cs::Union{Int,AbstractVector{Float64}} = 10::((_ isa Int && _ > 0) || all(_ .> 0))
     fit_intercept::Bool        = true
     cv::Any                    = 5
@@ -79,7 +79,7 @@ metadata_model(LogisticCVClassifier,
 
 # ============================================================================
 PassiveAggressiveClassifier_ = SKLM.PassiveAggressiveClassifier
-@sk_model mutable struct PassiveAggressiveClassifier <: MLJBase.Deterministic
+@sk_clf mutable struct PassiveAggressiveClassifier <: MLJBase.Deterministic
     C::Float64            = 1.0::(_ > 0)
     fit_intercept::Bool   = true
     max_iter::Int         = 100::(_ > 0)
@@ -109,7 +109,7 @@ metadata_model(PassiveAggressiveClassifier,
 
 # ============================================================================
 PerceptronClassifier_ = SKLM.Perceptron
-@sk_model mutable struct PerceptronClassifier <: MLJBase.Deterministic
+@sk_clf mutable struct PerceptronClassifier <: MLJBase.Deterministic
     penalty::Option{String} = nothing::(_ === nothing || _ in ("l2", "l1", "elasticnet"))
     alpha::Float64          = 1e-4::(_ > 0)
     fit_intercept::Bool     = true
@@ -139,7 +139,7 @@ metadata_model(PerceptronClassifier,
 
 # ============================================================================
 RidgeClassifier_ = SKLM.RidgeClassifier
-@sk_model mutable struct RidgeClassifier <: MLJBase.Deterministic
+@sk_clf mutable struct RidgeClassifier <: MLJBase.Deterministic
     alpha::Float64    = 1.0
     fit_intercept::Bool = true
     normalize::Bool   = false
@@ -163,7 +163,7 @@ metadata_model(RidgeClassifier,
 
 # ============================================================================
 RidgeCVClassifier_ = SKLM.RidgeClassifierCV
-@sk_model mutable struct RidgeCVClassifier <: MLJBase.Deterministic
+@sk_clf mutable struct RidgeCVClassifier <: MLJBase.Deterministic
     alphas::AbstractArray{Float64} = [0.1,1.0,10.0]::(all(0 .≤ _))
     fit_intercept::Bool   = true
     normalize::Bool       = false
@@ -185,7 +185,7 @@ metadata_model(RidgeCVClassifier,
 
 # ============================================================================
 SGDClassifier_ = SKLM.SGDClassifier
-@sk_model mutable struct SGDClassifier <: MLJBase.Deterministic
+@sk_clf mutable struct SGDClassifier <: MLJBase.Deterministic
     loss::String          = "hinge"::(_ in ("hinge", "log", "modified_huber", "squared_hinge", "perceptron", "squared_loss", "huber", "epsilon_insensitive", "squared_epsilon_insensitive"))
     penalty::String       = "l2"::(_ in ("l1", "l2", "elasticnet", "none"))
     alpha::Float64        = 1e-4::(_ > 0)
@@ -209,7 +209,7 @@ SGDClassifier_ = SKLM.SGDClassifier
     average::Bool         = false
 end
 ProbabilisticSGDClassifier_ = SKLM.SGDClassifier
-@sk_model mutable struct ProbabilisticSGDClassifier <: MLJBase.Probabilistic
+@sk_clf mutable struct ProbabilisticSGDClassifier <: MLJBase.Probabilistic
     loss::String          = "log"::(_ in ("log", "modified_huber")) # only those -> predict proba
     penalty::String       = "l2"::(_ in ("l1", "l2", "elasticnet", "none"))
     alpha::Float64        = 1e-4::(_ > 0)
