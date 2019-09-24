@@ -22,8 +22,8 @@ import ..ScikitLearn
 
 include("svm.jl")
 
-import .._process_model_def, .._model_constructor, .._model_cleaner
-import  ..metadata_model # metadata_pkg is handled by @sk_model
+import MLJBase._process_model_def, MLJBase._model_constructor, MLJBase._model_cleaner
+import MLJBase: metadata_model # metadata_pkg is handled by @sk_model
 
 const Option{T} = Union{Nothing, T}
 
