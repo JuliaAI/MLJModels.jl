@@ -66,8 +66,10 @@ Note that for some of these packages, the interface is incomplete; contributions
 * [ScikitLearn.jl](https://github.com/cstjean/ScikitLearn.jl)
     * **SVM**: `SVMClassifier`, `SVMRegressor`, `SVMNuClassifier`, `SVMNuRegressor`, `SVMLClassifier`, `SVMLRegressor`,
     * **Linear Models** (regressors): `ARDRegressor`, `BayesianRidgeRegressor`, `ElasticNetRegressor`, `ElasticNetCVRegressor`, `HuberRegressor`, `LarsRegressor`, `LarsCVRegressor`, `LassoRegressor`, `LassoCVRegressor`, `LassoLarsRegressor`, `LassoLarsCVRegressor`, `LassoLarsICRegressor`, `LinearRegressor`, `OrthogonalMatchingPursuitRegressor`, `OrthogonalMatchingPursuitCVRegressor`, `PassiveAggressiveRegressor`, `RidgeRegressor`, `RidgeCVRegressor`, `SGDRegressor`, `TheilSenRegressor`
-    * **Gaussian Processes**: `GaussianProcessRegressor`
-    * **Ensemble**: `AdaBoostRegressor`, `BaggingRegressor`, `GradientBoostingRegressor`, `RandomForestRegressor`
+    * **Linear Models** (classifiers): `LogisticClassifier`, `LogisticCVClassifier`, `PerceptronClassifier`, `RidgeClassifier`, `RidgeCVClassifier`, `PassiveAggressiveClassifier`, `SGDClassifier`
+    * **Gaussian Processes**: `GaussianProcessRegressor`, `GaussianProcessClassifier`
+    * **Ensemble**: `AdaBoostRegressor`, `AdaBoostClassifier`, `BaggingRegressor`, `BaggingClassifier`, `GradientBoostingRegressor`, `GradientBoostingClassifier`, `RandomForestRegressor`, `RandomForestClassifier`
+    * **Naive Bayes**: `GaussianNB`, `MultinomialNB`, `ComplementNB`
 * [XGBoost.jl](https://github.com/dmlc/XGBoost.jl)
     * `XGBoostRegressor`, `XGBoostClassifier`, `XGBoostCount`
 * [NearestNeighbors.jl](https://github.com/KristofferC/NearestNeighbors.jl)

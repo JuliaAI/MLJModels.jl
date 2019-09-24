@@ -5,8 +5,6 @@
 
 module Clustering_
 
-export KMeans, KMedoids
-
 import MLJBase
 using ScientificTypes
 

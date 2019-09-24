@@ -4,11 +4,9 @@ import MLJBase
 using Distances
 
 import ..NearestNeighbors
-import ..@mlj_model
+import ..@mlj_model, ..metadata_pkg, ..metadata_model
 
 const NN = NearestNeighbors
-
-export KNNRegressor, KNNClassifier
 
 const KNNRegressorDescription =
     """
@@ -158,8 +156,6 @@ function MLJBase.predict(m::KNNRegressor, (tree, y), X)
 end
 
 # ====
-
-import ..metadata_pkg, ..metadata_model
 
 metadata_pkg.((KNNRegressor, KNNClassifier),
     name="NearestNeighbors",
