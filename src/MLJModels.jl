@@ -4,7 +4,7 @@ module MLJModels
 export @update
 
 # from builtins/Transformers.jl:
-export StaticTransformer, FeatureSelector,
+export StaticTransformer, FillImputer, FeatureSelector,
     UnivariateStandardizer, Standardizer,
     UnivariateBoxCoxTransformer,
     OneHotEncoder
@@ -33,6 +33,16 @@ using Pkg.TOML
 
 const srcdir = dirname(@__FILE__) # the directory containing this file
 
+# TODO remove when the functionality has been merged in ScientificTypes.jl
+# and use ScientificTypes.nonmissing then.
+if VERSION < v"1.3"
+    nonmissingtype(::Type{T}) where T = T isa Union ? ifelse(T.a == Missing, T.b, T.a) : T
+end
+nonmissing = nonmissingtype
+
+include("metadata_utils.jl")
+
+>>>>>>> dev
 include("metadata.jl")
 include("model_search.jl")
 include("loading.jl")
@@ -42,6 +52,9 @@ import .Registry.@update
 # load built-in models:
 include("builtins/Transformers.jl")
 include("builtins/Constant.jl")
+
+include("parameters_utils.jl")
+include("metadata_utils.jl")
 
 function __init__()
 
