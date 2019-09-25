@@ -40,7 +40,6 @@ if VERSION < v"1.3"
 end
 nonmissing = nonmissingtype
 
-include("metadata_utils.jl")
 include("metadata.jl")
 include("model_search.jl")
 include("loading.jl")
@@ -50,9 +49,6 @@ import .Registry.@update
 # load built-in models:
 include("builtins/Transformers.jl")
 include("builtins/Constant.jl")
-
-include("parameters_utils.jl")
-include("metadata_utils.jl")
 
 function __init__()
 
