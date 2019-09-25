@@ -18,6 +18,7 @@
 # | OMPRegressor           | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
 # | OMPCVRegressor         | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
 # | PassiveAgressiveReg    | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
+# | RANSACReg              | ✗      | ✗             | ✗      | ✗        |  ✗      | ✗       |
 # | RidgeRegressor         | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
 # | RidgeCVRegressor       | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
 # | SGDRegressor           | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
@@ -34,42 +35,22 @@
 
 # ------------------------------------------------------------------------------
 
-export  ARDRegressor,
-        BayesianRidgeRegressor,
-        ElasticNetRegressor, ElasticNetCVRegressor,
-        HuberRegressor,
-        LarsRegressor, LarsCVRegressor,
-        LassoRegressor, LassoCVRegressor,
-        LassoLarsRegressor, LassoLarsCVRegressor, LassoLarsICRegressor,
-        LinearRegressor,
-        OrthogonalMatchingPursuitRegressor, OrthogonalMatchingPursuitCVRegressor,
-        PassiveAggressiveRegressor,
-        # RANSACRegressor,
-        RidgeRegressor, RidgeCVRegressor,
-        SGDRegressor, TheilSenRegressor
-
-# Multi-Task
-
-export MultiTaskLassoRegressor, MultiTaskLassoCVRegressor,
-       MultiTaskElasticNetRegressor, MultiTaskElasticNetCVRegressor
-
-# ==============================================================================
-ARDRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).ARDRegression
-@sk_model mutable struct ARDRegressor <: MLJBase.Deterministic
-    n_iter::Int               = 300::(arg>0)
-    tol::Float64              = 1e-3::(arg>0)
-    alpha_1::Float64          = 1e-6::(arg>0)
-    alpha_2::Float64          = 1e-6::(arg>0)
-    lambda_1::Float64         = 1e-6::(arg>0)
-    lambda_2::Float64         = 1e-6::(arg>0)
+ARDRegressor_ = SKLM.ARDRegression
+@sk_reg mutable struct ARDRegressor <: MLJBase.Deterministic
+    n_iter::Int               = 300::(_ > 0)
+    tol::Float64              = 1e-3::(_ > 0)
+    alpha_1::Float64          = 1e-6::(_ > 0)
+    alpha_2::Float64          = 1e-6::(_ > 0)
+    lambda_1::Float64         = 1e-6::(_ > 0)
+    lambda_2::Float64         = 1e-6::(_ > 0)
     compute_score::Bool       = false
-    threshold_lambda::Float64 = 1e4::(arg>0)
+    threshold_lambda::Float64 = 1e4::(_ > 0)
     fit_intercept::Bool       = true
     normalize::Bool           = false
     copy_X::Bool              = true
     verbose::Bool             = false
 end
-MLJBase.fitted_params(model::ARDRegressor, (fitresult, _)) = (
+MLJBase.fitted_params(model::ARDRegressor, (fitresult, _, _)) = (
     coef      = fitresult.coef_,
     intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing),
     alpha     = fitresult.alpha_,
@@ -79,21 +60,21 @@ MLJBase.fitted_params(model::ARDRegressor, (fitresult, _)) = (
     )
 
 # ==============================================================================
-BayesianRidgeRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).BayesianRidge
-@sk_model mutable struct BayesianRidgeRegressor <: MLJBase.Deterministic
-    n_iter::Int         = 300::(arg≥1)
-    tol::Float64        = 1e-3::(arg>0)
-    alpha_1::Float64    = 1e-6::(arg>0)
-    alpha_2::Float64    = 1e-6::(arg>0)
-    lambda_1::Float64   = 1e-6::(arg>0)
-    lambda_2::Float64   = 1e-6::(arg>0)
+BayesianRidgeRegressor_ = SKLM.BayesianRidge
+@sk_reg mutable struct BayesianRidgeRegressor <: MLJBase.Deterministic
+    n_iter::Int         = 300::(_ ≥ 1)
+    tol::Float64        = 1e-3::(_ > 0)
+    alpha_1::Float64    = 1e-6::(_ > 0)
+    alpha_2::Float64    = 1e-6::(_ > 0)
+    lambda_1::Float64   = 1e-6::(_ > 0)
+    lambda_2::Float64   = 1e-6::(_ > 0)
     compute_score::Bool = false
     fit_intercept::Bool = true
     normalize::Bool     = false
     copy_X::Bool        = true
     verbose::Bool       = false
 end
-MLJBase.fitted_params(model::BayesianRidgeRegressor, (fitresult, _)) = (
+MLJBase.fitted_params(model::BayesianRidgeRegressor, (fitresult, _, _)) = (
     coef      = fitresult.coef_,
     intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing),
     alpha     = fitresult.alpha_,
@@ -103,47 +84,47 @@ MLJBase.fitted_params(model::BayesianRidgeRegressor, (fitresult, _)) = (
     )
 
 # ==============================================================================
-ElasticNetRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).ElasticNet
-@sk_model mutable struct ElasticNetRegressor <: MLJBase.Deterministic
-    alpha::Float64      = 1.0::(arg≥0)   # 0 is OLS
-    l1_ratio::Float64   = 0.5::(0≤arg≤1)
+ElasticNetRegressor_ = SKLM.ElasticNet
+@sk_reg mutable struct ElasticNetRegressor <: MLJBase.Deterministic
+    alpha::Float64      = 1.0::(_ ≥ 0)   # 0 is OLS
+    l1_ratio::Float64   = 0.5::(0 ≤ _ ≤ 1)
     fit_intercept::Bool = true
     normalize::Bool     = false
     precompute::Union{Bool,AbstractMatrix} = false
-    max_iter::Int       = 1_000::(arg≥1)
+    max_iter::Int       = 1_000::(_ ≥ 1)
     copy_X::Bool        = true
-    tol::Float64        = 1e-4::(arg>0)
+    tol::Float64        = 1e-4::(_ > 0)
     warm_start::Bool    = false
     positive::Bool      = false
     random_state::Any   = nothing  # Int, random state, or nothing
-    selection::String   = "cyclic"::(arg in ("cyclic","random"))
+    selection::String   = "cyclic"::(_ in ("cyclic","random"))
 end
-MLJBase.fitted_params(model::ElasticNetRegressor, (fitresult, _)) = (
+MLJBase.fitted_params(model::ElasticNetRegressor, (fitresult, _, _)) = (
     coef      = fitresult.coef_,
     intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing),
     )
 
 # ==============================================================================
-ElasticNetCVRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).ElasticNetCV
-@sk_model mutable struct ElasticNetCVRegressor <: MLJBase.Deterministic
-    l1_ratio::Union{Float64,Vector{Float64}} = 0.5::(all(0 .≤ arg .≤ 1))
-    eps::Float64        = 1e-3::(arg>0)
-    n_alphas::Int       = 100::(arg>0)
-    alphas::Any         = nothing::(arg === nothing || all(0 .≤ arg .≤ 1))
+ElasticNetCVRegressor_ = SKLM.ElasticNetCV
+@sk_reg mutable struct ElasticNetCVRegressor <: MLJBase.Deterministic
+    l1_ratio::Union{Float64,Vector{Float64}} = 0.5::(all(0 .≤ _ .≤ 1))
+    eps::Float64        = 1e-3::(_ > 0)
+    n_alphas::Int       = 100::(_ > 0)
+    alphas::Any         = nothing::(_ === nothing || all(0 .≤ _ .≤ 1))
     fit_intercept::Bool = true
     normalize::Bool     = false
     precompute::Union{Bool,String,AbstractMatrix} = "auto"
-    max_iter::Int       = 1_000::(arg>0)
-    tol::Float64        = 1e-4::(arg>0)
+    max_iter::Int       = 1_000::(_ > 0)
+    tol::Float64        = 1e-4::(_ > 0)
     cv::Any             = 5 # can be Int, Nothing or an iterable / cv splitter
     copy_X::Bool        = true
     verbose::Union{Bool, Int}  = 0
-    n_jobs::Union{Int,Nothing} = nothing
+    n_jobs::Option{Int} = nothing
     positive::Bool      = false
     random_state::Any   = nothing
-    selection::String   = "cyclic"::(arg in ("cyclic","random"))
+    selection::String   = "cyclic"::(_ in ("cyclic","random"))
 end
-MLJBase.fitted_params(model::ElasticNetCVRegressor, (fitresult, _)) = (
+MLJBase.fitted_params(model::ElasticNetCVRegressor, (fitresult, _, _)) = (
     coef      = fitresult.coef_,
     intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing),
     l1_ratio  = fitresult.l1_ratio_,
@@ -152,16 +133,16 @@ MLJBase.fitted_params(model::ElasticNetCVRegressor, (fitresult, _)) = (
     )
 
 # ==============================================================================
-HuberRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).HuberRegressor
-@sk_model mutable struct HuberRegressor <: MLJBase.Deterministic
-    epsilon::Float64    = 1.35::(arg>1.0)
-    max_iter::Int       = 100::(arg>0)
-    alpha::Float64      = 1e-4::(arg>0)
+HuberRegressor_ = SKLM.HuberRegressor
+@sk_reg mutable struct HuberRegressor <: MLJBase.Deterministic
+    epsilon::Float64    = 1.35::(_ > 1.0)
+    max_iter::Int       = 100::(_ > 0)
+    alpha::Float64      = 1e-4::(_ > 0)
     warm_start::Bool    = false
     fit_intercept::Bool = true
-    tol::Float64        = 1e-5::(arg>0)
+    tol::Float64        = 1e-5::(_ > 0)
 end
-MLJBase.fitted_params(model::HuberRegressor, (fitresult, _)) = (
+MLJBase.fitted_params(model::HuberRegressor, (fitresult, _, _)) = (
     coef      = fitresult.coef_,
     intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing),
     scale     = fitresult.scale_,
@@ -169,19 +150,19 @@ MLJBase.fitted_params(model::HuberRegressor, (fitresult, _)) = (
     )
 
 # ==============================================================================
-LarsRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).Lars
-@sk_model mutable struct LarsRegressor <: MLJBase.Deterministic
+LarsRegressor_ = SKLM.Lars
+@sk_reg mutable struct LarsRegressor <: MLJBase.Deterministic
     fit_intercept::Bool      = true
     verbose::Union{Bool,Int} = false
     normalize::Bool = true
     precompute::Union{Bool,String,AbstractMatrix} = "auto"
-    n_nonzero_coefs::Int     = 500::(arg > 0)
-    eps::Float64    = eps(Float64)::(arg>0)
+    n_nonzero_coefs::Int     = 500::(_ > 0)
+    eps::Float64    = eps(Float64)::(_ > 0)
     copy_X::Bool    = true
     fit_path::Bool  = true
 #    positive::Bool  = false  # this option is deprecated
 end
-MLJBase.fitted_params(model::LarsRegressor, (fitresult, _)) = (
+MLJBase.fitted_params(model::LarsRegressor, (fitresult, _, _)) = (
     coef      = fitresult.coef_,
     intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing),
     alphas    = fitresult.alphas_,
@@ -190,21 +171,21 @@ MLJBase.fitted_params(model::LarsRegressor, (fitresult, _)) = (
     )
 
 # ==============================================================================
-LarsCVRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).LarsCV
-@sk_model mutable struct LarsCVRegressor <: MLJBase.Deterministic
+LarsCVRegressor_ = SKLM.LarsCV
+@sk_reg mutable struct LarsCVRegressor <: MLJBase.Deterministic
     fit_intercept::Bool      = true
     verbose::Union{Bool,Int} = false
-    max_iter::Int     = 500::(arg>0)
+    max_iter::Int     = 500::(_ > 0)
     normalize::Bool   = true
     precompute::Union{Bool,String,AbstractMatrix} = "auto"
     cv::Any           = 5
-    max_n_alphas::Int = 1_000::(arg>0)
-    n_jobs::Union{Nothing,Int} = nothing
-    eps::Float64      = eps(Float64)::(arg>0)
+    max_n_alphas::Int = 1_000::(_ > 0)
+    n_jobs::Option{Int} = nothing
+    eps::Float64      = eps(Float64)::(_ > 0)
     copy_X::Bool      = true
 #    positive::Bool    = false # deprecated
 end
-MLJBase.fitted_params(model::LarsCVRegressor, (fitresult, _)) = (
+MLJBase.fitted_params(model::LarsCVRegressor, (fitresult, _, _)) = (
     coef      = fitresult.coef_,
     intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing),
     alpha     = fitresult.alpha_,
@@ -215,45 +196,45 @@ MLJBase.fitted_params(model::LarsCVRegressor, (fitresult, _)) = (
     )
 
 # ==============================================================================
-LassoRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).Lasso
-@sk_model mutable struct LassoRegressor <: MLJBase.Deterministic
-    alpha::Float64      = 1.0::(arg ≥ 0) # not recommended to use alpha=0 (use OLS)
+LassoRegressor_ = SKLM.Lasso
+@sk_reg mutable struct LassoRegressor <: MLJBase.Deterministic
+    alpha::Float64      = 1.0::(_ ≥ 0) # not recommended to use alpha=0 (use OLS)
     fit_intercept::Bool = true
     normalize::Bool     = false
     precompute::Union{Bool,AbstractMatrix} = false
     copy_X::Bool        = true
-    max_iter::Int       = 1_000::(arg>0)
-    tol::Float64        = 1e-4::(arg>0)
+    max_iter::Int       = 1_000::(_ > 0)
+    tol::Float64        = 1e-4::(_ > 0)
     warm_start::Bool    = false
     positive::Bool      = false
     random_state::Any   = nothing
-    selection::String   = "cyclic"::(arg in ("cyclic","random"))
+    selection::String   = "cyclic"::(_ in ("cyclic","random"))
 end
-MLJBase.fitted_params(model::LassoRegressor, (fitresult, _)) = (
+MLJBase.fitted_params(model::LassoRegressor, (fitresult, _, _)) = (
     coef      = fitresult.coef_,
     intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing),
     )
 
 # ==============================================================================
-LassoCVRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).LassoCV
-@sk_model mutable struct LassoCVRegressor <: MLJBase.Deterministic
-    eps::Float64        = 1e-3::(arg>0)
-    n_alphas::Int       = 100::(arg>0)
-    alphas::Any         = nothing::(arg === nothing || all(0 .≤ arg .≤ 1))
+LassoCVRegressor_ = SKLM.LassoCV
+@sk_reg mutable struct LassoCVRegressor <: MLJBase.Deterministic
+    eps::Float64        = 1e-3::(_ > 0)
+    n_alphas::Int       = 100::(_ > 0)
+    alphas::Any         = nothing::(_ === nothing || all(0 .≤ _ .≤ 1))
     fit_intercept::Bool = true
     normalize::Bool     = false
     precompute::Union{Bool,String,AbstractMatrix} = "auto"
-    max_iter::Int       = 1_000::(arg>0)
-    tol::Float64        = 1e-4::(arg>0)
+    max_iter::Int       = 1_000::(_ > 0)
+    tol::Float64        = 1e-4::(_ > 0)
     copy_X::Bool        = true
     cv::Any             = 5
     verbose::Union{Bool, Int} = false
-    n_jobs::Union{Nothing,Int}   = nothing
+    n_jobs::Option{Int} = nothing
     positive::Bool      = false
     random_state::Int   = nothing
-    selection::String   = "cyclic"::(arg in ("cyclic","random"))
+    selection::String   = "cyclic"::(_ in ("cyclic","random"))
 end
-MLJBase.fitted_params(model::LassoCVRegressor, (fitresult, _)) = (
+MLJBase.fitted_params(model::LassoCVRegressor, (fitresult, _, _)) = (
     coef      = fitresult.coef_,
     intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing),
     alpha    = fitresult.alpha_,
@@ -263,20 +244,20 @@ MLJBase.fitted_params(model::LassoCVRegressor, (fitresult, _)) = (
     )
 
 # ==============================================================================
-LassoLarsRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).LassoLars
-@sk_model mutable struct LassoLarsRegressor <: MLJBase.Deterministic
-    alpha::Float64      = 1.0::(arg ≥ 0) # 0 should be OLS
+LassoLarsRegressor_ = SKLM.LassoLars
+@sk_reg mutable struct LassoLarsRegressor <: MLJBase.Deterministic
+    alpha::Float64      = 1.0::(_ ≥ 0) # 0 should be OLS
     fit_intercept::Bool = true
     verbose::Union{Bool, Int} = false
     normalize::Bool     = true
     precompute::Union{Bool,String,AbstractMatrix} = "auto"
-    max_iter::Int       = 500::(arg>0)
-    eps::Float64        = eps(Float64)::(arg>0)
+    max_iter::Int       = 500::(_ > 0)
+    eps::Float64        = eps(Float64)::(_ > 0)
     copy_X::Bool        = true
     fit_path::Bool      = true
     positive::Any       = false
 end
-MLJBase.fitted_params(model::LassoLarsRegressor, (fitresult, _)) = (
+MLJBase.fitted_params(model::LassoLarsRegressor, (fitresult, _, _)) = (
     coef      = fitresult.coef_,
     intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing),
     alphas    = fitresult.alphas_,
@@ -285,21 +266,21 @@ MLJBase.fitted_params(model::LassoLarsRegressor, (fitresult, _)) = (
     )
 
 # ==============================================================================
-LassoLarsCVRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).LassoLarsCV
-@sk_model mutable struct LassoLarsCVRegressor <: MLJBase.Deterministic
+LassoLarsCVRegressor_ = SKLM.LassoLarsCV
+@sk_reg mutable struct LassoLarsCVRegressor <: MLJBase.Deterministic
     fit_intercept::Bool = true
     verbose::Union{Bool, Int} = false
-    max_iter::Int       = 500::(arg>0)
+    max_iter::Int       = 500::(_ > 0)
     normalize::Bool     = true
     precompute::Union{Bool,String,AbstractMatrix} = "auto"
     cv::Any             = 5
-    max_n_alphas::Int   = 1_000::(arg>0)
-    n_jobs::Union{Nothing,Int} = nothing
-    eps::Float64        = eps(Float64)::(arg>0.0)
+    max_n_alphas::Int   = 1_000::(_ > 0)
+    n_jobs::Option{Int} = nothing
+    eps::Float64        = eps(Float64)::(_ > 0.0)
     copy_X::Bool        = true
     positive::Any       = false
 end
-MLJBase.fitted_params(model::LassoLarsCVRegressor, (fitresult, _)) = (
+MLJBase.fitted_params(model::LassoLarsCVRegressor, (fitresult, _, _)) = (
     coef      = fitresult.coef_,
     intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing),
     coef_path = fitresult.coef_path_,
@@ -309,136 +290,145 @@ MLJBase.fitted_params(model::LassoLarsCVRegressor, (fitresult, _)) = (
     mse_path  = fitresult.mse_path_
     )
 
-LassoLarsICRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).LassoLarsIC
-@sk_model mutable struct LassoLarsICRegressor <: MLJBase.Deterministic
-    criterion::String   = "aic"::(arg in ("aic","bic"))
+LassoLarsICRegressor_ = SKLM.LassoLarsIC
+@sk_reg mutable struct LassoLarsICRegressor <: MLJBase.Deterministic
+    criterion::String   = "aic"::(_ in ("aic","bic"))
     fit_intercept::Bool = true
     verbose::Union{Bool, Int} = false
     normalize::Bool     = true
     precompute::Union{Bool,String,AbstractMatrix} = "auto"
-    max_iter::Int       = 500::(arg>0)
-    eps::Float64        = eps(Float64)::(arg>0.0)
+    max_iter::Int       = 500::(_ > 0)
+    eps::Float64        = eps(Float64)::(_ > 0.0)
     copy_X::Bool        = true
     positive::Any       = false
 end
-MLJBase.fitted_params(model::LassoLarsICRegressor, (fitresult, _)) = (
+MLJBase.fitted_params(model::LassoLarsICRegressor, (fitresult, _, _)) = (
     coef = fitresult.coef_,
     intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing),
     alpha = fitresult.alpha_
     )
 
 # ==============================================================================
-LinearRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).LinearRegression
-@sk_model mutable struct LinearRegressor <: MLJBase.Deterministic
-    fit_intercept::Bool    = true
-    normalize::Bool        = false
-    copy_X::Bool           = true
-    n_jobs::Union{Nothing,Int} = nothing
-end
-MLJBase.fitted_params(model::LinearRegressor, (fitresult, _)) = (
-    coef      = fitresult.coef_,
-    intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing)
-    )
-
-# ==============================================================================
-OrthogonalMatchingPursuitRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).OrthogonalMatchingPursuit
-@sk_model mutable struct OrthogonalMatchingPursuitRegressor <: MLJBase.Deterministic
-    n_nonzero_coefs::Union{Nothing,Int} = nothing
-    tol::Union{Nothing,Float64}         = nothing
-    fit_intercept::Bool = true
-    normalize::Bool     = true
-    precompute::Union{Bool,String,AbstractMatrix} = "auto"
-end
-MLJBase.fitted_params(model::OrthogonalMatchingPursuitRegressor, (fitresult, _)) = (
-    coef      = fitresult.coef_,
-    intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing)
-    )
-
-# ==============================================================================
-OrthogonalMatchingPursuitCVRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).OrthogonalMatchingPursuitCV
-@sk_model mutable struct OrthogonalMatchingPursuitCVRegressor <: MLJBase.Deterministic
-    copy::Bool          = true
+LinearRegressor_ = SKLM.LinearRegression
+@sk_reg mutable struct LinearRegressor <: MLJBase.Deterministic
     fit_intercept::Bool = true
     normalize::Bool     = false
-    max_iter::Union{Nothing,Int} = nothing::(arg === nothing||arg>0)
-    cv::Any             = 5
-    n_jobs::Union{Nothing,Int} = 1
-    verbose::Union{Bool,Int}   = false
+    copy_X::Bool        = true
+    n_jobs::Option{Int} = nothing
 end
-MLJBase.fitted_params(model::OrthogonalMatchingPursuitCVRegressor, (fitresult, _)) = (
+MLJBase.fitted_params(model::LinearRegressor, (fitresult, _, _)) = (
+    coef      = fitresult.coef_,
+    intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing)
+    )
+
+# ==============================================================================
+OrthogonalMatchingPursuitRegressor_ = SKLM.OrthogonalMatchingPursuit
+@sk_reg mutable struct OrthogonalMatchingPursuitRegressor <: MLJBase.Deterministic
+    n_nonzero_coefs::Option{Int} = nothing
+    tol::Option{Float64} = nothing
+    fit_intercept::Bool  = true
+    normalize::Bool      = true
+    precompute::Union{Bool,String,AbstractMatrix} = "auto"
+end
+MLJBase.fitted_params(model::OrthogonalMatchingPursuitRegressor, (fitresult, _, _)) = (
+    coef      = fitresult.coef_,
+    intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing)
+    )
+
+# ==============================================================================
+OrthogonalMatchingPursuitCVRegressor_ = SKLM.OrthogonalMatchingPursuitCV
+@sk_reg mutable struct OrthogonalMatchingPursuitCVRegressor <: MLJBase.Deterministic
+    copy::Bool            = true
+    fit_intercept::Bool   = true
+    normalize::Bool       = false
+    max_iter::Option{Int} = nothing::(_ === nothing||_ > 0)
+    cv::Any               = 5
+    n_jobs::Option{Int}   = 1
+    verbose::Union{Bool,Int} = false
+end
+MLJBase.fitted_params(model::OrthogonalMatchingPursuitCVRegressor, (fitresult, _, _)) = (
     coef      = fitresult.coef_,
     intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing),
     n_nonzero_coefs = fitresult.n_nonzero_coefs_
     )
 
 # ==============================================================================
-PassiveAggressiveRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).PassiveAggressiveRegressor
-@sk_model mutable struct PassiveAggressiveRegressor <: MLJBase.Deterministic
-    C::Float64                   = 1.0::(arg>0)
+PassiveAggressiveRegressor_ = SKLM.PassiveAggressiveRegressor
+@sk_reg mutable struct PassiveAggressiveRegressor <: MLJBase.Deterministic
+    C::Float64                   = 1.0::(_ > 0)
     fit_intercept::Bool          = true
-    max_iter::Int                = 1_000::(arg>0)
-    tol::Float64                 = 1e-4::(arg>0)
+    max_iter::Int                = 1_000::(_ > 0)
+    tol::Float64                 = 1e-4::(_ > 0)
     early_stopping::Bool         = false
-    validation_fraction::Float64 = 0.1::(arg>0)
-    n_iter_no_change::Int        = 5::(arg>0)
+    validation_fraction::Float64 = 0.1::(0 < _ < 1)
+    n_iter_no_change::Int        = 5::(_ > 0)
     shuffle::Bool                = true
     verbose::Union{Bool,Int}     = 0
-    loss::String                 = "epsilon_insensitive"::(arg in ("epsilon_insensitive","squared_epsilon_insensitive"))
-    epsilon::Float64             = 0.1::(arg>0)
+    loss::String                 = "epsilon_insensitive"::(_ in ("epsilon_insensitive","squared_epsilon_insensitive"))
+    epsilon::Float64             = 0.1::(_ > 0)
     random_state::Any            = nothing
     warm_start::Bool             = false
     average::Union{Bool,Int}     = false
 end
-MLJBase.fitted_params(model::PassiveAggressiveRegressor, (fitresult, _)) = (
+MLJBase.fitted_params(model::PassiveAggressiveRegressor, (fitresult, _, _)) = (
     coef      = fitresult.coef_,
     intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing)
     )
 
-# RANSACRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).RANSACRegressor
-# mutable struct RANSACRegressor <: MLJBase.Deterministic
-#     base_estimator::Any = nothing
-#     min_samples::Union{Int,Float64} = 5::(arg isa Int ? arg <= 1 : !(0.0 <= arg <= 1.0))
-#     residual_threshold::Union{Nothing,Float64} = nothing
-#     is_data_valid::Any = nothing
-#     is_model_valid::Any = nothing
-#     max_trials::Union{Nothing, Int} = nothing
-#     max_skips::Union{Nothing, Int} = nothing
-#     stop_n_inliers::Union{Nothing, Int} = nothing
-#     stop_score::Union{Nothing, Float64} = nothing
-#     stop_probability::Float64 = 0.99::(0.0<=arg<=1.0)
-#     loss::String = "absolute_loss"::(arg in ("absolute_loss","squared_loss"))
-#     random_state::Any = nothing
-# end
+# ==============================================================================
+RANSACRegressor_ = SKLM.RANSACRegressor
+@sk_reg mutable struct RANSACRegressor <: MLJBase.Deterministic
+    base_estimator::Any         = nothing
+    min_samples::Union{Int,Float64}     = 5::(_ isa Int ? _ ≥ 1 : (0 ≤ _ ≤ 1))
+    residual_threshold::Option{Float64} = nothing
+    is_data_valid::Any          = nothing
+    is_model_valid::Any         = nothing
+    max_trials::Int             = 100::(_ > 0)
+    max_skips::Int              = typemax(Int)::(_ > 0)
+    stop_n_inliers::Int         = typemax(Int)::(_ > 0)
+    stop_score::Float64         = Inf::(_ > 0)
+    stop_probability::Float64   = 0.99::(0 ≤ _ ≤ 1.0)
+    loss::Union{Function,String}= "absolute_loss"::((_ isa Function) || _ in ("absolute_loss","squared_loss"))
+    random_state::Any           = nothing
+end
+MLJBase.fitted_params(m::RANSACRegressor, (f, _, _)) = (
+    estimator             = f.estimator_,
+    n_trials              = f.n_trials_,
+    inlier_mask           = f.inlier_mask_,
+    n_skips_no_inliers    = f.n_skips_no_inliers_,
+    n_skips_invalid_data  = f.n_skips_invalid_data_,
+    n_skips_invalid_model = f.n_skips_invalid_model_
+    )
 
 # ==============================================================================
-RidgeRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).Ridge
-@sk_model mutable struct RidgeRegressor <: MLJBase.Deterministic
-    alpha::Union{Float64,Vector{Float64}} = 1.0::(all(arg .> 0))
+RidgeRegressor_ = SKLM.Ridge
+@sk_reg mutable struct RidgeRegressor <: MLJBase.Deterministic
+    alpha::Union{Float64,Vector{Float64}} = 1.0::(all(_ .> 0))
     fit_intercept::Bool = true
     normalize::Bool     = false
     copy_X::Bool        = true
-    max_iter::Int       = 1_000::(arg>0)
-    tol::Float64        = 1e-4::(arg>0)
-    solver::String      = "auto"::(arg in ("auto","svd","cholesky","lsqr","sparse_cg","sag","saga"))
+    max_iter::Int       = 1_000::(_ > 0)
+    tol::Float64        = 1e-4::(_ > 0)
+    solver::String      = "auto"::(_ in ("auto","svd","cholesky","lsqr","sparse_cg","sag","saga"))
     random_state::Any   = nothing
 end
-MLJBase.fitted_params(model::RidgeRegressor, (fitresult, _)) = (
+MLJBase.fitted_params(model::RidgeRegressor, (fitresult, _, _)) = (
     coef      = fitresult.coef_,
     intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing)
     )
 
 # ==============================================================================
-RidgeCVRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).RidgeCV
-@sk_model mutable struct RidgeCVRegressor <: MLJBase.Deterministic
-    alphas::Any            = (0.1, 1.0, 10.0)::(all(arg .> 0))
-    fit_intercept::Bool    = true
-    normalize::Bool        = false
-    scoring::Any           = nothing
-    cv::Any                = 5
-    gcv_mode::Union{Nothing,String} = nothing::(arg === nothing || arg in ("auto","svd","eigen"))
-    store_cv_values::Bool  = false
+RidgeCVRegressor_ = SKLM.RidgeCV
+@sk_reg mutable struct RidgeCVRegressor <: MLJBase.Deterministic
+    alphas::Any              = (0.1, 1.0, 10.0)::(all(_ .> 0))
+    fit_intercept::Bool      = true
+    normalize::Bool          = false
+    scoring::Any             = nothing
+    cv::Any                  = 5
+    gcv_mode::Option{String} = nothing::(_ === nothing || _ in ("auto","svd","eigen"))
+    store_cv_values::Bool    = false
 end
-MLJBase.fitted_params(model::RidgeCVRegressor, (fitresult, _)) = (
+MLJBase.fitted_params(model::RidgeCVRegressor, (fitresult, _, _)) = (
     coef      = fitresult.coef_,
     intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing),
     alpha     = fitresult.alpha_,
@@ -446,29 +436,29 @@ MLJBase.fitted_params(model::RidgeCVRegressor, (fitresult, _)) = (
     )
 
 # ==============================================================================
-SGDRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).SGDRegressor
-@sk_model mutable struct SGDRegressor <: MLJBase.Deterministic
-    loss::String             = "squared_loss"::(arg in ("squared_loss","huber","epsilon_insensitive","squared_epsilon_insensitive"))
-    penalty::String          = "l2"::(arg in ("none","l2","l1","elasticnet"))
-    alpha::Float64           = 1e-4::(arg>0)
-    l1_ratio::Float64        = 0.15::(arg>0)
+SGDRegressor_ = SKLM.SGDRegressor
+@sk_reg mutable struct SGDRegressor <: MLJBase.Deterministic
+    loss::String             = "squared_loss"::(_ in ("squared_loss","huber","epsilon_insensitive","squared_epsilon_insensitive"))
+    penalty::String          = "l2"::(_ in ("none","l2","l1","elasticnet"))
+    alpha::Float64           = 1e-4::(_ > 0)
+    l1_ratio::Float64        = 0.15::(_ > 0)
     fit_intercept::Bool      = true
-    max_iter::Int            = 1_000::(arg>0)
-    tol::Float64             = 1e-3::(arg>0)
+    max_iter::Int            = 1_000::(_ > 0)
+    tol::Float64             = 1e-3::(_ > 0)
     shuffle::Bool            = true
     verbose::Union{Int,Bool} = 0
     epsilon::Float64         = 0.1
     random_state::Any        = nothing
-    learning_rate::String    = "invscaling"::(arg in ("constant","optimal","invscaling","adaptive"))
-    eta0::Float64            = 0.01::(arg>0)
-    power_t::Float64         = 0.25::(arg>0)
+    learning_rate::String    = "invscaling"::(_ in ("constant","optimal","invscaling","adaptive"))
+    eta0::Float64            = 0.01::(_ > 0)
+    power_t::Float64         = 0.25::(_ > 0)
     early_stopping::Bool     = false
-    validation_fraction::Float64 = 0.1::(arg>0)
-    n_iter_no_change::Int    = 5::(arg>0)
+    validation_fraction::Float64 = 0.1::(0 < _ < 1)
+    n_iter_no_change::Int    = 5::(_ > 0)
     warm_start::Bool         = false
     average::Union{Int,Bool} = false
 end
-MLJBase.fitted_params(model::SGDRegressor, (fitresult, _)) = (
+MLJBase.fitted_params(model::SGDRegressor, (fitresult, _, _)) = (
     coef      = fitresult.coef_,
     intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing),
     average_coef      = model.average ? fitresult.average_coef_ : nothing,
@@ -476,19 +466,19 @@ MLJBase.fitted_params(model::SGDRegressor, (fitresult, _)) = (
     )
 
 # ==============================================================================
-TheilSenRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).TheilSenRegressor
-@sk_model mutable struct TheilSenRegressor <: MLJBase.Deterministic
+TheilSenRegressor_ = SKLM.TheilSenRegressor
+@sk_reg mutable struct TheilSenRegressor <: MLJBase.Deterministic
     fit_intercept::Bool = true
     copy_X::Bool        = true
-    max_subpopulation::Int = 10_000::(arg>0)
-    n_subsamples::Union{Nothing,Int} = nothing::(arg === nothing||arg>0)
-    max_iter::Int       = 300::(arg>0)
-    tol::Float64        = 1e-3::(arg>0)
+    max_subpopulation::Int    = 10_000::(_ > 0)
+    n_subsamples::Option{Int} = nothing::(_ === nothing||_ > 0)
+    max_iter::Int       = 300::(_ > 0)
+    tol::Float64        = 1e-3::(_ > 0)
     random_state::Any   = nothing
-    n_jobs::Union{Nothing,Int} = nothing
+    n_jobs::Option{Int} = nothing
     verbose::Bool       = false
 end
-MLJBase.fitted_params(model::TheilSenRegressor, (fitresult, _)) = (
+MLJBase.fitted_params(model::TheilSenRegressor, (fitresult, _, _)) = (
     coef      = fitresult.coef_,
     intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing),
     breakdown       = fitresult.breakdown_,
@@ -496,7 +486,17 @@ MLJBase.fitted_params(model::TheilSenRegressor, (fitresult, _)) = (
     )
 
 # Metadata for Continuous -> Vector{Continuous}
-const SKL_REGS_SINGLE = Union{Type{<:ARDRegressor},Type{<:BayesianRidgeRegressor},        Type{<:ElasticNetRegressor},Type{<:ElasticNetCVRegressor},Type{<:HuberRegressor},Type{<:LarsRegressor},Type{<:LarsCVRegressor},Type{<:LassoRegressor},Type{<:LassoCVRegressor},Type{<:LassoLarsRegressor},Type{<:LassoLarsCVRegressor},Type{<:LassoLarsICRegressor},Type{<:LinearRegressor},Type{<:OrthogonalMatchingPursuitRegressor},Type{<:OrthogonalMatchingPursuitCVRegressor},Type{<:PassiveAggressiveRegressor},Type{<:RidgeRegressor},Type{<:RidgeCVRegressor},Type{<:SGDRegressor},Type{<:TheilSenRegressor}}
+const SKL_REGS_SINGLE = Union{Type{<:ARDRegressor},Type{<:BayesianRidgeRegressor},
+                              Type{<:ElasticNetRegressor},Type{<:ElasticNetCVRegressor},
+                              Type{<:HuberRegressor},Type{<:LarsRegressor},Type{<:LarsCVRegressor},
+                              Type{<:LassoRegressor},Type{<:LassoCVRegressor},
+                              Type{<:LassoLarsRegressor},Type{<:LassoLarsCVRegressor},
+                              Type{<:LassoLarsICRegressor},Type{<:LinearRegressor},
+                              Type{<:OrthogonalMatchingPursuitRegressor},
+                              Type{<:OrthogonalMatchingPursuitCVRegressor},
+                              Type{<:PassiveAggressiveRegressor}, Type{<:RANSACRegressor},
+                              Type{<:RidgeRegressor},Type{<:RidgeCVRegressor},Type{<:SGDRegressor},
+                              Type{<:TheilSenRegressor}}
 
 MLJBase.input_scitype(::SKL_REGS_SINGLE)  = MLJBase.Table(Continuous)
 MLJBase.target_scitype(::SKL_REGS_SINGLE) = AbstractVector{Continuous}
@@ -506,40 +506,40 @@ MLJBase.target_scitype(::SKL_REGS_SINGLE) = AbstractVector{Continuous}
 ##############
 
 # ==============================================================================
-MultiTaskLassoRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).MultiTaskLasso
-@sk_model mutable struct MultiTaskLassoRegressor <: MLJBase.Deterministic
-    alpha::Float64      = 1.0::(arg≥0)
+MultiTaskLassoRegressor_ = SKLM.MultiTaskLasso
+@sk_reg mutable struct MultiTaskLassoRegressor <: MLJBase.Deterministic
+    alpha::Float64      = 1.0::(_ ≥ 0)
     fit_intercept::Bool = true
     normalize::Bool     = false
-    max_iter::Int       = 1_000::(arg>0)
-    tol::Float64        = 1e-4::(arg>0)
+    max_iter::Int       = 1_000::(_ > 0)
+    tol::Float64        = 1e-4::(_ > 0)
     copy_X::Bool        = true
     random_state::Any   = nothing
-    selection::String   = "cyclic"::(arg in ("cyclic","random"))
+    selection::String   = "cyclic"::(_ in ("cyclic","random"))
 end
-MLJBase.fitted_params(model::MultiTaskLassoRegressor, (fitresult, _)) = (
+MLJBase.fitted_params(model::MultiTaskLassoRegressor, (fitresult, _, _)) = (
     coef      = fitresult.coef_,
     intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing)
     )
 
 # ==============================================================================
-MultiTaskLassoCVRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).MultiTaskLassoCV
-@sk_model mutable struct MultiTaskLassoCVRegressor <: MLJBase.Deterministic
-    eps::Float64        = 1e-3::(arg>0)
-    n_alphas::Int       = 100::(arg>0)
-    alphas::Any         = nothing::(arg === nothing || all(0 .≤ arg .≤ 1))
+MultiTaskLassoCVRegressor_ = SKLM.MultiTaskLassoCV
+@sk_reg mutable struct MultiTaskLassoCVRegressor <: MLJBase.Deterministic
+    eps::Float64        = 1e-3::(_ > 0)
+    n_alphas::Int       = 100::(_ > 0)
+    alphas::Any         = nothing::(_ === nothing || all(0 .≤ _ .≤ 1))
     fit_intercept::Bool = true
     normalize::Bool     = false
-    max_iter::Int       = 300::(arg>0)
-    tol::Float64        = 1e-4::(arg>0)
+    max_iter::Int       = 300::(_ > 0)
+    tol::Float64        = 1e-4::(_ > 0)
     copy_X::Bool        = true
     cv::Any             = 5
     verbose::Union{Bool, Int} = false
-    n_jobs::Union{Int,Nothing} = 1
+    n_jobs::Option{Int} = 1
     random_state::Any   = nothing
-    selection::String   = "cyclic"::(arg in ("cyclic","random"))
+    selection::String   = "cyclic"::(_ in ("cyclic","random"))
 end
-MLJBase.fitted_params(model::MultiTaskLassoCVRegressor, (fitresult, _)) = (
+MLJBase.fitted_params(model::MultiTaskLassoCVRegressor, (fitresult, _, _)) = (
     coef      = fitresult.coef_,
     intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing),
     alpha     = fitresult.alpha_,
@@ -548,43 +548,43 @@ MLJBase.fitted_params(model::MultiTaskLassoCVRegressor, (fitresult, _)) = (
     )
 
 # ==============================================================================
-MultiTaskElasticNetRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).MultiTaskElasticNet
-@sk_model mutable struct MultiTaskElasticNetRegressor <: MLJBase.Deterministic
-    alpha::Float64      = 1.0::(arg ≥ 0)
-    l1_ratio::Union{Float64, Vector{Float64}} = 0.5::(0<=arg<=1)
+MultiTaskElasticNetRegressor_ = SKLM.MultiTaskElasticNet
+@sk_reg mutable struct MultiTaskElasticNetRegressor <: MLJBase.Deterministic
+    alpha::Float64      = 1.0::(_ ≥ 0)
+    l1_ratio::Union{Float64, Vector{Float64}} = 0.5::(0 ≤ _ ≤ 1)
     fit_intercept::Bool = true
     normalize::Bool     = true
     copy_X::Bool        = true
-    max_iter::Int       = 1_000::(arg>0)
-    tol::Float64        = 1e-4::(arg>0)
+    max_iter::Int       = 1_000::(_ > 0)
+    tol::Float64        = 1e-4::(_ > 0)
     warm_start::Bool    = false
     random_state::Any   = nothing
-    selection::String   = "cyclic"::(arg in ("cyclic","random"))
+    selection::String   = "cyclic"::(_ in ("cyclic","random"))
 end
-MLJBase.fitted_params(model::MultiTaskElasticNetRegressor, (fitresult, _)) = (
+MLJBase.fitted_params(model::MultiTaskElasticNetRegressor, (fitresult, _, _)) = (
     coef      = fitresult.coef_,
     intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing)
     )
 
 # ==============================================================================
-MultiTaskElasticNetCVRegressor_ = ((ScikitLearn.Skcore).pyimport("sklearn.linear_model")).MultiTaskElasticNetCV
-@sk_model mutable struct MultiTaskElasticNetCVRegressor <: MLJBase.Deterministic
-    l1_ratio::Union{Float64, Vector{Float64}} = 0.5::(0<=arg<=1)
-    eps::Float64        = 1e-3::(arg>0)
-    n_alphas::Int       = 100::(arg>0)
-    alphas::Any         = nothing::(arg === nothing || all(0 .≤ arg .≤ 1))
+MultiTaskElasticNetCVRegressor_ = SKLM.MultiTaskElasticNetCV
+@sk_reg mutable struct MultiTaskElasticNetCVRegressor <: MLJBase.Deterministic
+    l1_ratio::Union{Float64, Vector{Float64}} = 0.5::(0 ≤ _ ≤ 1)
+    eps::Float64        = 1e-3::(_ > 0)
+    n_alphas::Int       = 100::(_ > 0)
+    alphas::Any         = nothing::(_ === nothing || all(0 .≤ _ .≤ 1))
     fit_intercept::Bool = true
     normalize::Bool     = false
-    max_iter::Int       = 1_000::(arg>0)
-    tol::Float64        = 1e-4::(arg>0)
+    max_iter::Int       = 1_000::(_ > 0)
+    tol::Float64        = 1e-4::(_ > 0)
     cv::Any             = 5
     copy_X::Bool        = true
-    verbose::Union{Bool, Int} = 0
-    n_jobs::Union{Nothing,Int}   = nothing
+    verbose::Union{Bool,Int} = 0
+    n_jobs::Option{Int} = nothing
     random_state::Any   = nothing
-    selection::String   = "cyclic"::(arg in ("cyclic","random"))
+    selection::String   = "cyclic"::(_ in ("cyclic","random"))
 end
-MLJBase.fitted_params(model::MultiTaskElasticNetCVRegressor, (fitresult, _)) = (
+MLJBase.fitted_params(model::MultiTaskElasticNetCVRegressor, (fitresult, _, _)) = (
     coef      = fitresult.coef_,
     intercept = ifelse(model.fit_intercept, fitresult.intercept_, nothing),
     alpha     = fitresult.alpha_,
