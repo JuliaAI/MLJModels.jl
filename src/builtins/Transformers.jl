@@ -62,19 +62,17 @@ MLJBase.is_pure_julia(::Type{<:StaticTransformer}) = true
 
 
 """
-mutable struct FillImputer <: Unsupervised
+mutable struct FillImputer
     features::Vector{Symbol}
     continuous_fill::Union{Function}
     count_fill::Union{Function}
     categorical_fill::Union{Function}
-    allowed_scitypes::Array{Any}
 
 end
 
 FillImputer(;features=Symbol[], continuous_fill=median,
-    count_fill=median_count_fill ,categorical_fill=x->mode_cat_fill(x),
-    allowed_scitypes=[Union{Continuous,Missing},Union{Count,Missing},Union{Multiclass,Missing}])= FillImputer(features,
-        continuous_fill,count_fill,categorical_fill,allowed_scitypes)
+    count_fill=median_count_fill ,categorical_fill=x->mode_cat_fill(x))= FillImputer(features,
+        continuous_fill,count_fill,categorical_fill)
 
 
 
@@ -100,18 +98,8 @@ function fit(transformer::FillImputer,verbosity::Int,X)
     all_features = MLJBase.schema(X).names # a tuple not vector
     specified_features =isempty(transformer.features) ? collect(all_features) : transformer.features
 
-    features=Symbol[]
-    for j in eachindex(all_features)
-        ftr = all_features[j]
-        col = MLJBase.selectcols(X,j)
-        T = scitype_union(col)
-        if any([T <: a for a in transformer.allowed_scitypes]) && ftr in specified_features
-            push!(features,ftr)
-        end
 
-    end
-
-    fitresult = FillImputerResult(collect(features))
+    fitresult = FillImputerResult(collect(specified_features))
     report = nothing
     cache = nothing
 
@@ -130,11 +118,11 @@ function transform(transformer::FillImputer, fitresult, X)
         col = MLJBase.selectcols(X,ftr)
         T = scitype_union(col)
         if T<:Union{Continuous,Missing}
-            X[mis_ind,ftr]=transformer.continuous_fill(X[:x][map(!,mis)])
+            X[mis_ind,ftr]=transformer.continuous_fill(X[ftr][map(!,mis)])
         elseif T <: Union{Count,Missing}
-            X[mis_ind,ftr]=transformer.count_fill(X[:x][map(!,mis)])
+            X[mis_ind,ftr]=transformer.count_fill(X[ftr][map(!,mis)])
         elseif T <: Union{Multiclass,Missing}
-            X[mis_ind,ftr]=transformer.categorical_fill(X[:x][map(!,mis)])
+            X[mis_ind,ftr]=transformer.categorical_fill(X[ftr][map(!,mis)])
         end
     end
     X

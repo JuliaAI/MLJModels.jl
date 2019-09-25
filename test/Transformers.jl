@@ -2,6 +2,7 @@ module TestTransformer
 
 using Revise
 using MLJModels
+using MLJBase
 using TestImages
 using MLJBase
 using Test
@@ -148,7 +149,13 @@ X = (name=categorical(["Ben", "John", "Mary", "John"], ordered=true),
 
 # playgorund
 # using TestImages
-# df=DataFrame(x=[testimage("cameraman"),testimage("cameraman"),testimage("cameraman"),missing]);
+function FeatureSelectorSciType(X,selector)
+    sch = MLJBase.schema(df)
+    mask = (e for e in 1:length(sch.names) if selector(sch.scitypes[e]))
+    MLJModels.FeatureSelector(features=[sch.names[m] for m in mask])
+end
+
+
 
 
 @testset "Imputer" begin
@@ -158,7 +165,7 @@ X = (name=categorical(["Ben", "John", "Mary", "John"], ordered=true),
     impRes=fit(imp,1,df)[1]
     transform(imp,impRes,df)
     @test !ismissing(df[:x])
-    df=DataFrame(x=categorical(vcat([missing for i=1:4], [["Old", "Young", "Middle", "Young"] for i=1:4]...)))
+    df=DataFrame(x=categorical(vcat([missing for i=1:4], [["Old", "Young", "Middle", "Young"] for i=1:2]...)))
 
     imp=MLJModels.FillImputer(features=[:x])
     fitresult=fit(imp,1, df)[1]
@@ -169,6 +176,19 @@ X = (name=categorical(["Ben", "John", "Mary", "John"], ordered=true),
     fitresult=fit(imp,1, df)[1]
     transform(imp,fitresult,df)
     @test !ismissing(df[:x])
+    df=DataFrame(x=categorical(vcat([missing for i=1:4], [["Old", "Young", "Middle", "Young"] for i=1:2]...)),
+        y=vcat([missing,1.0],ones(10)),
+        z=[missing,missing,1,1,1,1,1,5,1,1,1,1],a=["a" for i=1:12])
+
+
+    fun=s-> (s<: Union{Missing,Continuous} || s<: Union{Missing,Count} || s <: Union{Missing,Multiclass} )
+    fs=FeatureSelectorSciType(df, fun )
+    fitresult, cache, report=fit(fs,1,df)
+    df= transform(fs,fitresult,df)
+    imp=MLJModels.FillImputer()
+    impRes=fit(imp,1,df)[1]
+    transform(imp,impRes,df)
+    @test !ismissing(df)
 
 
 end
