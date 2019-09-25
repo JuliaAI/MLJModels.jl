@@ -33,10 +33,6 @@ end
 
 end
 
-@testset "@mlj_model macro" begin
-    include("parameters_utils.jl")
-end
-
 @testset "MultivariateStats  " begin
     @test include("MultivariateStats.jl")
 end
