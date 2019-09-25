@@ -4,6 +4,7 @@ export RidgeRegressor, PCA, KernelPCA, ICA
 
 import MLJBase
 using ScientificTypes
+using Tables
 
 import ..MultivariateStats # lazy loading
 
@@ -30,7 +31,7 @@ function MLJBase.fit(model::RidgeRegressor,
                      y)
 
     Xmatrix = MLJBase.matrix(X)
-    features = MLJBase.schema(X).names
+    features = Tables.schema(X).names
 
     weights = MS.ridge(Xmatrix, y, model.lambda)
 
