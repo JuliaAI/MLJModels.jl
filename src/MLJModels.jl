@@ -53,6 +53,9 @@ import .Registry.@update
 include("builtins/Transformers.jl")
 include("builtins/Constant.jl")
 
+include("parameters_utils.jl")
+include("metadata_utils.jl")
+
 function __init__()
 
     # lazily load in strap-on model interfaces for external packages:
