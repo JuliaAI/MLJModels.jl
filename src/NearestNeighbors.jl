@@ -1,10 +1,10 @@
 module NearestNeighbors_
 
 import MLJBase
-import MLJBase: @mlj_model, metadata_pkg, metadata_model
 using Distances
 
 import ..NearestNeighbors
+import ..@mlj_model, ..metadata_pkg, ..metadata_model
 
 const NN = NearestNeighbors
 

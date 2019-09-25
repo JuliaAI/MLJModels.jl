@@ -6,7 +6,6 @@
 module Clustering_
 
 import MLJBase
-import MLJBase: @mlj_model, metadata_pkg, metadata_model
 using ScientificTypes
 
 import ..Clustering # strange sytax for lazy-loading
@@ -15,6 +14,8 @@ using Distances
 using LinearAlgebra: norm
 
 const C = Clustering
+
+import ..@mlj_model
 
 const KMeansDescription =
     """
