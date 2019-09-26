@@ -114,6 +114,7 @@ function MLJBase.transform(transformer::FillImputer, fitresult, X)
             elseif T <: Union{MLJBase.Finite,Missing}
                 filler = transformer.finite_fill(col)
             end
+            col = copy(col) # carries the same name but not attached to the same memory
             col[ismissing.(col)] .= filler
             col = convert.(nonmissing(eltype(col)), col)
         end

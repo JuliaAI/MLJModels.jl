@@ -10,6 +10,17 @@ export @update
 # from loading.jl:
 export load, @load, info
 
+# from model_search:
+export models, localmodels
+
+# from model/Constant
+export ConstantRegressor, ConstantClassifier,
+        DeterministicConstantRegressor, DeterministicConstantClassifier
+
+# from model/Transformers
+export FeatureSelector, StaticTransformer, UnivariateStandardizer,
+        Standardizer, UnivariateBoxCoxTransformer, OneHotEncoder, FillImputer
+
 const srcdir = dirname(@__FILE__) # the directory containing this file
 
 # TODO remove when the functionality has been merged in ScientificTypes.jl
@@ -26,13 +37,8 @@ include("registry/src/Registry.jl")
 import .Registry.@update
 
 # load built-in models:
-
-export ConstantRegressor, ConstantClassifier,
-        DeterministicConstantRegressor, DeterministicConstantClassifier
 include("builtins/Constant.jl")
 
-export FeatureSelector, StaticTransformer, UnivariateStandardizer,
-        Standardizer, UnivariateBoxCoxTransformer, OneHotEncoder, FillImputer
 include("builtins/Transformers.jl")
 
 const INFO_GIVEN_HANDLE = Dict{Handle,Any}()

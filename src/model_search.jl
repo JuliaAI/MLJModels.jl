@@ -1,6 +1,3 @@
-# from model_search:
-export models, localmodels
-
 ## FUNCTIONS TO INSPECT METADATA OF REGISTERED MODELS AND TO
 ## FACILITATE MODEL SEARCH
 
