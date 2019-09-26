@@ -1,19 +1,16 @@
 module TestTransformer
 
-using Test
-using MLJModels, MLJBase, ScientificTypes
-using CategoricalArrays, Tables, StatsBase, Random
-
-using MLJModels.Transformers
+using Test, MLJBase, MLJModels
+using Tables, CategoricalArrays, Random
 
 #### STATIC TRANSFORMER ####
 
 t  = StaticTransformer(f=log)
-f, = MLJBase.fit(t, 1, nothing)
+f, = fit(t, 1, nothing)
 @test transform(t, f, 5) ≈ log(5)
 
-infos = MLJBase.info_dict(t)
-@test infos[:input_scitype]  == MLJBase.Table(Scientific)
+infos = info_dict(t)
+@test infos[:input_scitype]  == MLJBase.Table(MLJBase.Scientific)
 @test infos[:output_scitype] == MLJBase.Table(Scientific)
 
 #### FEATURE SELECTOR ####
@@ -26,7 +23,7 @@ X = (Zn   = rand(N),
 
 namesX   = Tables.schema(X).names |> collect
 selector = FeatureSelector()
-f,       = MLJBase.fit(selector, 1, X)
+f,       = fit(selector, 1, X)
 
 @test f == namesX
 
@@ -35,24 +32,25 @@ Xt = transform(selector, f, selectrows(X, 1:2))
 @test Set(Tables.schema(Xt).names) == Set(namesX)
 @test length(Xt.Zn) == 2
 
-selector = FeatureSelector([:Zn, :Crim])
-f,       = MLJBase.fit(selector, 1, X)
+selector = FeatureSelector(features=[:Zn, :Crim])
+f,       = fit(selector, 1, X)
 
-@test transform(selector, f, selectrows(X, 1:2)) == selectcols(selectrows(X, 1:2), [:Zn, :Crim])
+@test transform(selector, f, selectrows(X, 1:2)) ==
+        selectcols(selectrows(X, 1:2), [:Zn, :Crim])
 
-infos = MLJBase.info_dict(selector)
+infos = info_dict(selector)
 @test infos[:input_scitype]  == MLJBase.Table(Scientific)
 @test infos[:output_scitype] == MLJBase.Table(Scientific)
 
 #### UNIVARIATE STANDARDIZER ####
 
 stand = UnivariateStandardizer()
-f,    = MLJBase.fit(stand, 1, [0, 2, 4])
+f,    = fit(stand, 1, [0, 2, 4])
 
 @test round.(Int, transform(stand, f, [0,4,8])) == [-1.0,1.0,3.0]
 @test round.(Int, inverse_transform(stand, f, [-1, 1, 3])) == [0, 4, 8]
 
-infos = MLJBase.info_dict(stand)
+infos = info_dict(stand)
 @test infos[:package_name] == "MLJModels"
 @test infos[:name] == "UnivariateStandardizer"
 @test infos[:input_scitype] == AbstractVector{<:Infinite}
@@ -76,7 +74,7 @@ x4 = [round(Int, x) for x in X.x1stFlrSF]
 X = (x1=x1, x2=X[2], x3=X[3], x4=x4, x5=X[5])
 
 stand = Standardizer()
-f,    = MLJBase.fit(stand, 1, X)
+f,    = fit(stand, 1, X)
 Xnew  = transform(stand, f, X)
 
 @test Xnew[1] == X[1]
@@ -86,11 +84,11 @@ Xnew  = transform(stand, f, X)
 @test std(Xnew[5]) ≈ 1.0
 
 stand.features = [:x1, :x5]
-f,   = MLJBase.fit(stand, 1, X)
+f,   = fit(stand, 1, X)
 Xnew = transform(stand, f, X)
-f,   = MLJBase.fit(stand, 1, X)
+f,   = fit(stand, 1, X)
 
-@test issubset(Set(keys(f)), Set(MLJBase.schema(X).names[[5,]]))
+@test issubset(Set(keys(f)), Set(Tables.schema(X).names[[5,]]))
 
 Xt = transform(stand, f, X)
 
@@ -99,10 +97,6 @@ Xt = transform(stand, f, X)
 @test Xnew[3] == X[3]
 @test Xnew[4] == X[4]
 @test std(Xnew[5]) ≈ 1.0
-
-X = MLJBase.table(randn(10_000, 50))
-@time f, = MLJBase.fit(stand, 1, X)
-@time Xt = transform(stand, f, X)
 
 infos = info_dict(stand)
 
@@ -118,12 +112,11 @@ infos = info_dict(stand)
 Random.seed!(1551)
 v = abs.(randn(1000))
 v = v .- minimum(v)
-@test 0.9 ≤ MLJModels.Transformers.normality(v) ≤ 1.1
 
 t  = UnivariateBoxCoxTransformer(shift=true)
-f, = MLJBase.fit(t, 2, v)
+f, = fit(t, 2, v)
 
-@test sum(abs.(v - MLJBase.inverse_transform(t, f, MLJBase.transform(t, f, v)))) <= 5000*eps()
+@test sum(abs.(v - inverse_transform(t, f, transform(t, f, v)))) <= 5000*eps()
 
 infos = info_dict(t)
 
@@ -141,7 +134,7 @@ X = (name   = categorical(["Ben", "John", "Mary", "John"], ordered=true),
      age    = [23, 23, 14, 23])
 
 t  = OneHotEncoder()
-f, = @test_logs((:info, r"Spawning 3"), (:info, r"Spawning 3"), MLJBase.fit(t, 1, X))
+f, = @test_logs((:info, r"Spawning 3"), (:info, r"Spawning 3"), fit(t, 1, X))
 
 Xt = transform(t, f, X)
 
@@ -157,7 +150,7 @@ Xt = transform(t, f, X)
 # test that *entire* pool of categoricals is used in fit, including
 # unseen levels:
 f, = @test_logs((:info, r"Spawning 3"), (:info, r"Spawning 3"),
-                      MLJBase.fit(t, 1, MLJBase.selectrows(X,1:2)))
+                      fit(t, 1, MLJBase.selectrows(X,1:2)))
 Xtsmall = transform(t, f, X)
 @test Xt == Xtsmall
 
@@ -168,10 +161,10 @@ Xtsmall = transform(t, f, X)
 
 # test exclusion of ordered factors:
 t  = OneHotEncoder(ordered_factor=false)
-f, = MLJBase.fit(t, 1, X)
+f, = fit(t, 1, X)
 Xt = transform(t, f, X)
-@test :name in MLJBase.schema(Xt).names
-@test :favourite_number__5 in MLJBase.schema(Xt).names
+@test :name in Tables.schema(Xt).names
+@test :favourite_number__5 in Tables.schema(Xt).names
 
 # test that one may not add new columns:
 X = (name       = categorical(["Ben", "John", "Mary", "John"], ordered=true),

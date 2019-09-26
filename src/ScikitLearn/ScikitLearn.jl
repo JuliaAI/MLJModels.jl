@@ -2,6 +2,8 @@ module ScikitLearn_
 
 #> for all Supervised models:
 import MLJBase
+import MLJBase: @mlj_model, metadata_model,
+				_process_model_def, _model_constructor, _model_cleaner
 using ScientificTypes
 using Tables
 
@@ -22,9 +24,6 @@ import ..ScikitLearn
 @sk_import svm: LinearSVR
 
 include("svm.jl")
-
-import .._process_model_def, .._model_constructor, .._model_cleaner
-import  ..metadata_model # metadata_pkg is handled by @sk_model
 
 const Option{T} = Union{Nothing, T}
 

@@ -1,10 +1,10 @@
 module NearestNeighbors_
 
 import MLJBase
+import MLJBase: @mlj_model, metadata_model, metadata_pkg
 using Distances
 
 import ..NearestNeighbors
-import ..@mlj_model, ..metadata_pkg, ..metadata_model
 
 const NN = NearestNeighbors
 
@@ -69,32 +69,6 @@ $KNNFields
 end
 
 const KNN = Union{KNNRegressor, KNNClassifier}
-
-function MLJBase.clean!(m::KNN)
-    warning = ""
-    if m.K < 1
-        warning *= "Number of neighbors 'K' needs to be larger than 0. Setting to 1.\n"
-        m.K = 1
-    end
-    if m.leafsize < 0
-        warning *= "Leaf size should be ≥ 0. Setting to 10.\n"
-        m.leafsize = 10
-    end
-    if m.algorithm ∉ (:kdtree, :brutetree, :balltree)
-        warning *= "The tree algorithm should be ':kdtree', ':brutetree' or ':balltree'." *
-                   "Setting to ':kdtree'.\n"
-        m.algorithm = :kdtree
-    end
-    if m.algorithm == :kdtree && !isa(m.metric ∉ (Euclidean, Chebyshev, Minkowski, Citiblock))
-        warning *= "KDTree only supports axis-aligned metrics. Setting to 'Euclidean'.\n"
-        m.metric = Euclidean()
-    end
-    if m.weights ∉ (:uniform, :distance)
-        warning *= "Weighing should be ':uniform' or ':distance'. Setting to ':uniform'.\n"
-        m.weights = :distance
-    end
-    return warning
-end
 
 function MLJBase.fit(m::KNN, verbosity::Int, X, y)
     Xmatrix = MLJBase.matrix(X, transpose=true) # NOTE: copies the data

@@ -2,7 +2,7 @@
 # (for serializing/deserializing into TOML format)
 
 function encode_dic(s)
-    if s isa Symbol 
+    if s isa Symbol
         return string(":", s)
     elseif s isa AbstractString
         return string(s)
@@ -113,7 +113,7 @@ function localmodeltypes(modl)
             i = MLJBase.info_dict(M)
             name = i[:name]
             return isdefined(modl, Symbol(name)) &&
-                !i[:is_wrapper] 
+                !i[:is_wrapper]
         end
     end
 end
@@ -182,18 +182,17 @@ end
 
 ## METADATA INTITIALIZATION
 
-# Note. This more naturally sits in __init__ but then causes issues
-# with pre-compilation:
-
-try
-    metadata_file = joinpath(srcdir, "registry", "Metadata.toml")
-    global INFO_GIVEN_HANDLE = info_given_handle(metadata_file)
-    global AMBIGUOUS_NAMES = ambiguous_names(INFO_GIVEN_HANDLE)
-    global PKGS_GIVEN_NAME = pkgs_given_name(INFO_GIVEN_HANDLE)
-    global NAMES = model_names(INFO_GIVEN_HANDLE)
-    @info "Model metadata loaded from registry. "
-catch
-    @warn "Problem loading registry from $metadata_file. "*
-    "Model search and model code loading disabled. "
-end
-    
+# # Note. This more naturally sits in __init__ but then causes issues
+# # with pre-compilation:
+#
+# metadata_file = joinpath(srcdir, "registry", "Metadata.toml")
+# try
+#     global INFO_GIVEN_HANDLE = info_given_handle(metadata_file)
+#     global AMBIGUOUS_NAMES = ambiguous_names(INFO_GIVEN_HANDLE)
+#     global PKGS_GIVEN_NAME = pkgs_given_name(INFO_GIVEN_HANDLE)
+#     global NAMES = model_names(INFO_GIVEN_HANDLE)
+#     @info "Model metadata loaded from registry. "
+# catch
+#     @warn "Problem loading registry from $metadata_file. "*
+#     "Model search and model code loading disabled. "
+# end
