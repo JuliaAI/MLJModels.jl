@@ -2,28 +2,24 @@
 
 module Transformers
 
-export FeatureSelector
-# export ToIntTransformer
-export UnivariateStandardizer, Standardizer
-export UnivariateBoxCoxTransformer
-export OneHotEncoder
-export StaticTransformer
-export FillImputer
-
 import MLJBase: MLJType, Unsupervised
 import MLJBase: selectcols, table
 import MLJBase
-using ScientificTypes
-import Distributions
-using CategoricalArrays
-using Statistics
-using Tables
-using StatsBase
 
 # to be extended:
 import MLJBase: fit, transform, inverse_transform
 
-import ..@mlj_model, ..nonmissing
+import ..nonmissing, ..metadata_model, ..metadata_pkg
+
+import Distributions
+using ScientificTypes, CategoricalArrays, Tables, Statistics, StatsBase
+
+# export things
+export FeatureSelector, StaticTransformer,
+       UnivariateStandardizer, Standardizer,
+       UnivariateBoxCoxTransformer, OneHotEncoder,
+       FillImputer
+# export ToIntTransformer
 
 ## CONSTANTS
 
@@ -31,36 +27,35 @@ const N_VALUES_THRESH = 16 # for BoxCoxTransformation
 const CategoricalElement = Union{CategoricalValue,CategoricalString}
 
 
-## STATIC TRANSFORMERS
+#### STATIC TRANSFORMERS ####
 
 mutable struct StaticTransformer <: Unsupervised
-    f  # callable object or function
+    f
 end
-
-StaticTransformer(; f=identity) = StaticTransformer(f)
+StaticTransformer(;f=identity) = StaticTransformer(f)
 
 MLJBase.fitted_params(::StaticTransformer) = NamedTuple()
 
-MLJBase.fit(::StaticTransformer, verbosity::Integer, X) =
-    nothing, nothing, NamedTuple()
+MLJBase.fit(::StaticTransformer, ::Integer, _) = nothing, nothing, NamedTuple()
 MLJBase.transform(model::StaticTransformer, fitresult, Xnew) = (model.f)(Xnew)
 
-MLJBase.load_path(::Type{<:StaticTransformer})   = "MLJModels.StaticTransformer"
-MLJBase.package_url(::Type{<:StaticTransformer}) = "https://github.com/alan-turing-institute/MLJModels.jl"
-MLJBase.package_license(::Type{<:StaticTransformer}) = "MIT"
-MLJBase.package_name(::Type{<:StaticTransformer})    = "MLJModels"
-MLJBase.package_uuid(::Type{<:StaticTransformer})    = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
-MLJBase.is_pure_julia(::Type{<:StaticTransformer})   = true
-MLJBase.input_scitype(::Type{<:StaticTransformer})   = MLJBase.Table(MLJBase.Scientific)
-MLJBase.output_scitype(::Type{<:StaticTransformer})  = MLJBase.Table(MLJBase.Scientific)
+# NOTE: metadata_pkg for all transformers at the end of this module
 
-## Imputer
+metadata_model(StaticTransformer,
+    input  = MLJBase.Table(Scientific),
+    output = MLJBase.Table(Scientific),
+    descr  = "Applies a given data transformation `f` (either a function or callable)."
+    )
+
+
+#### IMPUTER ####
+
+const FILL_IMPUTER_DESCR = "Imputes missing data with a fixed value computed on the non-missing values. The way to compute the filler depends on the scitype of the data and can be specified."
 
 """
-    FillImputer -
+FillImputer
 
-Imputes missing data with a fixed value computed on the non-missing values. The way to
-compute the filler depends on the scitype of the data and can be specified.
+$FILL_IMPUTER_DESCR
 
 ## Fields
 
@@ -75,7 +70,7 @@ mutable struct FillImputer <: Unsupervised
     finite_fill::Function
 end
 
-round_median(v::AbstractVector) = v->round(eltype(v), median(v))
+round_median(v::AbstractVector) = v -> round(eltype(v), median(v))
 
 _median       = e -> skipmissing(e) |> median
 _round_median = e -> skipmissing(e) |> (f -> round(eltype(f), median(f)))
@@ -126,20 +121,17 @@ function transform(transformer::FillImputer, fitresult, X)
     return MLJBase.table(named_cols, prototype=X)
 end
 
-MLJBase.load_path(::Type{<:FillImputer})   = "MLJModels.FillImputer"
-MLJBase.package_url(::Type{<:FillImputer}) = "https://github.com/alan-turing-institute/MLJModels.jl"
-MLJBase.package_name(::Type{<:FillImputer})    = "MLJModels"
-MLJBase.package_license(::Type{<:FillImputer}) = "MIT"
-MLJBase.package_uuid(::Type{<:FillImputer})    = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
-MLJBase.is_pure_julia(::Type{<:FillImputer})   = true
-MLJBase.input_scitype(::Type{<:FillImputer})   = MLJBase.Table(MLJBase.Found)
-MLJBase.output_scitype(::Type{<:FillImputer})  = MLJBase.Table(MLJBase.Found)
+metadata_model(FillImputer,
+    input  = MLJBase.Table(Scientific),
+    output = MLJBase.Table(Found),
+    descr  = "$FILL_IMPUTER_DESCR"
+    )
 
 
 ## FOR FEATURE (COLUMN) SELECTION
 
 """
-    FeatureSelector(features=Symbol[])
+FeatureSelector(features=Symbol[])
 
 An unsupervised model for filtering features (columns) of a table.
 Only those features encountered during fitting will appear in
@@ -156,12 +148,12 @@ end
 FeatureSelector(;features=Symbol[]) = FeatureSelector(features)
 
 function fit(transformer::FeatureSelector, verbosity::Int, X)
-    namesX = Tables.schema(X).names
-    issubset(Set(transformer.features), Set(namesX)) ||
-        throw(error("Attempting to select non-existent feature(s)."))
+    namesX = collect(Tables.schema(X).names)
     if isempty(transformer.features)
-        fitresult = collect(namesX)
+        fitresult = namesX
     else
+        all(e -> e in namesX, transformer.features) ||
+            throw(error("Attempting to select non-existent feature(s)."))
         fitresult = transformer.features
     end
     report = NamedTuple()
@@ -171,20 +163,16 @@ end
 MLJBase.fitted_params(::FeatureSelector, fitresult) = (features_to_keep=fitresult,)
 
 function transform(transformer::FeatureSelector, features, X)
-    issubset(Set(features), Set(Tables.schema(X).names)) ||
+    all(e -> e in Tables.schema(X).names, features) ||
         throw(error("Supplied frame does not admit previously selected features."))
     return MLJBase.selectcols(X, features)
 end
 
-# metadata:
-MLJBase.load_path(::Type{<:FeatureSelector})   = "MLJModels.FeatureSelector"
-MLJBase.package_url(::Type{<:FeatureSelector}) = "https://github.com/alan-turing-institute/MLJModels.jl"
-MLJBase.package_license(::Type{<:FeatureSelector}) = "MIT"
-MLJBase.package_name(::Type{<:FeatureSelector})    = "MLJModels"
-MLJBase.package_uuid(::Type{<:FeatureSelector})    = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
-MLJBase.is_pure_julia(::Type{<:FeatureSelector})   = true
-MLJBase.input_scitype(::Type{<:FeatureSelector})   = MLJBase.Table(Scientific) # anything goes
-MLJBase.output_scitype(::Type{<:FeatureSelector})  = MLJBase.Table(Scientific)
+metadata_model(FeatureSelector,
+    input  = MLJBase.Table(Scientific),
+    output = MLJBase.Table(Scientific),
+    descr  = "Filter features (columns) of a table by name."
+    )
 
 
 ## UNIVARIATE STANDARDIZATION
@@ -195,8 +183,7 @@ MLJBase.output_scitype(::Type{<:FeatureSelector})  = MLJBase.Table(Scientific)
 Unsupervised model for standardizing (whitening) univariate data.
 
 """
-mutable struct UnivariateStandardizer <: Unsupervised
-end
+mutable struct UnivariateStandardizer <: Unsupervised end
 
 function fit(transformer::UnivariateStandardizer, verbosity::Int, v::AbstractVector{T}) where T<:Real
     std(v) > eps(Float64) ||
@@ -214,8 +201,7 @@ function transform(transformer::UnivariateStandardizer, fitresult, x::Real)
 end
 
 # for transforming vector:
-transform(transformer::UnivariateStandardizer, fitresult,
-          v) =
+transform(transformer::UnivariateStandardizer, fitresult, v) =
               [transform(transformer, fitresult, x) for x in v]
 
 # for single values:
@@ -228,15 +214,11 @@ end
 inverse_transform(transformer::UnivariateStandardizer, fitresult, w) =
     [inverse_transform(transformer, fitresult, y) for y in w]
 
-# metadata:
-MLJBase.load_path(::Type{<:UnivariateStandardizer}) = "MLJModels.UnivariateStandardizer"
-MLJBase.package_url(::Type{<:UnivariateStandardizer}) = "https://github.com/alan-turing-institute/MLJModels.jl"
-MLJBase.package_name(::Type{<:UnivariateStandardizer})    = "MLJModels"
-MLJBase.package_license(::Type{<:UnivariateStandardizer}) = "MIT"
-MLJBase.package_uuid(::Type{<:UnivariateStandardizer})    = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
-MLJBase.is_pure_julia(::Type{<:UnivariateStandardizer})   = true
-MLJBase.input_scitype(::Type{<:UnivariateStandardizer})   = AbstractVector{<:Infinite}
-MLJBase.output_scitype(::Type{<:UnivariateStandardizer})  = AbstractVector{Continuous}
+metadata_model(UnivariateStandardizer,
+    input  = AbstractVector{<:Infinite},
+    output = AbstractVector{Continuous},
+    descr  = "Standardize (whiten) univariate data."
+    )
 
 
 ## STANDARDIZATION OF ORDINAL FEATURES OF TABULAR DATA
@@ -247,7 +229,8 @@ MLJBase.output_scitype(::Type{<:UnivariateStandardizer})  = AbstractVector{Conti
 Unsupervised model for standardizing (whitening) the columns of
 tabular data. If `features` is empty then all columns `v` for which
 all elements have `Continuous` scitypes are standardized. For
-different behaviour, specify the names of features to be standardized.
+different behaviour (e.g. standardizing counts as well), specify the
+names of features to be standardized.
 
     using DataFrames
     X = DataFrame(x1=[0.2, 0.3, 1.0], x2=[4, 2, 3])
@@ -272,18 +255,17 @@ Standardizer(; features=Symbol[]) = Standardizer(features)
 
 function fit(transformer::Standardizer, verbosity::Int, X::Any)
 
-    _schema =  schema(X)
-    all_features = _schema.names
-    types = schema(X).scitypes
+    all_features = Tables.schema(X).names
+    mach_types   = collect(eltype(selectcols(X, c)) for c in all_features)
 
     # determine indices of all_features to be transformed
     if isempty(transformer.features)
         cols_to_fit = filter!(eachindex(all_features)|>collect) do j
-            types[j] <: Continuous
+            mach_types[j] <: AbstractFloat
         end
     else
         cols_to_fit = filter!(eachindex(all_features)|>collect) do j
-            all_features[j] in transformer.features && types[j] <: Continuous
+            all_features[j] in transformer.features && mach_types[j] <: Real
         end
     end
 
@@ -304,7 +286,6 @@ function fit(transformer::Standardizer, verbosity::Int, X::Any)
     report = (features_fit=keys(fitresult_given_feature),)
 
     return fitresult, cache, report
-
 end
 
 MLJBase.fitted_params(::Standardizer, fitresult) = (mean_and_std_given_feature=fitresult,)
@@ -336,16 +317,11 @@ function transform(transformer::Standardizer, fitresult, X)
 
 end
 
-# metadata:
-MLJBase.load_path(::Type{<:Standardizer})   = "MLJModels.Standardizer"
-MLJBase.package_url(::Type{<:Standardizer}) = "https://github.com/alan-turing-institute/MLJModels.jl"
-MLJBase.package_name(::Type{<:Standardizer})    = "MLJModels"
-MLJBase.package_license(::Type{<:Standardizer}) = "MIT"
-MLJBase.package_uuid(::Type{<:Standardizer})    = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
-MLJBase.is_pure_julia(::Type{<:Standardizer})   = true
- # non-continuous features allowed but ignored
-MLJBase.input_scitype(::Type{<:Standardizer})  = MLJBase.Table(Scientific)
-MLJBase.output_scitype(::Type{<:Standardizer}) = MLJBase.Table(Scientific)
+metadata_model(Standardizer,
+    input  = MLJBase.Table(Scientific),
+    output = MLJBase.Table(Scientific),
+    descr  = "Standardize (whiten) data."
+    )
 
 
 ## UNIVARIATE BOX-COX TRANSFORMATIONS
@@ -361,22 +337,17 @@ function midpoints(v::AbstractVector{T}) where T <: Real
 end
 
 function normality(v)
-
     n  = length(v)
-    v = standardize(convert(Vector{Float64}, v))
-
+    v  = standardize(convert(Vector{Float64}, v))
     # sort and replace with midpoints
     v = midpoints(sort!(v))
-
     # find the (approximate) expected value of the size (n-1)-ordered statistics for
     # standard normal:
     d = Distributions.Normal(0,1)
-    w= map(collect(1:(n-1))/n) do x
+    w = map(collect(1:(n-1))/n) do x
         quantile(d, x)
     end
-
     return cor(v, w)
-
 end
 
 function boxcox(lambda, c, x::Real)
@@ -465,15 +436,11 @@ function inverse_transform(transformer::UnivariateBoxCoxTransformer,
     return [inverse_transform(transformer, fitresult, y) for y in w]
 end
 
-# metadata:
-MLJBase.load_path(::Type{<:UnivariateBoxCoxTransformer}) = "MLJModels.UnivariateBoxCoxTransformer"
-MLJBase.package_url(::Type{<:UnivariateBoxCoxTransformer}) = "https://github.com/alan-turing-institute/MLJModels.jl"
-MLJBase.package_name(::Type{<:UnivariateBoxCoxTransformer})    = "MLJModels"
-MLJBase.package_license(::Type{<:UnivariateBoxCoxTransformer}) = "MIT"
-MLJBase.package_uuid(::Type{<:UnivariateBoxCoxTransformer})    = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
-MLJBase.is_pure_julia(::Type{<:UnivariateBoxCoxTransformer})  = true
-MLJBase.input_scitype(::Type{<:UnivariateBoxCoxTransformer})  = AbstractVector{Continuous}
-MLJBase.output_scitype(::Type{<:UnivariateBoxCoxTransformer}) = AbstractVector{Continuous}
+metadata_model(UnivariateBoxCoxTransformer,
+    input  = AbstractVector{Continuous},
+    output = AbstractVector{Continuous},
+    descr  = "Box-Cox transformation of the data."
+    )
 
 
 ## ONE HOT ENCODING
@@ -606,21 +573,45 @@ function transform(transformer::OneHotEncoder, fitresult, X)
 
 end
 
-# metadata:
-MLJBase.load_path(::Type{<:OneHotEncoder})   = "MLJModels.OneHotEncoder"
-MLJBase.package_url(::Type{<:OneHotEncoder}) = "https://github.com/alan-turing-institute/MLJModels.jl"
-MLJBase.package_name(::Type{<:OneHotEncoder})    = "MLJModels"
-MLJBase.package_license(::Type{<:OneHotEncoder}) = "MIT"
-MLJBase.package_uuid(::Type{<:OneHotEncoder})    = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
-MLJBase.is_pure_julia(::Type{<:OneHotEncoder})   = true
-# non-finite allowed but ignored
-MLJBase.input_scitype(::Type{<:OneHotEncoder})  = MLJBase.Table(Scientific)
-MLJBase.output_scitype(::Type{<:OneHotEncoder}) = MLJBase.Table(Scientific)
+metadata_model(OneHotEncoder,
+    input  = MLJBase.Table(Scientific),
+    output = MLJBase.Table(Scientific),
+    descr  = "One-Hot-Encoding of the data.",
+    )
 
 
-end # end module
+#### Metadata for all built-in transformers
+
+metadata_pkg.((FeatureSelector, StaticTransformer, UnivariateStandardizer, Standardizer,
+               UnivariateBoxCoxTransformer, OneHotEncoder, FillImputer),
+    name = "MLJModels",
+    uuid = "d491faf4-2d78-11e9-2867-c94bc002c0b7",
+    url  = "https://github.com/alan-turing-institute/MLJModels.jl",
+    julia = true,
+    license = "MIT",
+    is_wrapper = false,
+    )
+
+end # module
 
 
-## EXPOSE THE INTERFACE
 
-using .Transformers
+
+function foo()
+   X = MLJBase.table(randn(100_000, 50))
+   names = Tables.schema(X).names
+   for c in names
+       col = selectcols(X, c)
+       s = std(col)
+       m = mean(col)
+       col .-= m
+       col ./= s
+   end
+end
+
+@time foo()
+
+X = MLJBase.table(randn(100_000, 50))
+stand = MLJModels.Transformers.Standardizer()
+@time f, = MLJBase.fit(stand, 1, X)
+@time Xt = transform(stand, f, X)

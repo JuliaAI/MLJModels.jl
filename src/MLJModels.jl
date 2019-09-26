@@ -4,7 +4,7 @@ module MLJModels
 export @update
 
 # from builtins/Transformers.jl:
-export StaticTransformer, FillImputer, FeatureSelector,
+export FillImputer, StaticTransformer, FeatureSelector,
     UnivariateStandardizer, Standardizer,
     UnivariateBoxCoxTransformer,
     OneHotEncoder
@@ -40,7 +40,7 @@ if VERSION < v"1.3"
 end
 nonmissing = nonmissingtype
 
-
+include("parameters_utils.jl")
 include("metadata_utils.jl")
 
 include("metadata.jl")
@@ -52,9 +52,6 @@ import .Registry.@update
 # load built-in models:
 include("builtins/Transformers.jl")
 include("builtins/Constant.jl")
-
-include("parameters_utils.jl")
-include("metadata_utils.jl")
 
 function __init__()
 

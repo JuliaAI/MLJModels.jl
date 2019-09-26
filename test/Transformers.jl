@@ -2,11 +2,13 @@ module TestTransformer
 
 using Test
 using MLJModels, MLJBase, ScientificTypes
-using Statistics, CategoricalArrays, Tables, StatsBase, Random
+using CategoricalArrays, Tables, StatsBase, Random
+
+using MLJModels.Transformers
 
 #### STATIC TRANSFORMER ####
 
-t  = MLJModels.StaticTransformer(f=log)
+t  = StaticTransformer(f=log)
 f, = MLJBase.fit(t, 1, nothing)
 @test transform(t, f, 5) ≈ log(5)
 
@@ -97,6 +99,10 @@ Xt = transform(stand, f, X)
 @test Xnew[3] == X[3]
 @test Xnew[4] == X[4]
 @test std(Xnew[5]) ≈ 1.0
+
+X = MLJBase.table(randn(10_000, 50))
+@time f, = MLJBase.fit(stand, 1, X)
+@time Xt = transform(stand, f, X)
 
 infos = info_dict(stand)
 
