@@ -13,3 +13,15 @@ y  = X1 * θ .+ 0.1 .* randn(n)
     fp = fitted_params(gpr, res)
     @test keys(fp) == (:X_train, :y_train, :kernel, :L, :alpha, :log_marginal_likelihood_value)
 end
+
+Xc2, yc2 = gen_classif(classes=["A", "B", "C"])
+
+@testset "GPClassif" begin
+    m, f = simple_test_classif_prob(GaussianProcessClassifier(), Xc2, yc2)
+    fp = fitted_params(m, f)
+    @test keys(fp) == (:kernel, :log_marginal_likelihood_value, :classes, :n_classes)
+    infos = info_dict(m)
+    @test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
+    @test infos[:target_scitype] == AbstractVector{<:MLJBase.Finite}
+    @test !isempty(infos[:docstring])
+end

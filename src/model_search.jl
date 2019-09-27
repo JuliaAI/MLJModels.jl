@@ -1,14 +1,14 @@
 ## FUNCTIONS TO INSPECT METADATA OF REGISTERED MODELS AND TO
 ## FACILITATE MODEL SEARCH
 
-is_supervised(::Type{<:Supervised}) = true
-is_supervised(::Type{<:Unsupervised}) = false
+is_supervised(::Type{<:MLJBase.Supervised}) = true
+is_supervised(::Type{<:MLJBase.Unsupervised}) = false
 
 supervised_propertynames = sort(MLJBase.SUPERVISED_TRAITS)
 alpha = [:name, :package_name, :is_supervised]
 omega = [:input_scitype, :target_scitype]
 both = vcat(alpha, omega)
-filter!(!in(both), supervised_propertynames) 
+filter!(!in(both), supervised_propertynames)
 prepend!(supervised_propertynames, alpha)
 append!(supervised_propertynames, omega)
 const SUPERVISED_PROPERTYNAMES = Tuple(supervised_propertynames)
@@ -17,7 +17,7 @@ unsupervised_propertynames = sort(MLJBase.UNSUPERVISED_TRAITS)
 alpha = [:name, :package_name, :is_supervised]
 omega = [:input_scitype, :output_scitype]
 both = vcat(alpha, omega)
-filter!(!in(both), unsupervised_propertynames) 
+filter!(!in(both), unsupervised_propertynames)
 prepend!(unsupervised_propertynames, alpha)
 append!(unsupervised_propertynames, omega)
 const UNSUPERVISED_PROPERTYNAMES = Tuple(unsupervised_propertynames)
@@ -35,6 +35,23 @@ function Base.isless(p1::ModelProxy, p2::ModelProxy)
     end
 end
 
+import MLJBase.==
+function ==(m1::ModelProxy, m2::ModelProxy)
+    m1.name == m2.name && m1.package_name == m2.package_name
+    # tests = map(keys(m1)) do k
+    #     v1 = getproperty(m1, k)
+    #     v2 = getproperty(m2, k)
+    #     if k isa AbstractVector
+    #         Set(v1) == Set(v2)
+    #     else
+    #         v1 == v2
+    #     end
+    # end
+    # return all(tests)
+end
+
+
+
 Base.show(stream::IO, p::ModelProxy) =
     print(stream, "(name = $(p.name), package_name = $(p.package_name), "*
           "... )")
@@ -47,7 +64,7 @@ function Base.show(stream::IO, ::MIME"text/plain", p::ModelProxy)
 end
 
 # returns named tuple version of the dictionary i=info_dict(SomeModelType):
-function info_as_named_tuple(i) 
+function info_as_named_tuple(i)
     propertynames = ifelse(i[:is_supervised], SUPERVISED_PROPERTYNAMES,
                            UNSUPERVISED_PROPERTYNAMES)
     propertyvalues = Tuple(i[property] for property in propertynames)
@@ -55,7 +72,7 @@ function info_as_named_tuple(i)
 end
 
 MLJBase.info(handle::Handle) = info_as_named_tuple(INFO_GIVEN_HANDLE[handle])
-    
+
 """
     info(name::String; pkg=nothing)
 
@@ -96,10 +113,10 @@ end
 Return the traits associated with the specified `model`. Equivalent to
 `info(name; pkg=pkg)` where `name::String` is the name of the model type, and
 `pkg::String` the name of the package containing it.
- 
+
 """
-MLJBase.info(M::Type{<:Model}) = info_as_named_tuple(MLJBase.info_dict(M))
-MLJBase.info(model::Model) = info(typeof(model))
+MLJBase.info(M::Type{<:MLJBase.Model}) = info_as_named_tuple(MLJBase.info_dict(M))
+MLJBase.info(model::MLJBase.Model) = info(typeof(model))
 
 """
     models()
@@ -137,7 +154,7 @@ end
 
 models() = models(x->true)
 
-# function models(task::SupervisedTask)
+# function models(task::MLJBase.SupervisedTask)
 #     ret = Dict{String, Any}()
 #     function condition(t)
 #         return t.is_supervised &&
@@ -160,12 +177,11 @@ models() = models(x->true)
 """
     localmodels(; modl=Main)
     localmodels(conditions...; modl=Main)
- 
+
 
 List all models whose names are in the namespace of the specified
-module `modl`, additionally solving the `task`, or meeting the
-`conditions`, if specified. Here a *condition* is a `Bool`-valued
-function on models.
+module `modl`, or meeting the `conditions`, if specified. Here a
+*condition* is a `Bool`-valued function on models.
 
 See also [models](@ref)
 

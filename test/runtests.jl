@@ -6,35 +6,24 @@
 using Test
 
 @testset "metadata" begin
-    
     @testset "reading and extracting model metadata" begin
         @test include("metadata.jl")
     end
-
     @testset "model search" begin
         @test include("model_search.jl")
     end
-
     @testset "loading model code" begin
         @test include("loading.jl")
     end
-
 end
 
 @testset "built-in models" begin
-
     @testset "Constant" begin
         @test include("Constant.jl")
     end
-    
     @testset "Transformers" begin
         @test include("Transformers.jl")
     end
-    
-    @testset "KNN" begin
-        @test include("KNN.jl")
-    end
-    
 end
 
 @testset "MultivariateStats  " begin
@@ -73,4 +62,6 @@ end
     @test include("XGBoost.jl")
 end
 
-
+@testset "NearestNeighbors" begin
+    @test include("NearestNeighbors.jl")
+end

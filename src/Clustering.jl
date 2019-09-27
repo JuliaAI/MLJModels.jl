@@ -5,10 +5,8 @@
 
 module Clustering_
 
-export KMeans
-export KMedoids
-
 import MLJBase
+import MLJBase: @mlj_model
 using ScientificTypes
 
 import ..Clustering # strange sytax for lazy-loading
@@ -18,50 +16,60 @@ using LinearAlgebra: norm
 
 const C = Clustering
 
-# ----------------------------------
+const KMeansDescription =
+    """
+    K-Means algorithm: find K centroids corresponding to K clusters in the data.
+    """
 
-mutable struct KMeans{M<:SemiMetric} <: MLJBase.Unsupervised
-    k::Int
-    metric::M
+const KMedoidsDescription =
+    """
+    K-Medoids algorithm: find K centroids corresponding to K clusters in the data.
+    Unlike K-Means, the centroids are found among data points themselves."
+    """
+
+const KMFields =
+    """
+    ## Keywords
+
+    * `k=3`     : number of centroids
+    * `metric`  : distance metric to use
+    """
+
+"""
+KMeans(; kwargs...)
+
+$KMeansDescription
+
+$KMFields
+
+See also the [package documentation](http://juliastats.github.io/Clustering.jl/latest/kmeans.html).
+"""
+@mlj_model mutable struct KMeans <: MLJBase.Unsupervised
+    k::Int = 3::(_ ≥ 2)
+    metric::SemiMetric = SqEuclidean()
 end
 
-mutable struct KMedoids{M<:SemiMetric} <: MLJBase.Unsupervised
-    k::Int
-    metric::M
-end
+"""
+KMedoids(; kwargs...)
 
-const CM = Union{<:KMeans, <:KMedoids}
+$KMedoidsDescription
 
-function MLJBase.clean!(model::CM)
-    warning = ""
-    if model.k < 2
-        warning *= "Need k >= 2. Resetting k=2.\n"
-        model.k = 2
-    end
-    return warning
-end
+$KMFields
 
-####
-#### KMEANS: constructor, fit, transform and predict
-####
-
-function KMeans(; k=3, metric=SqEuclidean())
-    model = KMeans(k, metric)
-    message = MLJBase.clean!(model)
-    isempty(message) || @warn message
-    return model
+See also the [package documentation](http://juliastats.github.io/Clustering.jl/latest/kmedoids.html).
+"""
+@mlj_model mutable struct KMedoids <: MLJBase.Unsupervised
+    k::Int = 3::(_ ≥ 2)
+    metric::SemiMetric = SqEuclidean()
 end
 
 function MLJBase.fit(model::KMeans
                    , verbosity::Int
                    , X)
+    # NOTE: using transpose here to get a LinearAlgebra.Transpose object which Kmeans can handle
+    Xarray = transpose(MLJBase.matrix(X))
 
-    Xarray = MLJBase.matrix(X)
-
-    # NOTE see https://github.com/JuliaStats/Clustering.jl/issues/136
-    # this has been updated but only on #master, in the future replace permutedims
-    # with transpose (lazy)
-    result    = C.kmeans(permutedims(Xarray), model.k; distance=model.metric)
+    result    = C.kmeans(Xarray, model.k; distance=model.metric)
     fitresult = result.centers # centers (p x k)
     cache     = nothing
     report    = (assignments=result.assignments,) # size n
@@ -74,36 +82,22 @@ MLJBase.fitted_params(::KMeans, fitresult) = (centers=fitresult,)
 function MLJBase.transform(model::KMeans
                          , fitresult
                          , X)
-
-    Xarray = MLJBase.matrix(X)
-    (n, p), k = size(Xarray), model.k
     # pairwise distance from samples to centers
-    X̃ = pairwise(model.metric, transpose(Xarray), fitresult, dims=2)
+    X̃ = pairwise(model.metric, transpose(MLJBase.matrix(X)), fitresult, dims=2)
     return MLJBase.table(X̃, prototype=X)
-end
-
-####
-#### KMEDOIDS: constructor, fit and predict
-#### NOTE there is no transform in the sense of kmeans
-####
-
-function KMedoids(; k=3, metric=SqEuclidean())
-    model = KMedoids(k, metric)
-    message = MLJBase.clean!(model)
-    isempty(message) || @warn message
-    return model
 end
 
 function MLJBase.fit(model::KMedoids
                    , verbosity::Int
                    , X)
 
-    Xarray = MLJBase.matrix(X)
+    # NOTE: using transpose=true will materialize the transpose (~ permutedims), KMedoids
+    # does not yet accept LinearAlgebra.Transpose
+    Xarray = MLJBase.matrix(X, transpose=true)
     # cost matrix: all the pairwise distances
-    Carray = pairwise(model.metric, transpose(Xarray), dims=2) # n x n
-
+    Carray    = pairwise(model.metric, Xarray, dims=2) # n x n
     result    = C.kmedoids(Carray, model.k)
-    fitresult = permutedims(view(Xarray, result.medoids, :)) # medoids (p x k)
+    fitresult = view(Xarray, :, result.medoids) # medoids
     cache     = nothing
     report    = (assignments=result.assignments,) # size n
 
@@ -112,15 +106,11 @@ end
 
 MLJBase.fitted_params(::KMedoids, fitresult) = (medoids=fitresult,)
 
-
 function MLJBase.transform(model::KMedoids
                          , fitresult
                          , X)
-
-    Xarray = MLJBase.matrix(X)
-    (n, p), k = size(Xarray), model.k
     # pairwise distance from samples to medoids
-    X̃ = pairwise(model.metric, transpose(Xarray), fitresult, dims=2)
+    X̃ = pairwise(model.metric, MLJBase.matrix(X, transpose=true), fitresult, dims=2)
     return MLJBase.table(X̃, prototype=X)
 end
 
@@ -151,26 +141,29 @@ end
 #### METADATA
 ####
 
-MLJBase.package_url(::Type{<:CM}) = "https://github.com/JuliaStats/Clustering.jl"
-MLJBase.package_name(::Type{<:CM}) = "Clustering"
-MLJBase.package_uuid(::Type{<:CM}) = "aaaa29a8-35af-508c-8bc3-b662a17a0fe5"
-MLJBase.is_pure_julia(::Type{<:CM}) = true
+import ..metadata_pkg, ..metadata_model
 
-MLJBase.load_path(::Type{<:KMeans}) = "MLJModels.Clustering_.KMeans" # lazy-loaded from MLJ
-MLJBase.package_url(::Type{<:KMeans}) = "https://github.com/JuliaStats/Clustering.jl"
-MLJBase.package_name(::Type{<:KMeans}) = "Clustering"
-MLJBase.package_uuid(::Type{<:KMeans}) = "aaaa29a8-35af-508c-8bc3-b662a17a0fe5"
-MLJBase.is_pure_julia(::Type{<:KMeans}) = true
-MLJBase.input_scitype(::Type{<:KMeans}) = Table(Continuous)
-MLJBase.output_scitype(::Type{<:KMeans}) = Table(Continuous)
+metadata_pkg.((KMeans, KMedoids),
+    name="Clustering",
+    uuid="aaaa29a8-35af-508c-8bc3-b662a17a0fe5",
+    url="https://github.com/JuliaStats/Clustering.jl",
+    julia=true,
+    license="MIT",
+    is_wrapper=false
+    )
 
-MLJBase.load_path(::Type{<:KMedoids}) = "MLJModels.Clustering_.KMedoids" # lazy-loaded from MLJ
-MLJBase.package_url(::Type{<:KMedoids}) = MLJBase.package_url(KMeans)
-MLJBase.package_name(::Type{<:KMedoids}) = MLJBase.package_name(KMeans)
-MLJBase.package_uuid(::Type{<:KMedoids}) = MLJBase.package_uuid(KMeans)
-MLJBase.is_pure_julia(::Type{<:KMedoids}) = true
-MLJBase.input_scitype(::Type{<:KMedoids}) = Table(Continuous)
-MLJBase.output_scitype(::Type{<:KMedoids}) = Table(Continuous)
+metadata_model(KMeans,
+    input=MLJBase.Table(MLJBase.Continuous),
+    output=MLJBase.Table(MLJBase.Continuous),
+    weights=false,
+    descr=KMeansDescription
+    )
 
+metadata_model(KMedoids,
+    input=MLJBase.Table(MLJBase.Continuous),
+    output=MLJBase.Table(MLJBase.Continuous),
+    weights=false,
+    descr=KMedoidsDescription
+    )
 
 end # module

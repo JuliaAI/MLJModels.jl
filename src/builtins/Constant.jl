@@ -1,17 +1,10 @@
-# this file defines *and* loads one module
-
 module Constant
 
-export ConstantRegressor, ConstantClassifier
-export DeterministicConstantRegressor, DeterministicConstantClassifier
+using ..MLJBase, ..Tables
+using Distributions
 
-import MLJBase
-import MLJBase.nrows
-import Distributions
-using StatsBase
-using Statistics
-using CategoricalArrays
-using ScientificTypes
+export ConstantRegressor, ConstantClassifier,
+        DeterministicConstantRegressor, DeterministicConstantClassifier
 
 ## THE CONSTANT REGRESSOR
 
@@ -23,7 +16,7 @@ probability distribution best fitting the training target data. Use
 `predict_mean` to predict the mean value instead.
 
 """
-struct ConstantRegressor{D} <: MLJBase.Probabilistic 
+struct ConstantRegressor{D} <: MLJBase.Probabilistic
     distribution_type::Type{D}
 end
 function ConstantRegressor(; distribution_type=Distributions.Normal)
@@ -62,8 +55,8 @@ MLJBase.package_uuid(::Type{<:ConstantRegressor}) =
     "d491faf4-2d78-11e9-2867-c94bc002c0b7"
 MLJBase.package_url(::Type{<:ConstantRegressor}) = "https://github.com/alan-turing-institute/MLJModels.jl"
 MLJBase.is_pure_julia(::Type{<:ConstantRegressor}) = true
-MLJBase.input_scitype(::Type{<:ConstantRegressor}) = Table(Scientific) # anything goes
-MLJBase.target_scitype(::Type{<:ConstantRegressor}) = AbstractVector{Continuous}
+MLJBase.input_scitype(::Type{<:ConstantRegressor}) = MLJBase.Table(MLJBase.Scientific) # anything goes
+MLJBase.target_scitype(::Type{<:ConstantRegressor}) = AbstractVector{MLJBase.Continuous}
 
 
 ## THE CONSTANT DETERMINISTIC REGRESSOR (FOR TESTING)
@@ -80,13 +73,13 @@ end
 MLJBase.predict(model::DeterministicConstantRegressor, fitresult, Xnew) = fill(fitresult, nrows(Xnew))
 
 # metadata:
-MLJBase.load_path(::Type{<:DeterministicConstantRegressor}) = MLJBase.load_path(ConstantRegressor)
+MLJBase.load_path(::Type{<:DeterministicConstantRegressor}) = "MLJModels.DeterministicConstantRegressor"
 MLJBase.package_name(::Type{<:DeterministicConstantRegressor}) = MLJBase.package_name(ConstantRegressor)
 MLJBase.package_uuid(::Type{<:DeterministicConstantRegressor}) = MLJBase.package_url(ConstantRegressor)
 MLJBase.package_url(::Type{<:DeterministicConstantRegressor}) = MLJBase.package_url(ConstantRegressor)
 MLJBase.is_pure_julia(::Type{<:DeterministicConstantRegressor}) = true
-MLJBase.input_scitype(::Type{<:DeterministicConstantRegressor}) = Table(Scientific) # anything goes
-MLJBase.target_scitype(::Type{<:DeterministicConstantRegressor}) = AbstractVector{Continuous}
+MLJBase.input_scitype(::Type{<:DeterministicConstantRegressor}) = MLJBase.Table(MLJBase.Scientific) # anything goes
+MLJBase.target_scitype(::Type{<:DeterministicConstantRegressor}) = AbstractVector{MLJBase.Continuous}
 
 
 ## THE CONSTANT CLASSIFIER
@@ -104,7 +97,7 @@ obtain the training target mode instead.
 struct ConstantClassifier <: MLJBase.Probabilistic end
 
 function MLJBase.fit(model::ConstantClassifier,
-                 verbosity::Int, X, y) 
+                 verbosity::Int, X, y)
 
     fitresult = Distributions.fit(MLJBase.UnivariateFinite, y)
 
@@ -127,8 +120,8 @@ MLJBase.package_name(::Type{<:ConstantClassifier}) = MLJBase.package_name(Consta
 MLJBase.package_uuid(::Type{<:ConstantClassifier}) = MLJBase.package_uuid(ConstantRegressor)
 MLJBase.package_url(::Type{<:ConstantClassifier}) = MLJBase.package_url(ConstantRegressor)
 MLJBase.is_pure_julia(::Type{<:ConstantClassifier}) = true
-MLJBase.input_scitype(::Type{<:ConstantClassifier}) = Table(Scientific) # anything goes
-MLJBase.target_scitype(::Type{<:ConstantClassifier}) = AbstractVector{<:Finite}
+MLJBase.input_scitype(::Type{<:ConstantClassifier}) = MLJBase.Table(MLJBase.Scientific) # anything goes
+MLJBase.target_scitype(::Type{<:ConstantClassifier}) = AbstractVector{<:MLJBase.Finite}
 
 
 ## DETERMINISTIC CONSTANT CLASSIFIER (FOR TESTING)
@@ -161,13 +154,9 @@ MLJBase.package_name(::Type{<:DeterministicConstantClassifier}) = MLJBase.packag
 MLJBase.package_uuid(::Type{<:DeterministicConstantClassifier}) = MLJBase.package_uuid(ConstantRegressor)
 MLJBase.package_url(::Type{<:DeterministicConstantClassifier}) = MLJBase.package_url(ConstantRegressor)
 MLJBase.is_pure_julia(::Type{<:DeterministicConstantClassifier}) = true
-MLJBase.input_scitype(::Type{<:DeterministicConstantClassifier}) = Table(Scientific) # anything goes
-MLJBase.target_scitype(::Type{<:DeterministicConstantClassifier}) = AbstractVector{<:Finite}
+MLJBase.input_scitype(::Type{<:DeterministicConstantClassifier}) = MLJBase.Table(MLJBase.Scientific) # anything goes
+MLJBase.target_scitype(::Type{<:DeterministicConstantClassifier}) = AbstractVector{<:MLJBase.Finite}
 
+end
 
-end # module
-
-
-## EXPOSE THE INTERFACE
-
-using .Constant
+using MLJModels.Constant
