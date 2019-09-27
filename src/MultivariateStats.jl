@@ -3,6 +3,7 @@ module MultivariateStats_
 export RidgeRegressor, PCA, KernelPCA, ICA
 
 import MLJBase
+import MLJBase: @mlj_model
 using ScientificTypes
 using Tables
 
@@ -14,8 +15,6 @@ struct LinearFitresult{F} <: MLJBase.MLJType
     coefficients::Vector{F}
     bias::F
 end
-
-import ..@mlj_model
 
 ####
 #### RIDGE

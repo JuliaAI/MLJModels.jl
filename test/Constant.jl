@@ -1,12 +1,7 @@
 module TestConstant
 
-# using Revise
-using Test
-using MLJModels
-import MLJBase
-using CategoricalArrays
-import Distributions
-import Distributions.pdf
+using Test, MLJBase, MLJModels
+using Distributions
 
 ## REGRESSOR
 
@@ -25,7 +20,7 @@ d=Distributions.Normal(1.5, 0.5)
 @test MLJBase.predict_mean(model, fitresult, X) ≈ fill(1.5, 10)
 
 MLJBase.info_dict(model)
-MLJBase.info_dict(MLJModels.DeterministicConstantRegressor)
+MLJBase.info_dict(DeterministicConstantRegressor)
 
 
 ## CLASSIFIER
@@ -35,12 +30,12 @@ y = categorical(yraw)
 
 model = ConstantClassifier()
 fitresult, cache, report =  MLJBase.fit(model, 1, X, y)
-d = MLJBase.UnivariateFinite([y[1], y[2], y[4]], [0.5, 0.25, 0.25]) 
+d = MLJBase.UnivariateFinite([y[1], y[2], y[4]], [0.5, 0.25, 0.25])
 @test all([pdf(d, c) ≈ pdf(fitresult, c) for c in MLJBase.classes(d)])
 
 yhat = MLJBase.predict_mode(model, fitresult, X)
 @test MLJBase.classes(yhat[1]) == MLJBase.classes(y[1])
-@test yhat[5] == y[1] 
+@test yhat[5] == y[1]
 @test length(yhat) == 10
 
 yhat = MLJBase.predict(model, fitresult, X)
@@ -48,7 +43,7 @@ yhat1 = yhat[1]
 @test all([pdf(yhat1, c) ≈ pdf(d, c) for c in MLJBase.classes(d)])
 
 MLJBase.info_dict(model)
-MLJBase.info_dict(MLJModels.DeterministicConstantClassifier)
+MLJBase.info_dict(DeterministicConstantClassifier)
 
 end # module
 true

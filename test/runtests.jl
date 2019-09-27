@@ -6,35 +6,24 @@
 using Test
 
 @testset "metadata" begin
-
     @testset "reading and extracting model metadata" begin
         @test include("metadata.jl")
     end
-
     @testset "model search" begin
         @test include("model_search.jl")
     end
-
     @testset "loading model code" begin
         @test include("loading.jl")
     end
-
 end
 
 @testset "built-in models" begin
-
     @testset "Constant" begin
         @test include("Constant.jl")
     end
-
     @testset "Transformers" begin
         @test include("Transformers.jl")
     end
-
-end
-
-@testset "@mlj_model macro" begin
-    include("parameters_utils.jl")
 end
 
 @testset "MultivariateStats  " begin
