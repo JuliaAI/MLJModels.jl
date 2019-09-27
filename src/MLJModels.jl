@@ -46,15 +46,16 @@ const PKGS_GIVEN_NAME   = Dict{String,Vector{String}}()
 const AMBIGUOUS_NAMES   = String[]
 const NAMES             = String[]
 
+metadata_file = joinpath(srcdir, "registry", "Metadata.toml")
+
+merge!(INFO_GIVEN_HANDLE, info_given_handle(metadata_file))
+merge!(PKGS_GIVEN_NAME, pkgs_given_name(INFO_GIVEN_HANDLE))
+append!(AMBIGUOUS_NAMES, ambiguous_names(INFO_GIVEN_HANDLE))
+append!(NAMES, model_names(INFO_GIVEN_HANDLE))
+@info "Model metadata loaded from registry. "
+
 # lazily load in strap-on model interfaces for external packages:
 function __init__()
-    metadata_file = joinpath(srcdir, "registry", "Metadata.toml")
-
-    merge!(INFO_GIVEN_HANDLE, info_given_handle(metadata_file))
-    merge!(PKGS_GIVEN_NAME, pkgs_given_name(INFO_GIVEN_HANDLE))
-    append!(AMBIGUOUS_NAMES, ambiguous_names(INFO_GIVEN_HANDLE))
-    append!(NAMES, model_names(INFO_GIVEN_HANDLE))
-    @info "Model metadata loaded from registry. "
 
     @require MultivariateStats="6f286f6a-111f-5878-ab1e-185364afe411" include("MultivariateStats.jl")
     @require DecisionTree="7806a523-6efd-50cb-b5f6-3fa6f1930dbb" include("DecisionTree.jl")
