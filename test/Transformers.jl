@@ -1,5 +1,5 @@
 module TestTransformer
-
+using Revise
 using Test, MLJBase, MLJModels
 using Tables, CategoricalArrays, Random
 
@@ -42,6 +42,28 @@ infos = info_dict(selector)
 @test infos[:input_scitype]  == MLJBase.Table(Scientific)
 @test infos[:output_scitype] == MLJBase.Table(Scientific)
 
+#### FeatureSelectorRule ####
+using DataFrames
+X = (name       = categorical(["Ben", "John", "Mary", "John"], ordered=true),
+     height     = [1.85, 1.67, 1.5, 1.67],
+     dummy     = [1.0, 1.00, 1.0, 1.0],
+     favourite_number = categorical([7, 5, 10, 5]),
+     age        = [23, 23, 14, 23],
+     gender     = categorical(['M', 'M', 'F', 'M']))
+
+
+function var_rule(n,t,s)
+    return s <: Continuous ? (std(X[n])>0.1 ? true : false) : true
+end
+
+
+sch = MLJBase.schema(X)
+fsr=MLJModels.FeatureSelectorRule(MLJModels.FeatureSelector(),var_rule)
+
+fsr_result, =MLJBase.fit(fsr,1,(X))
+fsr_result
+Xt=transform(fsr,fsr_result,DataFrame(X))
+@test !(:dummy in schema(X).names)
 #### UNIVARIATE STANDARDIZER ####
 
 stand = UnivariateStandardizer()

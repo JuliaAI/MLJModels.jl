@@ -12,8 +12,7 @@ import ..nonmissing
 import ..MLJBase: @mlj_model, metadata_pkg, metadata_model
 
 
-export FeatureSelector,
-        StaticTransformer,
+export FeatureSelector,FeatureSelectorRule, StaticTransformer,
         UnivariateStandardizer,
         Standardizer,
         UnivariateBoxCoxTransformer,
@@ -170,12 +169,56 @@ function MLJBase.transform(transformer::FeatureSelector, features, X)
     return MLJBase.selectcols(X, features)
 end
 
+
+
 # metadata
 MLJBase.input_scitype(::Type{<:FeatureSelector})  = MLJBase.Table(MLJBase.Scientific)
 MLJBase.output_scitype(::Type{<:FeatureSelector}) = MLJBase.Table(MLJBase.Scientific)
 MLJBase.docstring(::Type{<:FeatureSelector})      = "Filter features (columns) of a table by name."
 MLJBase.load_path(::Type{<:FeatureSelector})      = "MLJModels.FeatureSelector"
 
+
+"""
+    FeatureSelectorRule(rule::Function)
+
+An unsupervised model for filtering features (columns) of a table.
+Only those features that satisfy the rule
+:name, :scitype, :type
+
+"""
+mutable struct FeatureSelectorRule <: Unsupervised
+    fs::FeatureSelector
+    rule::Function
+end
+
+FeatureSelectorRule(;rule=(n,t,s)->true) = FeatureSelectorRule(FeatureSelector(),rule)
+
+function MLJBase.fit(transformer::FeatureSelectorRule, verbosity::Int, X)
+    sch = MLJBase.schema(X)
+
+    mask = (e for e in 1:length(sch.names) if transformer.rule(sch.names[e],sch.types[e],sch.scitypes[e]))
+    features=[sch.names[m] for m in mask]
+
+    transformer.fs=FeatureSelector(features)
+    return fit(transformer.fs,verbosity,X)
+end
+
+MLJBase.fitted_params(::FeatureSelectorRule, fitresult) = (features_to_keep=fitresult,)
+
+function transform(transformer::FeatureSelectorRule,features, X)
+    return transform(transformer.fs,features,X)
+end
+
+
+
+MLJBase.load_path(::Type{<:FeatureSelector})   = "MLJModels.FeatureSelectorRule"
+MLJBase.package_url(::Type{<:FeatureSelector}) = "https://github.com/alan-turing-institute/MLJModels.jl"
+MLJBase.package_license(::Type{<:FeatureSelector}) = "MIT"
+MLJBase.package_name(::Type{<:FeatureSelector})    = "MLJModels"
+MLJBase.package_uuid(::Type{<:FeatureSelector})    = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
+MLJBase.is_pure_julia(::Type{<:FeatureSelector})   = true
+MLJBase.input_scitype(::Type{<:FeatureSelector})   = MLJBase.Table(Scientific) # anything goes
+MLJBase.output_scitype(::Type{<:FeatureSelector})  = MLJBase.Table(Scientific)
 
 ## UNIVARIATE STANDARDIZATION
 
