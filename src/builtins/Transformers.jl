@@ -1,26 +1,24 @@
-# note: this file defines *and* imports one module; see end
+# NOTE 26/9/2019 (TL): it's very annoying but we **CANNOT** seem to
+# be allowed to use @mlj_model, metadata_pkg or metadata_model here
+# without it causing some form of "Method definition" warning
+# or issue about an eval being called in a closed module.
 
 module Transformers
 
-export FeatureSelector
-# export ToIntTransformer
-export UnivariateStandardizer, Standardizer
-export UnivariateBoxCoxTransformer
-export OneHotEncoder
-export StaticTransformer
+using ..MLJBase, ..Tables
+using StatsBase, Statistics, CategoricalArrays, Distributions
 
-import MLJBase: MLJType, Unsupervised
-import MLJBase: selectcols, table
-import MLJBase
-using ScientificTypes
-import Distributions
-using CategoricalArrays
-using Statistics
-using Tables
+import ..nonmissing
+import ..MLJBase: @mlj_model, metadata_pkg, metadata_model
 
-# to be extended:
-import MLJBase: fit, transform, inverse_transform
 
+export FeatureSelector,
+        StaticTransformer,
+        UnivariateStandardizer,
+        Standardizer,
+        UnivariateBoxCoxTransformer,
+        OneHotEncoder,
+        FillImputer
 
 ## CONSTANTS
 
@@ -28,33 +26,115 @@ const N_VALUES_THRESH = 16 # for BoxCoxTransformation
 const CategoricalElement = Union{CategoricalValue,CategoricalString}
 
 
-## STATIC TRANSFORMERS
+#### STATIC TRANSFORMERS ####
 
-mutable struct StaticTransformer <: Unsupervised
-    f  # callable object or function
+const STATIC_TRANSFORMER_DESCR = "Applies a given data transformation `f` (either a function or callable)."
+
+"""
+StaticTransformer
+
+$STATIC_TRANSFORMER_DESCR
+
+## Field
+
+* `f=identity`: function or callable object to use for the data transformation.
+"""
+mutable struct StaticTransformer <: MLJBase.Unsupervised
+    f
 end
-
-StaticTransformer(; f=identity) = StaticTransformer(f)
+StaticTransformer(;f=identity) = StaticTransformer(f)
 
 MLJBase.fitted_params(::StaticTransformer) = NamedTuple()
-
-MLJBase.fit(::StaticTransformer, verbosity::Integer, X) =
-    nothing, nothing, NamedTuple()
+MLJBase.fit(::StaticTransformer, ::Integer, _) = nothing, nothing, NamedTuple()
 MLJBase.transform(model::StaticTransformer, fitresult, Xnew) = (model.f)(Xnew)
 
-MLJBase.load_path(::Type{<:StaticTransformer}) = "MLJModels.StaticTransformer"
-MLJBase.package_url(::Type{<:StaticTransformer}) = "https://github.com/alan-turing-institute/MLJModels.jl"
-MLJBase.package_name(::Type{<:StaticTransformer}) = "MLJModels"
-MLJBase.package_uuid(::Type{<:StaticTransformer}) = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
-MLJBase.is_pure_julia(::Type{<:StaticTransformer}) = true
-# MLJBase.input_scitype(::Type{<:StaticTransformer}) = Table(Scientific) # anything goes
-# MLJBase.output_scitype(::Type{<:StaticTransformer}) = Table(Scientific) 
+# metadata
+MLJBase.input_scitype(::Type{<:StaticTransformer})  = MLJBase.Table(MLJBase.Scientific)
+MLJBase.output_scitype(::Type{<:StaticTransformer}) = MLJBase.Table(MLJBase.Scientific)
+MLJBase.docstring(::Type{<:StaticTransformer})      = STATIC_TRANSFORMER_DESCR
+MLJBase.load_path(::Type{<:StaticTransformer})      = "MLJModels.StaticTransformer"
+
+
+#### IMPUTER ####
+
+const FILL_IMPUTER_DESCR = "Imputes missing data with a fixed value computed on the non-missing values. The way to compute the filler depends on the scitype of the data and can be specified."
+
+round_median(v::AbstractVector) = v -> round(eltype(v), median(v))
+
+_median       = e -> skipmissing(e) |> median
+_round_median = e -> skipmissing(e) |> (f -> round(eltype(f), median(f)))
+_mode         = e -> skipmissing(e) |> mode
+
+"""
+FillImputer
+
+$FILL_IMPUTER_DESCR
+
+## Fields
+
+* `continuous_fill`:  function to use on Continuous data (by default the median)
+* `count_fill`:       function to use on Count data (by default the rounded median)
+* `categorical_fill`: function to use on Finite data (by default the mode)
+"""
+mutable struct FillImputer <: MLJBase.Unsupervised
+    features::Vector{Symbol}
+    continuous_fill::Function
+    count_fill::Function
+    finite_fill::Function
+end
+FillImputer(; features=Symbol[], continuous_fill=_median, count_fill=_round_median, finite_fill=_mode) =
+    FillImputer(features, continuous_fill, count_fill, finite_fill)
+
+function MLJBase.fit(transformer::FillImputer, verbosity::Int, X)
+    if isempty(transformer.features)
+        features = Tables.schema(X).names |> collect
+    else
+        features = transformer.features
+    end
+    fitresult = features
+    report    = nothing
+    cache     = nothing
+    return fitresult, cache, report
+end
+
+function MLJBase.transform(transformer::FillImputer, fitresult, X)
+    features = Tables.schema(X).names
+    # check that the features match that of the transformer
+    all(e -> e in fitresult, features) ||
+        error("Attempting to transform table with feature labels not seen in fit. ")
+
+    cols = map(features) do ftr
+        col = MLJBase.selectcols(X, ftr)
+        if eltype(col) >: Missing
+            T    = scitype_union(col)
+            if T <: Union{MLJBase.Continuous,Missing}
+                filler = transformer.continuous_fill(col)
+            elseif T <: Union{MLJBase.Count,Missing}
+                filler = transformer.count_fill(col)
+            elseif T <: Union{MLJBase.Finite,Missing}
+                filler = transformer.finite_fill(col)
+            end
+            col = copy(col) # carries the same name but not attached to the same memory
+            col[ismissing.(col)] .= filler
+            col = convert.(nonmissing(eltype(col)), col)
+        end
+        col
+    end
+    named_cols = NamedTuple{features}(tuple(cols...))
+    return MLJBase.table(named_cols, prototype=X)
+end
+
+# metadata
+MLJBase.input_scitype(::Type{<:FillImputer})  = MLJBase.Table(MLJBase.Scientific)
+MLJBase.output_scitype(::Type{<:FillImputer}) = MLJBase.Table(MLJBase.Scientific)
+MLJBase.docstring(::Type{<:FillImputer})      = FILL_IMPUTER_DESCR
+MLJBase.load_path(::Type{<:FillImputer})      = "MLJModels.FillImputer"
 
 
 ## FOR FEATURE (COLUMN) SELECTION
 
 """
-    FeatureSelector(features=Symbol[])
+FeatureSelector(features=Symbol[])
 
 An unsupervised model for filtering features (columns) of a table.
 Only those features encountered during fitting will appear in
@@ -64,19 +144,18 @@ specified features are used. Throws an error if a recorded or
 specified feature is not present in the transformation input.
 
 """
-mutable struct FeatureSelector <: Unsupervised
+mutable struct FeatureSelector <: MLJBase.Unsupervised
     features::Vector{Symbol}
 end
+FeatureSelector(; features=Symbol[]) = FeatureSelector(features)
 
-FeatureSelector(;features=Symbol[]) = FeatureSelector(features)
-
-function fit(transformer::FeatureSelector, verbosity::Int, X)
-    namesX = MLJBase.schema(X).names
-    issubset(Set(transformer.features), Set(namesX)) ||
-        throw(error("Attempting to select non-existent feature(s)."))
+function MLJBase.fit(transformer::FeatureSelector, verbosity::Int, X)
+    namesX = collect(Tables.schema(X).names)
     if isempty(transformer.features)
-        fitresult = collect(namesX)
+        fitresult = namesX
     else
+        all(e -> e in namesX, transformer.features) ||
+            throw(error("Attempting to select non-existent feature(s)."))
         fitresult = transformer.features
     end
     report = NamedTuple()
@@ -85,20 +164,17 @@ end
 
 MLJBase.fitted_params(::FeatureSelector, fitresult) = (features_to_keep=fitresult,)
 
-function transform(transformer::FeatureSelector, features, X)
-    issubset(Set(features), Set(MLJBase.schema(X).names)) ||
+function MLJBase.transform(transformer::FeatureSelector, features, X)
+    all(e -> e in Tables.schema(X).names, features) ||
         throw(error("Supplied frame does not admit previously selected features."))
     return MLJBase.selectcols(X, features)
 end
 
-# metadata:
-MLJBase.load_path(::Type{<:FeatureSelector}) = "MLJModels.FeatureSelector"
-MLJBase.package_url(::Type{<:FeatureSelector}) = "https://github.com/alan-turing-institute/MLJModels.jl"
-MLJBase.package_name(::Type{<:FeatureSelector}) = "MLJModels"
-MLJBase.package_uuid(::Type{<:FeatureSelector}) = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
-MLJBase.is_pure_julia(::Type{<:FeatureSelector}) = true
-MLJBase.input_scitype(::Type{<:FeatureSelector}) = Table(Scientific) # anything goes
-MLJBase.output_scitype(::Type{<:FeatureSelector}) = Table(Scientific) 
+# metadata
+MLJBase.input_scitype(::Type{<:FeatureSelector})  = MLJBase.Table(MLJBase.Scientific)
+MLJBase.output_scitype(::Type{<:FeatureSelector}) = MLJBase.Table(MLJBase.Scientific)
+MLJBase.docstring(::Type{<:FeatureSelector})      = "Filter features (columns) of a table by name."
+MLJBase.load_path(::Type{<:FeatureSelector})      = "MLJModels.FeatureSelector"
 
 
 ## UNIVARIATE STANDARDIZATION
@@ -109,10 +185,10 @@ MLJBase.output_scitype(::Type{<:FeatureSelector}) = Table(Scientific)
 Unsupervised model for standardizing (whitening) univariate data.
 
 """
-mutable struct UnivariateStandardizer <: Unsupervised
-end
+mutable struct UnivariateStandardizer <: MLJBase.Unsupervised end
 
-function fit(transformer::UnivariateStandardizer, verbosity::Int, v::AbstractVector{T}) where T<:Real
+function MLJBase.fit(transformer::UnivariateStandardizer, verbosity::Int,
+             v::AbstractVector{T}) where T<:Real
     std(v) > eps(Float64) ||
         @warn "Extremely small standard deviation encountered in standardization."
     fitresult = (mean(v), std(v))
@@ -122,35 +198,30 @@ function fit(transformer::UnivariateStandardizer, verbosity::Int, v::AbstractVec
 end
 
 # for transforming single value:
-function transform(transformer::UnivariateStandardizer, fitresult, x::Real)
+function MLJBase.transform(transformer::UnivariateStandardizer, fitresult, x::Real)
     mu, sigma = fitresult
     return (x - mu)/sigma
 end
 
 # for transforming vector:
-transform(transformer::UnivariateStandardizer, fitresult,
-          v) =
+MLJBase.transform(transformer::UnivariateStandardizer, fitresult, v) =
               [transform(transformer, fitresult, x) for x in v]
 
 # for single values:
-function inverse_transform(transformer::UnivariateStandardizer, fitresult, y::Real)
+function MLJBase.inverse_transform(transformer::UnivariateStandardizer, fitresult, y::Real)
     mu, sigma = fitresult
     return mu + y*sigma
 end
 
 # for vectors:
-inverse_transform(transformer::UnivariateStandardizer, fitresult, w) =
+MLJBase.inverse_transform(transformer::UnivariateStandardizer, fitresult, w) =
     [inverse_transform(transformer, fitresult, y) for y in w]
 
-# metadata:
-MLJBase.load_path(::Type{<:UnivariateStandardizer}) = "MLJModels.UnivariateStandardizer"
-MLJBase.package_url(::Type{<:UnivariateStandardizer}) = "https://github.com/alan-turing-institute/MLJModels.jl"
-MLJBase.package_name(::Type{<:UnivariateStandardizer}) = "MLJModels"
-MLJBase.package_uuid(::Type{<:UnivariateStandardizer}) = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
-MLJBase.is_pure_julia(::Type{<:UnivariateStandardizer}) = true
-MLJBase.input_scitype(::Type{<:UnivariateStandardizer}) = AbstractVector{<:Union{Continuous, Count}}
-MLJBase.output_scitype(::Type{<:UnivariateStandardizer}) = AbstractVector{Continuous}
-
+# metadata
+MLJBase.input_scitype(::Type{<:UnivariateStandardizer})  = AbstractVector{<:MLJBase.Infinite}
+MLJBase.output_scitype(::Type{<:UnivariateStandardizer}) = AbstractVector{MLJBase.Continuous}
+MLJBase.docstring(::Type{<:UnivariateStandardizer})      = "Standardize (whiten) univariate data."
+MLJBase.load_path(::Type{<:UnivariateStandardizer})      = "MLJModels.UnivariateStandardizer"
 
 ## STANDARDIZATION OF ORDINAL FEATURES OF TABULAR DATA
 
@@ -160,7 +231,8 @@ MLJBase.output_scitype(::Type{<:UnivariateStandardizer}) = AbstractVector{Contin
 Unsupervised model for standardizing (whitening) the columns of
 tabular data. If `features` is empty then all columns `v` for which
 all elements have `Continuous` scitypes are standardized. For
-different behaviour, specify the names of features to be standardized.
+different behaviour (e.g. standardizing counts as well), specify the
+names of features to be standardized.
 
     using DataFrames
     X = DataFrame(x1=[0.2, 0.3, 1.0], x2=[4, 2, 3])
@@ -176,27 +248,24 @@ different behaviour, specify the names of features to be standardized.
     │ 3   │ 1.14708   │ 3     │
 
 """
-mutable struct Standardizer <: Unsupervised
+mutable struct Standardizer <: MLJBase.Unsupervised
     features::Vector{Symbol} # features to be standardized; empty means all of
 end
-
-# lazy keyword constructor:
 Standardizer(; features=Symbol[]) = Standardizer(features)
 
-function fit(transformer::Standardizer, verbosity::Int, X::Any)
+function MLJBase.fit(transformer::Standardizer, verbosity::Int, X::Any)
 
-    _schema =  schema(X)
-    all_features = _schema.names
-    types = schema(X).scitypes
+    all_features = Tables.schema(X).names
+    mach_types   = collect(eltype(selectcols(X, c)) for c in all_features)
 
     # determine indices of all_features to be transformed
     if isempty(transformer.features)
         cols_to_fit = filter!(eachindex(all_features)|>collect) do j
-            types[j] <: Continuous
+            mach_types[j] <: AbstractFloat
         end
     else
         cols_to_fit = filter!(eachindex(all_features)|>collect) do j
-            all_features[j] in transformer.features && types[j] <: Continuous
+            all_features[j] in transformer.features && mach_types[j] <: Real
         end
     end
 
@@ -217,20 +286,19 @@ function fit(transformer::Standardizer, verbosity::Int, X::Any)
     report = (features_fit=keys(fitresult_given_feature),)
 
     return fitresult, cache, report
-
 end
 
 MLJBase.fitted_params(::Standardizer, fitresult) = (mean_and_std_given_feature=fitresult,)
 
-function transform(transformer::Standardizer, fitresult, X)
+function MLJBase.transform(transformer::Standardizer, fitresult, X)
 
     # `fitresult` is dict of column fitresults, keyed on feature names
 
     features_to_be_transformed = keys(fitresult)
 
-    all_features = schema(X).names
+    all_features = Tables.schema(X).names
 
-    issubset(Set(features_to_be_transformed), Set(all_features)) ||
+    all(e -> e in all_features, features_to_be_transformed) ||
         error("Attempting to transform data with incompatible feature labels.")
 
     col_transformer = UnivariateStandardizer()
@@ -246,18 +314,13 @@ function transform(transformer::Standardizer, fitresult, X)
     named_cols = NamedTuple{all_features}(tuple(cols...))
 
     return MLJBase.table(named_cols, prototype=X)
-
 end
 
-# metadata:
-MLJBase.load_path(::Type{<:Standardizer}) = "MLJModels.Standardizer"
-MLJBase.package_url(::Type{<:Standardizer}) = "https://github.com/alan-turing-institute/MLJModels.jl"
-MLJBase.package_name(::Type{<:Standardizer}) = "MLJModels"
-MLJBase.package_uuid(::Type{<:Standardizer}) = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
-MLJBase.is_pure_julia(::Type{<:Standardizer}) = true
-MLJBase.input_scitype(::Type{<:Standardizer}) = Table(Scientific) # non-continuous features allowed but ignored
-MLJBase.output_scitype(::Type{<:Standardizer}) = Table(Scientific)
-
+# metadata
+MLJBase.input_scitype(::Type{<:Standardizer})  = MLJBase.Table(MLJBase.Scientific)
+MLJBase.output_scitype(::Type{<:Standardizer}) = MLJBase.Table(MLJBase.Scientific)
+MLJBase.docstring(::Type{<:Standardizer})      = "Standardize (whiten) data."
+MLJBase.load_path(::Type{<:Standardizer})      = "MLJModels.Standardizer"
 
 ## UNIVARIATE BOX-COX TRANSFORMATIONS
 
@@ -272,22 +335,17 @@ function midpoints(v::AbstractVector{T}) where T <: Real
 end
 
 function normality(v)
-
     n  = length(v)
-    v = standardize(convert(Vector{Float64}, v))
-
+    v  = standardize(convert(Vector{Float64}, v))
     # sort and replace with midpoints
     v = midpoints(sort!(v))
-
     # find the (approximate) expected value of the size (n-1)-ordered statistics for
     # standard normal:
     d = Distributions.Normal(0,1)
-    w= map(collect(1:(n-1))/n) do x
+    w = map(collect(1:(n-1))/n) do x
         quantile(d, x)
     end
-
     return cor(v, w)
-
 end
 
 function boxcox(lambda, c, x::Real)
@@ -321,15 +379,14 @@ positive shift `c` of `0.2` times the data mean. If there are no zero
 values, then no shift is applied.
 
 """
-mutable struct UnivariateBoxCoxTransformer <: Unsupervised
+mutable struct UnivariateBoxCoxTransformer <: MLJBase.Unsupervised
     n::Int      # nbr values tried in optimizing exponent lambda
     shift::Bool # whether to shift data away from zero
 end
-
-# lazy keyword constructor:
 UnivariateBoxCoxTransformer(; n=171, shift=false) = UnivariateBoxCoxTransformer(n, shift)
 
-function fit(transformer::UnivariateBoxCoxTransformer, verbosity::Int, v::AbstractVector{T}) where T <: Real
+function MLJBase.fit(transformer::UnivariateBoxCoxTransformer, verbosity::Int,
+             v::AbstractVector{T}) where T <: Real
 
     m = minimum(v)
     m >= 0 || error("Cannot perform a Box-Cox transformation on negative data.")
@@ -352,15 +409,15 @@ function fit(transformer::UnivariateBoxCoxTransformer, verbosity::Int, v::Abstra
 
 end
 
-fitted_params(::UnivariateBoxCoxTransformer, fitresult) =
+MLJBase.fitted_params(::UnivariateBoxCoxTransformer, fitresult) =
     (λ=fitresult[1], c=fitresult[2])
 
 # for X scalar or vector:
-transform(transformer::UnivariateBoxCoxTransformer, fitresult, X) =
+MLJBase.transform(transformer::UnivariateBoxCoxTransformer, fitresult, X) =
     boxcox(fitresult..., X)
 
 # scalar case:
-function inverse_transform(transformer::UnivariateBoxCoxTransformer,
+function MLJBase.inverse_transform(transformer::UnivariateBoxCoxTransformer,
                            fitresult, x::Real)
     lambda, c = fitresult
     if lambda == 0
@@ -371,19 +428,16 @@ function inverse_transform(transformer::UnivariateBoxCoxTransformer,
 end
 
 # vector case:
-function inverse_transform(transformer::UnivariateBoxCoxTransformer,
+function MLJBase.inverse_transform(transformer::UnivariateBoxCoxTransformer,
                            fitresult, w::AbstractVector{T}) where T <: Real
     return [inverse_transform(transformer, fitresult, y) for y in w]
 end
 
-# metadata:
-MLJBase.load_path(::Type{<:UnivariateBoxCoxTransformer}) = "MLJModels.UnivariateBoxCoxTransformer"
-MLJBase.package_url(::Type{<:UnivariateBoxCoxTransformer}) = "https://github.com/alan-turing-institute/MLJModels.jl"
-MLJBase.package_name(::Type{<:UnivariateBoxCoxTransformer}) = "MLJModels"
-MLJBase.package_uuid(::Type{<:UnivariateBoxCoxTransformer}) = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
-MLJBase.is_pure_julia(::Type{<:UnivariateBoxCoxTransformer}) = true
-MLJBase.input_scitype(::Type{<:UnivariateBoxCoxTransformer}) = AbstractVector{Continuous}
-MLJBase.output_scitype(::Type{<:UnivariateBoxCoxTransformer}) = AbstractVector{Continuous}
+# metadata
+MLJBase.input_scitype(::Type{<:UnivariateBoxCoxTransformer})  = AbstractVector{MLJBase.Continuous}
+MLJBase.output_scitype(::Type{<:UnivariateBoxCoxTransformer}) = AbstractVector{MLJBase.Continuous}
+MLJBase.docstring(::Type{<:UnivariateBoxCoxTransformer})      = "Box-Cox transformation of univariate data."
+MLJBase.load_path(::Type{<:UnivariateBoxCoxTransformer})      = "MLJModels.UnivariateBoxCoxTransformer"
 
 
 ## ONE HOT ENCODING
@@ -406,13 +460,11 @@ features present in the fit data, but no new features can be present.
  CategoricalPool object encountered during the fit.
 
 """
-mutable struct OneHotEncoder <: Unsupervised
+mutable struct OneHotEncoder <: MLJBase.Unsupervised
     features::Vector{Symbol}
     drop_last::Bool
     ordered_factor::Bool
 end
-
-# lazy keyword constructor:
 OneHotEncoder(; features=Symbol[], drop_last=false, ordered_factor=true) =
     OneHotEncoder(features, drop_last, ordered_factor)
 
@@ -420,7 +472,7 @@ OneHotEncoder(; features=Symbol[], drop_last=false, ordered_factor=true) =
 # corresponing feature labels generated (called
 # "names"). `all_features` is stored to ensure no new features appear
 # in new input data, causing potential name clashes.
-struct OneHotEncoderResult <: MLJType
+struct OneHotEncoderResult <: MLJBase.MLJType
     all_features::Vector{Symbol} # all feature labels
     ref_name_pairs_given_feature::Dict{Symbol,Vector{Pair{<:Unsigned,Symbol}}}
 end
@@ -436,18 +488,16 @@ function compound_label(all_features, feature, level)
     return label
 end
 
-function fit(transformer::OneHotEncoder, verbosity::Int, X)
+function MLJBase.fit(transformer::OneHotEncoder, verbosity::Int, X)
 
     all_features = Tables.schema(X).names # a tuple not vector
     specified_features =
         isempty(transformer.features) ? collect(all_features) : transformer.features
-
+    #
     ref_name_pairs_given_feature = Dict{Symbol,Vector{Pair{<:Unsigned,Symbol}}}()
-    allowed_scitypes =
-        transformer.ordered_factor == true ? Finite : Multiclass
-
+    allowed_scitypes = ifelse(transformer.ordered_factor, Finite, Multiclass)
     col_scitypes = schema(X).scitypes
-
+    # apply on each feature
     for j in eachindex(all_features)
         ftr = all_features[j]
         col = MLJBase.selectcols(X,j)
@@ -467,13 +517,10 @@ function fit(transformer::OneHotEncoder, verbosity::Int, X)
             end
         end
     end
-
     fitresult = OneHotEncoderResult(collect(all_features), ref_name_pairs_given_feature)
     report = (features_to_be_encoded=collect(keys(ref_name_pairs_given_feature)),)
     cache = nothing
-
     return fitresult, cache, report
-
 end
 
 # If v=categorical('a', 'a', 'b', 'a', 'c') and MLJBase.int(v[1]) = ref
@@ -482,14 +529,12 @@ hot(v::AbstractVector{<:CategoricalElement}, ref) = map(v) do c
     MLJBase.int(c) == ref
 end
 
-function transform(transformer::OneHotEncoder, fitresult, X)
-
+function MLJBase.transform(transformer::OneHotEncoder, fitresult, X)
     features = Tables.schema(X).names # tuple not vector
     d = fitresult.ref_name_pairs_given_feature
-
-    issubset(Set(features), Set(fitresult.all_features)) ||
+    # check the features match the fit result
+    all(e -> e in fitresult.all_features, features) ||
         error("Attempting to transform table with feature labels not seen in fit. ")
-
     new_features = Symbol[]
     new_cols = Vector[]
     features_to_be_transformed = keys(d)
@@ -509,27 +554,35 @@ function transform(transformer::OneHotEncoder, fitresult, X)
             push!(new_cols, col)
         end
     end
-
     named_cols = NamedTuple{tuple(new_features...)}(tuple(new_cols)...)
-
     return MLJBase.table(named_cols, prototype=X)
-
 end
 
-# metadata:
-MLJBase.load_path(::Type{<:OneHotEncoder}) = "MLJModels.OneHotEncoder"
-MLJBase.package_url(::Type{<:OneHotEncoder}) = "https://github.com/alan-turing-institute/MLJModels.jl"
-MLJBase.package_name(::Type{<:OneHotEncoder}) = "MLJModels"
-MLJBase.package_uuid(::Type{<:OneHotEncoder}) =
-    "d491faf4-2d78-11e9-2867-c94bc002c0b7"
-MLJBase.is_pure_julia(::Type{<:OneHotEncoder}) = true
-MLJBase.input_scitype(::Type{<:OneHotEncoder}) = Table(Scientific) # non-finite allowed but ignored
-MLJBase.output_scitype(::Type{<:OneHotEncoder}) = Table(Scientific)
+# metadata
+MLJBase.input_scitype(::Type{<:OneHotEncoder})  = MLJBase.Table(MLJBase.Scientific)
+MLJBase.output_scitype(::Type{<:OneHotEncoder}) = MLJBase.Table(MLJBase.Scientific)
+MLJBase.docstring(::Type{<:OneHotEncoder})      = "One-Hot-Encoding of the data."
+MLJBase.load_path(::Type{<:OneHotEncoder})      = "MLJModels.OneHotEncoder"
 
+#### Metadata for all built-in transformers
 
-end # end module
+const BUILTIN_TRANSFORMERS = Union{
+    Type{<:FeatureSelector},
+    Type{<:StaticTransformer},
+    Type{<:UnivariateStandardizer},
+    Type{<:Standardizer},
+    Type{<:UnivariateBoxCoxTransformer},
+    Type{<:OneHotEncoder},
+    Type{<:FillImputer}
+    }
 
+MLJBase.package_license(::BUILTIN_TRANSFORMERS) = "MIT"
+MLJBase.package_name(::BUILTIN_TRANSFORMERS) = "MLJModels"
+MLJBase.package_uuid(::BUILTIN_TRANSFORMERS) = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
+MLJBase.package_url(::BUILTIN_TRANSFORMERS)  = "https://github.com/alan-turing-institute/MLJModels.jl"
+MLJBase.is_pure_julia(::BUILTIN_TRANSFORMERS) = true
+MLJBase.is_wrapper(::BUILTIN_TRANSFORMERS)    = false
 
-## EXPOSE THE INTERFACE
+end # module
 
 using .Transformers

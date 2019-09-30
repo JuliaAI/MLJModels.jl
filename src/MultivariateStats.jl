@@ -3,7 +3,9 @@ module MultivariateStats_
 export RidgeRegressor, PCA, KernelPCA, ICA
 
 import MLJBase
+import MLJBase: @mlj_model
 using ScientificTypes
+using Tables
 
 import ..MultivariateStats # lazy loading
 
@@ -18,29 +20,8 @@ end
 #### RIDGE
 ####
 
-mutable struct RidgeRegressor <: MLJBase.Deterministic
-    lambda::Float64
-end
-
-function MLJBase.clean!(model::RidgeRegressor)
-    warning = ""
-    if model.lambda < 0
-        warning *= "Need lambda ≥ 0. Resetting lambda=0. "
-        model.lambda = 0
-    end
-    return warning
-end
-
-# keyword constructor
-function RidgeRegressor(; lambda=0.0)
-
-    model = RidgeRegressor(lambda)
-
-    message = MLJBase.clean!(model)
-    isempty(message) || @warn message
-
-    return model
-
+@mlj_model mutable struct RidgeRegressor <: MLJBase.Deterministic
+    lambda::Float64 = 0.0::(_ ≥ 0)
 end
 
 function MLJBase.fit(model::RidgeRegressor,
@@ -49,7 +30,7 @@ function MLJBase.fit(model::RidgeRegressor,
                      y)
 
     Xmatrix = MLJBase.matrix(X)
-    features = MLJBase.schema(X).names
+    features = Tables.schema(X).names
 
     weights = MS.ridge(Xmatrix, y, model.lambda)
 

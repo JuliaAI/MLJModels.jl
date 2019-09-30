@@ -16,6 +16,7 @@ module GLM_
 import MLJBase
 import Distributions
 using Parameters
+using Tables
 
 import ..GLM
 
@@ -83,7 +84,7 @@ const GLM_MODELS = Union{<:LinearRegressor, <:LinearBinaryClassifier, <:LinearCo
 
 function MLJBase.fit(model::LinearRegressor, verbosity::Int, X, y)
 	# apply the model
-	features  = MLJBase.schema(X).names
+	features  = Tables.schema(X).names
 	Xmatrix   = augment_X(MLJBase.matrix(X), model.fit_intercept)
 	fitresult = GLM.glm(Xmatrix, y, Distributions.Normal(), GLM.IdentityLink())
 	# form the report
@@ -95,7 +96,7 @@ end
 
 function MLJBase.fit(model::LinearCountRegressor, verbosity::Int, X, y)
 	# apply the model
-	features  = MLJBase.schema(X).names
+	features  = Tables.schema(X).names
 	Xmatrix   = augment_X(MLJBase.matrix(X), model.fit_intercept)
 	fitresult = GLM.glm(Xmatrix, y, model.distribution, model.link)
 	# form the report
@@ -107,7 +108,7 @@ end
 
 function MLJBase.fit(model::LinearBinaryClassifier, verbosity::Int, X, y)
 	# apply the model
-	features  = MLJBase.schema(X).names
+	features  = Tables.schema(X).names
 	Xmatrix   = augment_X(MLJBase.matrix(X), model.fit_intercept)
 	decode    = y[1]
 	y_plain   = MLJBase.int(y) .- 1 # 0, 1 of type Int
