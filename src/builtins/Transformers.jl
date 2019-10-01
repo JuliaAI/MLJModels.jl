@@ -189,25 +189,29 @@ Only those features that satisfy the rule
 mutable struct FeatureSelectorRule <: Unsupervised
     fs::FeatureSelector
     rule::Function
+    kwargs::NamedTuple
 end
 
-FeatureSelectorRule(;rule=(n,t,s)->true) = FeatureSelectorRule(FeatureSelector(),rule)
+FeatureSelectorRule(;rule=(n,t,s)->true,kwargs=NamedTuple()) = FeatureSelectorRule(FeatureSelector(),rule,kwargs)
 
 function MLJBase.fit(transformer::FeatureSelectorRule, verbosity::Int, X)
     sch = MLJBase.schema(X)
 
-    mask = (e for e in 1:length(sch.names) if transformer.rule(sch.names[e],sch.types[e],sch.scitypes[e]))
+    mask = (e for e in 1:length(sch.names) if transformer.rule(sch.names[e],sch.types[e],sch.scitypes[e],kwargs...))
     features=[sch.names[m] for m in mask]
 
     transformer.fs=FeatureSelector(features)
     return fit(transformer.fs,verbosity,X)
 end
 
-MLJBase.fitted_params(::FeatureSelectorRule, fitresult) = (features_to_keep=fitresult,)
-
-function transform(transformer::FeatureSelectorRule,features, X)
+function MLJBase.transform(transformer::FeatureSelectorRule,features, X)
     return transform(transformer.fs,features,X)
 end
+
+
+
+MLJBase.fitted_params(transformer::FeatureSelectorRule, fitresult) = (features_to_keep=fitresult,)
+
 
 
 
