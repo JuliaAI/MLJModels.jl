@@ -62,7 +62,12 @@ fsr=MLJModels.FeatureSelectorRule(MLJModels.FeatureSelector(),var_rule)
 
 fsr_result, =MLJBase.fit(fsr,1,(X))
 fsr_result
-Xt=transform(fsr,fsr_result,DataFrame(X))
+
+function trans(transformer::FeatureSelectorRule,features, X)
+    return transform(transformer.fs,features,X)
+end
+
+Xt=MLJBase.transform(fsr,fsr_result,X)
 @test !(:dummy in schema(X).names)
 #### UNIVARIATE STANDARDIZER ####
 
