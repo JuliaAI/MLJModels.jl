@@ -52,8 +52,8 @@ X = (name       = categorical(["Ben", "John", "Mary", "John"], ordered=true),
      gender     = categorical(['M', 'M', 'F', 'M']))
 
 
-function var_rule(n,t,s)
-    return s <: Continuous ? (std(X[n])>0.1 ? true : false) : true
+function var_rule(n,t,s;h=0.1)
+    return s <: Continuous ? (std(X[n])>h ? true : false) : true
 end
 
 
