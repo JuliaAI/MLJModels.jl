@@ -14,6 +14,8 @@ import ..MLJBase: @mlj_model, metadata_pkg, metadata_model
 
 export FeatureSelector,
         StaticTransformer,
+        UnivariateDiscretizer,
+        ToIntTransformer
         UnivariateStandardizer,
         Standardizer,
         UnivariateBoxCoxTransformer,
@@ -175,6 +177,91 @@ MLJBase.input_scitype(::Type{<:FeatureSelector})  = MLJBase.Table(MLJBase.Scient
 MLJBase.output_scitype(::Type{<:FeatureSelector}) = MLJBase.Table(MLJBase.Scientific)
 MLJBase.docstring(::Type{<:FeatureSelector})      = "Filter features (columns) of a table by name."
 MLJBase.load_path(::Type{<:FeatureSelector})      = "MLJModels.FeatureSelector"
+
+
+
+#### UNIVARIATE Discretizer ####
+"""
+UnivariateDiscretizer(n_classes=512)
+Returns a `MLJModels` for discretizing vectors of `Real`
+eltype, where `n_classes` describes the resolution of the
+discretization. Transformed vectors are of eltype `Int46`. The
+transformation is chosen so that the vector on which the transformer
+is fit has, in transformed form, an approximately uniform distribution
+of values.
+### Example
+    using MLJ
+    using MLJModels
+    t = UnivariateDiscretizer(n_classes=10)
+    v = randn(1000)
+    tM = fit(t, v)   # fit the transformer on `v`
+    w = transform(tM, v) # transform `v` according to `tM`
+"""
+mutable struct UnivariateDiscretizer <:MLJBase.Unsupervised
+    n_classes::Int
+end
+
+# lazy keyword constructor:
+UnivariateDiscretizer(; n_classes=512) = UnivariateDiscretizer(n_classes)
+
+struct UnivariateDiscretizerResult
+    odd_quantiles::Vector{Float64}
+    even_quantiles::Vector{Float64}
+end
+
+function MLJBase.fit(transformer::UnivariateDiscretizer, verbosity::Int,X)
+    n_classes = transformer.n_classes
+    quantiles = quantile(X, Array(range(0, stop=1, length=2*n_classes+1)))
+    clipped_quantiles = quantiles[2:2*n_classes] # drop 0% and 100% quantiles
+
+    # odd_quantiles for transforming, even_quantiles used for inverse_transforming:
+    odd_quantiles = clipped_quantiles[2:2:(2*n_classes-2)]
+    even_quantiles = clipped_quantiles[1:2:(2*n_classes-1)]
+    cache = nothing
+    report = NamedTuple()
+    return UnivariateDiscretizerResult(odd_quantiles, even_quantiles), cache, report
+end
+
+# transforming scalars:
+function MLJBase.transform(transformer::UnivariateDiscretizer, result, r::Real)
+    k = 1
+    for level in result.odd_quantiles
+        if r > level
+            k = k + 1
+        end
+    end
+    return k
+end
+
+# transforming vectors:
+function MLJBase.transform(transformer::UnivariateDiscretizer, result,
+                   v::AbstractVector{T}) where T<:Real
+    return [transform(transformer, result, r) for r in v]
+end
+
+# scalars:
+function MLJBase.inverse_transform(transformer::UnivariateDiscretizer, result, k::Int)
+    n_classes = length(result.even_quantiles)
+    if k < 1
+        return result.even_quantiles[1]
+    elseif k > n_classes
+        return result.even_quantiles[n_classes]
+    end
+    return result.even_quantiles[k]
+end
+
+# vectors:
+function MLJBase.inverse_transform(transformer::UnivariateDiscretizer, result,
+                           w::AbstractVector{T}) where T<:Integer
+    return [inverse_transform(transformer, result, k) for k in w]
+end
+
+
+MLJBase.input_scitype(::Type{<:UnivariateDiscretizer})  = AbstractVector{<:MLJBase.Infinite}
+MLJBase.output_scitype(::Type{<:UnivariateDiscretizer}) = AbstractVector{MLJBase.Continuous}
+MLJBase.docstring(::Type{<:UnivariateDiscretizer})      = "Discretise continuous variables via quantiles"
+MLJBase.load_path(::Type{<:UnivariateDiscretizer})      = "MLJModels.UnivariateDiscretizer"
+
 
 
 ## UNIVARIATE STANDARDIZATION

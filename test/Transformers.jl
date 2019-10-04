@@ -42,6 +42,17 @@ infos = info_dict(selector)
 @test infos[:input_scitype]  == MLJBase.Table(Scientific)
 @test infos[:output_scitype] == MLJBase.Table(Scientific)
 
+# Univariate discretization:
+v = randn(10000)
+t = MLJModels.UnivariateDiscretizer(n_classes=100)
+tM, = fit(t, 1,v)
+w = transform(t,tM, v)
+bad_values = filter(v - MLJBase.inverse_transform(t,tM, w)) do x
+    abs(x) > 0.05
+end
+@test length(bad_values)/length(v) < 0.06
+
+
 #### UNIVARIATE STANDARDIZER ####
 
 stand = UnivariateStandardizer()
