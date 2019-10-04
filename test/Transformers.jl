@@ -42,6 +42,21 @@ infos = info_dict(selector)
 @test infos[:input_scitype]  == MLJBase.Table(Scientific)
 @test infos[:output_scitype] == MLJBase.Table(Scientific)
 
+
+# IntegerToInt64:
+t = IntegerToIntTransformer()
+v = UInt8[4, 5, 2, 3, 1]
+tM = Machine(t,1, v)
+@test transform(tM, UInt8[3, 7, 8]) == [3, 7, 8]
+
+# introduce a field of type `Char`:
+
+transformer = ToIntTransformer(sorted=true)
+transformerM = fit(transformer,1,["Old", "Young", "Middle", "Young"])
+v = transform(transformer,transformerM, ["Young"])
+@test v[1] == 3
+
+
 # Univariate discretization:
 v = randn(10000)
 t = MLJModels.UnivariateDiscretizer(n_classes=100)
@@ -62,10 +77,7 @@ f,    = fit(stand, 1, [0, 2, 4])
 @test round.(Int, inverse_transform(stand, f, [-1, 1, 3])) == [0, 4, 8]
 
 infos = info_dict(stand)
-@test infos[:package_name] == "MLJModels"
-@test infos[:name] == "UnivariateStandardizer"
-@test infos[:input_scitype] == AbstractVector{<:Infinite}
-@test infos[:output_scitype] == AbstractVector{Continuous}
+
 
 #### STANDARDIZER ####
 
