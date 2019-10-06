@@ -217,7 +217,9 @@ function MLJBase.fit(transformer::ToIntTransformer,verbosity::Int , v::AbstractV
         T_given_int[i] = c
         i = i + 1
     end
-    return ToIntResult{T}(n_levels, int_given_T, T_given_int)
+    cache=nothing
+    report= NamedTuple()
+    return ToIntResult{T}(n_levels, int_given_T, T_given_int),cache, report
 end
 
 # scalar case:

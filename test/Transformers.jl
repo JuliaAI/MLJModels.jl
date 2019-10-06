@@ -52,9 +52,24 @@ tM = Machine(t,1, v)
 # introduce a field of type `Char`:
 
 transformer = ToIntTransformer(sorted=true)
-transformerM = fit(transformer,1,["Old", "Young", "Middle", "Young"])
+transformerM, = fit(transformer,1,["Old", "Young", "Middle", "Young"])
 v = transform(transformer,transformerM, ["Young"])
 @test v[1] == 3
+
+transformer = ToIntTransformer(sorted=true)
+transformerM, = fit(transformer,1,CategoricalArray(["Old", "Young", "Middle", "Young"]))
+v = transform(transformer,transformerM, CategoricalArray(["Young"]))
+@test v[1] == 3
+
+#  To be added with FeatureSelectorRule X = (n1=["a", "b", "a"], n2=["g", "g", "g"], n3=[7, 8, 9],
+#               n4 =UInt8[3,5,10],  o1=[4.5, 3.6, 4.0], )
+# MLJBase.schema(X)
+# Xc = coerce(X,  :n1=>Multiclass, :n2=>Multiclass)
+
+# t = Discretizer(features=[:o1, :n3, :n2, :n1])
+# @test Xt.features == [:o1, :n3, :n2, :n1]
+# @test Xt.is_ordinal == [true, false, false, false]
+# @test Xt.A == [512 1 1 1; 1 2 1 2; 256 3 1 1]
 
 
 # Univariate discretization:
