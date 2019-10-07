@@ -49,7 +49,13 @@ v = UInt8[4, 5, 2, 3, 1]
 tM = Machine(t,1, v)
 @test transform(tM, UInt8[3, 7, 8]) == [3, 7, 8]
 
+<<<<<<< HEAD
 # introduce a field of type `Char`:
+=======
+function var_rule(n,t,s;h=0.1)
+    return s <: Continuous ? (std(X[n])>h ? true : false) : true
+end
+>>>>>>> 4fb00512cdf421afca89bc1f07592c6621012a1d
 
 transformer = ToIntTransformer(sorted=true)
 transformerM, = fit(transformer,1,["Old", "Young", "Middle", "Young"])
@@ -83,6 +89,18 @@ end
 @test length(bad_values)/length(v) < 0.06
 
 
+<<<<<<< HEAD
+=======
+fsr_result, =MLJBase.fit(fsr,1,(X))
+fsr_result
+
+function trans(transformer::FeatureSelectorRule,features, X)
+    return transform(transformer.fs,features,X)
+end
+
+Xt=MLJBase.transform(fsr,fsr_result,X)
+@test !(:dummy in schema(X).names)
+>>>>>>> 4fb00512cdf421afca89bc1f07592c6621012a1d
 #### UNIVARIATE STANDARDIZER ####
 
 stand = UnivariateStandardizer()

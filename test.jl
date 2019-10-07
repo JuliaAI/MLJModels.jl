@@ -35,11 +35,7 @@ end
 std(X[:Crim])
 
 sch = MLJBase.schema(X)
-<<<<<<< HEAD
-fsr=MLJModels.FeatureSelectorRule(rule=var_rule, kwargs=(h=>9.0,)
-=======
 fsr=MLJModels.FeatureSelectorRule(rule=var_rule)
->>>>>>> 4fb00512cdf421afca89bc1f07592c6621012a1d
 params(fsr)
 fitresult, _, report = fit(atom_ols, 1, Xtrain, ytrain)
 pipe=@pipeline MyPipe(fsr=fsr, ols=atom_ols)
