@@ -32,14 +32,17 @@ function var_rule(n,t,s;h=0.1)
 end
 
 
-std(X[:Crim])
+fsr=MLJModels.FeatureSelectorRule(rule=var_rule,kwargs=(h=1.2,))
 
-sch = MLJBase.schema(X)
-fsr=MLJModels.FeatureSelectorRule(rule=var_rule)
+fsr_fit,=fit(fsr,1,X)
+transform(fsr,fsr_fit,X)
 params(fsr)
 fitresult, _, report = fit(atom_ols, 1, Xtrain, ytrain)
 pipe=@pipeline MyPipe(fsr=fsr, ols=atom_ols)
-
-TunedModel(model=pipe, tuning=Grid(), resampling=Holdout(),
-measure=rms, operation=predict, ranges=range(fsr,:kwargs,[(:h=>8.0,),(:h=>9.0,)]),
+params(pipe)
+tm= TunedModel(model=pipe, tuning=Grid(), resampling=Holdout(),
+measure=rms, operation=predict, ranges=range(pipe,:kwargs,values=[(h=8.0,),(h=9.0,)]),
 minimize=true, full_report=true)
+fit(tm,1, X,y)
+fit(pipe,1,X,y)
+params(pipe)

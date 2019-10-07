@@ -197,7 +197,7 @@ FeatureSelectorRule(;rule=(n,t,s)->true,kwargs=NamedTuple()) = FeatureSelectorRu
 function MLJBase.fit(transformer::FeatureSelectorRule, verbosity::Int, X)
     sch = MLJBase.schema(X)
 
-    mask = (e for e in 1:length(sch.names) if transformer.rule(sch.names[e],sch.types[e],sch.scitypes[e],kwargs...))
+    mask = (e for e in 1:length(sch.names) if transformer.rule(sch.names[e],sch.types[e],sch.scitypes[e];transformer.kwargs...))
     features=[sch.names[m] for m in mask]
 
     transformer.fs=FeatureSelector(features)
