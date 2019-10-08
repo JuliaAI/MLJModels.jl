@@ -71,6 +71,7 @@ end
 
 # NOTE: SGD classifier with few points is tricky which is why we remove the dummy test
 @testset "SGDClf" begin
+    ((ScikitLearn.Skcore).pyimport("numpy.random")).seed(0)
     m, f = simple_test_classif(SGDClassifier(), Xc2, yc2; nodummy=true)
     fp = fitted_params(m, f)
     @test keys(fp) == (:coef, :intercept)
@@ -78,7 +79,7 @@ end
     @test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
     @test infos[:target_scitype] == AbstractVector{<:MLJBase.Finite}
     @test !isempty(infos[:docstring])
-
+    ((ScikitLearn.Skcore).pyimport("numpy.random")).seed(0)
     m, f = simple_test_classif_prob(ProbabilisticSGDClassifier(), Xc2, yc2; nodummy=true)
     fp = fitted_params(m, f)
     @test keys(fp) == (:coef, :intercept)

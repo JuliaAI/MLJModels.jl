@@ -6,7 +6,7 @@
 module Clustering_
 
 import MLJBase
-import MLJBase: @mlj_model, metadata_pkg, metadata_model
+import MLJBase: @mlj_model
 using ScientificTypes
 
 import ..Clustering # strange sytax for lazy-loading
