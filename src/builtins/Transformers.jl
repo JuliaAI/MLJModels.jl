@@ -192,12 +192,12 @@ mutable struct FeatureSelectorRule <: Unsupervised
     kwargs::NamedTuple
 end
 
-FeatureSelectorRule(;rule=(n,t,s)->true,kwargs=NamedTuple()) = FeatureSelectorRule(FeatureSelector(),rule,kwargs)
+FeatureSelectorRule(;rule=(X,n,t,s)->true,kwargs=NamedTuple()) = FeatureSelectorRule(FeatureSelector(),rule,kwargs)
 
 function MLJBase.fit(transformer::FeatureSelectorRule, verbosity::Int, X)
     sch = MLJBase.schema(X)
 
-    mask = (e for e in 1:length(sch.names) if transformer.rule(sch.names[e],sch.types[e],sch.scitypes[e];transformer.kwargs...))
+    mask = (e for e in 1:length(sch.names) if transformer.rule(X,sch.names[e],sch.types[e],sch.scitypes[e];transformer.kwargs...))
     features=[sch.names[m] for m in mask]
 
     transformer.fs=FeatureSelector(features)
