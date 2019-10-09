@@ -121,8 +121,9 @@ function MLJBase.fit(model::DecisionTreeClassifier
 
     Xmatrix = MLJBase.matrix(X)
 
-    yplain = identity.(y) # y as plain not abstact vector
-    classes_seen = unique(yplain)
+    yplain = MLJBase.int(y)
+    classes_seen = filter(in(unique(y)), MLJBase.classes(y[1]))
+    integers_seen = unique(yplain)
 
     tree = DecisionTree.build_tree(yplain,
                                    Xmatrix,
@@ -137,7 +138,7 @@ function MLJBase.fit(model::DecisionTreeClassifier
 
     verbosity < 2 || DecisionTree.print_tree(tree, model.display_depth)
 
-    fitresult = (tree, classes_seen)
+    fitresult = (tree, classes_seen, integers_seen)
 
     #> return package-specific statistics (eg, feature rankings,
     #> internal estimates of generalization error) in `report`, which
@@ -145,14 +146,19 @@ function MLJBase.fit(model::DecisionTreeClassifier
     #> empty values):
 
     cache = nothing
-    report = NamedTuple{}()
+    report = (classes_seen=classes_seen,)
 
     return fitresult, cache, report
 
 end
 
+function get_encoding(classes_seen)
+    a_cat_element = classes_seen[1]
+    return Dict(c => MLJBase.int(c) for c in MLJBase.classes(a_cat_element))
+end
+
 MLJBase.fitted_params(::DecisionTreeClassifier, fitresult) = (tree_or_leaf =
-fitresult[1],)
+fitresult[1], encoding=get_encoding(fitresult[2]))
 
 function smooth(prob_vector, smoothing)
     threshold = smoothing/length(prob_vector)
@@ -168,9 +174,10 @@ function MLJBase.predict(model::DecisionTreeClassifier
                      , Xnew)
     Xmatrix = MLJBase.matrix(Xnew)
 
-    tree, classes_seen = fitresult
+    tree, classes_seen, integers_seen = fitresult
 
-    y_probabilities = DecisionTree.apply_tree_proba(tree, Xmatrix, classes_seen)
+    y_probabilities =
+        DecisionTree.apply_tree_proba(tree, Xmatrix, integers_seen)
     return [MLJBase.UnivariateFinite(classes_seen,
                                      smooth(y_probabilities[i,:],
                                             model.pdf_smoothing))
