@@ -36,7 +36,7 @@ The following lists may also be reasonably complete:
 ### Built-in models
 
 * Transformers (unsupervised models): `StaticTransformer`,
-  `FeatureSelector`, `UnivariateStandardizer`, `Standardizer`,
+  `FeatureSelector`, `FillImputer`, `UnivariateStandardizer`, `Standardizer`,
   `UnivariateBoxCoxTransformer`, `OneHotEncoder`
 
 * Constant predictors (for baselines and testing): `ConstantRegressor`,
