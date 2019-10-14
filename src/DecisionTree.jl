@@ -121,15 +121,9 @@ function MLJBase.fit(model::DecisionTreeClassifier
 
     Xmatrix = MLJBase.matrix(X)
 
-    # Note: Performance might be better if we use MLJBase.int to
-    # transform y to a vector of integers (and use
-    # MLJBase.classes(y[1]) as levels for prediction). However, this
-    # means the fitresult and print_tree outuput are less
-    # interpretable. So, as build_tree does not handle
-    # CategoricalVectors, we use a Vector of categorical elements
-    # instead:
-    yplain = Any[y...] # y as Vector of categorical elements
-    classes_seen = [unique(yplain)...] # a categorical vector
+    yplain = MLJBase.int(y)
+    classes_seen = filter(in(unique(y)), MLJBase.classes(y[1]))
+    integers_seen = unique(yplain)
 
     tree = DecisionTree.build_tree(yplain,
                                    Xmatrix,
@@ -144,7 +138,7 @@ function MLJBase.fit(model::DecisionTreeClassifier
 
     verbosity < 2 || DecisionTree.print_tree(tree, model.display_depth)
 
-    fitresult = (tree, classes_seen)
+    fitresult = (tree, classes_seen, integers_seen)
 
     #> return package-specific statistics (eg, feature rankings,
     #> internal estimates of generalization error) in `report`, which
@@ -152,14 +146,19 @@ function MLJBase.fit(model::DecisionTreeClassifier
     #> empty values):
 
     cache = nothing
-    report = NamedTuple{}()
+    report = (classes_seen=classes_seen,)
 
     return fitresult, cache, report
 
 end
 
+function get_encoding(classes_seen)
+    a_cat_element = classes_seen[1]
+    return Dict(c => MLJBase.int(c) for c in MLJBase.classes(a_cat_element))
+end
+
 MLJBase.fitted_params(::DecisionTreeClassifier, fitresult) = (tree_or_leaf =
-fitresult[1],)
+fitresult[1], encoding=get_encoding(fitresult[2]))
 
 function smooth(prob_vector, smoothing)
     threshold = smoothing/length(prob_vector)
@@ -175,10 +174,11 @@ function MLJBase.predict(model::DecisionTreeClassifier
                      , Xnew)
     Xmatrix = MLJBase.matrix(Xnew)
 
-    tree, classes_seen = fitresult
-    levels_seen = Any[classes_seen...] # a vector of categorical elements
+    tree, classes_seen, integers_seen = fitresult
 
-    y_probabilities = DecisionTree.apply_tree_proba(tree, Xmatrix, levels_seen)
+    y_probabilities =
+        DecisionTree.apply_tree_proba(tree, Xmatrix, integers_seen)
+
     return [MLJBase.UnivariateFinite(classes_seen,
                                      smooth(y_probabilities[i,:],
                                             model.pdf_smoothing))
