@@ -12,7 +12,7 @@ import ..nonmissing
 import ..MLJBase: @mlj_model, metadata_pkg, metadata_model
 
 
-export FeatureSelector,FeatureSelectorRule, StaticTransformer,
+export FeatureSelector,FeatureSelectorRule,SelectorRule, StaticTransformer,
         UnivariateStandardizer,
         Standardizer,
         UnivariateBoxCoxTransformer,
@@ -182,35 +182,48 @@ MLJBase.load_path(::Type{<:FeatureSelector})      = "MLJModels.FeatureSelector"
     FeatureSelectorRule(rule::Function)
 
 An unsupervised model for filtering features (columns) of a table.
-Only those features that satisfy the rule
-:name, :scitype, :type
+This a parmetric type that expects a callable mutable struct encapsulating
+    the parameters of the rule and the rule being returning true and false based
+    on (X,name,type,scitypes) where X is data treated as a table
+```
+mutable struct StdRule <: MLJModels.SelectorRule
+     threshold::Float64
+end
+(sr::StdRule)(X,name,type,scitypes) =  scitypes <: Continuous ? (std(X[name])>sr.threshold ? true : false) : true
+const StdSelector = MLJModels.FeatureSelectorRule{StdRule}
+StdSelector(;threshold=0.2)= StdSelector(StdRule(threshold))
+```
+
+
 
 """
-mutable struct FeatureSelectorRule <: Unsupervised
+abstract type SelectorRule  end
+
+
+mutable struct FeatureSelectorRule{R<:SelectorRule} <: Unsupervised
     fs::FeatureSelector
-    rule::Function
-    kwargs::NamedTuple
+    rule::R
 end
 
-FeatureSelectorRule(;rule=(X,n,t,s)->true,kwargs=NamedTuple()) = FeatureSelectorRule(FeatureSelector(),rule,kwargs)
+FeatureSelectorRule{R}(rule::R) where R<:SelectorRule= FeatureSelectorRule{R}(FeatureSelector(),rule)
 
-function MLJBase.fit(transformer::FeatureSelectorRule, verbosity::Int, X)
+function MLJBase.fit(transformer::FeatureSelectorRule{R}, verbosity::Int, X) where R<:SelectorRule
     sch = MLJBase.schema(X)
 
-    mask = (e for e in 1:length(sch.names) if transformer.rule(X,sch.names[e],sch.types[e],sch.scitypes[e];transformer.kwargs...))
+    mask = (e for e in 1:length(sch.names) if transformer.rule(X,sch.names[e],sch.types[e],sch.scitypes[e]))
     features=[sch.names[m] for m in mask]
 
     transformer.fs=FeatureSelector(features)
     return fit(transformer.fs,verbosity,X)
 end
 
-function MLJBase.transform(transformer::FeatureSelectorRule,features, X)
+function MLJBase.transform(transformer::FeatureSelectorRule{R},features, X) where R<:SelectorRule
     return transform(transformer.fs,features,X)
 end
 
 
 
-MLJBase.fitted_params(transformer::FeatureSelectorRule, fitresult) = (features_to_keep=fitresult,)
+MLJBase.fitted_params(transformer::FeatureSelectorRule{R}, fitresult) where R<:SelectorRule = (features_to_keep=fitresult,)
 
 
 

@@ -1,5 +1,4 @@
 module TestTransformer
-using Revise
 using Test, MLJBase, MLJModels
 using Tables, CategoricalArrays, Random
 
@@ -43,7 +42,6 @@ infos = info_dict(selector)
 @test infos[:output_scitype] == MLJBase.Table(Scientific)
 
 #### FeatureSelectorRule ####
-using DataFrames
 X = (name       = categorical(["Ben", "John", "Mary", "John"], ordered=true),
      height     = [1.85, 1.67, 1.5, 1.67],
      dummy     = [1.0, 1.00, 1.0, 1.0],
@@ -51,24 +49,23 @@ X = (name       = categorical(["Ben", "John", "Mary", "John"], ordered=true),
      age        = [23, 23, 14, 23],
      gender     = categorical(['M', 'M', 'F', 'M']))
 
+std(X[:height])
 
-function var_rule(n,t,s;h=0.1)
-    return s <: Continuous ? (std(X[n])>h ? true : false) : true
+mutable struct StdRule <: MLJModels.SelectorRule
+     threshold::Float64
 end
+(sr::StdRule)(X,name,type,scitypes) =  scitypes <: Continuous ? (std(X[name])>sr.threshold ? true : false) : true
+const StdSelector = MLJModels.FeatureSelectorRule{StdRule}
+StdSelector(;threshold=0.2)= StdSelector(StdRule(threshold))
+fsr=StdSelector()
+fsr_fit,=fit(fsr,1,X)
+
+Xt=MLJBase.transform(fsr,fsr_fit,X)
+@test !(:height in schema(Xt).names)
 
 
-sch = MLJBase.schema(X)
-fsr=MLJModels.FeatureSelectorRule(MLJModels.FeatureSelector(),var_rule)
 
-fsr_result, =MLJBase.fit(fsr,1,(X))
-fsr_result
 
-function trans(transformer::FeatureSelectorRule,features, X)
-    return transform(transformer.fs,features,X)
-end
-
-Xt=MLJBase.transform(fsr,fsr_result,X)
-@test !(:dummy in schema(X).names)
 #### UNIVARIATE STANDARDIZER ####
 
 stand = UnivariateStandardizer()
