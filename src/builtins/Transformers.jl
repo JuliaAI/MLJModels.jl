@@ -326,7 +326,7 @@ end
 
 # vectors:
 function MLJBase.inverse_transform(transformer::UnivariateDiscretizer, result,
-                          wcat::CategoricalArray) where T<:Integer
+                          wcat::CategoricalArray)
     w=MLJBase.int(wcat)
    return [inverse_transform(transformer, result, k) for k in   w]
 end
