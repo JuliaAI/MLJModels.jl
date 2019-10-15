@@ -314,7 +314,7 @@ function MLJBase.transform(transformer::UnivariateDiscretizer, result,
 end
 
 # scalars:
-function MLJBase.inverse_transform(transformer::UnivariateDiscretizer, result, k::Int)
+function MLJBase.inverse_transform(transformer::UnivariateDiscretizer, result, k::Integer)
    n_classes = length(result.even_quantiles)
    if k < 1
        return result.even_quantiles[1]
