@@ -214,16 +214,16 @@ function MLJBase.fit(transformer::FeatureSelectorRule{R}, verbosity::Int, X) whe
     mask = (e for e in 1:length(sch.names) if transformer.rule(X, sch.names[e], sch.types[e], sch.scitypes[e]))
     features=[sch.names[m] for m in mask]
     transformer.fs=FeatureSelector(features)
-    return fit(transformer.fs, verbosity,X)
+    return fit(transformer.fs, verbosity, X)
 end
 
-function MLJBase.transform(transformer::FeatureSelectorRule{R},features, X) where R<:SelectorRule
-    return transform(transformer.fs,features,X)
+function MLJBase.transform(transformer::FeatureSelectorRule{R}, features, X) where R<:SelectorRule
+    return transform(transformer.fs, features, X)
 end
 
 
 
-MLJBase.fitted_params(transformer::FeatureSelectorRule{R}, fitresult) where R<:SelectorRule = (features_to_keep=fitresult,)
+MLJBase.fitted_params(transformer::FeatureSelectorRule, fitresult) = (features_to_keep=fitresult,)
 
 
 
