@@ -15,7 +15,6 @@ import ..MLJBase: @mlj_model, metadata_pkg, metadata_model
 export FeatureSelector,
         StaticTransformer,
         UnivariateDiscretizer,
-        ToIntTransformer,
         UnivariateStandardizer,
         Standardizer,
         UnivariateBoxCoxTransformer,
@@ -177,81 +176,6 @@ MLJBase.input_scitype(::Type{<:FeatureSelector})  = MLJBase.Table(MLJBase.Scient
 MLJBase.output_scitype(::Type{<:FeatureSelector}) = MLJBase.Table(MLJBase.Scientific)
 MLJBase.docstring(::Type{<:FeatureSelector})      = "Filter features (columns) of a table by name."
 MLJBase.load_path(::Type{<:FeatureSelector})      = "MLJModels.FeatureSelector"
-
-
-mutable struct ToIntTransformer <: Unsupervised
-    sorted::Bool
-    initial_label::Int # ususally 0 or 1
-    map_unseen_to_minus_one::Bool # unseen inputs are transformed to -1
-end
-
-ToIntTransformer(; sorted=false, initial_label=1,
-                 map_unseen_to_minus_one=false) =
-                     ToIntTransformer(sorted, initial_label,
-                                      map_unseen_to_minus_one)
-
-struct ToIntResult{T}
-    n_levels::Int
-    int_given_T::Dict{T, Int}
-    T_given_int::Dict{Int, T}
-end
-
-# null Result constructor:
-ToIntResult(S::Type{T}) where T = ToIntResult{T}(0, Dict{T, Int}(), Dict{Int, T}())
-
-function MLJBase.fit(transformer::ToIntTransformer,verbosity::Int , v::AbstractVector{T}) where T
-    int_given_T = Dict{T, Int}()
-    T_given_int = Dict{Int, T}()
-    vals = collect(Set(v))
-    if transformer.sorted
-        sort!(vals)
-    end
-    n_levels = length(vals)
-    if n_levels > 2^62 - 1
-        error("Cannot encode with integers a vector "*
-                         "having more than $(2^62 - 1) values.")
-    end
-    i = transformer.initial_label
-    for c in vals
-        int_given_T[c] = i
-        T_given_int[i] = c
-        i = i + 1
-    end
-    cache=nothing
-    report= NamedTuple()
-    return ToIntResult{T}(n_levels, int_given_T, T_given_int),cache, report
-end
-
-# scalar case:
-function MLJBase.transform(transformer::ToIntTransformer, result::ToIntResult{T}, x::T) where T
-    ret = 0 # otherwise ret below stays in local scope
-    try
-        ret = result.int_given_T[x]
-    catch exception
-        if isa(exception, KeyError)
-            if transformer.map_unseen_to_minus_one
-                ret = -1
-            else
-                throw(exception)
-            end
-        end
-    end
-    return ret
-end
-MLJBase.inverse_transform(transformer::ToIntTransformer, result, y::Int) = result.T_given_int[y]
-
-# vector case:
-function MLJBase.transform(transformer::ToIntTransformer, result::ToIntResult{T},
-                   v::AbstractVector{T}) where T
-    return Int[transform(transformer, result, x) for x in v]
-end
-MLJBase.inverse_transform(transformer::ToIntTransformer, result::ToIntResult{T},
-                  w::AbstractVector{Int}) where T = T[result.T_given_int[y] for y in w]
-
-MLJBase.input_scitype(::Type{<:ToIntTransformer})  = AbstractVector{<:MLJBase.Infinite}
-MLJBase.output_scitype(::Type{<:ToIntTransformer}) = AbstractVector{MLJBase.Count}
-MLJBase.docstring(::Type{<:ToIntTransformer})      = "transforms values to Int"
-MLJBase.load_path(::Type{<:ToIntTransformer})      = "MLJModels.ToIntTransformer"
 
 #### UNIVARIATE Discretizer ####
 """

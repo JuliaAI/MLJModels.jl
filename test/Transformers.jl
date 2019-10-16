@@ -45,15 +45,6 @@ infos = info_dict(selector)
 
 
 
-transformer = ToIntTransformer(sorted=true)
-transformerM, = fit(transformer,1,["Old", "Young", "Middle", "Young"])
-v = transform(transformer,transformerM, ["Young"])
-@test v[1] == 3
-
-transformer = ToIntTransformer(sorted=true)
-transformerM, = fit(transformer,1,CategoricalArray(["Old", "Young", "Middle", "Young"]))
-v = transform(transformer,transformerM, CategoricalArray(["Young"]))
-@test v[1] == 3
 
 #  To be added with FeatureSelectorRule X = (n1=["a", "b", "a"], n2=["g", "g", "g"], n3=[7, 8, 9],
 #               n4 =UInt8[3,5,10],  o1=[4.5, 3.6, 4.0], )
