@@ -182,16 +182,17 @@ MLJBase.load_path(::Type{<:FeatureSelector})      = "MLJModels.FeatureSelector"
     FeatureSelectorRule(rule::Function)
 
 An unsupervised model for filtering features (columns) of a table.
-This a parmetric type that expects a callable mutable struct encapsulating
-    the parameters of the rule and the rule being returning true and false based
-    on (X,name,type,scitypes) where X is data treated as a table
+This a parametric type that expects a callable mutable struct `R` encapsulating
+    the parameters of the rule. The call to `R` must return a Bool based on the input
+    (X,name,type,scitype) where X is data treated as a table and name,type,scitype namerefert to the
+    column
 ```
 mutable struct StdRule <: MLJModels.SelectorRule
      threshold::Float64
 end
-(sr::StdRule)(X,name,type,scitypes) =  scitypes <: Continuous ? (std(X[name])>sr.threshold ? true : false) : true
+(sr::StdRule)(X,name,type,scitype) =  !(scitypes <: Continuous) || std(skipmissing(X[name])) >= sr.threshold)
 const StdSelector = MLJModels.FeatureSelectorRule{StdRule}
-StdSelector(;threshold=0.2)= StdSelector(StdRule(threshold))
+StdSelector(; threshold::Real =0.2)= StdSelector(StdRule(threshold))
 ```
 
 
@@ -205,16 +206,15 @@ mutable struct FeatureSelectorRule{R<:SelectorRule} <: Unsupervised
     rule::R
 end
 
-FeatureSelectorRule{R}(rule::R) where R<:SelectorRule= FeatureSelectorRule{R}(FeatureSelector(),rule)
+FeatureSelectorRule{R}(; rule::R = R()) where R<:SelectorRule = FeatureSelectorRule{R}(FeatureSelector(), rule)
 
 function MLJBase.fit(transformer::FeatureSelectorRule{R}, verbosity::Int, X) where R<:SelectorRule
     sch = MLJBase.schema(X)
 
-    mask = (e for e in 1:length(sch.names) if transformer.rule(X,sch.names[e],sch.types[e],sch.scitypes[e]))
+    mask = (e for e in 1:length(sch.names) if transformer.rule(X, sch.names[e], sch.types[e], sch.scitypes[e]))
     features=[sch.names[m] for m in mask]
-
     transformer.fs=FeatureSelector(features)
-    return fit(transformer.fs,verbosity,X)
+    return fit(transformer.fs, verbosity,X)
 end
 
 function MLJBase.transform(transformer::FeatureSelectorRule{R},features, X) where R<:SelectorRule

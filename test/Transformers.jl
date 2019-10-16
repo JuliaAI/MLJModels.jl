@@ -56,16 +56,21 @@ mutable struct StdRule <: MLJModels.SelectorRule
 end
 (sr::StdRule)(X,name,type,scitypes) =  scitypes <: Continuous ? (std(X[name])>sr.threshold ? true : false) : true
 const StdSelector = MLJModels.FeatureSelectorRule{StdRule}
-StdSelector(;threshold=0.2)= StdSelector(StdRule(threshold))
+StdSelector(;threshold=0.2)= StdSelector(rule=StdRule(threshold))
 fsr=StdSelector()
 fsr_fit,=fit(fsr,1,X)
-
+MLJModels.FeatureSelectorRule{StdRule}()
 Xt=MLJBase.transform(fsr,fsr_fit,X)
 @test !(:height in schema(Xt).names)
 
+FeatureSelectorRule{R}(; rule::R = R()) where R<: MLJModels.SelectorRule = FeatureSelectorRule{R}(FeatureSelector(), rule)
+FeatureSelectorRule{StdRule}()
 
 
-
+function t(x::R) where R<:SelectorRule
+    R()
+end
+t(StdSelector())
 #### UNIVARIATE STANDARDIZER ####
 
 stand = UnivariateStandardizer()
