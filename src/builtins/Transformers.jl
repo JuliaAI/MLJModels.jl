@@ -181,7 +181,7 @@ MLJBase.load_path(::Type{<:FeatureSelector})      = "MLJModels.FeatureSelector"
 """
 
 UnivariateDiscretizer(n_classes=512)
-Returns a `MLJModel` for dfor discretising any Continuous vector v
+Returns a `MLJModel` for for discretising any Continuous vector v
  (scitype(v) <: AbstractVector{Continuous}), where `n_classes` describes the resolution of the
 discretization. Transformed vectors are of eltype `Int46`. The
 transformation is chosen so that the vector on which the transformer
@@ -189,7 +189,6 @@ is fit has, in transformed form, an approximately uniform distribution
 of values.
 ### Example
     using MLJ
-    using MLJModels
     t = UnivariateDiscretizer(n_classes=10)
     v = randn(1000)
     tM = fit(t, v)   # fit the transformer on `v`
@@ -221,18 +220,12 @@ function MLJBase.fit(transformer::UnivariateDiscretizer, verbosity::Int,X)
 end
 # transforming scalars:
 function MLJBase.transform(transformer::UnivariateDiscretizer, result, r::Real)
-    k = 1
-    for level in result.odd_quantiles
-        if r > level
-            k = k + 1
-        end
-    end
-    return k
+    return k = sum(r .> result.odd_quantiles)
 end
 
 #transforming vectors:
 function MLJBase.transform(transformer::UnivariateDiscretizer, result,
-                  v::AbstractVector{T}) where T<:Real
+                  v) where (scitype(v) <: AbstractVector{Continuous})
    w=[transform(transformer, result, r) for r in v]
    return categorical(w, ordered=true)
 end
