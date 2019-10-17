@@ -38,7 +38,6 @@ import .Registry.@update
 
 # load built-in models:
 include("builtins/Constant.jl")
-
 include("builtins/Transformers.jl")
 
 const INFO_GIVEN_HANDLE = Dict{Handle,Any}()

@@ -18,7 +18,7 @@ function MLJBase.fit(model::GaussianNBClassifier, verbosity::Int
     Xmatrix = MLJBase.matrix(X)' |> collect
     p = size(Xmatrix, 1)
 
-    yplain = identity.(y) # y as plain Vector
+    yplain = Any[y...] # y as Vector
     classes_seen = unique(yplain)
 
     # initiates dictionaries keyed on classes_seen:
@@ -46,7 +46,6 @@ function MLJBase.predict(model::GaussianNBClassifier, fitresult, Xnew)
     n = size(Xmatrix, 2)
 
     classes_observed, logprobs = NaiveBayes.predict_logprobs(fitresult, Xmatrix)
-
     # Note that NaiveBayes does not normalize the probabilities.
 
     probs = exp.(logprobs)
@@ -55,7 +54,7 @@ function MLJBase.predict(model::GaussianNBClassifier, fitresult, Xnew)
 
     # UnivariateFinite constructor automatically adds unobserved
     # classes with zero probability:
-    return [MLJBase.UnivariateFinite(classes_observed, probs[:,i])
+    return [MLJBase.UnivariateFinite([classes_observed...], probs[:,i])
             for i in 1:n]
 
 end
@@ -77,7 +76,7 @@ function MLJBase.fit(model::MultinomialNBClassifier, verbosity::Int
 
     Xmatrix = MLJBase.matrix(X) |> permutedims
     p = size(Xmatrix, 1)
-    yplain = identity.(y)
+    yplain = Any[y...] # ordinary Vector
     classes_observed = unique(yplain)
 
     res = NaiveBayes.MultinomialNB(classes_observed, p ,alpha= model.alpha)
@@ -110,7 +109,8 @@ function MLJBase.predict(model::MultinomialNBClassifier, fitresult, Xnew)
     col_sums = sum(probs, dims=1)
     probs = probs ./ col_sums
 
-    return [MLJBase.UnivariateFinite(classes_observed, probs[:,i]) for i in 1:n]
+    return [MLJBase.UnivariateFinite([classes_observed...],
+                                     probs[:,i]) for i in 1:n]
 end
 
 # metadata:
