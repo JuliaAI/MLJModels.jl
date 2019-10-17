@@ -70,8 +70,8 @@ seed!(0)
 # data drawn from https://stats.idre.ucla.edu/r/dae/poisson-regression/
 data = dataset("MASS", "Melanoma")
 
-X = data[[:Status, :Sex, :Age, :Year, :Thickness]]
-y_plain = data[:Ulcer]
+X = data[:, [:Status, :Sex, :Age, :Year, :Thickness]]
+y_plain = data.Ulcer
 y = categorical(y_plain)
 
 n = length(y)
