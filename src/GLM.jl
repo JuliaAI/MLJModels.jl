@@ -58,17 +58,17 @@ glm_report(fitresult) = ( deviance     = GLM.deviance(fitresult),
 # MulticlassClassifier   --> Probabilistic w Multiclass target
 
 
-@with_kw mutable struct LinearRegressor <: MLJBase.Probabilistic
+@with_kw_noshow mutable struct LinearRegressor <: MLJBase.Probabilistic
     fit_intercept::Bool      = true
     allowrankdeficient::Bool = false
 end
 
-@with_kw mutable struct LinearBinaryClassifier{L<:GLM.Link01} <: MLJBase.Probabilistic
+@with_kw_noshow mutable struct LinearBinaryClassifier{L<:GLM.Link01} <: MLJBase.Probabilistic
     fit_intercept::Bool = true
     link::L             = GLM.LogitLink()
 end
 
-@with_kw mutable struct LinearCountRegressor{D<:Distributions.Distribution,L<:GLM.Link} <: MLJBase.Probabilistic
+@with_kw_noshow mutable struct LinearCountRegressor{D<:Distributions.Distribution,L<:GLM.Link} <: MLJBase.Probabilistic
 	fit_intercept::Bool = true
 	distribution::D     = Distributions.Poisson()
 	link::L 			= GLM.LogLink()

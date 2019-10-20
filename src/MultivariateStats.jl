@@ -6,6 +6,7 @@ import MLJBase
 import MLJBase: @mlj_model
 import StatsBase:proportions
 using  CovarianceEstimation
+using LinearAlgebra
 using ScientificTypes
 using Tables
 
@@ -357,8 +358,29 @@ MLJBase.output_scitype(::Type{<:ICA}) = Table(Continuous)
 ####
 #### LDA
 ####
+const LDA_Desc=
+""" LDA:
+Find the linear combination ` Z = wTX ` and the bias ` b ` that projects ` X ` into 
+lower dimensional space of dimension `out_dim` such that the betweenclass variance is maximized 
+relative to the within-class variance and classify based on bayes rule. 
+"""
+const LDAFields = """
+    ## Keywords
+    `method` selects the method to be used. \n
+    `shrinkage`
+    `out_dim`
+    `regcoef`
+    """
 
+"""
+` LDA( ; method=:gevd, shrinkage=:None , out_dim=1 , regcoef=1e-4 ) `
 
+$LDA_Desc
+
+$LDAFields
+
+See also the [package documentation](https://multivariatestatsjl.readthedocs.io/en/latest/lda.html)
+"""
 mutable struct LDA <: MLJBase.Probabilistic
     method::Symbol
     shrinkage::Union{Symbol,Float64}
@@ -369,17 +391,17 @@ end
 
 function MLJBase.clean!(model::LDA)
     warning = ""
-    if model.method ∉ [:gevd,:whiten,:subspace_lda]
+    if model.method ∉ [:gevd, :whiten, :subspace_lda]
         warning *= "Unknown method. Resetting method=:gevd.\n"
         model.method = :gevd
     end
-    if model.method==:subspace_lda && model.shrinkage!=:None
+    if model.method == :subspace_lda && model.shrinkage != :None
         warning *= "shrinkage not implemented for :subspace_lda. Resetting to shrinkage=:None.\n"
         model.shrinkage = :None
     end
-    if typeof(model.shrinkage)<:Real && !(0<=model.shrinkage<=1)
+    if typeof(model.shrinkage) <: Real && !(0 <= model.shrinkage <= 1)
         warning *= "shrinkage has to be ∈ [0,1]. Resetting to shrinkage=:lw. \n"
-    elseif model.shrinkage ∉ [:lw,:None]
+    elseif model.shrinkage ∉ [ :lw, :None ]
         warning *= "Unknown model solver. Resetting to shrinkage=:None.\n"
         model.shrinkage = :None
     end
@@ -388,154 +410,107 @@ function MLJBase.clean!(model::LDA)
         model.lambda = 1
     end
     if model.regcoef <= 0
-        warning *= "Need regcoef ≥ 0 . Resetting regcoef=1e-4.\n"
+        warning *= "Need regcoef > 0 . Resetting regcoef=1e-4.\n"
         model.regcoef = 1e-4
     end
     return warning
 end
 
-function LDA(;method=:gevd,shrinkage=:None,out_dim=1,regcoef=1e-6)
-    model = LDA(method,shrinkage,out_dim,regcoef)
+
+function LDA(; method=:gevd, shrinkage=:None, out_dim=1, regcoef=1e-6)
+    model = LDA(method, shrinkage, out_dim, regcoef)
     message = MLJBase.clean!(model)
     isempty(message) || @warn message
     return model
 end
 
-# function fitted(::Type{LDA}, X::DenseMatrix{T}, y::AbstractVector{<:Integer}; 
-#                   method::Symbol=:gevd, 
-#                   out_dim::Int, 
-#                   regcoef::T,shrinkage::Union{Float64,Symbol}) where T<:Real
+function MLJBase.fit(model::LDA, verbosity::Int, X, y)
+ 
+    class_list = MLJBase.classes(y[1]) #class list containing unique entries in y
     
-#     nc=maximum(y)
-#     out_dim <= min(nc-1,size(X,1)) || throw(ArgumentError("out_dim greater than min(maximum(y),size(X,1))"))
-
-#     ifelse(shrinkage==:None,covestimator= MS.SimpleCovariance(),
-#     covestimator=LinearShrinkage(target=DiagonalCommonVariance(), shrinkage=shrinkage) )
-  
-#     if method ∈ [:gevd,:whiten]
-#         fitted_model=MS.fit(MS.MulticlassLDA, Int(nc), X, Int.(y);
-#                     method=method,
-#                     outdim=out_dim,
-#                     regcoef=regcoef,
-#                     covestimator_within=covestimator,
-#                     covestimator_between=covestimator)
-#     else
-#          fitted_model=MS.fit(MS.SubspaceLDA, X,
-#                          Int.(y),
-#                          nc;
-#                          normalize=false)
-#      end
-#     return fitted_model
-# end
-
-# function fitted(::Type{LDA},::Val{false}, X::DenseMatrix{T}, y::AbstractVector{<:Integer}; 
-#     method::Symbol=:gevd, 
-#     out_dim::Int, 
-#     regcoef::T,shrinkage::Union{Float64,Symbol}) where T<:Real
-
-# nc=maximum(y)
-# out_dim <= min(nc-1,size(X,1)) || throw(ArgumentError("out_dim greater than min(maximum(y),size(X,1))"))
-
-#     fitted_model=MS.fit(MS.SubspaceLDA, X,
-#                     Int.(y),
-#                     nc;
-#                     normalize=false)
-# return fitted_model
-# end
-
-const LDA_Desc=
-""" LDA:
-Find the linear combination `Z = wTX` and the bias `b `that projects `X` into 
-lower dimensional space of dimension `out_dim` such that the betweenclass variance is maximized 
-relative to the within-class variance and the misclassification error of `Z` is minimum 
-"""
-const LDAFields = """
-    ## Keywords
-    None
-    """
-"""
-`LDA(;method=:gevd,shrinkage=:None,out_dim=1,regcoef=1e-4)`
-
-$LDA_Desc
-
-$LDAFields
-
-See also the [package documentation](https://multivariatestatsjl.readthedocs.io/en/latest/lda.html)
-"""
-
-function MLJBase.fit(model::LDA,verbosity::Int,X,y)
-
-    #features :: Array{Symbol,1}=collect(schema(X).names) 
-    class_list=MLJBase.classes(y[1])
     # NOTE: copy/transpose
     Xmatrix ::Array{Float64,2} = MLJBase.matrix(X,transpose=true)
-    yarray=MLJBase.int(y)
-    nc=maximum(yarray)
-    model.out_dim <= min(nc-1,size(X,1)) || throw(ArgumentError("out_dim > min(maximum(y),size(X,1))"))
-    if model.method ∈ [:gevd,:whiten]
-        model.shrinkage==:None ?
+    training_sample_size ::Int64 = size(Xmatrix,2)
+
+    #convert the target array of categoricals (y) to array of integers (yarray)
+    #and get the number of classes from yarray
+    yarray = MLJBase.int(y)
+    no_of_classes = maximum(yarray)
+
+    #check to make sure output dimension isn't too large or negative
+    0 < model.out_dim <= min(no_of_classes-1, training_sample_size) ||
+     throw(ArgumentError("out_dim must lie within 0 and min(no_of_features,training_sample_size)"))
+
+    if model.method ∈ [:gevd, :whiten]
+        model.shrinkage == :None ?
             covestimator ::Union{MS.SimpleCovariance,LinearShrinkage}=MS.SimpleCovariance() :
-            covestimator=LinearShrinkage(target=DiagonalCommonVariance(),shrinkage=model.shrinkage)
+            covestimator = LinearShrinkage(target=DiagonalCommonVariance(),shrinkage=model.shrinkage)
 
-        core_fitresult=MS.fit(MS.MulticlassLDA, Int(nc), Xmatrix,Int.(yarray);
-                    method=model.method,
-                    outdim=model.out_dim,
-                    regcoef=model.regcoef,
-                    covestimator_within=covestimator,
-                    covestimator_between=covestimator)
-    elseif model.method==:subspacelda
-        model.shrinkage!=:None || println("Warning shrinkage does not apply to subspace_lda method")
-         core_fitresult=MS.fit(MS.SubspaceLDA, Xmatrix,Int.(yarray),nc;
-                         normalize=false)
-    else
-        throw(ArgumentError("Invalid model method"))
-     end
+        core_fitresult=MS.fit(MS.MulticlassLDA, Int(no_of_classes), Xmatrix, Int.(yarray);
+                            method=model.method,
+                            outdim=model.out_dim,
+                            regcoef=model.regcoef,
+                            covestimator_within=covestimator,
+                            covestimator_between=covestimator)
 
+    elseif model.method == :subspace_lda
+        model.shrinkage == :None || println("Warning shrinkage does not apply to subspace_lda method")
+        core_fitresult = MS.fit(MS.SubspaceLDA, Xmatrix, Int.(yarray), no_of_classes; normalize=true)
     
-    #core_fitresult = fitted(LDA,Xmatrix, yarray;method=model.method,
-    #out_dim=model.out_dim, regcoef=model.regcoef,shrinkage=model.shrinkage)
+    else
+        throw(ArgumentError("Invalid model method $(model.method)"))
+     end
+    
+    πk = proportions(yarray) #estimate prior probabilities of each class in target vector y
     cache = nothing
-
-    #class_means :: Array{Float64,2}=MS.classmeans(core_fitresult)
-    #πk=sort(proportionmap(y))
-    πk=proportions(yarray)
-    #report=(prior_probabilities=πk)#,class_means=class_means)
+    
     report = NamedTuple{}()
-    fitresult=(class_list, core_fitresult,πk)
+    fitresult = (class_list, core_fitresult, πk, training_sample_size)
     return fitresult, cache, report
 end
 
-function MLJBase.fitted_params(::LDA, (class_list, core_fitresult,πk)) 
-    (projection_matrix=MS.projection(core_fitresult),prior_probabilities=πk)
+function MLJBase.fitted_params(::LDA, (class_list, core_fitresult, πk, training_sample_size))
+    ## Note The projection matrix that projects data unto
+    ## a lower dimensional subspace and whitens the lower dimensional data .
+    return (class_means = MS.classmeans(core_fitresult),
+            projection_matrix = MS.projection(core_fitresult),
+            prior_probabilities = πk)
 end
-function MLJBase.predict(model::LDA, (class_list,core_fitresult,πk), Xnew)
+
+function MLJBase.predict(model::LDA , (class_list , core_fitresult , πk , training_sample_size), Xnew)
     
-    Xmatrix =MS.transform(core_fitresult,MLJBase.matrix(Xnew,transpose=true)) :: Array{Float64,2}
-    pmeans=MS.transform(core_fitresult,MS.classmeans(core_fitresult)):: Array{Float64,2}
-    (row_dim,col_dim)=(size(pmeans,2),size(Xmatrix,2))
-    probability_matrix=Array{Float64,2}(undef,(row_dim,col_dim))
+    ##Transpose the Xnew matrix and reduce its dimension
+    Xmatrix = MS.transform(core_fitresult ,MLJBase.matrix(Xnew,transpose=true)) :: Array{Float64,2}
+
+    ## Estimated the probabilities of each column in Xmatrix belonging to each class in 
+    ## class_list storing the results in a probability_matrix
     
-    @views for j=1:col_dim,i=1:row_dim
-        probability_matrix[i,j]=exp((Xmatrix[:,j] .-pmeans[:,i])'*(Xmatrix[:,j] .-pmeans[:,i]) ./ -2 + log(πk[i]))
+    pmeans = MS.transform(core_fitresult, MS.classmeans(core_fitresult)):: Array{Float64,2}
+    class_size = size(pmeans, 2)
+    test_sample_size = size(Xmatrix, 2)
+    
+    probability_matrix = Array{Float64,2}(undef, (class_size, test_sample_size))
+
+     @views for j = 1:test_sample_size, i = 1:class_size
+        probability_matrix[i,j] = 
+        πk[i] * exp(-0.5* norm(Xmatrix[:,j] .- pmeans[:,i])^2 * (training_sample_size-class_size))
+        #probability_matrix[i,j]= πk[i]*exp(((Xmatrix[:,j]'*pmeans[:,i]) .- (0.5 .* norm(pmeans[:,i])))) #.+ log(πk[i]))
     end
 
-    # sum_array=[sum(exp.(discriminant_matrix[:,i])) for i in 1:dims[2]]
-    # probability_matrix=exp.(discriminant_matrix)./ sum_array'
-    #sum_array=[sum((discriminant_matrix[:,i])) for i in 1:col_dim]
-    #sum_array=sum(probability_matrix,dims=1)
-    probability_matrix .=(probability_matrix)./ sum(probability_matrix,dims=1)
-    return [MLJBase.UnivariateFinite(class_list, view(probability_matrix,:,i)) for i in 1:col_dim]
+    probability_matrix .= (probability_matrix) ./ sum(probability_matrix,dims=1) 
+    
+    return [MLJBase.UnivariateFinite(class_list, view(probability_matrix,:,j)) for j in 1:test_sample_size]
 end
 
 # metadata:
-MLJBase.metadata_pkg(LDA; name="MultivariateStats", uuid="6f286f6a-111f-5878-ab1e-185364afe411",
-                         url="https://github.com/JuliaStats/MultivariateStats.jl",
-                         julia=true, license="MIT",
-                         is_wrapper=true)
+MLJBase.metadata_pkg(LDA; name = "MultivariateStats", uuid="6f286f6a-111f-5878-ab1e-185364afe411",
+                         url = "https://github.com/JuliaStats/MultivariateStats.jl",
+                         julia = true, license = "MIT",
+                         is_wrapper = true)
                                             
-MLJBase.metadata_model(LDA; input=Table(Continuous), target=AbstractVector{<:Finite},
-                         output=Unknown, weights=false,
-                         descr=LDA_Desc, path="MLJModels.MultivariateStats_.LDA")
+MLJBase.metadata_model(LDA; input = Table(Continuous), target = AbstractVector{<:Finite},
+                            output = Unknown, weights = false,
+                            descr = LDA_Desc, path = "MLJModels.MultivariateStats_.LDA")
 
 
 

@@ -3,7 +3,7 @@ module ScikitLearn_
 #> for all Supervised models:
 import MLJBase
 import MLJBase: @mlj_model, metadata_model,
-				_process_model_def, _model_constructor, _model_cleaner
+    _process_model_def, _model_constructor, _model_cleaner
 using ScientificTypes
 using Tables
 
