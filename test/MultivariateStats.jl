@@ -119,7 +119,7 @@ end
 
     LDA_model=LDA(method=:gevd)
     fitresult, = fit(LDA_model, 1, Xtrain, ytrain)
-    class_means,projection_matrix,prior_probabilities, = MLJBase.fitted_params(LDA_model, fitresult)
+    class_means,projection_matrix,prior_probabilities = MLJBase.fitted_params(LDA_model, fitresult)
     predicted_posteriors=predict(LDA_model, fitresult, Xtest)
     predicted_class = predict_mode(LDA_model, fitresult, Xtest)
     test_unit_projection_vector = projection_matrix / norm(projection_matrix)
@@ -131,7 +131,7 @@ end
     @test round.(class_means', sigdigits = 3) == [0.0428 0.0339; -0.0395 -0.0313]
     @test round.(prior_probabilities, sigdigits = 3) == [0.492, 0.508]
     
-    @test round(accuracy, sigdigits=2) == 0.56
+    @test round(accuracy, sigdigits = 2) == 0.56
     @test sum(pdf.(predicted_posteriors, "Down") .>= 0.5) == 70
     @test sum(pdf.(predicted_posteriors, "Down") .>= 0.9) == 0
 
