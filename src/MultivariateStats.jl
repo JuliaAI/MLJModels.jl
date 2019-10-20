@@ -1,6 +1,6 @@
 module MultivariateStats_
 
-export RidgeRegressor, PCA, KernelPCA, ICA
+export RidgeRegressor, PCA, KernelPCA, ICA, LDA
 
 import MLJBase
 import MLJBase: @mlj_model
