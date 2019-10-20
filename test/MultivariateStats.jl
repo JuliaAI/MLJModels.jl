@@ -106,7 +106,6 @@ end
 
 end
     @testset "LDA" begin
-    const MS=MultivariateStats
     Smarket=dataset("ISLR","Smarket")
     X=selectcols(Smarket,[:Lag1,:Lag2])
     y=selectcols(Smarket,:Direction)
