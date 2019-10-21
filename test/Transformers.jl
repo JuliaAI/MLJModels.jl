@@ -22,8 +22,7 @@ X = (Zn   = rand(N),
 
 namesX   = Tables.schema(X).names |> collect
 selector = FeatureSelector()
-typeof(selector.rule)
-typeof(selector.rule)
+
 f,       = fit(selector, 1, X)
 
 @test f == namesX
@@ -60,12 +59,6 @@ fsr=FeatureSelector(rule=StdRule(0.2))
 fsr_fit,=fit(fsr,1,X)
 Xt=MLJBase.transform(fsr,fsr_fit,X)
 @test !(:height in schema(Xt).names)
-
-# mutable struct StdFeatureSelector
-#     threshold::Float64
-# end
-# StdFeatureSelector(;threshold=1.0)=FeatureSelector(rule=StdRule(threshold))
-# StdFeatureSelector(threshold=0.1)
 
 
 
