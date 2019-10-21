@@ -429,8 +429,8 @@ function MLJBase.fit(model::LDA, verbosity::Int, X, y)
     class_list = MLJBase.classes(y[1]) #class list containing unique entries in y
     
     # NOTE: copy/transpose
-    Xmatrix ::Array{Float64,2} = MLJBase.matrix(X,transpose=true)
-    training_sample_size ::Int64 = size(Xmatrix,2)
+    Xmatrix  = MLJBase.matrix(X,transpose=true)
+    training_sample_size = size(Xmatrix,2)
 
     #convert the target array of categoricals (y) to array of integers (yarray)
     #and get the number of classes from yarray
