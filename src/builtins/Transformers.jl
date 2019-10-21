@@ -225,7 +225,7 @@ end
 
 #transforming vectors:
 function MLJBase.transform(transformer::UnivariateDiscretizer, result,
-                  v) where (scitype(v) <: AbstractVector{Continuous})
+                  v)
    w=[transform(transformer, result, r) for r in v]
    return categorical(w, ordered=true)
 end
