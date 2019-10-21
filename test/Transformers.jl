@@ -22,6 +22,8 @@ X = (Zn   = rand(N),
 
 namesX   = Tables.schema(X).names |> collect
 selector = FeatureSelector()
+typeof(selector.rule)
+typeof(selector.rule)
 f,       = fit(selector, 1, X)
 
 @test f == namesX
@@ -49,28 +51,24 @@ X = (name       = categorical(["Ben", "John", "Mary", "John"], ordered=true),
      age        = [23, 23, 14, 23],
      gender     = categorical(['M', 'M', 'F', 'M']))
 
-std(X[:height])
 
 mutable struct StdRule <: MLJModels.SelectorRule
      threshold::Float64
 end
 (sr::StdRule)(X,name,type,scitypes) =  scitypes <: Continuous ? (std(X[name])>sr.threshold ? true : false) : true
-const StdSelector = MLJModels.FeatureSelectorRule{StdRule}
-StdSelector(;threshold=0.2)= StdSelector(rule=StdRule(threshold))
-fsr=StdSelector()
+fsr=FeatureSelector(rule=StdRule(0.2))
 fsr_fit,=fit(fsr,1,X)
-MLJModels.FeatureSelectorRule{StdRule}()
 Xt=MLJBase.transform(fsr,fsr_fit,X)
 @test !(:height in schema(Xt).names)
 
-FeatureSelectorRule{R}(; rule::R = R()) where R<: MLJModels.SelectorRule = FeatureSelectorRule{R}(FeatureSelector(), rule)
-FeatureSelectorRule{StdRule}()
+# mutable struct StdFeatureSelector
+#     threshold::Float64
+# end
+# StdFeatureSelector(;threshold=1.0)=FeatureSelector(rule=StdRule(threshold))
+# StdFeatureSelector(threshold=0.1)
 
 
-function t(x::R) where R<:SelectorRule
-    R()
-end
-t(StdSelector())
+
 #### UNIVARIATE STANDARDIZER ####
 
 stand = UnivariateStandardizer()

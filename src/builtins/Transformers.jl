@@ -12,7 +12,7 @@ import ..nonmissing
 import ..MLJBase: @mlj_model, metadata_pkg, metadata_model
 
 
-export FeatureSelector,FeatureSelectorRule,SelectorRule, StaticTransformer,
+export FeatureSelector, StaticTransformer,SelectorRule,
         UnivariateStandardizer,
         Standardizer,
         UnivariateBoxCoxTransformer,
@@ -133,7 +133,7 @@ MLJBase.load_path(::Type{<:FillImputer})      = "MLJModels.FillImputer"
 ## FOR FEATURE (COLUMN) SELECTION
 
 """
-FeatureSelector(features=Symbol[])
+FeatureSelector(; features=Symbol[], rule=...) = FeatureSelector(features)
 
 An unsupervised model for filtering features (columns) of a table.
 Only those features encountered during fitting will appear in
@@ -142,46 +142,6 @@ Alternatively, if a non-empty `features` is specified, then only the
 specified features are used. Throws an error if a recorded or
 specified feature is not present in the transformation input.
 
-"""
-mutable struct FeatureSelector <: MLJBase.Unsupervised
-    features::Vector{Symbol}
-end
-FeatureSelector(; features=Symbol[]) = FeatureSelector(features)
-
-function MLJBase.fit(transformer::FeatureSelector, verbosity::Int, X)
-    namesX = collect(Tables.schema(X).names)
-    if isempty(transformer.features)
-        fitresult = namesX
-    else
-        all(e -> e in namesX, transformer.features) ||
-            throw(error("Attempting to select non-existent feature(s)."))
-        fitresult = transformer.features
-    end
-    report = NamedTuple()
-    return fitresult, nothing, report
-end
-
-MLJBase.fitted_params(::FeatureSelector, fitresult) = (features_to_keep=fitresult,)
-
-function MLJBase.transform(transformer::FeatureSelector, features, X)
-    all(e -> e in Tables.schema(X).names, features) ||
-        throw(error("Supplied frame does not admit previously selected features."))
-    return MLJBase.selectcols(X, features)
-end
-
-
-
-# metadata
-MLJBase.input_scitype(::Type{<:FeatureSelector})  = MLJBase.Table(MLJBase.Scientific)
-MLJBase.output_scitype(::Type{<:FeatureSelector}) = MLJBase.Table(MLJBase.Scientific)
-MLJBase.docstring(::Type{<:FeatureSelector})      = "Filter features (columns) of a table by name."
-MLJBase.load_path(::Type{<:FeatureSelector})      = "MLJModels.FeatureSelector"
-
-
-"""
-    FeatureSelectorRule(rule::Function)
-
-An unsupervised model for filtering features (columns) of a table.
 This a parametric type that expects a callable mutable struct `R` encapsulating
     the parameters of the rule. The call to `R` must return a Bool based on the input
     (X,name,type,scitype) where X is data treated as a table and name,type,scitype namerefert to the
@@ -198,37 +158,55 @@ StdSelector(; threshold::Real =0.2)= StdSelector(StdRule(threshold))
 
 
 """
+
 abstract type SelectorRule  end
 
+mutable struct StaticSelector <:SelectorRule
+end
 
-mutable struct FeatureSelectorRule{R<:SelectorRule} <: Unsupervised
-    fs::FeatureSelector
+
+
+mutable struct FeatureSelector{R} <: MLJBase.Unsupervised
+    features::Vector{Symbol}
     rule::R
 end
+FeatureSelector(; features=Symbol[], rule=StaticSelector) = FeatureSelector(features,rule)
 
-FeatureSelectorRule{R}(; rule::R = R()) where R<:SelectorRule = FeatureSelectorRule{R}(FeatureSelector(), rule)
 
-function MLJBase.fit(transformer::FeatureSelectorRule{R}, verbosity::Int, X) where R<:SelectorRule
-    sch = MLJBase.schema(X)
 
-    mask = (e for e in 1:length(sch.names) if transformer.rule(X, sch.names[e], sch.types[e], sch.scitypes[e]))
-    features=[sch.names[m] for m in mask]
-    transformer.fs=FeatureSelector(features)
-    return fit(transformer.fs, verbosity, X)
+function MLJBase.fit(transformer::FeatureSelector, verbosity::Int, X)
+    namesX = collect(Tables.schema(X).names)
+    if isempty(transformer.features)
+        fitresult = namesX
+    else
+        all(e -> e in namesX, transformer.features) ||
+            throw(error("Attempting to select non-existent feature(s)."))
+        fitresult = transformer.features
+    end
+
+    report = NamedTuple()
+    if transformer.rule==StaticSelector
+        return fitresult, nothing, report
+    else
+        sch=MLJBase.schema(MLJBase.selectcols(X, fitresult)) # TO CHECK.
+        mask = (e for e in 1:length(fitresult) if transformer.rule(X, sch.names[e], sch.types[e], sch.scitypes[e]))
+        fitresult=[sch.names[m] for m in mask]
+        return fitresult, nothing, report
+    end
 end
 
-function MLJBase.transform(transformer::FeatureSelectorRule{R}, features, X) where R<:SelectorRule
-    return transform(transformer.fs, features, X)
+MLJBase.fitted_params(::FeatureSelector, fitresult) = (features_to_keep=fitresult,)
+
+function MLJBase.transform(transformer::FeatureSelector, features, X)
+    all(e -> e in Tables.schema(X).names, features) ||
+        throw(error("Supplied frame does not admit previously selected features."))
+    return MLJBase.selectcols(X, features)
 end
 
+# metadata
 
-
-MLJBase.fitted_params(transformer::FeatureSelectorRule, fitresult) = (features_to_keep=fitresult,)
-
-
-
-
-MLJBase.load_path(::Type{<:FeatureSelector})   = "MLJModels.FeatureSelectorRule"
+MLJBase.docstring(::Type{<:FeatureSelector})      = "Filter features (columns) of a table by name or rule."
+MLJBase.load_path(::Type{<:FeatureSelector})   = "MLJModels.FeatureSelector"
 MLJBase.package_url(::Type{<:FeatureSelector}) = "https://github.com/alan-turing-institute/MLJModels.jl"
 MLJBase.package_license(::Type{<:FeatureSelector}) = "MIT"
 MLJBase.package_name(::Type{<:FeatureSelector})    = "MLJModels"
