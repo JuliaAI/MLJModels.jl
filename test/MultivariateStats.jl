@@ -105,7 +105,7 @@ end
     @test Xtr_mlj ≈ Xtr_ms
 
 end
-    @testset "LDA" begin
+    @testset "MulticlassLDA" begin
     Smarket=dataset("ISLR","Smarket")
     X=selectcols(Smarket,[:Lag1,:Lag2])
     y=selectcols(Smarket,:Direction)
@@ -116,7 +116,7 @@ end
     Xtest  = selectrows(X, test)
     ytest  = selectrows(y, test)
 
-    LDA_model=LDA(method=:gevd)
+    LDA_model=MulticlassLDA()
     fitresult, = fit(LDA_model, 1, Xtrain, ytrain)
     class_means,projection_matrix,prior_probabilities = MLJBase.fitted_params(LDA_model, fitresult)
     predicted_posteriors=predict(LDA_model, fitresult, Xtest)

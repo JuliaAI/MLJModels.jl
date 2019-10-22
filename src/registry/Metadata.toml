@@ -10,7 +10,7 @@
 ":package_url" = "https://github.com/KristofferC/NearestNeighbors.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":docstring" = "K-Nearest Neighbors classifier: predicts the class associated with a new point\nby taking a vote over the classes of the K-nearest points.\n\n→ based on [NearestNeighbors](https://github.com/KristofferC/NearestNeighbors.jl)\n→ do `@load KNNClassifier` to use the model\n→ do `?KNNClassifier` for documentation."
+":docstring" = "K-Nearest Neighbors classifier: predicts the class associated with a new point\nby taking a vote over the classes of the K-nearest points.\n\n→ based on [NearestNeighbors](https://github.com/KristofferC/NearestNeighbors.jl).\n→ do `@load KNNClassifier pkg=\"NearestNeighbors\"` to use the model.\n→ do `?KNNClassifier` for documentation."
 ":name" = "KNNClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
@@ -29,7 +29,7 @@
 ":package_url" = "https://github.com/KristofferC/NearestNeighbors.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":docstring" = "K-Nearest Neighbors regressor: predicts the response associated with a new point\nby taking an average of the response of the K-nearest points.\n\n→ based on [NearestNeighbors](https://github.com/KristofferC/NearestNeighbors.jl)\n→ do `@load KNNRegressor` to use the model\n→ do `?KNNRegressor` for documentation."
+":docstring" = "K-Nearest Neighbors regressor: predicts the response associated with a new point\nby taking an average of the response of the K-nearest points.\n\n→ based on [NearestNeighbors](https://github.com/KristofferC/NearestNeighbors.jl).\n→ do `@load KNNRegressor pkg=\"NearestNeighbors\"` to use the model.\n→ do `?KNNRegressor` for documentation."
 ":name" = "KNNRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
@@ -48,7 +48,7 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":docstring" = "Linear classifier with stochastic gradient descent training.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl)\n→ do `@load ProbabilisticSGDClassifier` to use the model\n→ do `?ProbabilisticSGDClassifier` for documentation."
+":docstring" = "Linear classifier with stochastic gradient descent training.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load ProbabilisticSGDClassifier pkg=\"ScikitLearn\"` to use the model.\n→ do `?ProbabilisticSGDClassifier` for documentation."
 ":name" = "ProbabilisticSGDClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
@@ -67,7 +67,7 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":docstring" = "Ridge regression classifier.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl)\n→ do `@load RidgeCVClassifier` to use the model\n→ do `?RidgeCVClassifier` for documentation."
+":docstring" = "Ridge regression classifier.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load RidgeCVClassifier pkg=\"ScikitLearn\"` to use the model.\n→ do `?RidgeCVClassifier` for documentation."
 ":name" = "RidgeCVClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
@@ -86,7 +86,7 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":docstring" = "Logistic regression classifier.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl)\n→ do `@load LogisticClassifier` to use the model\n→ do `?LogisticClassifier` for documentation."
+":docstring" = "Logistic regression classifier.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load LogisticClassifier pkg=\"ScikitLearn\"` to use the model.\n→ do `?LogisticClassifier` for documentation."
 ":name" = "LogisticClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
@@ -143,7 +143,7 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":docstring" = "Perceptron classifier.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl)\n→ do `@load PerceptronClassifier` to use the model\n→ do `?PerceptronClassifier` for documentation."
+":docstring" = "Perceptron classifier.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load PerceptronClassifier pkg=\"ScikitLearn\"` to use the model.\n→ do `?PerceptronClassifier` for documentation."
 ":name" = "PerceptronClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
@@ -276,7 +276,7 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":docstring" = "Ridge regression classifier.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl)\n→ do `@load RidgeClassifier` to use the model\n→ do `?RidgeClassifier` for documentation."
+":docstring" = "Ridge regression classifier.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load RidgeClassifier pkg=\"ScikitLearn\"` to use the model.\n→ do `?RidgeClassifier` for documentation."
 ":name" = "RidgeClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
@@ -314,7 +314,7 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":docstring" = "Similar to Multinomial NB classifier but with more robust assumptions. Suited for imbalanced datasets.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl)\n→ do `@load ComplementNBClassifier` to use the model\n→ do `?ComplementNBClassifier` for documentation."
+":docstring" = "Similar to Multinomial NB classifier but with more robust assumptions. Suited for imbalanced datasets.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load ComplementNBClassifier pkg=\"ScikitLearn\"` to use the model.\n→ do `?ComplementNBClassifier` for documentation."
 ":name" = "ComplementNBClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
@@ -371,7 +371,7 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":docstring" = "Gradient boosting ensemble classifier.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl)\n→ do `@load GradientBoostingClassifier` to use the model\n→ do `?GradientBoostingClassifier` for documentation."
+":docstring" = "Gradient boosting ensemble classifier.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load GradientBoostingClassifier pkg=\"ScikitLearn\"` to use the model.\n→ do `?GradientBoostingClassifier` for documentation."
 ":name" = "GradientBoostingClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
@@ -523,7 +523,7 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":docstring" = "Passive aggressive classifier.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl)\n→ do `@load PassiveAggressiveClassifier` to use the model\n→ do `?PassiveAggressiveClassifier` for documentation."
+":docstring" = "Passive aggressive classifier.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load PassiveAggressiveClassifier pkg=\"ScikitLearn\"` to use the model.\n→ do `?PassiveAggressiveClassifier` for documentation."
 ":name" = "PassiveAggressiveClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
@@ -561,7 +561,7 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":docstring" = "Binomial naive bayes classifier. It is suitable for classification with binary features; features will be binarized based on the `binarize` keyword (unless it's `nothing` in which\n    case the features are assumed to be binary).\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl)\n→ do `@load BernoulliNBClassifier` to use the model\n→ do `?BernoulliNBClassifier` for documentation."
+":docstring" = "Binomial naive bayes classifier. It is suitable for classification with binary features; features will be binarized based on the `binarize` keyword (unless it's `nothing` in which\n    case the features are assumed to be binary).\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load BernoulliNBClassifier pkg=\"ScikitLearn\"` to use the model.\n→ do `?BernoulliNBClassifier` for documentation."
 ":name" = "BernoulliNBClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
@@ -580,7 +580,7 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":docstring" = "Gaussian naive bayes model.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl)\n→ do `@load GaussianNBClassifier` to use the model\n→ do `?GaussianNBClassifier` for documentation."
+":docstring" = "Gaussian naive bayes model.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load GaussianNBClassifier pkg=\"ScikitLearn\"` to use the model.\n→ do `?GaussianNBClassifier` for documentation."
 ":name" = "GaussianNBClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
@@ -599,7 +599,7 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":docstring" = "Extra trees classifier, fits a number of randomized decision trees on various sub-samples of the dataset and uses averaging to improve the predictive accuracy and control over-fitting.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl)\n→ do `@load ExtraTreesClassifier` to use the model\n→ do `?ExtraTreesClassifier` for documentation."
+":docstring" = "Extra trees classifier, fits a number of randomized decision trees on various sub-samples of the dataset and uses averaging to improve the predictive accuracy and control over-fitting.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load ExtraTreesClassifier pkg=\"ScikitLearn\"` to use the model.\n→ do `?ExtraTreesClassifier` for documentation."
 ":name" = "ExtraTreesClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
@@ -675,7 +675,7 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":docstring" = "Adaboost ensemble classifier.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl)\n→ do `@load AdaBoostClassifier` to use the model\n→ do `?AdaBoostClassifier` for documentation."
+":docstring" = "Adaboost ensemble classifier.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load AdaBoostClassifier pkg=\"ScikitLearn\"` to use the model.\n→ do `?AdaBoostClassifier` for documentation."
 ":name" = "AdaBoostClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
@@ -751,7 +751,7 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":docstring" = "Bagging ensemble classifier.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl)\n→ do `@load BaggingClassifier` to use the model\n→ do `?BaggingClassifier` for documentation."
+":docstring" = "Bagging ensemble classifier.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load BaggingClassifier pkg=\"ScikitLearn\"` to use the model.\n→ do `?BaggingClassifier` for documentation."
 ":name" = "BaggingClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
@@ -770,7 +770,7 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":docstring" = "Gaussian process classifier.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl)\n→ do `@load GaussianProcessClassifier` to use the model\n→ do `?GaussianProcessClassifier` for documentation."
+":docstring" = "Gaussian process classifier.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load GaussianProcessClassifier pkg=\"ScikitLearn\"` to use the model.\n→ do `?GaussianProcessClassifier` for documentation."
 ":name" = "GaussianProcessClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
@@ -789,7 +789,7 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":docstring" = "K-Nearest Neighbors regressor: predicts the response associated with a new point\n    by taking an average of the response of the K-nearest points.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl)\n→ do `@load KNeighborsRegressor` to use the model\n→ do `?KNeighborsRegressor` for documentation."
+":docstring" = "K-Nearest Neighbors regressor: predicts the response associated with a new point\n    by taking an average of the response of the K-nearest points.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load KNeighborsRegressor pkg=\"ScikitLearn\"` to use the model.\n→ do `?KNeighborsRegressor` for documentation."
 ":name" = "KNeighborsRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
@@ -827,7 +827,7 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":docstring" = "DummyRegressor is a regressor that makes predictions using simple rules.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl)\n→ do `@load DummyRegressor` to use the model\n→ do `?DummyRegressor` for documentation."
+":docstring" = "DummyRegressor is a regressor that makes predictions using simple rules.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load DummyRegressor pkg=\"ScikitLearn\"` to use the model.\n→ do `?DummyRegressor` for documentation."
 ":name" = "DummyRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
@@ -884,7 +884,7 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":docstring" = "K-Nearest Neighbors classifier: predicts the class associated with a new point\n    by taking a vote over the classes of the K-nearest points.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl)\n→ do `@load KNeighborsClassifier` to use the model\n→ do `?KNeighborsClassifier` for documentation."
+":docstring" = "K-Nearest Neighbors classifier: predicts the class associated with a new point\n    by taking a vote over the classes of the K-nearest points.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load KNeighborsClassifier pkg=\"ScikitLearn\"` to use the model.\n→ do `?KNeighborsClassifier` for documentation."
 ":name" = "KNeighborsClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
@@ -903,7 +903,7 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":docstring" = "DummyClassifier is a classifier that makes predictions using simple rules.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl)\n→ do `@load DummyClassifier` to use the model\n→ do `?DummyClassifier` for documentation."
+":docstring" = "DummyClassifier is a classifier that makes predictions using simple rules.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load DummyClassifier pkg=\"ScikitLearn\"` to use the model.\n→ do `?DummyClassifier` for documentation."
 ":name" = "DummyClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
@@ -941,7 +941,7 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":docstring" = "Linear classifier with stochastic gradient descent training.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl)\n→ do `@load SGDClassifier` to use the model\n→ do `?SGDClassifier` for documentation."
+":docstring" = "Linear classifier with stochastic gradient descent training.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load SGDClassifier pkg=\"ScikitLearn\"` to use the model.\n→ do `?SGDClassifier` for documentation."
 ":name" = "SGDClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
@@ -998,7 +998,7 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":docstring" = "Random forest classifier.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl)\n→ do `@load RandomForestClassifier` to use the model\n→ do `?RandomForestClassifier` for documentation."
+":docstring" = "Random forest classifier.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load RandomForestClassifier pkg=\"ScikitLearn\"` to use the model.\n→ do `?RandomForestClassifier` for documentation."
 ":name" = "RandomForestClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
@@ -1017,7 +1017,7 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":docstring" = "Logistic regression classifier with internal cross-validation.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl)\n→ do `@load LogisticCVClassifier` to use the model\n→ do `?LogisticCVClassifier` for documentation."
+":docstring" = "Logistic regression classifier with internal cross-validation.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load LogisticCVClassifier pkg=\"ScikitLearn\"` to use the model.\n→ do `?LogisticCVClassifier` for documentation."
 ":name" = "LogisticCVClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
@@ -1055,7 +1055,7 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":docstring" = "Extra trees regressor, fits a number of randomized decision trees on various sub-samples of the dataset and uses averaging to improve the predictive accuracy and control over-fitting.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl)\n→ do `@load ExtraTreesRegressor` to use the model\n→ do `?ExtraTreesRegressor` for documentation."
+":docstring" = "Extra trees regressor, fits a number of randomized decision trees on various sub-samples of the dataset and uses averaging to improve the predictive accuracy and control over-fitting.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load ExtraTreesRegressor pkg=\"ScikitLearn\"` to use the model.\n→ do `?ExtraTreesRegressor` for documentation."
 ":name" = "ExtraTreesRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
@@ -1093,7 +1093,7 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":docstring" = "Multinomial naive bayes classifier. It is suitable for classification with discrete features (e.g. word counts for text classification).\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl)\n→ do `@load MultinomialNBClassifier` to use the model\n→ do `?MultinomialNBClassifier` for documentation."
+":docstring" = "Multinomial naive bayes classifier. It is suitable for classification with discrete features (e.g. word counts for text classification).\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load MultinomialNBClassifier pkg=\"ScikitLearn\"` to use the model.\n→ do `?MultinomialNBClassifier` for documentation."
 ":name" = "MultinomialNBClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
@@ -1249,25 +1249,6 @@
 ":hyperparameters" = [":maxoutdim", ":kernel", ":solver", ":inverse", ":β", ":tol", ":maxiter"]
 ":hyperparameter_types" = ["Union{Nothing, Int64}", "Union{Nothing, Function}", "Union{Nothing, Symbol}", "Union{Nothing, Bool}", "Union{Nothing, Real}", "Union{Nothing, Real}", "Union{Nothing, Int64}"]
 
-[MultivariateStats.LDA]
-":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:Union{AbstractArray{_s12,1} where _s12<:ScientificTypes.Count, AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous}`"
-":target_scitype" = "`AbstractArray{_s657,1} where _s657<:ScientificTypes.Finite`"
-":is_pure_julia" = "`true`"
-":package_name" = "MultivariateStats"
-":package_license" = "MIT"
-":load_path" = "MLJModels.MultivariateStats_.LDA"
-":package_uuid" = "6f286f6a-111f-5878-ab1e-185364afe411"
-":package_url" = "https://github.com/JuliaStats/MultivariateStats.jl"
-":is_wrapper" = "`true`"
-":supports_weights" = "`false`"
-":docstring" = " LDA:\nFind the linear combination `Z = wTX` and the bias `b `that projects `X` into \n1-dimension such that the betweenclass variance is maximized relative to the \nwithin-class variance and the misclassification error of `Z` is minimum \n\n→ based on [MultivariateStats](https://github.com/JuliaStats/MultivariateStats.jl)\n→ do `@load LDA` to use the model\n→ do `?LDA` for documentation."
-":name" = "LDA"
-":is_supervised" = "`true`"
-":prediction_type" = ":probabilistic"
-":implemented_methods" = [":fit", ":predict", ":clean!", ":fitted_params"]
-":hyperparameters" = [":method", ":shrinkage", ":out_dim", ":regcoef"]
-":hyperparameter_types" = ["Symbol", "Union{Float64, Symbol}", "Int64", "Float64"]
-
 [MultivariateStats.PCA]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
@@ -1284,6 +1265,25 @@
 ":implemented_methods" = [":fit", ":clean!", ":fitted_params", ":transform"]
 ":hyperparameters" = [":maxoutdim", ":method", ":pratio", ":mean"]
 ":hyperparameter_types" = ["Union{Nothing, Int64}", "Symbol", "Float64", "Union{Nothing, Array{Float64,1}, Real}"]
+
+[MultivariateStats.MulticlassLDA]
+":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
+":target_scitype" = "`AbstractArray{_s657,1} where _s657<:ScientificTypes.Finite`"
+":is_pure_julia" = "`true`"
+":package_name" = "MultivariateStats"
+":package_license" = "MIT"
+":load_path" = "MLJModels.MultivariateStats_.MulticlassLDA"
+":package_uuid" = "6f286f6a-111f-5878-ab1e-185364afe411"
+":package_url" = "https://github.com/JuliaStats/MultivariateStats.jl"
+":is_wrapper" = "`true`"
+":supports_weights" = "`false`"
+":docstring" = " LDA:\nFind the linear combination ` Z = wTX ` and the bias ` b ` that projects ` X ` into \nlower dimensional space of dimension `out_dim` such that the betweenclass variance is maximized \nrelative to the within-class variance and classify based on bayes rule. \n\n→ based on [MultivariateStats](https://github.com/JuliaStats/MultivariateStats.jl).\n→ do `@load MulticlassLDA pkg=\"MultivariateStats\"` to use the model.\n→ do `?MulticlassLDA` for documentation."
+":name" = "MulticlassLDA"
+":is_supervised" = "`true`"
+":prediction_type" = ":probabilistic"
+":implemented_methods" = [":fit", ":predict", ":fitted_params"]
+":hyperparameters" = [":method", ":shrinkage", ":out_dim", ":regcoef"]
+":hyperparameter_types" = ["Symbol", "Union{Float64, Symbol}", "Int64", "Float64"]
 
 [DecisionTree.DecisionTreeRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
@@ -1333,7 +1333,7 @@
 ":package_uuid" = "aaaa29a8-35af-508c-8bc3-b662a17a0fe5"
 ":package_url" = "https://github.com/JuliaStats/Clustering.jl"
 ":is_wrapper" = "`false`"
-":docstring" = "K-Means algorithm: find K centroids corresponding to K clusters in the data.\n\n→ based on [Clustering](https://github.com/JuliaStats/Clustering.jl)\n→ do `@load KMeans` to use the model\n→ do `?KMeans` for documentation."
+":docstring" = "K-Means algorithm: find K centroids corresponding to K clusters in the data.\n\n→ based on [Clustering](https://github.com/JuliaStats/Clustering.jl).\n→ do `@load KMeans pkg=\"Clustering\"` to use the model.\n→ do `?KMeans` for documentation."
 ":name" = "KMeans"
 ":is_supervised" = "`false`"
 ":implemented_methods" = [":fit", ":predict", ":fitted_params", ":transform"]
@@ -1350,7 +1350,7 @@
 ":package_uuid" = "aaaa29a8-35af-508c-8bc3-b662a17a0fe5"
 ":package_url" = "https://github.com/JuliaStats/Clustering.jl"
 ":is_wrapper" = "`false`"
-":docstring" = "K-Medoids algorithm: find K centroids corresponding to K clusters in the data.\nUnlike K-Means, the centroids are found among data points themselves.\"\n\n→ based on [Clustering](https://github.com/JuliaStats/Clustering.jl)\n→ do `@load KMedoids` to use the model\n→ do `?KMedoids` for documentation."
+":docstring" = "K-Medoids algorithm: find K centroids corresponding to K clusters in the data.\nUnlike K-Means, the centroids are found among data points themselves.\"\n\n→ based on [Clustering](https://github.com/JuliaStats/Clustering.jl).\n→ do `@load KMedoids pkg=\"Clustering\"` to use the model.\n→ do `?KMedoids` for documentation."
 ":name" = "KMedoids"
 ":is_supervised" = "`false`"
 ":implemented_methods" = [":fit", ":predict", ":fitted_params", ":transform"]
@@ -1736,7 +1736,7 @@
 ":name" = "LinearBinaryClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":fit", ":predict", ":predict_mean", ":show"]
+":implemented_methods" = [":fit", ":predict", ":predict_mean"]
 ":hyperparameters" = [":fit_intercept", ":link"]
 ":hyperparameter_types" = ["Bool", "GLM.Link01"]
 
@@ -1755,7 +1755,7 @@
 ":name" = "LinearCountRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":fit", ":predict", ":show"]
+":implemented_methods" = [":fit", ":predict"]
 ":hyperparameters" = [":fit_intercept", ":distribution", ":link"]
 ":hyperparameter_types" = ["Bool", "Distributions.Distribution", "GLM.Link"]
 
@@ -1774,6 +1774,6 @@
 ":name" = "LinearRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":fit", ":predict", ":show"]
+":implemented_methods" = [":fit", ":predict"]
 ":hyperparameters" = [":fit_intercept", ":allowrankdeficient"]
 ":hyperparameter_types" = ["Bool", "Bool"]
