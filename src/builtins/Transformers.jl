@@ -217,14 +217,14 @@ reftype(::CategoricalArray{<:Any,<:Any,R}) where R = R
 """
     UnivariateDiscretizer(n_classes=512)
 
-Returns a `MLJModel` for for discretizing any continuous vector `v`
+Returns an `MLJModel` for for discretizing any continuous vector `v`
  (`scitype(v) <: AbstractVector{Continuous}`), where `n_classes`
  describes the resolution of the discretization.
 
-Transformed output `w` is an ordered factor vector (`scitype(w) <:
+Transformed output `w` is a vector of ordered factors (`scitype(w) <:
  AbstractVector{<:OrderedFactor}`). Specifically, `w` is a
  `CategoricalVector`, with element type
- `CategoricalValue{Int64,UInt32}`.
+ `CategoricalValue{R,R}`, where `R<Unsigned` is optimized.
 
 The transformation is chosen so that the vector on which the
  transformer is fit has, in transformed form, an approximately uniform
@@ -234,10 +234,11 @@ The transformation is chosen so that the vector on which the
 
     using MLJ
     t = UnivariateDiscretizer(n_classes=10)
-    v = randn(1000)
-    tM = fit(t, v)   # fit the transformer on `v`
-    w = transform(tM, v)         # transform `v` according to `tM`
-    v̂ = inverse_transform(tM, w) # reconstruction of `v` from `w`
+    discretizer = machine(t, randn(1000))
+    fit!(discretizer)
+    v = rand(10)
+    w = transform(discretizer, v) 
+    v_approx = inverse_transform(discretizer, w) # reconstruction of v from w
 
 """
 mutable struct UnivariateDiscretizer <:MLJBase.Unsupervised
