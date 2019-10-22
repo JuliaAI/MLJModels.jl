@@ -11,7 +11,6 @@ using StatsBase, Statistics, CategoricalArrays, Distributions
 import ..nonmissing
 import ..MLJBase: @mlj_model, metadata_pkg, metadata_model
 
-
 export FeatureSelector,
         StaticTransformer,
         UnivariateDiscretizer,
@@ -24,7 +23,8 @@ export FeatureSelector,
 ## CONSTANTS
 
 const N_VALUES_THRESH = 16 # for BoxCoxTransformation
-const CategoricalElement = Union{CategoricalValue,CategoricalString}
+const CategoricalElement = MLJBase.CategoricalElement
+
 
 
 #### STATIC TRANSFORMERS ####
@@ -177,22 +177,68 @@ MLJBase.output_scitype(::Type{<:FeatureSelector}) = MLJBase.Table(MLJBase.Scient
 MLJBase.docstring(::Type{<:FeatureSelector})      = "Filter features (columns) of a table by name."
 MLJBase.load_path(::Type{<:FeatureSelector})      = "MLJModels.FeatureSelector"
 
-#### UNIVARIATE Discretizer ####
-"""
 
-UnivariateDiscretizer(n_classes=512)
-Returns a `MLJModel` for for discretising any Continuous vector v
- (scitype(v) <: AbstractVector{Continuous}), where `n_classes` describes the resolution of the
-discretization. Transformed vectors are of eltype `Int46`. The
-transformation is chosen so that the vector on which the transformer
-is fit has, in transformed form, an approximately uniform distribution
-of values.
+#### UNIVARIATE Discretizer ####
+
+# helper functions
+# TODO: move these to MLJBase/src/data.jl
+
+const message1 = "Attempting to transform a level not in pool of specified "*
+   "categorical element. "
+
+# Transform a raw level `x` in the pool of some categorical element,
+# `element`, into a categorical element (with the same pool):
+function MLJBase.transform(element::C, x) where C<:CategoricalElement
+    pool = element.pool
+    x in levels(pool) || error(message1)
+    ref = pool.invindex[x]
+    return C(ref, pool)
+end
+
+# Transform ordinary array `X` into a categorical array with the same
+# pool as the categorical element `element`:
+function MLJBase.transform(element::CategoricalElement,
+                           X::AbstractArray{T,N}) where {T,N}
+    pool = element.pool
+
+    levels_presented = unique(X)
+    issubset(levels_presented, levels(pool)) || error(message1)
+    Missing <: T &&
+        error("Missing values not supported. ")
+
+    refs = broadcast(x -> pool.invindex[x], X)
+
+    return CategoricalArray{T,N}(refs, pool)
+
+end
+
+reftype(::CategoricalArray{<:Any,<:Any,R}) where R = R
+
+"""
+    UnivariateDiscretizer(n_classes=512)
+
+Returns a `MLJModel` for for discretizing any continuous vector `v`
+ (`scitype(v) <: AbstractVector{Continuous}`), where `n_classes`
+ describes the resolution of the discretization.
+
+Transformed output `w` is an ordered factor vector (`scitype(w) <:
+ AbstractVector{<:OrderedFactor}`). Specifically, `w` is a
+ `CategoricalVector`, with element type
+ `CategoricalValue{Int64,UInt32}`.
+
+The transformation is chosen so that the vector on which the
+ transformer is fit has, in transformed form, an approximately uniform
+ distribution of values.
+
 ### Example
+
     using MLJ
     t = UnivariateDiscretizer(n_classes=10)
     v = randn(1000)
     tM = fit(t, v)   # fit the transformer on `v`
-    w = transform(tM, v) # transform `v` according to `tM`
+    w = transform(tM, v)         # transform `v` according to `tM`
+    v̂ = inverse_transform(tM, w) # reconstruction of `v` from `w`
+
 """
 mutable struct UnivariateDiscretizer <:MLJBase.Unsupervised
     n_classes::Int
@@ -201,64 +247,97 @@ end
 # lazy keyword constructor:
 UnivariateDiscretizer(; n_classes=512) = UnivariateDiscretizer(n_classes)
 
-struct UnivariateDiscretizerResult
+struct UnivariateDiscretizerResult{C}
     odd_quantiles::Vector{Float64}
     even_quantiles::Vector{Float64}
+    element::C
 end
 
 function MLJBase.fit(transformer::UnivariateDiscretizer, verbosity::Int,X)
+
     n_classes = transformer.n_classes
     quantiles = quantile(X, Array(range(0, stop=1, length=2*n_classes+1)))
     clipped_quantiles = quantiles[2:2*n_classes] # drop 0% and 100% quantiles
 
-    # odd_quantiles for transforming, even_quantiles used for inverse_transforming:
+    # odd_quantiles for transforming, even_quantiles used for
+    # inverse_transforming:
     odd_quantiles = clipped_quantiles[2:2:(2*n_classes-2)]
     even_quantiles = clipped_quantiles[1:2:(2*n_classes-1)]
+
+    # determine optimal reference type for encoding as categorical:
+    R = reftype(categorical(1:n_classes, true))
+    output_prototype = categorical(R(1):R(n_classes), true, ordered=true)
+    element = output_prototype[1]
+
     cache = nothing
     report = NamedTuple()
-    return UnivariateDiscretizerResult(odd_quantiles, even_quantiles), cache, report
+
+    return UnivariateDiscretizerResult(odd_quantiles,
+                                       even_quantiles,
+                                       element), cache, report
 end
+
+# acts on scalars:
+function transform_to_int(
+    result::UnivariateDiscretizerResult{<:CategoricalElement{R}},
+    r::Real) where R
+
+    k = R(1)
+    for q in result.odd_quantiles
+        if r > q
+            k += R(1)
+        end
+    end
+    return k
+
+end
+
 # transforming scalars:
-function MLJBase.transform(transformer::UnivariateDiscretizer, result, r::Real)
-    return k = sum(r .> result.odd_quantiles)
+MLJBase.transform(::UnivariateDiscretizer, result, r::Real) =
+    transform(result.element, transform_to_int(result, r))
+
+# transforming vectors:
+function MLJBase.transform(::UnivariateDiscretizer, result, v)
+   w = [transform_to_int(result, r) for r in v]
+   return transform(result.element, w)
 end
 
-#transforming vectors:
-function MLJBase.transform(transformer::UnivariateDiscretizer, result,
-                  v)
-   w=[transform(transformer, result, r) for r in v]
-   return categorical(w, ordered=true)
+# inverse_transforming raw scalars:
+function MLJBase.inverse_transform(
+    transformer::UnivariateDiscretizer, result , k::Integer)
+    k <= transformer.n_classes && k > 0 ||
+        error("Cannot transform an integer outside the range "*
+              "`[1, n_classes]`, where `n_classes = $(transformer.n_classes)`")
+    return result.even_quantiles[k]
 end
 
-# scalars:
-function MLJBase.inverse_transform(transformer::UnivariateDiscretizer, result, k::Integer)
-   n_classes = length(result.even_quantiles)
-   if k < 1
-       return result.even_quantiles[1]
-   elseif k > n_classes
-       return result.even_quantiles[n_classes]
-   end
-   return result.even_quantiles[k]
+# inverse transforming a categorical value:
+function MLJBase.inverse_transform(
+    transformer::UnivariateDiscretizer, result, e::CategoricalElement)
+    k = get(e)
+    return inverse_transform(transformer, result, k)
 end
 
-# vectors:
+# inverse transforming raw vectors:
+MLJBase.inverse_transform(transformer::UnivariateDiscretizer, result,
+                          w::AbstractVector{<:Integer}) =
+      [inverse_transform(transformer, result, k) for k in w]
+
+# inverse transforming vectors of categorical elements:
 function MLJBase.inverse_transform(transformer::UnivariateDiscretizer, result,
-                          wcat::CategoricalArray)
-    w=MLJBase.int(wcat)
-   return [inverse_transform(transformer, result, k) for k in   w]
+                          wcat::AbstractVector{<:CategoricalElement})
+    w = MLJBase.int(wcat)
+    return [inverse_transform(transformer, result, k) for k in w]
 end
 
-
-MLJBase.input_scitype(::Type{<:UnivariateDiscretizer})  = AbstractVector{<:MLJBase.Continuous}
-MLJBase.output_scitype(::Type{<:UnivariateDiscretizer}) = AbstractVector{<:MLJBase.OrderedFactor}
-MLJBase.docstring(::Type{<:UnivariateDiscretizer})      = "Discretise continuous variables via quantiles"
-MLJBase.load_path(::Type{<:UnivariateDiscretizer})      = "MLJModels.UnivariateDiscretizer"
-
-
-
-
-
-
+MLJBase.input_scitype(::Type{<:UnivariateDiscretizer})  =
+    AbstractVector{<:MLJBase.Continuous}
+MLJBase.output_scitype(::Type{<:UnivariateDiscretizer}) =
+    AbstractVector{<:MLJBase.OrderedFactor}
+MLJBase.docstring(::Type{<:UnivariateDiscretizer})      =
+    "Discretize continuous variables via quantiles"
+MLJBase.load_path(::Type{<:UnivariateDiscretizer})      =
+    "MLJModels.UnivariateDiscretizer"
 
 
 ## UNIVARIATE STANDARDIZATION

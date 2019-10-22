@@ -43,9 +43,6 @@ infos = info_dict(selector)
 @test infos[:output_scitype] == MLJBase.Table(Scientific)
 
 
-
-
-
 #  To be added with FeatureSelectorRule X = (n1=["a", "b", "a"], n2=["g", "g", "g"], n3=[7, 8, 9],
 #               n4 =UInt8[3,5,10],  o1=[4.5, 3.6, 4.0], )
 # MLJBase.schema(X)
@@ -57,16 +54,42 @@ infos = info_dict(selector)
 # @test Xt.A == [512 1 1 1; 1 2 1 2; 256 3 1 1]
 
 
-# Univariate discretization:
+#### UNIVARIATE DISCRETIZATION ####
+
+# TODO: move this test to MLJBase:
+# test helper function:
+v = collect("qwertyuiopasdfghjklzxcvbnm1")
+X = reshape(v, (3, 9))
+Xcat = categorical(X)
+Acat = Xcat[:, 1:4] # cat vector with unseen levels
+element = Acat[1]
+@test transform(element, X) == Xcat
+@test transform(element, X[5]) == Xcat[5]
+
 v = randn(10000)
-t = MLJModels.UnivariateDiscretizer(n_classes=100)
-tM, = fit(t, 1,v)
-w = transform(t,tM, v)
-bad_values = filter(v - MLJBase.inverse_transform(t,tM, w)) do x
+t = UnivariateDiscretizer(n_classes=100);
+result, = fit(t, 1, v)
+w = transform(t, result, v)
+bad_values = filter(v - MLJBase.inverse_transform(t, result, w)) do x
     abs(x) > 0.05
 end
 @test length(bad_values)/length(v) < 0.06
 
+# scalars:
+@test transform(t, result, v[42]) == w[42]
+r =  inverse_transform(t, result, w)[43]
+@test inverse_transform(t, result, w[43]) ≈ r
+
+# test of permitted abuses of argument:
+@test inverse_transform(t, result, get(w[43])) ≈ r
+@test inverse_transform(t, result, map(get, w)) ≈ 
+    inverse_transform(t, result, w)
+
+# all transformed vectors should have an identical pool (determined in
+# call to fit):
+v2 = v[1:3]
+w2 = transform(t, result, v2)
+@test levels(w2) == levels(w)
 
 
 #### UNIVARIATE STANDARDIZER ####
