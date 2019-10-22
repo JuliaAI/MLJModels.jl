@@ -418,13 +418,13 @@ function MLJBase.clean!(model::MulticlassLDA)
     end
     if model.regcoef <= 0
         warning *= "Need regcoef > 0 . Resetting regcoef=1e-4.\n"
-        model.regcoef = 1e-6
+        model.regcoef = 1e-4
     end
     return warning
 end
 
 
-function MulticlassLDA(; method=:gevd, shrinkage=:lw, out_dim=1, regcoef=1e-6)
+function MulticlassLDA(; method=:gevd, shrinkage=:lw, out_dim=1, regcoef=1e-4)
     model = MulticlassLDA(method, shrinkage, out_dim, regcoef)
     message = MLJBase.clean!(model)
     isempty(message) || @warn message
