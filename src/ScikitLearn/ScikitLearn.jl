@@ -3,7 +3,7 @@ module ScikitLearn_
 #> for all Supervised models:
 import MLJBase
 import MLJBase: @mlj_model, metadata_model,
-				_process_model_def, _model_constructor, _model_cleaner
+    _process_model_def, _model_constructor, _model_cleaner
 using ScientificTypes
 using Tables
 
@@ -165,7 +165,7 @@ function _sk_finalize(m, clean_ex, fit_ex, ex)
 	        $fit_ex
 	        $clean_ex
 	        $predict_ex
-	        MLJBase.load_path(::Type{<:$m}) 	  = "MLJModels.ScikitLearn_.$($m)"
+	        MLJBase.load_path(::Type{<:$m}) 	  = "MLJModels.ScikitLearn_.$(MLJBase.name($m))"
 	        MLJBase.package_name(::Type{<:$m})    = "ScikitLearn"
 	        MLJBase.package_uuid(::Type{<:$m})    = "3646fa90-6ef7-5e7e-9f22-8aca16db6324"
 	        MLJBase.is_pure_julia(::Type{<:$m})   = false

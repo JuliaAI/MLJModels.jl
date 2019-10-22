@@ -16,7 +16,7 @@ XGBoost = "009559a3-9522-5dbb-924b-0b6ed2b22bb9"
 
 [compat]
 MLJBase = "0.6.0"
-MLJModels = "0.4.0"
+MLJModels = "0.5.0"
 
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
