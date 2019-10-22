@@ -116,7 +116,7 @@ end
     Xtest  = selectrows(X, test)
     ytest  = selectrows(y, test)
 
-    LDA_model=MulticlassLDA()
+    LDA_model=MulticlassLDA(shrinkage=:None)
     fitresult, = fit(LDA_model, 1, Xtrain, ytrain)
     class_means,projection_matrix,prior_probabilities = MLJBase.fitted_params(LDA_model, fitresult)
     predicted_posteriors=predict(LDA_model, fitresult, Xtest)
