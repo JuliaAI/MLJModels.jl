@@ -42,6 +42,56 @@ infos = info_dict(selector)
 @test infos[:input_scitype]  == MLJBase.Table(Scientific)
 @test infos[:output_scitype] == MLJBase.Table(Scientific)
 
+
+#  To be added with FeatureSelectorRule X = (n1=["a", "b", "a"], n2=["g", "g", "g"], n3=[7, 8, 9],
+#               n4 =UInt8[3,5,10],  o1=[4.5, 3.6, 4.0], )
+# MLJBase.schema(X)
+# Xc = coerce(X,  :n1=>Multiclass, :n2=>Multiclass)
+
+# t = Discretizer(features=[:o1, :n3, :n2, :n1])
+# @test Xt.features == [:o1, :n3, :n2, :n1]
+# @test Xt.is_ordinal == [true, false, false, false]
+# @test Xt.A == [512 1 1 1; 1 2 1 2; 256 3 1 1]
+
+
+#### UNIVARIATE DISCRETIZATION ####
+
+# TODO: move this test to MLJBase:
+# test helper function:
+v = collect("qwertyuiopasdfghjklzxcvbnm1")
+X = reshape(v, (3, 9))
+Xcat = categorical(X)
+Acat = Xcat[:, 1:4] # cat vector with unseen levels
+element = Acat[1]
+@test transform(element, X) == Xcat
+@test transform(element, X[5]) == Xcat[5]
+
+v = randn(10000)
+t = UnivariateDiscretizer(n_classes=100);
+result, = fit(t, 1, v)
+w = transform(t, result, v)
+bad_values = filter(v - MLJBase.inverse_transform(t, result, w)) do x
+    abs(x) > 0.05
+end
+@test length(bad_values)/length(v) < 0.06
+
+# scalars:
+@test transform(t, result, v[42]) == w[42]
+r =  inverse_transform(t, result, w)[43]
+@test inverse_transform(t, result, w[43]) ≈ r
+
+# test of permitted abuses of argument:
+@test inverse_transform(t, result, get(w[43])) ≈ r
+@test inverse_transform(t, result, map(get, w)) ≈ 
+    inverse_transform(t, result, w)
+
+# all transformed vectors should have an identical pool (determined in
+# call to fit):
+v2 = v[1:3]
+w2 = transform(t, result, v2)
+@test levels(w2) == levels(w)
+
+
 #### UNIVARIATE STANDARDIZER ####
 
 stand = UnivariateStandardizer()
@@ -51,10 +101,7 @@ f,    = fit(stand, 1, [0, 2, 4])
 @test round.(Int, inverse_transform(stand, f, [-1, 1, 3])) == [0, 4, 8]
 
 infos = info_dict(stand)
-@test infos[:package_name] == "MLJModels"
-@test infos[:name] == "UnivariateStandardizer"
-@test infos[:input_scitype] == AbstractVector{<:Infinite}
-@test infos[:output_scitype] == AbstractVector{Continuous}
+
 
 #### STANDARDIZER ####
 

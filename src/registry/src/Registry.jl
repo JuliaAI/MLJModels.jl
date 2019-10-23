@@ -1,6 +1,6 @@
 module Registry
 
-# for this module   
+# for this module
 import Pkg.TOML
 using InteractiveUtils
 
@@ -24,7 +24,8 @@ function finaltypes(T::Type)
 end
 
 const project_toml = joinpath(srcdir, "../Project.toml")
-const packages = map(Symbol, keys(TOML.parsefile(project_toml)["deps"])|>collect)
+const packages = map(Symbol,
+                     keys(TOML.parsefile(project_toml)["deps"])|>collect)
 filter!(packages) do pkg
     !(pkg in [:MLJBase, :InteractiveUtils, :Pkg])
 end
@@ -46,7 +47,7 @@ end
 function _update(mod, test_env_only)
 
     test_env_only && @info "Testing registry environment only. "
-    
+
     program1 = quote
         @info "Packages to be searched for model implementations:"
         for pkg in $packages
@@ -67,7 +68,7 @@ function _update(mod, test_env_only)
         import MLJBase
         import MLJModels
         using Pkg.TOML
-        
+
         # import the packages
         $(Registry.package_import_commands...)
 
@@ -80,7 +81,7 @@ function _update(mod, test_env_only)
                     MLJBase.UnsupervisedNetwork,
                     MLJBase.Interval])
         end
-        
+
         # generate and write to file the model metadata:
         packages = string.(MLJModels.Registry.packages)
         meta_given_package = Dict()
@@ -88,20 +89,22 @@ function _update(mod, test_env_only)
             meta_given_package[pkg] = Dict()
         end
         for M in modeltypes
-            print("\r", M, "               ")
             _info = MLJBase.info_dict(M)
             pkg = _info[:package_name]
             if !(pkg in ["unknown",])
                 modelname = _info[:name]
                 meta_given_package[pkg][modelname] = _info
+                println(M, "\u2714 ")
+            else
+                println(M, "\u2717 (package_name is :unknown)")
             end
         end
         print("\r")
-        
+
         open(joinpath(MLJModels.Registry.srcdir, "../Metadata.toml"), "w") do file
             TOML.print(file, MLJModels.encode_dic(meta_given_package))
         end
-        
+
         # generate and write to file list of models for each package:
         models_given_pkg = Dict()
         for pkg in packages
@@ -118,7 +121,7 @@ function _update(mod, test_env_only)
     mod.eval(program1)
     test_env_only || mod.eval(program2)
 
-    println("If you have called @update from the REPL then your namespace "* 
+    println("If you have called @update from the REPL then your namespace "*
             "is now polluted. Restart your REPL. ")
 
     true
