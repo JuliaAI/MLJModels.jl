@@ -734,6 +734,7 @@ const BUILTIN_TRANSFORMERS = Union{
     Type{<:FeatureSelector},
     Type{<:StaticTransformer},
     Type{<:UnivariateStandardizer},
+    Type{<:UnivariateDiscretizer},
     Type{<:Standardizer},
     Type{<:UnivariateBoxCoxTransformer},
     Type{<:OneHotEncoder},
