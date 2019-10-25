@@ -14,6 +14,7 @@ module GLM_
 # -------------------------------------------------------------------
 
 import MLJBase
+import MLJBase: metadata_pkg, metadata_model
 import Distributions
 using Parameters
 using Tables
@@ -21,6 +22,15 @@ using Tables
 import ..GLM
 
 export LinearRegressor, LinearBinaryClassifier, LinearCountRegressor
+
+##
+## DESCRIPTIONS
+##
+
+const LR_DESCR = "Linear regressor (OLS) with a Normal model."
+const LBC_DESCR = "Linear binary classifier with specified link (e.g. logistic)."
+const LCR_DESCR = "Linear count regressor with specified link and distribution (e.g. log link and poisson)."
+
 
 ###
 ## Helper functions
@@ -166,26 +176,34 @@ end
 # shared metadata
 const GLM_REGS = Union{Type{<:LinearRegressor}, Type{<:LinearBinaryClassifier}, Type{<:LinearCountRegressor}}
 
-MLJBase.package_name(::GLM_REGS)  = "GLM"
-MLJBase.package_uuid(::GLM_REGS)  = "38e38edf-8417-5370-95a0-9cbb8c7f171a"
-MLJBase.package_url(::GLM_REGS)   = "https://github.com/JuliaStats/GLM.jl"
-MLJBase.is_pure_julia(::GLM_REGS) = true
-MLJBase.package_license(::GLM_REGS) = "MIT"
+metadata_pkg.((LinearRegressor, LinearBinaryClassifier, LinearCountRegressor),
+	name="GLM",
+	uuid="38e38edf-8417-5370-95a0-9cbb8c7f171a",
+	url="https://github.com/JuliaStats/GLM.jl",
+	julia=true,
+	license="MIT",
+	is_wrapper=false
+	)
 
-MLJBase.load_path(::Type{<:LinearRegressor})      = "MLJModels.GLM_.LinearRegressor"
-MLJBase.input_scitype(::Type{<:LinearRegressor})  = MLJBase.Table(MLJBase.Continuous)
-MLJBase.target_scitype(::Type{<:LinearRegressor}) = AbstractVector{MLJBase.Continuous}
+metadata_model(LinearRegressor,
+	input=MLJBase.Table(MLJBase.Continuous),
+    output=AbstractVector{MLJBase.Continuous},
+    weights=false,
+    descr=LR_DESCR
+	)
 
-MLJBase.load_path(::Type{<:LinearRegressor})      = "MLJModels.GLM_.LinearRegressor"
-MLJBase.input_scitype(::Type{<:LinearRegressor})  = MLJBase.Table(MLJBase.Continuous)
-MLJBase.target_scitype(::Type{<:LinearRegressor}) = AbstractVector{MLJBase.Continuous}
+metadata_model(LinearBinaryClassifier,
+	input=MLJBase.Table(MLJBase.Continuous),
+    target=AbstractVector{MLJBase.UnivariateFinite},
+    weights=false,
+    descr=LBC_DESCR
+	)
 
-MLJBase.load_path(::Type{<:LinearCountRegressor})      = "MLJModels.GLM_.LinearCountRegressor"
-MLJBase.input_scitype(::Type{<:LinearCountRegressor})  = MLJBase.Table(MLJBase.Continuous)
-MLJBase.target_scitype(::Type{<:LinearCountRegressor}) = AbstractVector{MLJBase.Count}
-
-MLJBase.load_path(::Type{<:LinearBinaryClassifier})      = "MLJModels.GLM_.LinearBinaryClassifier"
-MLJBase.input_scitype(::Type{<:LinearBinaryClassifier})  = MLJBase.Table(MLJBase.Continuous)
-MLJBase.target_scitype(::Type{<:LinearBinaryClassifier}) = AbstractVector{MLJBase.UnivariateFinite}
+metadata_model(LinearCountRegressor,
+	input=MLJBase.Table(MLJBase.Continuous),
+    target=AbstractVector{MLJBase.Count},
+    weights=false,
+    descr=LCR_DESCR
+	)
 
 end # module
