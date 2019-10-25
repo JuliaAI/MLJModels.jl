@@ -1,6 +1,5 @@
 module TestMetadata
 
-# using Revise
 using Test
 using MLJModels
 import MLJBase
@@ -19,13 +18,13 @@ end
 
 @testset "building INFO_GIVEN_HANDLE" begin
     @test isempty(MLJModels.localmodeltypes(MLJBase))
-    @test issubset(Set([MLJModels.Constant.DeterministicConstantClassifier,
-                        MLJModels.Constant.DeterministicConstantRegressor, 
-                        ConstantClassifier,                          
-                        ConstantRegressor,                           
-                        FeatureSelector,                             
-                        OneHotEncoder,                               
-                        Standardizer,                                
+    @test issubset(Set([DeterministicConstantClassifier,
+                        DeterministicConstantRegressor, 
+                        ConstantClassifier,
+                        ConstantRegressor,
+                        FeatureSelector,
+                        OneHotEncoder,
+                        Standardizer,
                         UnivariateBoxCoxTransformer,
                         UnivariateStandardizer]),
                    MLJModels.localmodeltypes(MLJModels))
