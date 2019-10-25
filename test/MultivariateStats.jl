@@ -105,6 +105,36 @@ end
     @test Xtr_mlj ≈ Xtr_ms
 
 end
+    @testset "MulticlassLDA" begin
+    Smarket=dataset("ISLR","Smarket")
+    X=selectcols(Smarket,[:Lag1,:Lag2])
+    y=selectcols(Smarket,:Direction)
+    train=selectcols(Smarket,:Year).<2005
+    test=.!train
+    Xtrain = selectrows(X, train)
+    ytrain = selectrows(y, train)
+    Xtest  = selectrows(X, test)
+    ytest  = selectrows(y, test)
 
+    LDA_model=MulticlassLDA(shrinkage=:None)
+    fitresult, = fit(LDA_model, 1, Xtrain, ytrain)
+    class_means,projection_matrix,prior_probabilities = MLJBase.fitted_params(LDA_model, fitresult)
+    predicted_posteriors=predict(LDA_model, fitresult, Xtest)
+    predicted_class = predict_mode(LDA_model, fitresult, Xtest)
+    test_unit_projection_vector = projection_matrix / norm(projection_matrix)
+    R_unit_projection_vector = [-0.642, -0.514]/norm([-0.642, -0.514])
+    accuracy = 1 - misclassification_rate(predicted_class, ytest)
+    
+    ##tests based on example from Introduction to Statistical Learning in R
+    ## 
+    @test round.(class_means', sigdigits = 3) == [0.0428 0.0339; -0.0395 -0.0313]
+    @test round.(prior_probabilities, sigdigits = 3) == [0.492, 0.508]
+    
+    @test round(accuracy, sigdigits = 2) == 0.56
+    @test sum(pdf.(predicted_posteriors, "Down") .>= 0.5) == 70
+    @test sum(pdf.(predicted_posteriors, "Down") .>= 0.9) == 0
+
+
+end
 end
 true
