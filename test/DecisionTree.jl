@@ -1,6 +1,5 @@
 module TestDecisionTree
 
-# using Revise
 using Test
 import CategoricalArrays
 using MLJBase

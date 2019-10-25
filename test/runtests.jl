@@ -19,10 +19,10 @@ end
 
 @testset "built-in models" begin
     @testset "Constant" begin
-        @test include("Constant.jl")
+        @test include("builtins/Constant.jl")
     end
     @testset "Transformers" begin
-        @test include("Transformers.jl")
+        @test include("builtins/Transformers.jl")
     end
 end
 
