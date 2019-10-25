@@ -19,11 +19,21 @@ d=Distributions.Normal(1.5, 0.5)
 @test MLJBase.predict(model, fitresult, X)[7].μ ≈ d.μ
 @test MLJBase.predict_mean(model, fitresult, X) ≈ fill(1.5, 10)
 
-MLJBase.info_dict(model)
-MLJBase.info_dict(DeterministicConstantRegressor)
+d = MLJBase.info_dict(model)
+@test d[:input_scitype] == MLJBase.Table(MLJBase.Scientific)
+@test d[:target_scitype] == AbstractVector{MLJBase.Continuous}
+@test d[:name] == "ConstantRegressor"
+@test d[:load_path] == "MLJModels.ConstantRegressor"
 
+d = MLJBase.info_dict(DeterministicConstantRegressor)
+@test d[:input_scitype] == MLJBase.Table(MLJBase.Scientific)
+@test d[:target_scitype] == AbstractVector{MLJBase.Continuous}
+@test d[:name] == "DeterministicConstantRegressor"
+@test d[:load_path] == "MLJModels.DeterministicConstantRegressor"
 
-## CLASSIFIER
+##
+## CONSTANT CLASSIFIERS
+##
 
 yraw = ["Perry", "Antonia", "Perry", "Skater"]
 y = categorical(yraw)
@@ -42,8 +52,17 @@ yhat = MLJBase.predict(model, fitresult, X)
 yhat1 = yhat[1]
 @test all([pdf(yhat1, c) ≈ pdf(d, c) for c in MLJBase.classes(d)])
 
-MLJBase.info_dict(model)
-MLJBase.info_dict(DeterministicConstantClassifier)
+d = MLJBase.info_dict(model)
+@test d[:input_scitype] == MLJBase.Table(MLJBase.Scientific)
+@test d[:target_scitype] == AbstractVector{<:MLJBase.Finite}
+@test d[:name] == "ConstantClassifier"
+@test d[:load_path] == "MLJModels.ConstantClassifier"
+
+d = MLJBase.info_dict(DeterministicConstantClassifier)
+@test d[:input_scitype] == MLJBase.Table(MLJBase.Scientific)
+@test d[:target_scitype] == AbstractVector{<:MLJBase.Finite}
+@test d[:name] == "DeterministicConstantClassifier"
+@test d[:load_path] == "MLJModels.DeterministicConstantClassifier"
 
 end # module
 true
