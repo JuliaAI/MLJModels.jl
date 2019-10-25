@@ -384,7 +384,7 @@ const MulticlassLDAFields = """
     """
 
 """
-    ` LDA( ; method=:gevd, shrinkage=:lw , out_dim=1 , regcoef=1e-6 ) `
+    ` LDA( ; method=:gevd, shrinkage=:None , out_dim=1 , regcoef=1e-6 ) `
 
 $MulticlassLDA_Desc
 
@@ -401,14 +401,14 @@ end
 
 function MLJBase.clean!(model::MulticlassLDA)
     warning = ""
-    if model.method ∉ [:gevd, :whiten]
+    if model.method ∉ (:gevd, :whiten)
         warning *= "Unknown method. Resetting method=:gevd.\n"
         model.method = :gevd
     end
     if typeof(model.shrinkage) <: Real && !(0 <= model.shrinkage <= 1)
-        warning *= "shrinkage has to be ∈ [0,1]. Resetting to shrinkage=:lw. \n"
+        warning *= "shrinkage has to be ∈ (0,1). Resetting to shrinkage=:lw. \n"
         model.shrinkage = :lw
-    elseif model.shrinkage ∉ [ :lw, :None ]
+    elseif model.shrinkage ∉ ( :lw, :None )
         warning *= "Unknown model solver. Resetting to shrinkage=:None.\n"
         model.shrinkage = :lw
     end
@@ -424,7 +424,7 @@ function MLJBase.clean!(model::MulticlassLDA)
 end
 
 
-function MulticlassLDA(; method=:gevd, shrinkage=:lw, out_dim=1, regcoef=1e-4)
+function MulticlassLDA(; method=:gevd, shrinkage=:None, out_dim=1, regcoef=1e-4)
     model = MulticlassLDA(method, shrinkage, out_dim, regcoef)
     message = MLJBase.clean!(model)
     isempty(message) || @warn message
@@ -436,27 +436,27 @@ function MLJBase.fit(model::MulticlassLDA, verbosity::Int, X, y)
     class_list = MLJBase.classes(y[1]) #class list containing unique entries in y
     
     # NOTE: copy/transpose
-    Xmatrix  = MLJBase.matrix(X,transpose=true)
-    training_sample_size = size(Xmatrix,2)
+    Xmatrix  = MLJBase.matrix(X, transpose = true)
+    training_sample_size = size(Xmatrix, 2)
 
     #convert the target array of categoricals (y) to array of integers (yplain)
     #and get the number of classes from yplain
     yplain = MLJBase.int(y)
-    no_of_classes = maximum(yplain)
+    no_of_classes = length(class_list)
 
     #check to make sure output dimension isn't too large or negative
-    0 < model.out_dim <= min(no_of_classes-1, training_sample_size) ||
-     throw(ArgumentError("out_dim must lie within 0 and min(no_of_features,training_sample_size)"))
+    0 < model.out_dim <= min( no_of_classes - 1, training_sample_size ) ||
+     throw(ArgumentError("`out_dim` must lie within 0 and `min(no_of_features, training_sample_size)`"))
 
      model.shrinkage == :None ?
-            covestimator ::Union{MS.SimpleCovariance,LinearShrinkage}=MS.SimpleCovariance() :
-            covestimator = LinearShrinkage(target=DiagonalCommonVariance(),shrinkage=model.shrinkage)
+            covestimator =MS.SimpleCovariance() :
+            covestimator = LinearShrinkage(target = DiagonalCommonVariance(), shrinkage = model.shrinkage)
 
     
     πk = proportions(yplain) #estimate prior probabilities of each class in target vector y
     cache = nothing
     report = NamedTuple{}()
-    core_fitresult=MS.fit(MS.MulticlassLDA, Int(no_of_classes), Xmatrix, Int.(yplain);
+    core_fitresult=MS.fit(MS.MulticlassLDA, no_of_classes, Xmatrix, Int.(yplain);
                             method = model.method,
                             outdim = model.out_dim,
                             regcoef = model.regcoef,
@@ -479,7 +479,7 @@ end
 function MLJBase.predict(model::MulticlassLDA , (class_list , core_fitresult , πk , training_sample_size), Xnew)
     
     ##Transpose the Xnew matrix and reduce its dimension
-    Xmatrix = MS.transform(core_fitresult ,MLJBase.matrix(Xnew,transpose=true))
+    Xmatrix = MS.transform(core_fitresult, MLJBase.matrix(Xnew, transpose=true))
 
     ## Estimated the probabilities of each column in Xmatrix belonging to each class in 
     ## class_list storing the results in a probability_matrix  
@@ -487,10 +487,10 @@ function MLJBase.predict(model::MulticlassLDA , (class_list , core_fitresult , �
     class_size = size(pmeans, 2)
     test_sample_size = size(Xmatrix, 2)
     probability_matrix = pairwise(SqEuclidean(), pmeans, Xmatrix, dims = 2)
-    probability_matrix .= πk .* exp.(-0.5 .* probability_matrix .*(training_sample_size-class_size))
-    probability_matrix ./= sum(probability_matrix,dims=1) 
+    probability_matrix .= πk .* exp.(-0.5 .* probability_matrix .* (training_sample_size - class_size) )
+    probability_matrix ./= sum(probability_matrix, dims = 1) 
     
-    return [MLJBase.UnivariateFinite(class_list, probability_matrix[:,j]) for j in 1:test_sample_size]
+    return [MLJBase.UnivariateFinite(class_list, probability_matrix[:, j]) for j in 1:test_sample_size]
 end
 
 # metadata:
