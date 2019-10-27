@@ -4,27 +4,24 @@ export RidgeRegressor, PCA, KernelPCA, ICA, LDA
 
 import MLJBase
 import MLJBase: @mlj_model, metadata_model, metadata_pkg
-import StatsBase:proportions
-using  CovarianceEstimation
-using Distances
-using LinearAlgebra
-using ScientificTypes
-using Tables
+import StatsBase: proportions, CovarianceEstimator
+using Distances, LinearAlgebra
+using Tables, ScientificTypes
 
-import ..MultivariateStats # lazy loading
+import ..MultivariateStats
 
 const MS = MultivariateStats
 
 struct LinearFitresult{F} <: MLJBase.MLJType
     coefficients::Vector{F}
-    bias::F
+    intercept::F
 end
 
-const RIDGE_DESCR = "Ridge regressor with regularization parameter lambda."
-const PCA_DESCR = "Principal component analysis."
+const RIDGE_DESCR = "Ridge regressor with regularization parameter lambda. Learns a linear regression with a penalty on the l2 norm of the coefficients."
+const PCA_DESCR = "Principal component analysis. Learns a linear transformation to project the data  on a lower dimensional space while preserving most of the initial variance."
 const KPCA_DESCR = "Kernel principal component analysis."
 const ICA_DESCR = "Independent component analysis."
-const LDA_DESCR = "Linear discriminant analysis, learns a projection matrix `W` that projects the feature matrix `Xtrain` unto a lower dimensional space of dimension `out_dim` such that the between-class variance is maximized relative to the  within-class variance. Classification is done by applying Bayes' rule to the transformed test matrix `W'Xtest`."
+const LDA_DESCR = "Multiclass linear discriminant analysis. The algorithm learns a projection matrix `W` that projects the feature matrix `Xtrain` onto a lower dimensional space of dimension `out_dim` such that the between-class variance in the transformed space is maximized relative to the within-class variance."
 
 ####
 #### RIDGE
@@ -44,26 +41,25 @@ $RIDGE_DESCR
 end
 
 function MLJBase.fit(model::RidgeRegressor, verbosity::Int, X, y)
-    Xmatrix = MLJBase.matrix(X)
-    features = Tables.schema(X).names
+    Xmatrix   = MLJBase.matrix(X)
+    features  = Tables.schema(X).names
+    θ         = MS.ridge(Xmatrix, y, model.lambda)
+    coefs     = θ[1:end-1]
+    intercept = θ[end]
 
-    weights      = MS.ridge(Xmatrix, y, model.lambda)
-    coefficients = weights[1:end-1]
-    bias         = weights[end]
-
-    fitresult = LinearFitresult(coefficients, bias)
+    fitresult = LinearFitresult(coefs, intercept)
     report    = NamedTuple()
     cache     = nothing
 
     return fitresult, cache, report
 end
 
-MLJBase.fitted_params(::RidgeRegressor, fitresult) =
-    (coefficients=fitresult.coefficients, bias=fitresult.bias)
+MLJBase.fitted_params(::RidgeRegressor, fr) =
+    (coefficients=fr.coefficients, intercept=fr.intercept)
 
-function MLJBase.predict(::RidgeRegressor, fitresult, Xnew)
+function MLJBase.predict(::RidgeRegressor, fr, Xnew)
     Xmatrix = MLJBase.matrix(Xnew)
-    return Xmatrix * fitresult.coefficients .+ fitresult.bias
+    return Xmatrix * fr.coefficients .+ fr.intercept
 end
 
 ####
@@ -98,11 +94,11 @@ function MLJBase.fit(model::PCA, verbosity::Int, X)
     maxoutdim = ifelse(model.maxoutdim == typemax(Int), mindim, model.maxoutdim)
 
     # NOTE: copy/transpose
-    fitresult = MS.fit(MS.PCA, permutedims(Xarray)
-                     ; method=model.method
-                     , pratio=model.pratio
-                     , maxoutdim=maxoutdim
-                     , mean=model.mean)
+    fitresult = MS.fit(MS.PCA, permutedims(Xarray);
+                       method=model.method,
+                       pratio=model.pratio,
+                       maxoutdim=maxoutdim,
+                       mean=model.mean)
 
     cache = nothing
     report = (indim=MS.indim(fitresult),
@@ -116,15 +112,14 @@ function MLJBase.fit(model::PCA, verbosity::Int, X)
     return fitresult, cache, report
 end
 
-MLJBase.fitted_params(::PCA, fitresult) = (projection=fitresult,)
+MLJBase.fitted_params(::PCA, fr) = (projection=fr,)
 
 
-function MLJBase.transform(::PCA, fitresult::PCAFitResultType, X)
-    Xarray = MLJBase.matrix(X)
+function MLJBase.transform(::PCA, fr::PCAFitResultType, X)
     # X is n x d, need to transpose and copy twice...
-    return MLJBase.table(
-                permutedims(MS.transform(fitresult, permutedims(Xarray))),
-                prototype=X)
+    Xarray = MLJBase.matrix(X)
+    Xnew   = permutedims(MS.transform(fr, permutedims(Xarray)))
+    return MLJBase.table(Xnew, prototype=X)
 end
 
 ####
@@ -160,41 +155,37 @@ $KPCA_DESCR
     maxiter::Int     = 300::(_ ≥ 1)
 end
 
-function MLJBase.fit(model::KernelPCA
-                   , verbosity::Int
-                   , X)
-
+function MLJBase.fit(model::KernelPCA, verbosity::Int, X)
     Xarray = MLJBase.matrix(X)
     mindim = minimum(size(Xarray))
-
+    # default max out dim if not given
     maxoutdim = ifelse(model.maxoutdim == typemax(Int), mindim, model.maxoutdim)
 
-    fitresult = MS.fit(MS.KernelPCA, permutedims(Xarray)
-                     ; kernel=model.kernel
-                     , maxoutdim=maxoutdim
-                     , solver=model.solver
-                     , inverse=model.inverse
-                     , β=model.beta
-                     , tol=model.tol
-                     , maxiter=model.maxiter)
+    fitresult = MS.fit(MS.KernelPCA, permutedims(Xarray);
+                       kernel=model.kernel,
+                       maxoutdim=maxoutdim,
+                       solver=model.solver,
+                       inverse=model.inverse,
+                       β=model.beta,
+                       tol=model.tol,
+                       maxiter=model.maxiter)
 
-    cache = nothing
-    report = (indim=MS.indim(fitresult)
-            , outdim=MS.outdim(fitresult)
-            , projection=MS.projection(fitresult)
-            , principalvars=MS.principalvars(fitresult))
+    cache  = nothing
+    report = (indim=MS.indim(fitresult),
+              outdim=MS.outdim(fitresult),
+              projection=MS.projection(fitresult),
+              principalvars=MS.principalvars(fitresult))
 
     return fitresult, cache, report
 end
 
-MLJBase.fitted_params(::KernelPCA, fitresult) = (projection=fitresult,)
+MLJBase.fitted_params(::KernelPCA, fr) = (projection=fr,)
 
-function MLJBase.transform(::KernelPCA, fitresult::KernelPCAFitResultType, X)
+function MLJBase.transform(::KernelPCA, fr::KernelPCAFitResultType, X)
     # X is n x d, need to transpose and copy twice...
     Xarray = MLJBase.matrix(X)
-    return MLJBase.table(
-                permutedims(MS.transform(fitresult, permutedims(Xarray))),
-                prototype=X)
+    Xnew   = permutedims(MS.transform(fr, permutedims(Xarray)))
+    return MLJBase.table(Xnew, prototype=X)
 end
 
 ####
@@ -232,20 +223,20 @@ $ICA_DESCR
 end
 
 function MLJBase.fit(model::ICA, verbosity::Int, X)
-
     Xarray = MLJBase.matrix(X)
-    m, n = size(Xarray)
+    n, p   = size(Xarray)
 
-    k = (model.k <= min(m, n)) ? min(m, n) : model.k
+    m = min(n, p)
+    k = ifelse(model.k ≤ m, model.k, m)
 
-    fitresult = MS.fit(MS.ICA, permutedims(Xarray), k
-                     ; alg=model.alg
-                     , fun=MS.icagfun(model.fun)
-                     , do_whiten=model.do_whiten
-                     , maxiter=model.maxiter
-                     , tol=model.tol
-                     , mean=model.mean
-                     , winit=ifelse(model.winit === nothing, zeros(0,0), model.winit))
+    fitresult = MS.fit(MS.ICA, permutedims(Xarray), k;
+                       alg=model.alg,
+                       fun=MS.icagfun(model.fun),
+                       do_whiten=model.do_whiten,
+                       maxiter=model.maxiter,
+                       tol=model.tol,
+                       mean=model.mean,
+                       winit=ifelse(model.winit === nothing, zeros(0,0), model.winit))
 
     cache = nothing
     report = (indim=MS.indim(fitresult),
@@ -255,17 +246,13 @@ function MLJBase.fit(model::ICA, verbosity::Int, X)
     return fitresult, cache, report
 end
 
-MLJBase.fitted_params(::ICA, fitresult) = (projection=fitresult,)
+MLJBase.fitted_params(::ICA, fr) = (projection=fr,)
 
-function MLJBase.transform(model::ICA
-                         , fitresult::ICAFitResultType
-                         , X)
-
-    Xarray = MLJBase.matrix(X)
+function MLJBase.transform(::ICA, fr::ICAFitResultType, X)
     # X is n x d, need to transpose and copy twice...
-    return MLJBase.table(
-                permutedims(MS.transform(fitresult, permutedims(Xarray))),
-                prototype=X)
+    Xarray = MLJBase.matrix(X)
+    Xnew   = permutedims(MS.transform(fr, permutedims(Xarray)))
+    return MLJBase.table(Xnew, prototype=X)
 end
 
 ####
@@ -273,90 +260,81 @@ end
 ####
 
 """
-LDA(; method=:gevd, shrinkage=:None , out_dim=1, regcoef=1e-6)
+LDA(; kwargs...)
 
 $LDA_DESCR
 
 ## Parameters
 
-* `method`    : The choice of methods, one of
-    * `:gevd`   : based on generalized eigenvalue decomposition
-    * `:whiten` : first derive a whitening transform from Sw and then solve the problem based on
-                  eigenvalue decomposition of the whiten Sb
-* `shrinkage` : Choice of shrinkage parameter for Linear shrinkage covariance estimator using a
-                Diagonal target matrix, one of
-    * `:None` : No shrinkage. use `SimpleCovariance` estimator instead
-    * `:lw`  : select optimal shrinkage using the Ledoit-Wolf formula.
-* `out_dim`   : The output dimension, i.e dimension of the transformed space, automatically set if 0
-* `regcoef`   : The regularization coefficient. A positive value regcoef * eigmax(Sw) is added to
-                the diagonal of Sw to improve numerical stability.
+* `method=:gev`: choice of solver, one of `:gevd` or `:whiten` methods
+* `cov_w=SimpleCovariance()`: an estimator for the within-class covariance, by default set to the standard `MultivariateStats.CovarianceEstimator` but could be set to any robust estimator from `CovarianceEstimation.jl`.
+* `cov_b=SimpleCovariance()`: same as `cov_w` but for the between-class covariance.
+* `out_dim`: the output dimension, i.e dimension of the transformed space, automatically set if 0 is given (default).
+* `regcoef`: regularization coefficient. A positive value `regcoef * eigmax(Sw)` where `Sw` is the within-class covariance estimator, is added to the diagonal of Sw to improve numerical stability. This can be useful if using the standard covariance estimator.
+* `dist=SqEuclidean`: the distance metric to use when performing classification (to compare the distance between a new point and centroids in the transformed space), an alternative choice can be the `CosineDist`.
 
 See also the [package documentation](https://multivariatestatsjl.readthedocs.io/en/latest/lda.html).
+For more information about the algorithm, see the paper by Li, Zhu and Ogihara, [Using Discriminant Analysis for Multi-class Classification: An Experimental Investigation](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.89.7068&rep=rep1&type=pdf).
 """
 @mlj_model mutable struct LDA <: MLJBase.Probabilistic
-    method::Symbol                = :gevd::(_ in (:gevd, :whiten))
-    shrinkage::Union{Symbol,Real} = :none::(_ in (:none,) || (_ isa Real && 0 ≤ _ ≤ 1))
-    out_dim::Int                  = 0::(_ ≥ 0)
-    regcoef::Real                 = 1e-6::(_ ≥ 0)
+    method::Symbol   = :gevd::(_ in (:gevd, :whiten))
+    cov_w::CovarianceEstimator = MS.SimpleCovariance()
+    cov_b::CovarianceEstimator = MS.SimpleCovariance()
+    out_dim::Int     = 0::(_ ≥ 0)
+    regcoef::Real    = 0.0::(_ ≥ 0)
+    dist::SemiMetric = SqEuclidean()
 end
 
-function MLJBase.fit(model::LDA, verbosity::Int, X, y)
+function MLJBase.fit(model::LDA, ::Int, X, y)
     class_list = MLJBase.classes(y[1]) #class list containing unique entries in y
     nclasses   = length(class_list)
 
     # NOTE: copy/transpose
-    Xmatrix = MLJBase.matrix(X, transpose=true) # now p x n
-    dims    = size(Xmatrix, 1)
+    Xm_t   = MLJBase.matrix(X, transpose=true) # now p x n matrix
+    yplain = MLJBase.int(y) # vector of n ints in {1,..., nclasses}
+    p      = size(Xm_t, 1)
 
-    # convert y into ints and estimate prior probabilities
-    yplain = MLJBase.int(y)
-    πk     = proportions(yplain)
-
-    def_outdim = min(dims, nclasses - 1)
-    out_dim    = ifelse(model.out_dim == 0, def_outdim, model.out_dim)
+    # check output dimension default is min(p, nc-1)
+    def_outdim = min(p, nclasses - 1)
+    # if unset (0) use the default; otherwise try to use the provided one
+    out_dim = ifelse(model.out_dim == 0, def_outdim, model.out_dim)
+    # check if the given one is sensible
     out_dim ≤ def_outdim || throw(ArgumentError("`out_dim` must not be larger than `min(p, nc-1)` where `p` is the dimension of `X` and `nc` is the number of classes."))
 
-    covestimator = model.shrinkage == :none ?
-                     MS.SimpleCovariance() :
-                     LinearShrinkage(target=DiagonalCommonVariance(), shrinkage=model.shrinkage)
+    core_res = MS.fit(MS.MulticlassLDA, nclasses, Xm_t, Int.(yplain);
+                      method=model.method,
+                      outdim=out_dim,
+                      regcoef=model.regcoef,
+                      covestimator_within=model.cov_w,
+                      covestimator_between=model.cov_b)
 
-    cache  = nothing
-    report = NamedTuple{}()
+    cache     = nothing
+    report    = NamedTuple{}()
+    fitresult = (core_res, class_list)
 
-    core_fitresult = MS.fit(MS.MulticlassLDA, nclasses, Xmatrix, Int.(yplain);
-                            method=model.method,
-                            outdim=out_dim,
-                            regcoef=model.regcoef,
-                            covestimator_within=covestimator,
-                            covestimator_between=covestimator)
-
-    fitresult = (class_list, core_fitresult, πk, dims)
     return fitresult, cache, report
 end
 
-function MLJBase.fitted_params(::LDA, (class_list, core_fitresult, πk, dims))
-    ## Note The projection matrix that projects data unto
-    ## a lower dimensional subspace and whitens the lower dimensional data .
-    return (class_means = MS.classmeans(core_fitresult),
-            projection_matrix = MS.projection(core_fitresult),
-            prior_probabilities = πk)
+function MLJBase.fitted_params(::LDA, (core_res, class_list))
+    return (class_means       = MS.classmeans(core_res),
+            projection_matrix = MS.projection(core_res))
 end
 
-function MLJBase.predict(model::LDA , (class_list, core_fitresult, πk, dims), Xnew)
-    nclasses = length(class_list)
+function MLJBase.predict(m::LDA, (core_res, class_list), Xnew)
+    # projection of Xnew XWt is n x o  where o = number of out dims
+    XWt = MLJBase.matrix(Xnew) * core_res.proj
+    # centroids in the transformed space, nc x o
+    centroids = permutedims(core_res.pmeans)
 
-    ##Transpose the Xnew matrix and reduce its dimension
-    Xmatrix = MS.transform(core_fitresult, MLJBase.matrix(Xnew, transpose=true)) # p x n
+    # compute the distances in the transformed space between pairs of rows
+    # the probability matrix is `n x nc` and normalised accross rows
+    P = pairwise(m.dist, XWt, centroids, dims=1)
+    # apply a softmax transformation
+    P .-= maximum(P, dims=2)
+	P  .= exp.(-P)
+    P ./= sum(P, dims=2)
 
-    ## Estimated the probabilities of each column in Xmatrix belonging to each class in
-    ## class_list storing the results in a probability_matrix
-    pmeans = MS.transform(core_fitresult, MS.classmeans(core_fitresult))
-
-    probability_matrix   = pairwise(SqEuclidean(), pmeans, Xmatrix, dims=2)
-    probability_matrix  .= πk .* exp.(-0.5 .* probability_matrix .* (dims - nclasses) )
-    probability_matrix ./= sum(probability_matrix, dims=1)
-
-    return [MLJBase.UnivariateFinite(class_list, probability_matrix[:, j]) for j in 1:size(Xmatrix, 2)]
+    return [MLJBase.UnivariateFinite(class_list, P[j, :]) for j in 1:size(P, 1)]
 end
 
 

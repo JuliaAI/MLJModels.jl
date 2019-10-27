@@ -14,7 +14,7 @@ seed!(1234)
     ## SYNTHETIC DATA TEST
 
     # Define some linear, noise-free, synthetic data:
-    bias = -42.0
+    intercept = -42.0
     coefficients = Float64[1, 3, 7]
     n = 1000
     A = randn(n, 3)
@@ -31,9 +31,9 @@ seed!(1234)
     yhat = predict(ridge, fitresult, Xtable)
     @test norm(yhat - y)/sqrt(n) < 1e-12
 
-    # Get the true bias?
+    # Get the true intercept?
     fr = fitted_params(ridge, fitresult)
-    @test abs(fr.bias) < 1e-10
+    @test abs(fr.intercept) < 1e-10
     @test norm(fr.coefficients - coefficients) < 1e-10
 
     info_dict(ridge)
@@ -82,10 +82,8 @@ end
 
     # MultivariateStats ICA
     seed!(1234) # winit gets randomly initialised
-    ica_ms = MultivariateStats.fit(MultivariateStats.ICA
-                                 , permutedims(X_array)
-                                 , k
-                                 ; tol=tolerance)
+    ica_ms = MultivariateStats.fit(MultivariateStats.ICA, permutedims(X_array), k;
+                                   tol=tolerance)
     Xtr_ms = permutedims(MultivariateStats.transform(ica_ms, permutedims(X_array)))
 
     # MLJ ICA
@@ -95,46 +93,6 @@ end
     Xtr_mlj = MLJBase.matrix(MLJBase.transform(ica_mlj, fitresult, X))
 
     @test Xtr_mlj ≈ Xtr_ms
-end
-
-@testset "MulticlassLDA-basic" begin
-    Random.seed!(34568)
-    # this just reproduces an example they have in the MV repo
-    ## prepare data
-    d = 5
-    ns = [10, 15, 20]
-    nc = length(ns)
-    n = sum(ns)
-    Xs = Matrix{Float64}[]
-    ys = Vector{Int}[]
-    Ss = Matrix{Float64}[]
-    cmeans = zeros(d, nc)
-
-    for k = 1:nc
-        R = qr(randn(d, d)).Q
-        nk = ns[k]
-
-        Xk = R * Diagonal(2 * rand(d) .+ 0.5) * randn(d, nk) .+ randn(d)
-        yk = fill(k, nk)
-        uk = vec(mean(Xk, dims=2))
-        Zk = Xk .- uk
-        Sk = Zk * Zk'
-
-        push!(Xs, Xk)
-        push!(ys, yk)
-        push!(Ss, Sk)
-        cmeans[:,k] .= uk
-    end
-
-    X = hcat(Xs...)
-    y = vcat(ys...)
-
-    # regular call
-    M = fit(MultivariateStats.MulticlassLDA, nc, X, y; regcoef=1e-3)
-    fr, = fit(LDA(regcoef=1e-3), 1, X, yc)
-
-    @test fr[2].pmeans ≈ M.pmeans
-    @test fr[2].proj ≈ M.proj
 end
 
 @testset "MulticlassLDA" begin
@@ -150,29 +108,48 @@ end
 
     LDA_model = LDA()
     fitresult, = fit(LDA_model, 1, Xtrain, ytrain)
-    class_means, projection_matrix, prior_probabilities = MLJBase.fitted_params(LDA_model, fitresult)
+    class_means, projection_matrix = MLJBase.fitted_params(LDA_model, fitresult)
 
+    preds = predict(LDA_model, fitresult, Xtest)
 
-# XXX predict is still wrong
+    mce = MLJBase.cross_entropy(preds, ytest) |> mean
 
-    predicted_posteriors = predict(LDA_model, fitresult, Xtest)
-    predicted_class = predict_mode(LDA_model, fitresult, Xtest)
+    @test 0.69 ≤ mce ≤ 0.695
 
-    test_unit_projection_vector = projection_matrix / norm(projection_matrix)
-    R_unit_projection_vector = [-0.642, -0.514] / norm([-0.642, -0.514])
-    accuracy = 1 - misclassification_rate(predicted_class, ytest)
-
-    ##tests based on example from Introduction to Statistical Learning in R
-    ##
     @test round.(class_means', sigdigits = 3) == [0.0428 0.0339; -0.0395 -0.0313]
-    @test round.(prior_probabilities, sigdigits = 3) == [0.492, 0.508]
 
     d = info_dict(LDA)
     @test d[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
     @test d[:target_scitype] == AbstractVector{<:MLJBase.Finite}
     @test d[:name] == "LDA"
+end
 
-    # Elementary test
+@testset "MLDA-2" begin
+    Random.seed!(1125)
+    X1 = -2 .+ randn(100, 2)
+    X2 = randn(100, 2)
+    X3 = 2 .+ randn(100, 2)
+    y1 = ones(100)
+    y2 = 2ones(100)
+    y3 = 3ones(100)
+    X = vcat(X1, X2, X3)
+    y = vcat(y1, y2, y3)
+    p = Random.randperm(300)
+    X = X[p, :]
+    y = y[p]
+    X = MLJBase.table(X)
+    y = categorical(y)
+    train, test = partition(eachindex(y), 0.7)
+    Xtrain = selectrows(X, train)
+    ytrain = selectrows(y, train)
+    Xtest = selectrows(X, test)
+    ytest = selectrows(y, test)
+
+    lda_model = LDA()
+    fitresult, = fit(lda_model, 1, Xtrain, ytrain)
+    preds = predict_mode(lda_model, fitresult, Xtest)
+    mcr = misclassification_rate(preds, ytest)
+    @test mcr ≤ 0.15
 end
 
 end
