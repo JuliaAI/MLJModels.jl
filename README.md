@@ -60,7 +60,7 @@ Note that for some of these packages, the interface is incomplete; contributions
 * [LIBSVM.jl](https://github.com/mpastell/LIBSVM.jl) (**note**: _these models are effectively duplicated by the sklearn models below_.)
     * `LinearSVC`, `SVC`, `NuSVC`, `NuSVR`, `EpsilonSVR`, `OneClassSVM`
 * [MultivariateStats.jl](https://github.com/mpastell/LIBSVM.jl)
-    * `RidgeRegressor`, `PCA`, `KernelPCA`, `ICA`, `MulticlassLDA`
+    * `RidgeRegressor`, `PCA`, `KernelPCA`, `ICA`, `LDA` (multiclass)
 * [NaiveBayes.jl](https://github.com/dfdx/NaiveBayes.jl)
     * `GaussianNBClassifier`, `MultinomialNBClassifier`, `HybridNBClassifier`
 * [ScikitLearn.jl](https://github.com/cstjean/ScikitLearn.jl)
