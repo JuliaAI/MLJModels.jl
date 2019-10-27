@@ -82,7 +82,7 @@ r =  inverse_transform(t, result, w)[43]
 
 # test of permitted abuses of argument:
 @test inverse_transform(t, result, get(w[43])) ≈ r
-@test inverse_transform(t, result, map(get, w)) ≈ 
+@test inverse_transform(t, result, map(get, w)) ≈
     inverse_transform(t, result, w)
 
 # all transformed vectors should have an identical pool (determined in
@@ -168,8 +168,8 @@ f, = fit(t, 2, v)
 infos = info_dict(t)
 
 @test infos[:name] == "UnivariateBoxCoxTransformer"
-@test infos[:input_scitype] == AbstractVector{Continuous}
-@test infos[:output_scitype] == AbstractVector{Continuous}
+@test infos[:input_scitype] == AbstractVector{MLJBase.Continuous}
+@test infos[:output_scitype] == AbstractVector{MLJBase.Continuous}
 
 
 #### ONE HOT ENCODER ####

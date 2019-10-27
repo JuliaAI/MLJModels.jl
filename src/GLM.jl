@@ -14,6 +14,7 @@ module GLM_
 # -------------------------------------------------------------------
 
 import MLJBase
+import MLJBase: metadata_pkg, metadata_model
 import Distributions
 using Parameters
 using Tables
@@ -21,6 +22,15 @@ using Tables
 import ..GLM
 
 export LinearRegressor, LinearBinaryClassifier, LinearCountRegressor
+
+##
+## DESCRIPTIONS
+##
+
+const LR_DESCR = "Linear regressor (OLS) with a Normal model."
+const LBC_DESCR = "Linear binary classifier with specified link (e.g. logistic)."
+const LCR_DESCR = "Linear count regressor with specified link and distribution (e.g. log link and poisson)."
+
 
 ###
 ## Helper functions
@@ -69,9 +79,9 @@ end
 end
 
 @with_kw_noshow mutable struct LinearCountRegressor{D<:Distributions.Distribution,L<:GLM.Link} <: MLJBase.Probabilistic
-	fit_intercept::Bool = true
-	distribution::D     = Distributions.Poisson()
-	link::L 			= GLM.LogLink()
+    fit_intercept::Bool = true
+    distribution::D     = Distributions.Poisson()
+    link::L 			= GLM.LogLink()
 end
 
 # Short names for convenience here
@@ -83,47 +93,47 @@ const GLM_MODELS = Union{<:LinearRegressor, <:LinearBinaryClassifier, <:LinearCo
 ####
 
 function MLJBase.fit(model::LinearRegressor, verbosity::Int, X, y)
-	# apply the model
-	features  = Tables.schema(X).names
-	Xmatrix   = augment_X(MLJBase.matrix(X), model.fit_intercept)
-	fitresult = GLM.glm(Xmatrix, y, Distributions.Normal(), GLM.IdentityLink())
-	# form the report
+    # apply the model
+    features  = Tables.schema(X).names
+    Xmatrix   = augment_X(MLJBase.matrix(X), model.fit_intercept)
+    fitresult = GLM.glm(Xmatrix, y, Distributions.Normal(), GLM.IdentityLink())
+    # form the report
     report    = glm_report(fitresult)
     cache     = nothing
-	# return
+    # return
     return fitresult, cache, report
 end
 
 function MLJBase.fit(model::LinearCountRegressor, verbosity::Int, X, y)
-	# apply the model
-	features  = Tables.schema(X).names
-	Xmatrix   = augment_X(MLJBase.matrix(X), model.fit_intercept)
-	fitresult = GLM.glm(Xmatrix, y, model.distribution, model.link)
-	# form the report
-	report    = glm_report(fitresult)
-	cache     = nothing
-	# return
-	return fitresult, cache, report
+    # apply the model
+    features  = Tables.schema(X).names
+    Xmatrix   = augment_X(MLJBase.matrix(X), model.fit_intercept)
+    fitresult = GLM.glm(Xmatrix, y, model.distribution, model.link)
+    # form the report
+    report    = glm_report(fitresult)
+    cache     = nothing
+    # return
+    return fitresult, cache, report
 end
 
 function MLJBase.fit(model::LinearBinaryClassifier, verbosity::Int, X, y)
-	# apply the model
-	features  = Tables.schema(X).names
-	Xmatrix   = augment_X(MLJBase.matrix(X), model.fit_intercept)
-	decode    = y[1]
-	y_plain   = MLJBase.int(y) .- 1 # 0, 1 of type Int
-	fitresult = GLM.glm(Xmatrix, y_plain, Distributions.Bernoulli(), model.link)
-	# form the report
-	report    = glm_report(fitresult)
-	cache     = nothing
-	# return
-	return (fitresult, decode), cache, report
+    # apply the model
+    features  = Tables.schema(X).names
+    Xmatrix   = augment_X(MLJBase.matrix(X), model.fit_intercept)
+    decode    = y[1]
+    y_plain   = MLJBase.int(y) .- 1 # 0, 1 of type Int
+    fitresult = GLM.glm(Xmatrix, y_plain, Distributions.Bernoulli(), model.link)
+    # form the report
+    report    = glm_report(fitresult)
+    cache     = nothing
+    # return
+    return (fitresult, decode), cache, report
 end
 
 function MLJBase.fitted_params(model::GLM_MODELS, fitresult)
     coefs = GLM.coef(fitresult)
     return (coef      = coefs[1:end-Int(model.fit_intercept)],
-	        intercept = ifelse(model.fit_intercept, coefs[end], nothing))
+            intercept = ifelse(model.fit_intercept, coefs[end], nothing))
 end
 
 ####
@@ -153,8 +163,8 @@ function MLJBase.predict(model::LinearCountRegressor, fitresult, Xnew)
 end
 
 function MLJBase.predict(model::LinearBinaryClassifier, (fitresult, decode), Xnew)
-	π = MLJBase.predict_mean(model, (fitresult, decode), Xnew)
-	return [MLJBase.UnivariateFinite(MLJBase.classes(decode), [1-πᵢ, πᵢ]) for πᵢ in π]
+    π = MLJBase.predict_mean(model, (fitresult, decode), Xnew)
+    return [MLJBase.UnivariateFinite(MLJBase.classes(decode), [1-πᵢ, πᵢ]) for πᵢ in π]
 end
 
 # NOTE: predict_mode uses MLJBase's fallback
@@ -166,26 +176,34 @@ end
 # shared metadata
 const GLM_REGS = Union{Type{<:LinearRegressor}, Type{<:LinearBinaryClassifier}, Type{<:LinearCountRegressor}}
 
-MLJBase.package_name(::GLM_REGS)  = "GLM"
-MLJBase.package_uuid(::GLM_REGS)  = "38e38edf-8417-5370-95a0-9cbb8c7f171a"
-MLJBase.package_url(::GLM_REGS)   = "https://github.com/JuliaStats/GLM.jl"
-MLJBase.is_pure_julia(::GLM_REGS) = true
-MLJBase.package_license(::GLM_REGS) = "MIT"
+metadata_pkg.((LinearRegressor, LinearBinaryClassifier, LinearCountRegressor),
+    name="GLM",
+    uuid="38e38edf-8417-5370-95a0-9cbb8c7f171a",
+    url="https://github.com/JuliaStats/GLM.jl",
+    julia=true,
+    license="MIT",
+    is_wrapper=false
+    )
 
-MLJBase.load_path(::Type{<:LinearRegressor})      = "MLJModels.GLM_.LinearRegressor"
-MLJBase.input_scitype(::Type{<:LinearRegressor})  = MLJBase.Table(MLJBase.Continuous)
-MLJBase.target_scitype(::Type{<:LinearRegressor}) = AbstractVector{MLJBase.Continuous}
+metadata_model(LinearRegressor,
+    input=MLJBase.Table(MLJBase.Continuous),
+    output=AbstractVector{MLJBase.Continuous},
+    weights=false,
+    descr=LR_DESCR
+    )
 
-MLJBase.load_path(::Type{<:LinearRegressor})      = "MLJModels.GLM_.LinearRegressor"
-MLJBase.input_scitype(::Type{<:LinearRegressor})  = MLJBase.Table(MLJBase.Continuous)
-MLJBase.target_scitype(::Type{<:LinearRegressor}) = AbstractVector{MLJBase.Continuous}
+metadata_model(LinearBinaryClassifier,
+    input=MLJBase.Table(MLJBase.Continuous),
+    target=AbstractVector{MLJBase.UnivariateFinite},
+    weights=false,
+    descr=LBC_DESCR
+    )
 
-MLJBase.load_path(::Type{<:LinearCountRegressor})      = "MLJModels.GLM_.LinearCountRegressor"
-MLJBase.input_scitype(::Type{<:LinearCountRegressor})  = MLJBase.Table(MLJBase.Continuous)
-MLJBase.target_scitype(::Type{<:LinearCountRegressor}) = AbstractVector{MLJBase.Count}
-
-MLJBase.load_path(::Type{<:LinearBinaryClassifier})      = "MLJModels.GLM_.LinearBinaryClassifier"
-MLJBase.input_scitype(::Type{<:LinearBinaryClassifier})  = MLJBase.Table(MLJBase.Continuous)
-MLJBase.target_scitype(::Type{<:LinearBinaryClassifier}) = AbstractVector{MLJBase.UnivariateFinite}
+metadata_model(LinearCountRegressor,
+    input=MLJBase.Table(MLJBase.Continuous),
+    target=AbstractVector{MLJBase.Count},
+    weights=false,
+    descr=LCR_DESCR
+    )
 
 end # module
