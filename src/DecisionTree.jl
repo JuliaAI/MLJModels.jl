@@ -100,7 +100,7 @@ function get_encoding(classes_seen)
 end
 
 MLJBase.fitted_params(::DecisionTreeClassifier, fitresult) =
-	(tree_or_leaf=fitresult[1], encoding=get_encoding(fitresult[2]))
+    (tree_or_leaf=fitresult[1], encoding=get_encoding(fitresult[2]))
 
 function smooth(prob_vector, smoothing)
     threshold = smoothing/length(prob_vector)
@@ -155,11 +155,11 @@ end
 function MLJBase.fit(model::DecisionTreeRegressor, verbosity::Int, X, y)
     Xmatrix   = MLJBase.matrix(X)
     fitresult = DecisionTree.build_tree(float.(y), Xmatrix
-				   , model.n_subfeatures
-				   , model.max_depth
-				   , model.min_samples_leaf
-				   , model.min_samples_split
-				   , model.min_purity_increase)
+       , model.n_subfeatures
+       , model.max_depth
+       , model.min_samples_leaf
+       , model.min_samples_split
+       , model.min_purity_increase)
 
     if model.post_prune
         fitresult = DecisionTree.prune_tree(fitresult,

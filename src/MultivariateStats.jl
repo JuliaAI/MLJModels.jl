@@ -331,7 +331,7 @@ function MLJBase.predict(m::LDA, (core_res, class_list), Xnew)
     P = pairwise(m.dist, XWt, centroids, dims=1)
     # apply a softmax transformation
     P .-= maximum(P, dims=2)
-	P  .= exp.(-P)
+    P  .= exp.(-P)
     P ./= sum(P, dims=2)
 
     return [MLJBase.UnivariateFinite(class_list, P[j, :]) for j in 1:size(P, 1)]
