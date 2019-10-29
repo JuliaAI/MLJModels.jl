@@ -114,7 +114,7 @@ end
 
     mce = MLJBase.cross_entropy(preds, ytest) |> mean
 
-    @test 0.685 ≤ mce ≤ 0.690
+    @test 0.685 ≤ mce ≤ 0.695
 
     @test round.(class_means', sigdigits = 3) == [0.0428 0.0339; -0.0395 -0.0313]
 
