@@ -55,7 +55,7 @@ Note that for some of these packages, the interface is incomplete; contributions
     * `DecisionTreeClassifier`, `DecisionTreeRegressor`
 * [GaussianProcesses.jl](https://github.com/STOR-i/GaussianProcesses.jl)
     * `GPClassifier`
-* [GLM.jl](https://github.com/STOR-i/GaussianProcesses.jl)
+* [GLM.jl](https://github.com/JuliaStats/GLM.jl)
     * `LinearRegressor`, `LinearBinaryClassifier`, `LinearCountRegressor`
 * [LIBSVM.jl](https://github.com/mpastell/LIBSVM.jl) (**note**: _these models are effectively duplicated by the sklearn models below_.)
     * `LinearSVC`, `SVC`, `NuSVC`, `NuSVR`, `EpsilonSVR`, `OneClassSVM`
