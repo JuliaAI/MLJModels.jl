@@ -53,7 +53,7 @@ $KNNFields
 end
 
 """
-KNNRegressoor(;kwargs...)
+KNNRegressor(;kwargs...)
 
 $KNNClassifierDescription
 

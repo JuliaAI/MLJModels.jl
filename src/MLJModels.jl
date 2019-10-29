@@ -2,7 +2,7 @@ module MLJModels
 
 using MLJBase, Tables, ScientificTypes
 using Requires, Pkg.TOML, OrderedCollections
-using StatsBase # countmap is required in metadata
+using Parameters, CategoricalArrays, StatsBase, Distributions
 
 # for administrators to update Metadata.toml:
 export @update
@@ -18,7 +18,7 @@ export ConstantRegressor, ConstantClassifier,
         DeterministicConstantRegressor, DeterministicConstantClassifier
 
 # from model/Transformers
-export FeatureSelector, StaticTransformer, UnivariateStandardizer,
+export FeatureSelector, StaticTransformer, UnivariateDiscretizer, UnivariateStandardizer,
         Standardizer, UnivariateBoxCoxTransformer, OneHotEncoder, FillImputer
 
 const srcdir = dirname(@__FILE__) # the directory containing this file
