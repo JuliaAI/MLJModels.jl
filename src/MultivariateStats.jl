@@ -291,9 +291,7 @@ function MLJBase.fit(model::LDA, ::Int, X, y)
     # NOTE: copy/transpose
     Xm_t   = MLJBase.matrix(X, transpose=true) # now p x n matrix
     yplain = MLJBase.int(y) # vector of n ints in {1,..., nclasses}
-    N      = size(Xm_t, 2)  # Number of training samples
-    p      = size(Xm_t, 1)  # Number of features
-
+    p, n      = size(Xm_t, 2)
     # check output dimension default is min(p, nc-1)
     def_outdim = min(p, nclasses - 1)
     # if unset (0) use the default; otherwise try to use the provided one
@@ -320,8 +318,8 @@ function MLJBase.fit(model::LDA, ::Int, X, y)
     ## The original projection matrix satisfies Pᵀ*Sw*P=I
     ## scaled projection_matrix and core_res.proj by multiplying by sqrt(N - nclasses) this ensures Pᵀ*Σ*P=I
     ## where covariance estimate Σ = Sw / (N - nclasses)
-    core_res.proj   = core_res.proj .* sqrt(N - nclasses) 
-    core_res.pmeans = core_res.pmeans .* sqrt(N - nclasses)
+    core_res.proj   = core_res.proj .* sqrt(n - nclasses) 
+    core_res.pmeans = core_res.pmeans .* sqrt(n - nclasses)
 
     cache     = nothing
     report    = NamedTuple{}()
@@ -342,7 +340,7 @@ function MLJBase.predict(m::LDA, (core_res, class_list, priors), Xnew)
     # centroids in the transformed space, nc x o
     centroids = permutedims(core_res.pmeans)
 
-    N  = core_res.stats.tweight # N is the Number of training examples
+    n  = core_res.stats.tweight # n is the Number of training examples
     nclasses = length(class_list) 
 
     # compute the distances in the transformed space between pairs of rows
@@ -352,7 +350,6 @@ function MLJBase.predict(m::LDA, (core_res, class_list, priors), Xnew)
     P = pairwise(SqEuclidean(), XWt, centroids, dims=1)
     P .*= -0.5
     P .+= log.(priors)'
-    #display(P)
    
     # apply a softmax transformation to convert P to a probability matrix
     P  .= exp.(P)
