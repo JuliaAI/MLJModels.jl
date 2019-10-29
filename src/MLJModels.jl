@@ -1,8 +1,8 @@
-module MLJModels 
+module MLJModels
 
 using MLJBase, Tables, ScientificTypes
 using Requires, Pkg.TOML, OrderedCollections
-using StatsBase # countmap is required in metadata
+using Parameters, CategoricalArrays, StatsBase
 
 # for administrators to update Metadata.toml:
 export @update

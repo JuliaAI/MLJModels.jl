@@ -1,20 +1,3 @@
-module Transformers
-
-using ..MLJBase, ..Tables
-using StatsBase, Statistics, CategoricalArrays, Distributions
-
-import ..nonmissing
-import ..MLJBase: @mlj_model, metadata_pkg, metadata_model
-
-export FeatureSelector,
-        StaticTransformer,
-        UnivariateDiscretizer,
-        UnivariateStandardizer,
-        Standardizer,
-        UnivariateBoxCoxTransformer,
-        OneHotEncoder,
-        FillImputer
-
 ## CONSTANTS
 
 const N_VALUES_THRESH = 16 # for BoxCoxTransformation
@@ -74,7 +57,7 @@ $FILL_IMPUTER_DESCR
 * `count_fill`:       function to use on Count data (by default the rounded median)
 * `categorical_fill`: function to use on Finite data (by default the mode)
 """
-@mlj_model mutable struct FillImputer <: MLJBase.Unsupervised
+@with_kw_noshow mutable struct FillImputer <: MLJBase.Unsupervised
     features::Vector{Symbol}  = Symbol[]
     continuous_fill::Function = _median
     count_fill::Function      = _round_median
@@ -134,7 +117,7 @@ Alternatively, if a non-empty `features` is specified, then only the
 specified features are used. Throws an error if a recorded or
 specified feature is not present in the transformation input.
 """
-@mlj_model mutable struct FeatureSelector <: MLJBase.Unsupervised
+@with_kw_noshow mutable struct FeatureSelector <: MLJBase.Unsupervised
     features::Vector{Symbol} = Symbol[]
 end
 
@@ -223,8 +206,8 @@ The transformation is chosen so that the vector on which the
     v_approx = inverse_transform(discretizer, w) # reconstruction of v from w
 
 """
-@mlj_model mutable struct UnivariateDiscretizer <:MLJBase.Unsupervised
-    n_classes::Int = 512::(_ ≥ 1)
+@with_kw_noshow mutable struct UnivariateDiscretizer <:MLJBase.Unsupervised
+    n_classes::Int = 512
 end
 
 struct UnivariateDiscretizerResult{C}
@@ -372,7 +355,7 @@ names of features to be standardized.
     │ 3   │ 1.14708   │ 3     │
 
 """
-@mlj_model mutable struct Standardizer <: MLJBase.Unsupervised
+@with_kw_noshow mutable struct Standardizer <: MLJBase.Unsupervised
     features::Vector{Symbol} = Symbol[] # features to be standardized; empty means all
 end
 
@@ -495,9 +478,9 @@ positive shift `c` of `0.2` times the data mean. If there are no zero
 values, then no shift is applied.
 
 """
-@mlj_model mutable struct UnivariateBoxCoxTransformer <: MLJBase.Unsupervised
-    n::Int      = 171::(_ > 1) # nbr values tried in optimizing exponent lambda
-    shift::Bool = false        # whether to shift data away from zero
+@with_kw_noshow mutable struct UnivariateBoxCoxTransformer <: MLJBase.Unsupervised
+    n::Int      = 171   # nbr values tried in optimizing exponent lambda
+    shift::Bool = false # whether to shift data away from zero
 end
 
 function MLJBase.fit(transformer::UnivariateBoxCoxTransformer, verbosity::Int,
@@ -568,7 +551,7 @@ features present in the fit data, but no new features can be present.
  CategoricalPool object encountered during the fit.
 
 """
-@mlj_model mutable struct OneHotEncoder <: MLJBase.Unsupervised
+@with_kw_noshow mutable struct OneHotEncoder <: MLJBase.Unsupervised
     features::Vector{Symbol} = Symbol[]
     drop_last::Bool          = false
     ordered_factor::Bool     = true
@@ -733,6 +716,3 @@ metadata_model(OneHotEncoder,
                weights=false,
                descr=ONE_HOT_DESCR,
                path="MLJModels.OneHotEncoder")
-end # module
-
-using .Transformers

@@ -1,11 +1,3 @@
-module Constant
-
-using ..MLJBase, ..Tables
-using Distributions
-
-export ConstantRegressor, ConstantClassifier,
-        DeterministicConstantRegressor, DeterministicConstantClassifier
-
 ## THE CONSTANT REGRESSOR
 
 """
@@ -141,7 +133,3 @@ metadata_model(DeterministicConstantClassifier,
                weights=false,
                descr="Constant classifier (Deterministic).",
                path="MLJModels.DeterministicConstantClassifier")
-
-end
-
-using MLJModels.Constant
