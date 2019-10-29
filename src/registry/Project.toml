@@ -13,7 +13,6 @@ NearestNeighbors = "b8a86587-4115-5ab1-83bc-aa920d37bbce"
 Pkg = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
 ScientificTypes = "321657f4-b219-11e9-178b-2701a2544e81"
 ScikitLearn = "3646fa90-6ef7-5e7e-9f22-8aca16db6324"
-StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
 XGBoost = "009559a3-9522-5dbb-924b-0b6ed2b22bb9"
 
 [compat]
