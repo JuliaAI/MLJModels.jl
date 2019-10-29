@@ -1747,8 +1747,8 @@
 ":hyperparameter_types" = ["Array{Symbol,1}"]
 
 [MLJModels.UnivariateDiscretizer]
-":input_scitype" = "`AbstractArray{_s89,1} where _s89<:ScientificTypes.Continuous`"
-":output_scitype" = "`AbstractArray{_s88,1} where _s88<:ScientificTypes.OrderedFactor`"
+":input_scitype" = "`AbstractArray{_s110,1} where _s110<:ScientificTypes.Continuous`"
+":output_scitype" = "`AbstractArray{_s63,1} where _s63<:ScientificTypes.OrderedFactor`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "MLJModels"
 ":package_license" = "MIT"
@@ -1800,7 +1800,7 @@
 ":hyperparameter_types" = []
 
 [MLJModels.UnivariateStandardizer]
-":input_scitype" = "`AbstractArray{_s89,1} where _s89<:ScientificTypes.Infinite`"
+":input_scitype" = "`AbstractArray{_s110,1} where _s110<:ScientificTypes.Infinite`"
 ":output_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "MLJModels"
