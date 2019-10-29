@@ -37,6 +37,196 @@
 ":hyperparameters" = [":K", ":algorithm", ":metric", ":leafsize", ":reorder", ":weights"]
 ":hyperparameter_types" = ["Int64", "Symbol", "Distances.Metric", "Int64", "Bool", "Symbol"]
 
+[MLJLinearModels.QuantileRegressor]
+":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
+":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
+":is_pure_julia" = "`true`"
+":package_name" = "MLJLinearModels"
+":package_license" = "MIT"
+":load_path" = "MLJLinearModels.QuantileRegressor"
+":package_uuid" = "6ee0df7b-362f-4a72-a706-9e79364fb692"
+":package_url" = "https://github.com/alan-turing-institute/MLJLinearModels.jl"
+":is_wrapper" = "`false`"
+":supports_weights" = "`false`"
+":docstring" = "Robust regression with objective ``∑ρ(Xθ - y) + λ|θ|₂² + γ|θ|₁`` where `ρ` is the Quantile Loss.\n→ based on [MLJLinearModels](https://github.com/alan-turing-institute/MLJLinearModels.jl)\n→ do `@load QuantileRegressor pkg=\"MLJLinearModels\" to use the model.`\n→ do `?QuantileRegressor` for documentation.\n→ based on [MLJLinearModels](https://github.com/alan-turing-institute/MLJLinearModels.jl).\n→ do `@load QuantileRegressor pkg=\"MLJLinearModels\"` to use the model.\n→ do `?QuantileRegressor` for documentation."
+":name" = "QuantileRegressor"
+":is_supervised" = "`true`"
+":prediction_type" = ":deterministic"
+":implemented_methods" = [":fit", ":fitted_params", ":predict"]
+":hyperparameters" = [":delta", ":lambda", ":gamma", ":penalty", ":fit_intercept", ":penalize_intercept", ":solver"]
+":hyperparameter_types" = ["Real", "Real", "Real", "Symbol", "Bool", "Bool", "Union{Nothing, MLJLinearModels.Solver}"]
+
+[MLJLinearModels.LogisticClassifier]
+":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
+":target_scitype" = "`AbstractArray{_s58,1} where _s58<:ScientificTypes.Finite`"
+":is_pure_julia" = "`true`"
+":package_name" = "MLJLinearModels"
+":package_license" = "MIT"
+":load_path" = "MLJLinearModels.LogisticClassifier"
+":package_uuid" = "6ee0df7b-362f-4a72-a706-9e79364fb692"
+":package_url" = "https://github.com/alan-turing-institute/MLJLinearModels.jl"
+":is_wrapper" = "`false`"
+":supports_weights" = "`false`"
+":docstring" = "Classifier corresponding to the loss function ``L(y, Xθ) + λ|θ|₂²/2 + γ|θ|₁`` where `L` is the logistic loss.\n→ based on [MLJLinearModels](https://github.com/alan-turing-institute/MLJLinearModels.jl)\n→ do `@load LogisticClassifier pkg=\"MLJLinearModels\" to use the model.`\n→ do `?LogisticClassifier` for documentation.\n→ based on [MLJLinearModels](https://github.com/alan-turing-institute/MLJLinearModels.jl).\n→ do `@load LogisticClassifier pkg=\"MLJLinearModels\"` to use the model.\n→ do `?LogisticClassifier` for documentation."
+":name" = "LogisticClassifier"
+":is_supervised" = "`true`"
+":prediction_type" = ":probabilistic"
+":implemented_methods" = [":fit", ":fitted_params", ":predict"]
+":hyperparameters" = [":lambda", ":gamma", ":penalty", ":fit_intercept", ":penalize_intercept", ":solver", ":multi_class"]
+":hyperparameter_types" = ["Real", "Real", "Symbol", "Bool", "Bool", "Union{Nothing, MLJLinearModels.Solver}", "Bool"]
+
+[MLJLinearModels.MultinomialClassifier]
+":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
+":target_scitype" = "`AbstractArray{_s58,1} where _s58<:ScientificTypes.Finite`"
+":is_pure_julia" = "`true`"
+":package_name" = "MLJLinearModels"
+":package_license" = "MIT"
+":load_path" = "MLJLinearModels.MultinomialClassifier"
+":package_uuid" = "6ee0df7b-362f-4a72-a706-9e79364fb692"
+":package_url" = "https://github.com/alan-turing-institute/MLJLinearModels.jl"
+":is_wrapper" = "`false`"
+":supports_weights" = "`false`"
+":docstring" = "Classifier corresponding to the loss function ``L(y, Xθ) + λ|θ|₂²/2 + γ|θ|₁`` where `L` is the multinomial loss.\n→ based on [MLJLinearModels](https://github.com/alan-turing-institute/MLJLinearModels.jl)\n→ do `@load MultinomialClassifier pkg=\"MLJLinearModels\" to use the model.`\n→ do `?MultinomialClassifier` for documentation.\n→ based on [MLJLinearModels](https://github.com/alan-turing-institute/MLJLinearModels.jl).\n→ do `@load MultinomialClassifier pkg=\"MLJLinearModels\"` to use the model.\n→ do `?MultinomialClassifier` for documentation."
+":name" = "MultinomialClassifier"
+":is_supervised" = "`true`"
+":prediction_type" = ":probabilistic"
+":implemented_methods" = [":fit", ":fitted_params", ":predict"]
+":hyperparameters" = [":lambda", ":gamma", ":penalty", ":fit_intercept", ":penalize_intercept", ":solver"]
+":hyperparameter_types" = ["Real", "Real", "Symbol", "Bool", "Bool", "Union{Nothing, MLJLinearModels.Solver}"]
+
+[MLJLinearModels.LADRegressor]
+":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
+":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
+":is_pure_julia" = "`true`"
+":package_name" = "MLJLinearModels"
+":package_license" = "MIT"
+":load_path" = "MLJLinearModels.LADRegressor"
+":package_uuid" = "6ee0df7b-362f-4a72-a706-9e79364fb692"
+":package_url" = "https://github.com/alan-turing-institute/MLJLinearModels.jl"
+":is_wrapper" = "`false`"
+":supports_weights" = "`false`"
+":docstring" = "Robust regression with objective ``∑ρ(Xθ - y) + λ|θ|₂² + γ|θ|₁`` where `ρ` is the Absolute Loss.\n→ based on [MLJLinearModels](https://github.com/alan-turing-institute/MLJLinearModels.jl)\n→ do `@load LADRegressor pkg=\"MLJLinearModels\" to use the model.`\n→ do `?LADRegressor` for documentation.\n→ based on [MLJLinearModels](https://github.com/alan-turing-institute/MLJLinearModels.jl).\n→ do `@load LADRegressor pkg=\"MLJLinearModels\"` to use the model.\n→ do `?LADRegressor` for documentation."
+":name" = "LADRegressor"
+":is_supervised" = "`true`"
+":prediction_type" = ":deterministic"
+":implemented_methods" = [":fit", ":fitted_params", ":predict"]
+":hyperparameters" = [":lambda", ":gamma", ":penalty", ":fit_intercept", ":penalize_intercept", ":solver"]
+":hyperparameter_types" = ["Real", "Real", "Symbol", "Bool", "Bool", "Union{Nothing, MLJLinearModels.Solver}"]
+
+[MLJLinearModels.RidgeRegressor]
+":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
+":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
+":is_pure_julia" = "`true`"
+":package_name" = "MLJLinearModels"
+":package_license" = "MIT"
+":load_path" = "MLJLinearModels.RidgeRegressor"
+":package_uuid" = "6ee0df7b-362f-4a72-a706-9e79364fb692"
+":package_url" = "https://github.com/alan-turing-institute/MLJLinearModels.jl"
+":is_wrapper" = "`false`"
+":supports_weights" = "`false`"
+":docstring" = "Regression with objective function ``|Xθ - y|₂²/2 + λ|θ|₂²/2``.\n→ based on [MLJLinearModels](https://github.com/alan-turing-institute/MLJLinearModels.jl)\n→ do `@load RidgeRegressor pkg=\"MLJLinearModels\" to use the model.`\n→ do `?RidgeRegressor` for documentation.\n→ based on [MLJLinearModels](https://github.com/alan-turing-institute/MLJLinearModels.jl).\n→ do `@load RidgeRegressor pkg=\"MLJLinearModels\"` to use the model.\n→ do `?RidgeRegressor` for documentation."
+":name" = "RidgeRegressor"
+":is_supervised" = "`true`"
+":prediction_type" = ":deterministic"
+":implemented_methods" = [":fit", ":fitted_params", ":predict"]
+":hyperparameters" = [":lambda", ":fit_intercept", ":penalize_intercept", ":solver"]
+":hyperparameter_types" = ["Real", "Bool", "Bool", "Union{Nothing, MLJLinearModels.Solver}"]
+
+[MLJLinearModels.RobustRegressor]
+":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
+":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
+":is_pure_julia" = "`true`"
+":package_name" = "MLJLinearModels"
+":package_license" = "MIT"
+":load_path" = "MLJLinearModels.RobustRegressor"
+":package_uuid" = "6ee0df7b-362f-4a72-a706-9e79364fb692"
+":package_url" = "https://github.com/alan-turing-institute/MLJLinearModels.jl"
+":is_wrapper" = "`false`"
+":supports_weights" = "`false`"
+":docstring" = "Robust regression with objective ``∑ρ(Xθ - y) + λ|θ|₂² + γ|θ|₁`` for a given robust `ρ`.\n→ based on [MLJLinearModels](https://github.com/alan-turing-institute/MLJLinearModels.jl)\n→ do `@load RobustRegressor pkg=\"MLJLinearModels\" to use the model.`\n→ do `?RobustRegressor` for documentation.\n→ based on [MLJLinearModels](https://github.com/alan-turing-institute/MLJLinearModels.jl).\n→ do `@load RobustRegressor pkg=\"MLJLinearModels\"` to use the model.\n→ do `?RobustRegressor` for documentation."
+":name" = "RobustRegressor"
+":is_supervised" = "`true`"
+":prediction_type" = ":deterministic"
+":implemented_methods" = [":fit", ":fitted_params", ":predict"]
+":hyperparameters" = [":rho", ":lambda", ":gamma", ":penalty", ":fit_intercept", ":penalize_intercept", ":solver"]
+":hyperparameter_types" = ["MLJLinearModels.RobustRho", "Real", "Real", "Symbol", "Bool", "Bool", "Union{Nothing, MLJLinearModels.Solver}"]
+
+[MLJLinearModels.ElasticNetRegressor]
+":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
+":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
+":is_pure_julia" = "`true`"
+":package_name" = "MLJLinearModels"
+":package_license" = "MIT"
+":load_path" = "MLJLinearModels.ElasticNetRegressor"
+":package_uuid" = "6ee0df7b-362f-4a72-a706-9e79364fb692"
+":package_url" = "https://github.com/alan-turing-institute/MLJLinearModels.jl"
+":is_wrapper" = "`false`"
+":supports_weights" = "`false`"
+":docstring" = "Regression with objective function ``|Xθ - y|₂²/2 + λ|θ|₂²/2 + γ|θ|₁``.\n→ based on [MLJLinearModels](https://github.com/alan-turing-institute/MLJLinearModels.jl)\n→ do `@load ElasticNetRegressor pkg=\"MLJLinearModels\" to use the model.`\n→ do `?ElasticNetRegressor` for documentation.\n→ based on [MLJLinearModels](https://github.com/alan-turing-institute/MLJLinearModels.jl).\n→ do `@load ElasticNetRegressor pkg=\"MLJLinearModels\"` to use the model.\n→ do `?ElasticNetRegressor` for documentation."
+":name" = "ElasticNetRegressor"
+":is_supervised" = "`true`"
+":prediction_type" = ":deterministic"
+":implemented_methods" = [":fit", ":fitted_params", ":predict"]
+":hyperparameters" = [":lambda", ":gamma", ":fit_intercept", ":penalize_intercept", ":solver"]
+":hyperparameter_types" = ["Real", "Real", "Bool", "Bool", "Union{Nothing, MLJLinearModels.Solver}"]
+
+[MLJLinearModels.LinearRegressor]
+":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
+":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
+":is_pure_julia" = "`true`"
+":package_name" = "MLJLinearModels"
+":package_license" = "MIT"
+":load_path" = "MLJLinearModels.LinearRegressor"
+":package_uuid" = "6ee0df7b-362f-4a72-a706-9e79364fb692"
+":package_url" = "https://github.com/alan-turing-institute/MLJLinearModels.jl"
+":is_wrapper" = "`false`"
+":supports_weights" = "`false`"
+":docstring" = "Regression with objective function ``|Xθ - y|₂²/2``.\n→ based on [MLJLinearModels](https://github.com/alan-turing-institute/MLJLinearModels.jl)\n→ do `@load LinearRegressor pkg=\"MLJLinearModels\" to use the model.`\n→ do `?LinearRegressor` for documentation.\n→ based on [MLJLinearModels](https://github.com/alan-turing-institute/MLJLinearModels.jl).\n→ do `@load LinearRegressor pkg=\"MLJLinearModels\"` to use the model.\n→ do `?LinearRegressor` for documentation."
+":name" = "LinearRegressor"
+":is_supervised" = "`true`"
+":prediction_type" = ":deterministic"
+":implemented_methods" = [":fit", ":fitted_params", ":predict"]
+":hyperparameters" = [":fit_intercept", ":solver"]
+":hyperparameter_types" = ["Bool", "Union{Nothing, MLJLinearModels.Solver}"]
+
+[MLJLinearModels.LassoRegressor]
+":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
+":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
+":is_pure_julia" = "`true`"
+":package_name" = "MLJLinearModels"
+":package_license" = "MIT"
+":load_path" = "MLJLinearModels.LassoRegressor"
+":package_uuid" = "6ee0df7b-362f-4a72-a706-9e79364fb692"
+":package_url" = "https://github.com/alan-turing-institute/MLJLinearModels.jl"
+":is_wrapper" = "`false`"
+":supports_weights" = "`false`"
+":docstring" = "Regression with objective function ``|Xθ - y|₂²/2 + λ|θ|₁``.\n→ based on [MLJLinearModels](https://github.com/alan-turing-institute/MLJLinearModels.jl)\n→ do `@load LassoRegressor pkg=\"MLJLinearModels\" to use the model.`\n→ do `?LassoRegressor` for documentation.\n→ based on [MLJLinearModels](https://github.com/alan-turing-institute/MLJLinearModels.jl).\n→ do `@load LassoRegressor pkg=\"MLJLinearModels\"` to use the model.\n→ do `?LassoRegressor` for documentation."
+":name" = "LassoRegressor"
+":is_supervised" = "`true`"
+":prediction_type" = ":deterministic"
+":implemented_methods" = [":fit", ":fitted_params", ":predict"]
+":hyperparameters" = [":lambda", ":fit_intercept", ":penalize_intercept", ":solver"]
+":hyperparameter_types" = ["Real", "Bool", "Bool", "Union{Nothing, MLJLinearModels.Solver}"]
+
+[MLJLinearModels.HuberRegressor]
+":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
+":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
+":is_pure_julia" = "`true`"
+":package_name" = "MLJLinearModels"
+":package_license" = "MIT"
+":load_path" = "MLJLinearModels.HuberRegressor"
+":package_uuid" = "6ee0df7b-362f-4a72-a706-9e79364fb692"
+":package_url" = "https://github.com/alan-turing-institute/MLJLinearModels.jl"
+":is_wrapper" = "`false`"
+":supports_weights" = "`false`"
+":docstring" = "Robust regression with objective ``∑ρ(Xθ - y) + λ|θ|₂² + γ|θ|₁`` where `ρ` is the Huber Loss.\n→ based on [MLJLinearModels](https://github.com/alan-turing-institute/MLJLinearModels.jl)\n→ do `@load HuberRegressor pkg=\"MLJLinearModels\" to use the model.`\n→ do `?HuberRegressor` for documentation.\n→ based on [MLJLinearModels](https://github.com/alan-turing-institute/MLJLinearModels.jl).\n→ do `@load HuberRegressor pkg=\"MLJLinearModels\"` to use the model.\n→ do `?HuberRegressor` for documentation."
+":name" = "HuberRegressor"
+":is_supervised" = "`true`"
+":prediction_type" = ":deterministic"
+":implemented_methods" = [":fit", ":fitted_params", ":predict"]
+":hyperparameters" = [":delta", ":lambda", ":gamma", ":penalty", ":fit_intercept", ":penalize_intercept", ":solver"]
+":hyperparameter_types" = ["Real", "Real", "Real", "Symbol", "Bool", "Bool", "Union{Nothing, MLJLinearModels.Solver}"]
+
 [ScikitLearn.ProbabilisticSGDClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
 ":target_scitype" = "`AbstractArray{_s583,1} where _s583<:ScientificTypes.Finite`"
@@ -1198,100 +1388,100 @@
 
 [MultivariateStats.ICA]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":output_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
+":output_scitype" = "`ScientificTypes.Unknown`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "MultivariateStats"
-":package_license" = "unknown"
+":package_license" = "MIT"
 ":load_path" = "MLJModels.MultivariateStats_.ICA"
 ":package_uuid" = "6f286f6a-111f-5878-ab1e-185364afe411"
 ":package_url" = "https://github.com/JuliaStats/MultivariateStats.jl"
 ":is_wrapper" = "`false`"
-":docstring" = "ICA from MultivariateStats.jl.\n[Documentation](https://github.com/JuliaStats/MultivariateStats.jl)."
+":docstring" = "Independent component analysis.\n→ based on [MultivariateStats](https://github.com/JuliaStats/MultivariateStats.jl).\n→ do `@load ICA pkg=\"MultivariateStats\"` to use the model.\n→ do `?ICA` for documentation."
 ":name" = "ICA"
 ":is_supervised" = "`false`"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":transform"]
-":hyperparameters" = [":k", ":alg", ":fun", ":do_whiten", ":maxiter", ":tol", ":mean", ":winit"]
-":hyperparameter_types" = ["Int64", "Union{Nothing, Symbol}", "Union{Nothing, MultivariateStats.ICAGDeriv{T}} where T<:Real", "Union{Nothing, Bool}", "Union{Nothing, Int64}", "Union{Nothing, Real}", "Union{Nothing, Array{Float64,1}, Real}", "Union{Nothing, Array{Float64,2}}"]
+":implemented_methods" = [":fit", ":fitted_params", ":transform"]
+":hyperparameters" = [":k", ":alg", ":fun", ":do_whiten", ":maxiter", ":tol", ":winit", ":mean"]
+":hyperparameter_types" = ["Int64", "Symbol", "Symbol", "Bool", "Int64", "Real", "Union{Nothing, Array{#s673,2} where #s673<:Real}", "Union{Nothing, Array{Float64,1}, Real}"]
 
 [MultivariateStats.RidgeRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "MultivariateStats"
-":package_license" = "unknown"
+":package_license" = "MIT"
 ":load_path" = "MLJModels.MultivariateStats_.RidgeRegressor"
 ":package_uuid" = "6f286f6a-111f-5878-ab1e-185364afe411"
 ":package_url" = "https://github.com/JuliaStats/MultivariateStats.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":docstring" = "RidgeRegressor from MultivariateStats.jl.\n[Documentation](https://github.com/JuliaStats/MultivariateStats.jl)."
+":docstring" = "Ridge regressor with regularization parameter lambda. Learns a linear regression with a penalty on the l2 norm of the coefficients.\n→ based on [MultivariateStats](https://github.com/JuliaStats/MultivariateStats.jl).\n→ do `@load RidgeRegressor pkg=\"MultivariateStats\"` to use the model.\n→ do `?RidgeRegressor` for documentation."
 ":name" = "RidgeRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
 ":implemented_methods" = [":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = [":lambda"]
-":hyperparameter_types" = ["Float64"]
+":hyperparameter_types" = ["Real"]
 
 [MultivariateStats.KernelPCA]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":output_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
+":output_scitype" = "`ScientificTypes.Unknown`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "MultivariateStats"
-":package_license" = "unknown"
+":package_license" = "MIT"
 ":load_path" = "MLJModels.MultivariateStats_.KernelPCA"
 ":package_uuid" = "6f286f6a-111f-5878-ab1e-185364afe411"
 ":package_url" = "https://github.com/JuliaStats/MultivariateStats.jl"
 ":is_wrapper" = "`false`"
-":docstring" = "KernelPCA from MultivariateStats.jl.\n[Documentation](https://github.com/JuliaStats/MultivariateStats.jl)."
+":docstring" = "Kernel principal component analysis.\n→ based on [MultivariateStats](https://github.com/JuliaStats/MultivariateStats.jl).\n→ do `@load KernelPCA pkg=\"MultivariateStats\"` to use the model.\n→ do `?KernelPCA` for documentation."
 ":name" = "KernelPCA"
 ":is_supervised" = "`false`"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":transform"]
-":hyperparameters" = [":maxoutdim", ":kernel", ":solver", ":inverse", ":β", ":tol", ":maxiter"]
-":hyperparameter_types" = ["Union{Nothing, Int64}", "Union{Nothing, Function}", "Union{Nothing, Symbol}", "Union{Nothing, Bool}", "Union{Nothing, Real}", "Union{Nothing, Real}", "Union{Nothing, Int64}"]
+":implemented_methods" = [":fit", ":fitted_params", ":transform"]
+":hyperparameters" = [":maxoutdim", ":kernel", ":solver", ":inverse", ":beta", ":tol", ":maxiter"]
+":hyperparameter_types" = ["Int64", "Function", "Symbol", "Bool", "Real", "Real", "Int64"]
 
-[MultivariateStats.PCA]
-":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":output_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":is_pure_julia" = "`true`"
-":package_name" = "MultivariateStats"
-":package_license" = "unknown"
-":load_path" = "MLJModels.MultivariateStats_.PCA"
-":package_uuid" = "6f286f6a-111f-5878-ab1e-185364afe411"
-":package_url" = "https://github.com/JuliaStats/MultivariateStats.jl"
-":is_wrapper" = "`false`"
-":docstring" = "PCA from MultivariateStats.jl.\n[Documentation](https://github.com/JuliaStats/MultivariateStats.jl)."
-":name" = "PCA"
-":is_supervised" = "`false`"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":transform"]
-":hyperparameters" = [":maxoutdim", ":method", ":pratio", ":mean"]
-":hyperparameter_types" = ["Union{Nothing, Int64}", "Symbol", "Float64", "Union{Nothing, Array{Float64,1}, Real}"]
-
-[MultivariateStats.MulticlassLDA]
+[MultivariateStats.LDA]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
 ":target_scitype" = "`AbstractArray{_s673,1} where _s673<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "MultivariateStats"
 ":package_license" = "MIT"
-":load_path" = "MLJModels.MultivariateStats_.MulticlassLDA"
+":load_path" = "MLJModels.MultivariateStats_.LDA"
 ":package_uuid" = "6f286f6a-111f-5878-ab1e-185364afe411"
 ":package_url" = "https://github.com/JuliaStats/MultivariateStats.jl"
-":is_wrapper" = "`true`"
+":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":docstring" = " MulticlassLDA:\nLearns a projection matrix `W` that transforms training feature matrix `Xtrain` unto a \nlower dimensional space of dimension `out_dim` such that the betweenclass variance is maximized \nrelative to the within-class variance. Classification is done by applying bayes rule to \nthe transformed test feature matrix `WᵀXtest`                          \n\n→ based on [MultivariateStats](https://github.com/JuliaStats/MultivariateStats.jl).\n→ do `@load MulticlassLDA pkg=\"MultivariateStats\"` to use the model.\n→ do `?MulticlassLDA` for documentation."
-":name" = "MulticlassLDA"
+":docstring" = "Multiclass linear discriminant analysis. The algorithm learns a projection matrix `W` that projects the feature matrix `Xtrain` onto a lower dimensional space of dimension `out_dim` such that the between-class variance in the transformed space is maximized relative to the within-class variance.\n→ based on [MultivariateStats](https://github.com/JuliaStats/MultivariateStats.jl).\n→ do `@load LDA pkg=\"MultivariateStats\"` to use the model.\n→ do `?LDA` for documentation."
+":name" = "LDA"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
-":hyperparameters" = [":method", ":shrinkage", ":out_dim", ":regcoef"]
-":hyperparameter_types" = ["Symbol", "Union{Real, Symbol}", "Int64", "Float64"]
+":implemented_methods" = [":fit", ":fitted_params", ":predict"]
+":hyperparameters" = [":method", ":cov_w", ":cov_b", ":out_dim", ":regcoef", ":dist"]
+":hyperparameter_types" = ["Symbol", "StatsBase.CovarianceEstimator", "StatsBase.CovarianceEstimator", "Int64", "Real", "Distances.SemiMetric"]
+
+[MultivariateStats.PCA]
+":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
+":output_scitype" = "`ScientificTypes.Unknown`"
+":is_pure_julia" = "`true`"
+":package_name" = "MultivariateStats"
+":package_license" = "MIT"
+":load_path" = "MLJModels.MultivariateStats_.PCA"
+":package_uuid" = "6f286f6a-111f-5878-ab1e-185364afe411"
+":package_url" = "https://github.com/JuliaStats/MultivariateStats.jl"
+":is_wrapper" = "`false`"
+":docstring" = "Principal component analysis. Learns a linear transformation to project the data  on a lower dimensional space while preserving most of the initial variance.\n→ based on [MultivariateStats](https://github.com/JuliaStats/MultivariateStats.jl).\n→ do `@load PCA pkg=\"MultivariateStats\"` to use the model.\n→ do `?PCA` for documentation."
+":name" = "PCA"
+":is_supervised" = "`false`"
+":implemented_methods" = [":fit", ":fitted_params", ":transform"]
+":hyperparameters" = [":maxoutdim", ":method", ":pratio", ":mean"]
+":hyperparameter_types" = ["Int64", "Symbol", "Float64", "Union{Nothing, Array{Float64,1}, Real}"]
 
 [DecisionTree.DecisionTreeRegressor]
-":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s672,1} where _s672<:ScientificTypes.Continuous`"
+":input_scitype" = "`ScientificTypes.Unknown`"
+":target_scitype" = "`ScientificTypes.Unknown`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "DecisionTree"
-":package_license" = "unknown"
-":load_path" = "MLJModels.DecisionTree_.DecisionTreeRegressor"
+":package_license" = "MIT"
+":load_path" = "unknown"
 ":package_uuid" = "7806a523-6efd-50cb-b5f6-3fa6f1930dbb"
 ":package_url" = "https://github.com/bensadeghi/DecisionTree.jl"
 ":is_wrapper" = "`false`"
@@ -1300,26 +1490,26 @@
 ":name" = "DecisionTreeRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = [":pruning_purity_threshold", ":max_depth", ":min_samples_leaf", ":min_samples_split", ":min_purity_increase", ":n_subfeatures", ":post_prune"]
 ":hyperparameter_types" = ["Float64", "Int64", "Int64", "Int64", "Float64", "Int64", "Bool"]
 
 [DecisionTree.DecisionTreeClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s672,1} where _s672<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "DecisionTree"
-":package_license" = "unknown"
+":package_license" = "MIT"
 ":load_path" = "MLJModels.DecisionTree_.DecisionTreeClassifier"
 ":package_uuid" = "7806a523-6efd-50cb-b5f6-3fa6f1930dbb"
 ":package_url" = "https://github.com/bensadeghi/DecisionTree.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":docstring" = "DecisionTreeClassifier from DecisionTree.jl.\n[Documentation](https://github.com/bensadeghi/DecisionTree.jl)."
+":docstring" = "Decision Tree Regressor.\n→ based on [DecisionTree](https://github.com/bensadeghi/DecisionTree.jl).\n→ do `@load DecisionTreeClassifier pkg=\"DecisionTree\"` to use the model.\n→ do `?DecisionTreeClassifier` for documentation."
 ":name" = "DecisionTreeClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = [":pruning_purity", ":max_depth", ":min_samples_leaf", ":min_samples_split", ":min_purity_increase", ":n_subfeatures", ":display_depth", ":post_prune", ":merge_purity_threshold", ":pdf_smoothing"]
 ":hyperparameter_types" = ["Float64", "Int64", "Int64", "Int64", "Float64", "Int64", "Int64", "Bool", "Float64", "Float64"]
 
@@ -1749,7 +1939,7 @@
 ":package_url" = "https://github.com/JuliaStats/GLM.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":docstring" = "LinearBinaryClassifier from GLM.jl.\n[Documentation](https://github.com/JuliaStats/GLM.jl)."
+":docstring" = "Linear binary classifier with specified link (e.g. logistic).\n→ based on [GLM](https://github.com/JuliaStats/GLM.jl).\n→ do `@load LinearBinaryClassifier pkg=\"GLM\"` to use the model.\n→ do `?LinearBinaryClassifier` for documentation."
 ":name" = "LinearBinaryClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
@@ -1768,7 +1958,7 @@
 ":package_url" = "https://github.com/JuliaStats/GLM.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":docstring" = "LinearCountRegressor from GLM.jl.\n[Documentation](https://github.com/JuliaStats/GLM.jl)."
+":docstring" = "Linear count regressor with specified link and distribution (e.g. log link and poisson).\n→ based on [GLM](https://github.com/JuliaStats/GLM.jl).\n→ do `@load LinearCountRegressor pkg=\"GLM\"` to use the model.\n→ do `?LinearCountRegressor` for documentation."
 ":name" = "LinearCountRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
@@ -1778,7 +1968,7 @@
 
 [GLM.LinearRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
+":target_scitype" = "`ScientificTypes.Unknown`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "GLM"
 ":package_license" = "MIT"
@@ -1787,7 +1977,7 @@
 ":package_url" = "https://github.com/JuliaStats/GLM.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":docstring" = "LinearRegressor from GLM.jl.\n[Documentation](https://github.com/JuliaStats/GLM.jl)."
+":docstring" = "Linear regressor (OLS) with a Normal model.\n→ based on [GLM](https://github.com/JuliaStats/GLM.jl).\n→ do `@load LinearRegressor pkg=\"GLM\"` to use the model.\n→ do `?LinearRegressor` for documentation."
 ":name" = "LinearRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
