@@ -59,6 +59,9 @@ Note that for some of these packages, the interface is incomplete; contributions
     * `LinearRegressor`, `LinearBinaryClassifier`, `LinearCountRegressor`
 * [LIBSVM.jl](https://github.com/mpastell/LIBSVM.jl) (**note**: _these models are effectively duplicated by the sklearn models below_.)
     * `LinearSVC`, `SVC`, `NuSVC`, `NuSVR`, `EpsilonSVR`, `OneClassSVM`
+* [MLJLinearModels.jl](https://github.com/alan-turing-institute/MLJLinearModels.jl)
+    * `LinearRegressor`, `RidgeRegressor`, `LassoRegressor`, `ElasticNetRegressor`, `QuantileRegressor`, `HuberRegressor`, `RobustRegressor`, `LADRegressor` (all with optional elastic net regression)
+    * `LogisticClassifier`, `MultinomialClassifier` (with elastic net regularisation)
 * [MultivariateStats.jl](https://github.com/mpastell/LIBSVM.jl)
     * `RidgeRegressor`, `PCA`, `KernelPCA`, `ICA`, `LDA` (multiclass)
 * [NaiveBayes.jl](https://github.com/dfdx/NaiveBayes.jl)
