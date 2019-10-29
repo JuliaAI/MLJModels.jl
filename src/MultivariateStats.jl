@@ -23,7 +23,7 @@ const PCA_DESCR = "Principal component analysis. Learns a linear transformation 
 const KPCA_DESCR = "Kernel principal component analysis."
 const ICA_DESCR = "Independent component analysis."
 const LDA_DESCR = "Multiclass linear discriminant analysis. The algorithm learns a projection matrix `W` that projects the feature matrix `Xtrain` onto a lower dimensional space of dimension `out_dim` such that the between-class variance in the transformed space is maximized relative to the within-class variance."
-const BayesianLDA_DESCR= "Bayesian Multiclass linear discriminant analysis. The algorithm learns a projection matrix `W` that projects the feature matrix `Xtrain` onto a lower dimensional space of dimension `out_dim` such that the between-class variance in the transformed space is maximized relative to the within-class variance and classfy using Bayes rule."
+const BayesianLDA_DESCR= "Bayesian Multiclass linear discriminant analysis. The algorithm learns a projection matrix `W` that projects the feature matrix `Xtrain` onto a lower dimensional space of dimension `out_dim` such that the between-class variance in the transformed space is maximized relative to the within-class variance and classifies using Bayes rule."
 
 ####
 #### RIDGE
@@ -388,9 +388,9 @@ function MLJBase.fit(model::BayesianLDA, ::Int, X, y)
     if model.priors == nothing
         priors = proportions(yplain)
     else
-     #check if the length of priors is same as nclasses
-     length(MLJBase.classes(model.priors)) == nclasses || throw(ArgumentError("Invalid size of `priors`"))
-     priors = MLJBase.pdf.(model.priors, class_list)
+        #check if the length of priors is same as nclasses
+        size(MLJBase.classes(model.priors)) == nclasses || throw(ArgumentError("Invalid size of `priors`"))
+        priors = MLJBase.pdf.(model.priors, class_list)
     end
 
     core_res = MS.fit(MS.MulticlassLDA, nclasses, Xm_t, Int.(yplain);
@@ -403,8 +403,8 @@ function MLJBase.fit(model::BayesianLDA, ::Int, X, y)
     ## The original projection matrix satisfies Pᵀ*Sw*P=I
     ## scaled projection_matrix and core_res.proj by multiplying by sqrt(n - nclasses) this ensures Pᵀ*Σ*P=I
     ## where covariance estimate Σ = Sw / (n - nclasses)
-    core_res.proj   = core_res.proj .* sqrt(n - nclasses) 
-    core_res.pmeans = core_res.pmeans .* sqrt(n - nclasses)
+    core_res.proj   .*= sqrt(n - nclasses) 
+    core_res.pmeans .*= sqrt(n - nclasses)
 
     cache     = nothing
     report    = NamedTuple{}()
@@ -426,12 +426,11 @@ function MLJBase.predict(m::BayesianLDA, (core_res, class_list, priors), Xnew)
     centroids = permutedims(core_res.pmeans)
 
     n  = core_res.stats.tweight # n is the Number of training examples
-    nclasses = length(class_list) 
+    nclasses = size(class_list) 
 
     # compute the distances in the transformed space between pairs of rows
     # The discriminant matrix `P` is of dimension `n x nc`
     #  P[i,k] = -0.5*(xᵢ −  µₖ)ᵀΣ⁻¹(xᵢ −  µₖ) + log(priorsₖ) and Σ⁻¹ = I due to the nature of the projection_matrix
-
     P = pairwise(SqEuclidean(), XWt, centroids, dims=1)
     P .*= -0.5
     P .+= log.(priors)'
