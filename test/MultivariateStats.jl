@@ -108,13 +108,13 @@ end
 
     LDA_model = LDA()
     fitresult, = fit(LDA_model, 1, Xtrain, ytrain)
-    class_means, projection_matrix = MLJBase.fitted_params(LDA_model, fitresult)
+    class_means, projection_matrix, priors = MLJBase.fitted_params(LDA_model, fitresult)
 
     preds = predict(LDA_model, fitresult, Xtest)
 
     mce = MLJBase.cross_entropy(preds, ytest) |> mean
 
-    @test 0.69 ≤ mce ≤ 0.695
+    @test 0.685 ≤ mce ≤ 0.690
 
     @test round.(class_means', sigdigits = 3) == [0.0428 0.0339; -0.0395 -0.0313]
 

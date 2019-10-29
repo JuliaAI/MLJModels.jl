@@ -271,8 +271,7 @@ $LDA_DESCR
 * `cov_b=SimpleCovariance()`: same as `cov_w` but for the between-class covariance.
 * `out_dim`: the output dimension, i.e dimension of the transformed space, automatically set if 0 is given (default).
 * `regcoef`: regularization coefficient. A positive value `regcoef * eigmax(Sw)` where `Sw` is the within-class covariance estimator, is added to the diagonal of Sw to improve numerical stability. This can be useful if using the standard covariance estimator.
-* `dist=SqEuclidean`: the distance metric to use when performing classification (to compare the distance between a new point and centroids in the transformed space), an alternative choice can be the `CosineDist`.
-
+* `priors=nothing`: if `priors = nothing` estimates the prior probabilities from the data else it uses the user specified `Univariate` prior probabilities.
 See also the [package documentation](https://multivariatestatsjl.readthedocs.io/en/latest/lda.html).
 For more information about the algorithm, see the paper by Li, Zhu and Ogihara, [Using Discriminant Analysis for Multi-class Classification: An Experimental Investigation](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.89.7068&rep=rep1&type=pdf).
 """
@@ -282,7 +281,7 @@ For more information about the algorithm, see the paper by Li, Zhu and Ogihara, 
     cov_b::CovarianceEstimator = MS.SimpleCovariance()
     out_dim::Int     = 0::(_ ≥ 0)
     regcoef::Real    = 0.0::(_ ≥ 0)
-    dist::SemiMetric = SqEuclidean()
+    priors::Union{Nothing, MLJBase.UnivariateFinite} = nothing
 end
 
 function MLJBase.fit(model::LDA, ::Int, X, y)
@@ -292,7 +291,8 @@ function MLJBase.fit(model::LDA, ::Int, X, y)
     # NOTE: copy/transpose
     Xm_t   = MLJBase.matrix(X, transpose=true) # now p x n matrix
     yplain = MLJBase.int(y) # vector of n ints in {1,..., nclasses}
-    p      = size(Xm_t, 1)
+    N      = size(Xm_t, 2)  # Number of training samples
+    p      = size(Xm_t, 1)  # Number of features
 
     # check output dimension default is min(p, nc-1)
     def_outdim = min(p, nclasses - 1)
@@ -301,37 +301,61 @@ function MLJBase.fit(model::LDA, ::Int, X, y)
     # check if the given one is sensible
     out_dim ≤ def_outdim || throw(ArgumentError("`out_dim` must not be larger than `min(p, nc-1)` where `p` is the dimension of `X` and `nc` is the number of classes."))
 
+    ## Estimates prior probabilities is unspecified by user.
+    if model.priors == nothing
+        priors = proportions(yplain)
+    else
+     #check if the length of priors is same as nclasses
+     length(MLJBase.classes(model.priors)) == nclasses || throw(ArgumentError("Invalid size of `priors`"))
+     priors = MLJBase.pdf.(model.priors, class_list)
+    end
+
     core_res = MS.fit(MS.MulticlassLDA, nclasses, Xm_t, Int.(yplain);
                       method=model.method,
                       outdim=out_dim,
                       regcoef=model.regcoef,
                       covestimator_within=model.cov_w,
                       covestimator_between=model.cov_b)
+    
+    ## The original projection matrix satisfies Pᵀ*Sw*P=I
+    ## scaled projection_matrix and core_res.proj by multiplying by sqrt(N - nclasses) this ensures Pᵀ*Σ*P=I
+    ## where covariance estimate Σ = Sw / (N - nclasses)
+    core_res.proj   = core_res.proj .* sqrt(N - nclasses) 
+    core_res.pmeans = core_res.pmeans .* sqrt(N - nclasses)
 
     cache     = nothing
     report    = NamedTuple{}()
-    fitresult = (core_res, class_list)
+    fitresult = (core_res, class_list, priors)
 
     return fitresult, cache, report
 end
 
-function MLJBase.fitted_params(::LDA, (core_res, class_list))
+function MLJBase.fitted_params(::LDA, (core_res, class_list, priors))
     return (class_means       = MS.classmeans(core_res),
-            projection_matrix = MS.projection(core_res))
+            projection_matrix = MS.projection(core_res),
+            priors            = priors)
 end
 
-function MLJBase.predict(m::LDA, (core_res, class_list), Xnew)
+function MLJBase.predict(m::LDA, (core_res, class_list, priors), Xnew)
     # projection of Xnew XWt is n x o  where o = number of out dims
     XWt = MLJBase.matrix(Xnew) * core_res.proj
     # centroids in the transformed space, nc x o
     centroids = permutedims(core_res.pmeans)
 
+    N  = core_res.stats.tweight # N is the Number of training examples
+    nclasses = length(class_list) 
+
     # compute the distances in the transformed space between pairs of rows
-    # the probability matrix is `n x nc` and normalised accross rows
-    P = pairwise(m.dist, XWt, centroids, dims=1)
-    # apply a softmax transformation
-    P .-= maximum(P, dims=2)
-    P  .= exp.(-P)
+    # The discriminant matrix `P` is of dimension `n x nc`
+    #  P[i,k] = -0.5*(xᵢ −  µₖ)ᵀΣ⁻¹(xᵢ −  µₖ) + log(priorsₖ) and Σ⁻¹ = I due to the nature of the projection_matrix
+
+    P = pairwise(SqEuclidean(), XWt, centroids, dims=1)
+    P .*= -0.5
+    P .+= log.(priors)'
+    #display(P)
+   
+    # apply a softmax transformation to convert P to a probability matrix
+    P  .= exp.(P)
     P ./= sum(P, dims=2)
 
     return [MLJBase.UnivariateFinite(class_list, P[j, :]) for j in 1:size(P, 1)]
