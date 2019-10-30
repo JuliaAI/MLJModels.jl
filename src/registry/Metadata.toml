@@ -1456,7 +1456,7 @@
 ":is_supervised" = "`false`"
 ":implemented_methods" = [":fit", ":fitted_params", ":transform"]
 ":hyperparameters" = [":maxoutdim", ":kernel", ":solver", ":inverse", ":beta", ":tol", ":maxiter"]
-":hyperparameter_types" = ["Int64", "Function", "Symbol", "Bool", "Real", "Real", "Int64"]
+":hyperparameter_types" = ["Union{Nothing, Int64}", "Function", "Symbol", "Bool", "Real", "Real", "Int64"]
 
 [MultivariateStats.LDA]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
@@ -1492,7 +1492,7 @@
 ":is_supervised" = "`false`"
 ":implemented_methods" = [":fit", ":fitted_params", ":transform"]
 ":hyperparameters" = [":maxoutdim", ":method", ":pratio", ":mean"]
-":hyperparameter_types" = ["Int64", "Symbol", "Float64", "Union{Nothing, Array{Float64,1}, Real}"]
+":hyperparameter_types" = ["Union{Nothing, Int64}", "Symbol", "Float64", "Union{Nothing, Array{Float64,1}, Real}"]
 
 [DecisionTree.DecisionTreeRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"

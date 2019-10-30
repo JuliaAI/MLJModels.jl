@@ -8,7 +8,6 @@ import StatsBase: proportions, CovarianceEstimator
 using Distances, LinearAlgebra
 using Tables, ScientificTypes
 
-#import ..MultivariateStats
 import MultivariateStats
 
 const MS = MultivariateStats
@@ -83,7 +82,7 @@ $PCA_DESCR
 * `mean=nothing`: if set to nothing centering will be computed and applied, if set to `0` no centering (assumed pre-centered), if a vector is passed, the centering is done with that vector.
 """
 @mlj_model mutable struct PCA <: MLJBase.Unsupervised
-    maxoutdim::Int  = typemax(Int)::(_ === nothing || _ ≥ 1)
+    maxoutdim::Union{Nothing,Int} = nothing::(_ === nothing || _ ≥ 1)
     method::Symbol  = :auto::(_ in (:auto, :cov, :svd))
     pratio::Float64 = 0.99::(0.0 < _ ≤ 1.0)
     mean::Union{Nothing, Real, Vector{Float64}} = nothing::(_ === nothing || (_ isa Real && iszero(_)) || true)
@@ -93,7 +92,7 @@ function MLJBase.fit(model::PCA, verbosity::Int, X)
     Xarray = MLJBase.matrix(X)
     mindim = minimum(size(Xarray))
 
-    maxoutdim = ifelse(model.maxoutdim == typemax(Int), mindim, model.maxoutdim)
+    maxoutdim = model.maxoutdim === nothing ? mindim : model.maxoutdim
 
     # NOTE: copy/transpose
     fitresult = MS.fit(MS.PCA, permutedims(Xarray);
@@ -148,7 +147,7 @@ $KPCA_DESCR
 * `maxiter=300`: maximum number of iterations for eigs solver
 """
 @mlj_model mutable struct KernelPCA <: MLJBase.Unsupervised
-    maxoutdim::Int   = typemax(Int)::(_ ≥ 1)
+    maxoutdim::Union{Nothing,Int} = nothing::(_ === nothing || _ ≥ 1)
     kernel::Function = default_kernel
     solver::Symbol   = :eig::(_ in (:eig, :eigs))
     inverse::Bool    = false
@@ -161,7 +160,7 @@ function MLJBase.fit(model::KernelPCA, verbosity::Int, X)
     Xarray = MLJBase.matrix(X)
     mindim = minimum(size(Xarray))
     # default max out dim if not given
-    maxoutdim = ifelse(model.maxoutdim == typemax(Int), mindim, model.maxoutdim)
+    maxoutdim = model.maxoutdim === nothing ? mindim : model.maxoutdim
 
     fitresult = MS.fit(MS.KernelPCA, permutedims(Xarray);
                        kernel=model.kernel,
@@ -376,7 +375,7 @@ function MLJBase.fit(model::BayesianLDA, ::Int, X, y)
     Xm_t   = MLJBase.matrix(X, transpose=true) # now p x n matrix
     yplain = MLJBase.int(y) # vector of n ints in {1,..., nclasses}
     p, n   = size(Xm_t)
-   
+
     # check output dimension default is min(p, nc-1)
     def_outdim = min(p, nclasses - 1)
     # if unset (0) use the default; otherwise try to use the provided one
@@ -399,11 +398,11 @@ function MLJBase.fit(model::BayesianLDA, ::Int, X, y)
                       regcoef=model.regcoef,
                       covestimator_within=model.cov_w,
                       covestimator_between=model.cov_b)
-    
+
     ## The original projection matrix satisfies Pᵀ*Sw*P=I
     ## scaled projection_matrix and core_res.proj by multiplying by sqrt(n - nclasses) this ensures Pᵀ*Σ*P=I
     ## where covariance estimate Σ = Sw / (n - nclasses)
-    core_res.proj   .*= sqrt(n - nclasses) 
+    core_res.proj   .*= sqrt(n - nclasses)
     core_res.pmeans .*= sqrt(n - nclasses)
 
     cache     = nothing
@@ -426,7 +425,7 @@ function MLJBase.predict(m::BayesianLDA, (core_res, class_list, priors), Xnew)
     centroids = permutedims(core_res.pmeans)
 
     n  = core_res.stats.tweight # n is the Number of training examples
-    nclasses = size(class_list) 
+    nclasses = size(class_list)
 
     # compute the distances in the transformed space between pairs of rows
     # The discriminant matrix `P` is of dimension `n x nc`
@@ -434,7 +433,7 @@ function MLJBase.predict(m::BayesianLDA, (core_res, class_list, priors), Xnew)
     P = pairwise(SqEuclidean(), XWt, centroids, dims=1)
     P .*= -0.5
     P .+= log.(priors)'
-   
+
     # apply a softmax transformation to convert P to a probability matrix
     P  .= exp.(P)
     P ./= sum(P, dims=2)
