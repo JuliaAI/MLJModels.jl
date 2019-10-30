@@ -1,7 +1,7 @@
 ## FUNTIONS TO LOAD MODEL IMPLEMENTATION CODE
 
 """
-    load(name::String; pkg=nothing, modl=Main, verbosity=1)
+load(name::String; pkg=nothing, modl=Main, verbosity=1, allow_ambiguous=false)
 
 Load the model implementation code for the model type with specified
 `name` into the module `modl`, specifying `pkg` if necesssary, to
@@ -13,7 +13,7 @@ In the case that `proxy` is a return value of `traits` (ie, has the
 form `(name = ..., package_name = ..., etc)`) this is equivalent to
 `load(name=proxy.name, pkg=proxy.package_name)`.
 
-If `allow_ambiguous=true` then multiple models with the same name can be imported.
+If `allow_ambiguous=true` then multiple models with the same name can be imported, otherwise a warning is raised and the previously available model is kept.
 
 See also [`@load`](@ref)
 
