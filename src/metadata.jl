@@ -104,16 +104,16 @@ end
 
 # get the model types in top-level of given module's namespace:
 function localmodeltypes(modl)
-    return filter(MLJBase.finaltypes(Model)) do M
-        if M in [Supervised, Unsupervised, Deterministic,
+    ft = MLJBase.finaltypes(Model)
+    return filter!(ft) do M
+        if M in (Supervised, Unsupervised, Deterministic,
                  Probabilistic, DeterministicNetwork, Interval,
-                 ProbabilisticNetwork, UnsupervisedNetwork]
+                 ProbabilisticNetwork, UnsupervisedNetwork)
             return false
         else
-            i = MLJBase.info_dict(M)
-            name = i[:name]
-            return isdefined(modl, Symbol(name)) &&
-                !i[:is_wrapper]
+            name = MLJBase.name(M)
+            wrap = MLJBase.is_wrapper(M)
+            return isdefined(modl, Symbol(name)) && !wrap
         end
     end
 end
