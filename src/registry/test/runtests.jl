@@ -1,13 +1,26 @@
-# using Revise
-using Test
+import Pkg
+import Pkg:TOML
+using DelimitedFiles
+using MLJ
 
-# brittle hack b/s of https://github.com/dmlc/XGBoost.jl/issues/58:
-# using Pkg
-# Pkg.add(PackageSpec(url="https://github.com/dmlc/XGBoost.jl"))
+curdir = @__DIR__
 
-using Registry
-using MLJBase
+Pkg.activate(joinpath(curdir, ".."))
 
-#@test !(isempty(Registry.metadata()))
+# Read Metadata.toml
+dict = TOML.parsefile(joinpath(curdir, "..", "Metadata.toml"))
 
-
+# There will be warnings for ambiguous things, ignore them
+for (package, model_dict) in dict
+    for (model, meta) in model_dict
+        # check if new entry or changed entry, otherwise don't test
+        key = "$package.$model"
+        try
+            load(model; pkg=package, allow_ambiguous=true)
+            # add/refresh entry
+            print("Entry for $key was loaded properly ✓    \r")
+        catch
+            println("⚠ there was an issue trying to load $key")
+        end
+    end
+end

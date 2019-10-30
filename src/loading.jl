@@ -2,16 +2,18 @@
 
 """
     load(name::String; pkg=nothing, modl=Main, verbosity=1)
-            
+
 Load the model implementation code for the model type with specified
 `name` into the module `modl`, specifying `pkg` if necesssary, to
-resolve duplicate names. 
+resolve duplicate names.
 
     load(proxy; pkg=nothing, modl=Main, verbosity=1)
 
 In the case that `proxy` is a return value of `traits` (ie, has the
 form `(name = ..., package_name = ..., etc)`) this is equivalent to
-`load(name=proxy.name, pkg=proxy.package_name)`. 
+`load(name=proxy.name, pkg=proxy.package_name)`.
+
+If `allow_ambiguous=true` then multiple models with the same name can be imported.
 
 See also [`@load`](@ref)
 
@@ -23,21 +25,21 @@ See also [`@load`](@ref)
 See also [`@load`](@ref)
 
 """
-function load(proxy::ModelProxy; modl=Main, verbosity=0)
+function load(proxy::ModelProxy; modl=Main, verbosity=0, allow_ambiguous=false)
     # get name, package and load path:
     name = proxy.name
     pkg = proxy.package_name
     handle = (name=name, pkg=pkg)
-    
+
     path = INFO_GIVEN_HANDLE[handle][:load_path]
     path_components = split(path, '.')
 
     # decide what to print
     toprint = verbosity > 0
 
-    # return if model is already loaded
+    # return if model is already loaded unless allow_ambiguous
     localnames = map(p->p.name, localmodels(modl=modl))
-    if name ∈ localnames
+    if !allow_ambiguous && name ∈ localnames
         @info "A model type \"$name\" is already loaded. \n"*
         "No new code loaded. "
         return
@@ -57,7 +59,7 @@ function load(proxy::ModelProxy; modl=Main, verbosity=0)
     pkg_ex = Symbol(pkg)
     toprint && print("import $pkg_ex ")
     modl.eval(:(import $pkg_ex))
-    
+
     toprint && println('\u2714')
 
     # load the model:
@@ -71,7 +73,7 @@ end
 
 load(name::String; pkg=nothing, kwargs...) =
     load(info(name; pkg=pkg); kwargs...)
-    
+
 """
     @load name pkg=nothing verbosity=0
 
@@ -83,7 +85,7 @@ duplicate names.
 
     @load DecisionTreeeRegressor
     @load PCA verbosity=1
-    @load SVC pkg=LIBSVM 
+    @load SVC pkg=LIBSVM
 
 See also [`load`](@ref)
 
@@ -108,13 +110,13 @@ macro load(name_ex, kw_exs...)
     end
     (@isdefined pkg) || (pkg = nothing)
     (@isdefined verbosity) || (verbosity = 0)
-    
+
     # get rid brackets in name_, as in
     # "(MLJModels.Clustering).KMedoids":
     name = filter(name_) do c !(c in ['(',')']) end
-    
+
     load(name, modl=__module__, pkg=pkg, verbosity=verbosity)
-    
+
     esc(quote
             try
                 $name_ex()
