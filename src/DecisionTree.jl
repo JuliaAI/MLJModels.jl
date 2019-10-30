@@ -199,7 +199,7 @@ metadata_model(DecisionTreeClassifier,
                weights=false,
                descr=DTC_DESCR)
 
-metadata_model(DecisionTreeClassifier,
+metadata_model(DecisionTreeRegressor,
                input=MLJBase.Table(MLJBase.Continuous),
                target=AbstractVector{MLJBase.Continuous},
                weights=false,
