@@ -1,11 +1,11 @@
-module MLJModels 
+module MLJModels
 
 using MLJBase, Tables, ScientificTypes
-using Requires, Pkg.TOML, OrderedCollections
+using Requires, Pkg, Pkg.TOML, OrderedCollections
 using Parameters, CategoricalArrays, StatsBase, Distributions
 
 # for administrators to update Metadata.toml:
-export @update
+export @update, check_registry
 
 # from loading.jl:
 export load, @load, info
@@ -34,6 +34,7 @@ include("metadata.jl")
 include("model_search.jl")
 include("loading.jl")
 include("registry/src/Registry.jl")
+include("registry/src/check_registry.jl")
 import .Registry.@update
 
 # load built-in models:

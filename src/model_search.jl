@@ -189,7 +189,7 @@ See also [models](@ref)
 function localmodels(args...; modl=Main)
     modeltypes = localmodeltypes(modl)
     names = map(modeltypes) do M
-        info(M).name
+        MLJBase.name(M)
     end
     return filter(models(args...)) do handle
         handle.name in names

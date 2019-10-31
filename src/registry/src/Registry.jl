@@ -1,6 +1,7 @@
 module Registry
 
 # for this module
+import Pkg
 import Pkg.TOML
 using InteractiveUtils
 
@@ -10,7 +11,6 @@ import MLJBase: OrderedFactor, Count, Multiclass, Binary
 
 const srcdir = dirname(@__FILE__) # the directory containing this file
 const environment_path = joinpath(srcdir, "..")
-
 
 ## METHODS TO GENERATE METADATA AND WRITE TO ARCHIVE
 
@@ -27,7 +27,7 @@ const project_toml = joinpath(srcdir, "../Project.toml")
 const packages = map(Symbol,
                      keys(TOML.parsefile(project_toml)["deps"])|>collect)
 filter!(packages) do pkg
-    !(pkg in [:MLJBase, :InteractiveUtils, :Pkg])
+    !(pkg in (:MLJBase, :InteractiveUtils, :Pkg, :ScientificTypes))
 end
 
 const package_import_commands =  [:(import $pkg) for pkg in packages]
