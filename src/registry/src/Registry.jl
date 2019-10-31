@@ -1,6 +1,7 @@
 module Registry
 
 # for this module
+import Pkg
 import Pkg.TOML
 using InteractiveUtils
 
@@ -10,7 +11,6 @@ import MLJBase: OrderedFactor, Count, Multiclass, Binary
 
 const srcdir = dirname(@__FILE__) # the directory containing this file
 const environment_path = joinpath(srcdir, "..")
-
 
 ## METHODS TO GENERATE METADATA AND WRITE TO ARCHIVE
 
