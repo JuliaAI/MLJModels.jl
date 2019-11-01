@@ -56,7 +56,6 @@ append!(NAMES, model_names(INFO_GIVEN_HANDLE))
 
 # lazily load in strap-on model interfaces for external packages:
 function __init__()
-
     @require MultivariateStats="6f286f6a-111f-5878-ab1e-185364afe411" include("MultivariateStats.jl")
     @require DecisionTree="7806a523-6efd-50cb-b5f6-3fa6f1930dbb" include("DecisionTree.jl")
     @require GaussianProcesses="891a1506-143c-57d2-908e-e1f8e92e6de9" include("GaussianProcesses.jl")

@@ -33,7 +33,8 @@ const SKEN = ((ScikitLearn.Skcore).pyimport("sklearn.ensemble"))
 const SKDU = ((ScikitLearn.Skcore).pyimport("sklearn.dummy"))
 const SKNB = ((ScikitLearn.Skcore).pyimport("sklearn.naive_bayes"))
 const SKNE = ((ScikitLearn.Skcore).pyimport("sklearn.neighbors"))
-const SKNN = ((ScikitLearn.Skcore).pyimport("sklearn.neural_network"))
+const SKDA = ((ScikitLearn.Skcore).pyimport("sklearn.discriminant_analysis"))
+# const SKNN = ((ScikitLearn.Skcore).pyimport("sklearn.neural_network"))
 
 """
 _skmodel_fit_reg
@@ -214,6 +215,7 @@ include("linear-regressors.jl")
 include("linear-classifiers.jl")
 include("gaussian-process.jl")
 include("ensemble.jl")
+include("discriminant-analysis.jl")
 include("misc.jl")
 
 end # module
