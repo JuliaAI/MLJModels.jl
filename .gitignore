@@ -5,3 +5,4 @@ Manifest.toml
 *.bu
 .DS_Store
 sandbox/
+profiler.jl
