@@ -8,8 +8,7 @@ import StatsBase: proportions, CovarianceEstimator
 using Distances, LinearAlgebra
 using Tables, ScientificTypes
 
-#import ..MultivariateStats
-import MultivariateStats
+import ..MultivariateStats
 
 const MS = MultivariateStats
 
@@ -519,8 +518,9 @@ function MLJBase.fit(model::BayesianSubspaceLDA, ::Int, X, y)
     ## where covariance estimate Σ = Sw / (n - nclasses)
     core_res.projLDA   .*= sqrt(n - nclasses)
 
+    vproportions = λ ./ sum(λ) #proportions of variance
     cache     = nothing
-    report    = NamedTuple{}()
+    report    = (vproportions = vproportions,)
     fitresult = (core_res, class_list, priors)
 
     return fitresult, cache, report
@@ -578,6 +578,7 @@ For more information about the algorithm, see the paper by Li, Zhu and Ogihara, 
 end
 
 function MLJBase.fit(model::SubspaceLDA, ::Int, X, y)
+    features   = MLJBase.schema(X).names
     class_list = MLJBase.classes(y[1]) #class list containing unique entries in y
     nclasses   = length(class_list)
 
@@ -615,10 +616,11 @@ function MLJBase.fit(model::SubspaceLDA, ::Int, X, y)
     G .= G[:, 1:out_dim]
     
     core_res = MS.SubspaceLDA(projw, G, λ, cmeans, cweights)
+    vproportions = λ ./ sum(λ) #proportions of variance
 
     cache     = nothing
-    report    = NamedTuple{}()
-    fitresult = (core_res, class_list)
+    report    = (vproportions = vproportions,)
+    fitresult = (core_res, class_list, features)
 
     return fitresult, cache, report
 end
@@ -629,7 +631,7 @@ function MLJBase.fitted_params(::SubspaceLDA, (core_res, class_list))
 end
 
 function MLJBase.predict(m::SubspaceLDA, (core_res, class_list), Xnew)
-    # projection of Xnew XWt is n x o  where o = number of out dims
+    # projection of Xnew, XWt is n x o  where o = number of out dims
     proj = core_res.projw * core_res.projLDA #proj is the projection_matrix
     XWt = MLJBase.matrix(Xnew) * proj
     # centroids in the transformed space, nc x o
@@ -645,6 +647,14 @@ function MLJBase.predict(m::SubspaceLDA, (core_res, class_list), Xnew)
 
     return [MLJBase.UnivariateFinite(class_list, P[j, :]) for j in 1:size(P, 1)]
 end
+
+function MLJBase.transform(m::T, (core_res,), X) where T<:Union{LDA, SubspaceLDA, BayesianLDA, BayesianSubspaceLDA}
+    # projection of X, XWt is n x o  where o = number of out dims
+    proj = core_res.projw * core_res.projLDA #proj is the projection_matrix
+    XWt = MLJBase.matrix(X) * proj
+    return MLJBase.table(XWt, prototype = X)
+end
+
 
 ####
 #### METADATA
@@ -686,21 +696,25 @@ metadata_model(LDA,
                input=MLJBase.Table(MLJBase.Continuous),
                target=AbstractVector{<:MLJBase.Finite},
                weights=false,
+               output=MLJBase.Table(MLJBase.Continuous),
                descr=LDA_DESCR)
 metadata_model(BayesianLDA,
                input=MLJBase.Table(MLJBase.Continuous),
                target=AbstractVector{<:MLJBase.Finite},
                weights=false,
+               output=MLJBase.Table(MLJBase.Continuous),
                descr=BayesianLDA_DESCR)
 metadata_model(SubspaceLDA,
                input=MLJBase.Table(MLJBase.Continuous),
                target=AbstractVector{<:MLJBase.Finite},
                weights=false,
+               output=MLJBase.Table(MLJBase.Continuous),
                descr=SubspaceLDA_DESCR)               
 metadata_model(BayesianSubspaceLDA,
                input=MLJBase.Table(MLJBase.Continuous),
                target=AbstractVector{<:MLJBase.Finite},
                weights=false,
+               output = MLJBase.Table(MLJBase.Continuous),
                descr=BayesianSubspaceLDA_DESCR)
 
 end # of module+
