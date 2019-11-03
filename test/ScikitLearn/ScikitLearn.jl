@@ -9,6 +9,7 @@ include("linear-regressors.jl")
 include("linear-classifiers.jl")
 include("gaussian-process.jl")
 include("ensemble.jl")
+include("discriminant-analysis.jl")
 include("misc.jl")
 
 end

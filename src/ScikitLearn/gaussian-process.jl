@@ -22,8 +22,12 @@ MLJBase.fitted_params(model::GaussianProcessRegressor, (fitresult, _, _)) = (
     log_marginal_likelihood_value = fitresult.log_marginal_likelihood_value_
     )
 
-MLJBase.input_scitype(::Type{<:GaussianProcessRegressor})  = MLJBase.Table(MLJBase.Continuous)
-MLJBase.target_scitype(::Type{<:GaussianProcessRegressor}) = AbstractVector{MLJBase.Continuous}
+metadata_model(GaussianProcessRegressor,
+    input=MLJBase.Table(MLJBase.Continuous),
+    target=AbstractVector{MLJBase.Continuous},
+    weights=false,
+    descr="Gaussian process regressor."
+    )
 
 # ============================================================================
 GaussianProcessClassifier_ = SKGP.GaussianProcessClassifier
