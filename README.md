@@ -73,6 +73,7 @@ Note that for some of these packages, the interface is incomplete; contributions
     * **Gaussian Processes**: `GaussianProcessRegressor`, `GaussianProcessClassifier`
     * **Ensemble**: `AdaBoostRegressor`, `AdaBoostClassifier`, `BaggingRegressor`, `BaggingClassifier`, `GradientBoostingRegressor`, `GradientBoostingClassifier`, `RandomForestRegressor`, `RandomForestClassifier`
     * **Naive Bayes**: `GaussianNB`, `MultinomialNB`, `ComplementNB`
+    * **Discriminant Analysis**, `BayesianLDA`, `BayesianQDA`
 * [XGBoost.jl](https://github.com/dmlc/XGBoost.jl)
     * `XGBoostRegressor`, `XGBoostClassifier`, `XGBoostCount`
 * [NearestNeighbors.jl](https://github.com/KristofferC/NearestNeighbors.jl)
