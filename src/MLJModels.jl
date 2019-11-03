@@ -2,7 +2,8 @@ module MLJModels
 
 using MLJBase, Tables, ScientificTypes
 using Requires, Pkg, Pkg.TOML, OrderedCollections
-using Parameters, CategoricalArrays, StatsBase, Distributions
+using Parameters, CategoricalArrays, StatsBase, Statistics
+import Distributions
 
 # for administrators to update Metadata.toml:
 export @update, check_registry
