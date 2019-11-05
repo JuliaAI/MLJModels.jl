@@ -1,4 +1,4 @@
-module MLJModels
+module MLJModels 
 
 using MLJBase, Tables, ScientificTypes
 using Requires, Pkg, Pkg.TOML, OrderedCollections
