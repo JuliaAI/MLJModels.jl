@@ -1671,7 +1671,7 @@
 ":package_uuid" = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
 ":package_url" = "https://github.com/alan-turing-institute/MLJModels.jl"
 ":is_wrapper" = "`false`"
-":supports_weights" = "`false`"
+":supports_weights" = "`true`"
 ":docstring" = "Constant classifier (Probabilistic).\n→ based on [MLJModels](https://github.com/alan-turing-institute/MLJModels.jl).\n→ do `@load ConstantClassifier pkg=\"MLJModels\"` to use the model.\n→ do `?ConstantClassifier` for documentation."
 ":name" = "ConstantClassifier"
 ":is_supervised" = "`true`"
