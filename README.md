@@ -63,7 +63,7 @@ Note that for some of these packages, the interface is incomplete; contributions
     * `LinearRegressor`, `RidgeRegressor`, `LassoRegressor`, `ElasticNetRegressor`, `QuantileRegressor`, `HuberRegressor`, `RobustRegressor`, `LADRegressor` (all with optional elastic net regression)
     * `LogisticClassifier`, `MultinomialClassifier` (with elastic net regularisation)
 * [MultivariateStats.jl](https://github.com/mpastell/LIBSVM.jl)
-    * `RidgeRegressor`, `PCA`, `KernelPCA`, `ICA`, `LDA` (multiclass)
+    * `RidgeRegressor`, `PCA`, `KernelPCA`, `ICA`, `LDA` (multiclass), `BayesianLDA` (multiclass)
 * [NaiveBayes.jl](https://github.com/dfdx/NaiveBayes.jl)
     * `GaussianNBClassifier`, `MultinomialNBClassifier`, `HybridNBClassifier`
 * [ScikitLearn.jl](https://github.com/cstjean/ScikitLearn.jl)
