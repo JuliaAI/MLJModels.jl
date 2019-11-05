@@ -67,7 +67,7 @@ function MLJBase.fit(model::DecisionTreeClassifier, verbosity::Int, X, y)
     Xmatrix = MLJBase.matrix(X)
     yplain  = MLJBase.int(y)
     classes_seen = filter(in(unique(y)), MLJBase.classes(y[1]))
-    integers_seen = unique(yplain)
+    integers_seen = MLJBase.int(classes_seen) #unique(yplain)
 
     tree = DecisionTree.build_tree(yplain, Xmatrix,
                                    model.n_subfeatures,

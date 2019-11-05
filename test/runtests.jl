@@ -34,9 +34,9 @@ end
     @test include("DecisionTree.jl")
 end
 
-@testset "GaussianProcesses  " begin
-    @test include("GaussianProcesses.jl")
-end
+# @testset "GaussianProcesses  " begin
+#     @test include("GaussianProcesses.jl")
+# end
 
 @testset "Clustering         " begin
     @test include("Clustering.jl")
