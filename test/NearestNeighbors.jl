@@ -26,6 +26,8 @@ y3 = fill("C", n)
 
 y = categorical(vcat(y1, y2, y3))
 
+w = abs.(50 * randn(nrows(x)))
+
 ntest =  5
 xtest1 = randn(ntest, p)
 xtest2 = randn(ntest, p) .+ 5
@@ -43,13 +45,20 @@ knn = KNNClassifier(weights=:distance)
 
 f,_,_ = fit(knn, 1, x, y)
 
+f2,_,_ = fit(knn, 1, x, y, w)
+@test f2[3] == w
+
 p = predict(knn, f, xtest)
+p2 = predict(knn, f2, xtest)
 
 @test p[1] isa UnivariateFinite
+@test p2[1] isa UnivariateFinite
 
 p = predict_mode(knn, f, xtest)
+p2 = predict_mode(knn, f2, xtest)
 
 @test sum(p .== ytest)/length(ytest) == 1.0
+@test sum(p2 .== ytest)/length(ytest) == 1.0
 
 # === regression case
 
@@ -62,12 +71,15 @@ y = vcat(y1, y2, y3)
 knnr = KNNRegressor(weights=:distance)
 
 f,_,_ = fit(knnr, 1, x, y)
+f2,_,_ = fit(knnr, 1, x, y, w)
 
 p = predict(knnr, f, xtest)
+p2 = predict(knnr, f2, xtest)
 
 @test all(p[1:ntest] .≈ 0.0)
 @test all(p[ntest+1:2*ntest] .≈ 2.0)
 @test all(p[2*ntest+1:end] .≈ -2.0)
+
 
 
 # test metadata

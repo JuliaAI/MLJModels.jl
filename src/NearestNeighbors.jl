@@ -73,6 +73,7 @@ const KNN = Union{KNNRegressor, KNNClassifier}
 function MLJBase.fit(m::KNN, verbosity::Int, X, y, w=nothing)
     if w !== nothing
         length(w) == length(y) || throw(ArgumentError("The weights vector `w` must have the same length as that of the response `y`."))
+        all(w .≥ 0) || throw(ArgumentError("Only non-negative weights are supported."))
     end
     Xmatrix = MLJBase.matrix(X, transpose=true) # NOTE: copies the data
     if m.algorithm == :kdtree
@@ -101,20 +102,20 @@ function MLJBase.predict(m::KNNClassifier, (tree, y, w), X)
 
     # go over each test record, and for each go over the k nearest entries
     for i in eachindex(idxs)
-        idxs_    = idxs[i]
-        dists_   = dists[i]
-        labels   = y[idxs_]
+        idxs_  = idxs[i]
+        dists_ = dists[i]
+        labels = y[idxs_]
         if w !== nothing
             w_ = w[idxs_]
         end
         probas .*= 0.0
         if m.weights == :uniform
             for (k, label) in enumerate(labels)
-                probas[classes .== label] .+= 1.0 / m.K .* w_[k]
+                probas[classes .== label] .+= 1.0 / m.K * w_[k]
             end
         else
             for (k, label) in enumerate(labels)
-                probas[classes .== label] .+= 1.0 / dists_[k] .* w_[k]
+                probas[classes .== label] .+= 1.0 / dists_[k] * w_[k]
             end
         end
         # normalize so that sum to 1
@@ -161,14 +162,14 @@ metadata_pkg.((KNNRegressor, KNNClassifier),
 metadata_model(KNNRegressor,
     input=MLJBase.Table(MLJBase.Continuous),
     target=AbstractVector{MLJBase.Continuous},
-    weights=false,
+    weights=true,
     descr=KNNRegressorDescription
     )
 
 metadata_model(KNNClassifier,
     input=MLJBase.Table(MLJBase.Continuous),
     target=AbstractVector{<:MLJBase.Finite},
-    weights=false,
+    weights=true,
     descr=KNNClassifierDescription
     )
 
