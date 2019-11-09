@@ -8,7 +8,7 @@ import StatsBase: proportions, CovarianceEstimator
 using Distances, LinearAlgebra
 using Tables, ScientificTypes
 
-import ..MultivariateStats
+import MultivariateStats
 
 const MS = MultivariateStats
 
@@ -23,8 +23,8 @@ const KPCA_DESCR = "Kernel principal component analysis."
 const ICA_DESCR = "Independent component analysis."
 const LDA_DESCR = "Multiclass linear discriminant analysis. The algorithm learns a projection matrix `W` that projects the feature matrix `Xtrain` onto a lower dimensional space of dimension `out_dim` such that the between-class variance in the transformed space is maximized relative to the within-class variance."
 const BayesianLDA_DESCR= "Bayesian Multiclass linear discriminant analysis. The algorithm learns a projection matrix `W` that projects the feature matrix `Xtrain` onto a lower dimensional space of dimension `out_dim` such that the between-class variance in the transformed space is maximized relative to the within-class variance and classifies using Bayes rule."
-const BayesianSubspaceLDA_DESCR = "Bayesian Multiclass linear discriminant analysis. Suitable for high dimensional data. The algorithm learns a projection matrix `W` (without computing covariance matrices Sw ,Sb) that projects the feature matrix `Xtrain` onto a lower dimensional space of dimension `out_dim` such that the between-class variance in the transformed space is maximized relative to the within-class variance and classifies using Bayes rule."
-const SubspaceLDA_DESCR = "Multiclass linear discriminant analysis. Suitable for high dimensional data. The algorithm learns a projection matrix `W` (without computing covariance matrices Sw ,Sb) that projects the feature matrix `Xtrain` onto a lower dimensional space of dimension `out_dim` such that the between-class variance in the transformed space is maximized relative to the within-class variance."
+const BayesianSubspaceLDA_DESCR = "Bayesian Multiclass linear discriminant analysis. Suitable for high dimensional data. The algorithm learns a projection matrix `W` (without computing covariance matrices Sw ,Sb) in the subspace spanned by the within class scatter matrix, that projects the feature matrix `Xtrain` onto a lower dimensional space of dimension `out_dim` such that the between-class variance in the transformed space is maximized relative to the within-class variance and classifies using Bayes rule."
+const SubspaceLDA_DESCR = "Multiclass linear discriminant analysis. Suitable for high dimensional data. The algorithm learns a projection matrix `W` (without computing covariance matrices Sw ,Sb) in the subspace spanned by the within class scatter matrix, that projects the feature matrix `Xtrain` onto a lower dimensional space of dimension `out_dim` such that the between-class variance in the transformed space is maximized relative to the within-class variance."
 
 ####
 #### RIDGE
@@ -385,12 +385,12 @@ function MLJBase.fit(model::BayesianLDA, ::Int, X, y)
     # check if the given one is sensible
     out_dim ≤ def_outdim || throw(ArgumentError("`out_dim` must not be larger than `min(p, nc-1)` where `p` is the dimension of `X` and `nc` is the number of classes."))
 
-    ## Estimates prior probabilities is unspecified by user.
+    ## Estimates prior probabilities if unspecified by user.
     if model.priors == nothing
         priors = proportions(yplain)
     else
         #check if the length of priors is same as nclasses
-        size(MLJBase.classes(model.priors)) == nclasses || throw(ArgumentError("Invalid size of `priors`"))
+        length(MLJBase.levels(model.priors)) == nclasses || throw(ArgumentError("Invalid size of `priors`"))
         priors = MLJBase.pdf.(model.priors, class_list)
     end
 
@@ -437,6 +437,7 @@ function MLJBase.predict(m::BayesianLDA, (core_res, class_list, priors), Xnew)
     P .+= log.(priors)'
 
     # apply a softmax transformation to convert P to a probability matrix
+    P .-= maximum(P, dims=2)
     P  .= exp.(P)
     P ./= sum(P, dims=2)
 
@@ -454,11 +455,11 @@ $BayesianSubspaceLDA_DESCR
 
 ## Parameters
 
-* `normalize=true`: Option to normalize Sb by number of observations in each class, one of `true` or `false`.
+* `normalize=true`: Option to normalize the between class variance by number of observations in each class, one of `true` or `false`.
 * `out_dim`: the output dimension, i.e dimension of the transformed space, automatically set if 0 is given (default).
 * `priors=nothing`: if `priors = nothing` estimates the prior probabilities from the data, else it uses the user specified `UnivariateFinite` prior probabilities.
 See also the [package documentation](https://multivariatestatsjl.readthedocs.io/en/latest/lda.html).
-For more information about the algorithm, see the paper by Li, Zhu and Ogihara, [Using Discriminant Analysis for Multi-class Classification: An Experimental Investigation](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.89.7068&rep=rep1&type=pdf).
+For more information about the algorithm, see the paper by Howland & Park (2006), "Generalizing discriminant analysis using the generalized singular value decomposition", IEEE Trans. Patt. Anal. & Mach. Int., 26: 995-1006.
 """
 @mlj_model mutable struct BayesianSubspaceLDA <: MLJBase.Probabilistic
     normalize::Bool=true
@@ -485,21 +486,21 @@ function MLJBase.fit(model::BayesianSubspaceLDA, ::Int, X, y)
     # check to make sure sample size is greater or equals nclasses
     n ≥ nclasses || throw(ArgumentError("The number of samples is less than the number of classes"))
     
-    ## Estimates prior probabilities is unspecified by user.
+    ## Estimates prior probabilities if unspecified by user.
     if model.priors == nothing
         priors = proportions(yplain)
     else
         #check if the length of priors is same as nclasses
-        size(MLJBase.classes(model.priors)) == nclasses || throw(ArgumentError("Invalid size of `priors`"))
+        length(MLJBase.levels(model.priors)) == nclasses || throw(ArgumentError("Invalid size of `priors`"))
         priors = MLJBase.pdf.(model.priors, class_list)
     end
 
     # # Code gotten from JuliaStats/MultivariateStats.jl
     # # Compute centroids, class weights, and deviation from centroids
-    # # Note Sb = Hb*Hb', Sw = Hw*Hw'
-    cmeans, cweights, Hw = MS.center(Xm_t, Int.(yplain), nclasses)
-    dmeans = cmeans .- (model.normalize ? MS.mean(cmeans, dims=2) : cmeans * (cweights / (n)))
-    Hb = model.normalize ? dmeans * sqrt(n)  : dmeans * Diagonal(sqrt.(cweights))
+    # # Note Sb = Hb*Hb', Sw = Hw*Hw' 
+    cmeans, cweights, Hw = MS.center(Xm_t, Int.(yplain), nclasses) # Hw is p x n matrix , cmeans is p x nclasses matrix, cweights is nclasses x 1 vector
+    dmeans = cmeans .- (model.normalize ? MS.mean(cmeans, dims=2) : cmeans * (cweights / (n))) #dmeans is p x nclasses
+    Hb = model.normalize ? dmeans .* sqrt(n)  : dmeans .* sqrt.(cweights) #Hb is p x nclasses
 
     # Project to the subspace spanned by the within-class scatter
     # (essentially, PCA before LDA)
@@ -508,13 +509,15 @@ function MLJBase.fit(model::BayesianSubspaceLDA, ::Int, X, y)
     projw = Uw[:, keep]
     pHb = projw' * Hb
     pHw = projw' * Hw
-    λ, G = MS.lda_gsvd(pHb, pHw, cweights)
+    
+    # compute LDA projection G in the subspace spanned by the within-class variance.
+    λ, G = MS.lda_gsvd(pHb, pHw, cweights) # λ is a (nclasses -1) x 1 vector containing the eigen values sorted in descending order. 
 
-    G .= G[:, 1:out_dim]
+    G = G[:, 1:out_dim]
     
     core_res = MS.SubspaceLDA(projw, G, λ, cmeans, cweights)
 
-    ## scaled the overall projection_matrix (P = G*projw) by multiplying by sqrt(n - nclasses) this ensures Pᵀ*Σ*P=I
+    ## scaled the overall projection_matrix (P = projw * G) by multiplying by sqrt(n - nclasses) this ensures Pᵀ*Σ*P=I
     ## where covariance estimate Σ = Sw / (n - nclasses)
     core_res.projLDA   .*= sqrt(n - nclasses)
 
@@ -541,12 +544,13 @@ function MLJBase.predict(m::BayesianSubspaceLDA, (core_res, class_list, priors),
 
     # compute the distances in the transformed space between pairs of rows
     # The discriminant matrix `P` is of dimension `n x nc`
-    #  P[i,k] = -0.5*(xᵢ −  µₖ)ᵀΣ⁻¹(xᵢ −  µₖ) + log(priorsₖ) and Σ⁻¹ = I due to the nature of the projection_matrix
+    #  P[i,k] = -0.5*(xᵢ −  µₖ)ᵀΣ⁻¹(xᵢ −  µₖ) + log(priorsₖ) and Σ⁻¹ = I due to the nature of the projection_matrix (P = projw * G)
     P = pairwise(SqEuclidean(), XWt, centroids, dims=1)
     P .*= -0.5
     P .+= log.(priors)'
 
     # apply a softmax transformation to convert P to a probability matrix
+    P .-= maximum(P, dims=2)
     P  .= exp.(P)
     P ./= sum(P, dims=2)
 
@@ -564,12 +568,12 @@ $SubspaceLDA_DESCR
 
 ## Parameters
 
-* `normalize=true`: Option to normalize Sb by number of observations in each class, one of `true` or `false`.
+* `normalize=true`: Option to normalize the between class variance by number of observations in each class, one of `true` or `false`.
 * `out_dim`: the output dimension, i.e dimension of the transformed space, automatically set if 0 is given (default).
 * `dist=SqEuclidean`: the distance metric to use when performing classification (to compare the distance between a new point and centroids in the transformed space), an alternative choice can be the `CosineDist`.
 
 See also the [package documentation](https://multivariatestatsjl.readthedocs.io/en/latest/lda.html).
-For more information about the algorithm, see the paper by Li, Zhu and Ogihara, [Using Discriminant Analysis for Multi-class Classification: An Experimental Investigation](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.89.7068&rep=rep1&type=pdf).
+For more information about the algorithm, see the paper by Howland & Park (2006), "Generalizing discriminant analysis using the generalized singular value decomposition", IEEE Trans. Patt. Anal. & Mach. Int., 26: 995-1006.
 """
 @mlj_model mutable struct SubspaceLDA <: MLJBase.Probabilistic
     normalize::Bool=true
@@ -600,9 +604,9 @@ function MLJBase.fit(model::SubspaceLDA, ::Int, X, y)
     # # Code gotten from JuliaStats/MultivariateStats.jl
     # # Compute centroids, class weights, and deviation from centroids
     # # Note Sb = Hb*Hb', Sw = Hw*Hw'
-    cmeans, cweights, Hw = MS.center(Xm_t, Int.(yplain), nclasses)
-    dmeans = cmeans .- (model.normalize ? MS.mean(cmeans, dims=2) : cmeans * (cweights / (n)))
-    Hb = model.normalize ? dmeans * sqrt(n)  : dmeans * Diagonal(sqrt.(cweights))
+    cmeans, cweights, Hw = MS.center(Xm_t, Int.(yplain), nclasses) # Hw is p x n matrix , cmeans is p x nclasses matrix, cweights is nclasses x 1 vector
+    dmeans = cmeans .- (model.normalize ? MS.mean(cmeans, dims=2) : cmeans * (cweights / (n))) #dmeans is p x nclasses
+    Hb = model.normalize ? dmeans .* sqrt(n)  : dmeans .* sqrt.(cweights)
 
     # Project to the subspace spanned by the within-class scatter
     # (essentially, PCA before LDA)
@@ -611,9 +615,11 @@ function MLJBase.fit(model::SubspaceLDA, ::Int, X, y)
     projw = Uw[:, keep]
     pHb = projw' * Hb
     pHw = projw' * Hw
-    λ, G = MS.lda_gsvd(pHb, pHw, cweights)
+    
+    # compute LDA projection G in the subspace spanned by the within-class variance.
+    λ, G = MS.lda_gsvd(pHb, pHw, cweights) # λ is a (nclasses -1) x 1 vector containing the eigen values sorted in descending order. 
 
-    G .= G[:, 1:out_dim]
+    G = G[:, 1:out_dim]
     
     core_res = MS.SubspaceLDA(projw, G, λ, cmeans, cweights)
     vproportions = λ ./ sum(λ) #proportions of variance
