@@ -296,6 +296,9 @@ function MLJBase.fit(model::LDA, ::Int, X, y)
     Xm_t   = MLJBase.matrix(X, transpose=true) # now p x n matrix
     yplain = MLJBase.int(y) # vector of n ints in {1,..., nclasses}
     p      = size(Xm_t, 1)
+    
+     #check to make sure we have more than one class
+    nclasses >= 2 ||  throw(ArgumentError("The number of classes has to be greater than one"))
 
     # check output dimension default is min(p, nc-1)
     def_outdim = min(p, nclasses - 1)
@@ -377,6 +380,9 @@ function MLJBase.fit(model::BayesianLDA, ::Int, X, y)
     Xm_t   = MLJBase.matrix(X, transpose=true) # now p x n matrix
     yplain = MLJBase.int(y) # vector of n ints in {1,..., nclasses}
     p, n   = size(Xm_t)
+    
+     #check to make sure we have more than one class
+    nclasses >= 2 ||  throw(ArgumentError("The number of classes has to be greater than one"))
 
     # check output dimension default is min(p, nc-1)
     def_outdim = min(p, nclasses - 1)
@@ -475,6 +481,9 @@ function MLJBase.fit(model::BayesianSubspaceLDA, ::Int, X, y)
     Xm_t   = MLJBase.matrix(X, transpose=true) # now p x n matrix
     yplain = MLJBase.int(y) # vector of n ints in {1,..., nclasses}
     p, n   = size(Xm_t)
+    
+     #check to make sure we have more than one class
+    nclasses >= 2 ||  throw(ArgumentError("The number of classes has to be greater than one"))
 
     # check output dimension default is min(p, nc-1)
     def_outdim = min(p, nclasses - 1)
@@ -590,6 +599,9 @@ function MLJBase.fit(model::SubspaceLDA, ::Int, X, y)
     Xm_t   = MLJBase.matrix(X, transpose=true) # now p x n matrix
     yplain = MLJBase.int(y) # vector of n ints in {1,..., nclasses}
     p, n   = size(Xm_t)
+    
+     #check to make sure we have more than one class
+    nclasses >= 2 ||  throw(ArgumentError("The number of classes has to be greater than one"))
 
     # check output dimension default is min(p, nc-1)
     def_outdim = min(p, nclasses - 1)
