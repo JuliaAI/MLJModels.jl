@@ -71,10 +71,6 @@ end
 const KNN = Union{KNNRegressor, KNNClassifier}
 
 function MLJBase.fit(m::KNN, verbosity::Int, X, y, w=nothing)
-    if w !== nothing
-        length(w) == length(y) || throw(ArgumentError("The weights vector `w` must have the same length as that of the response `y`."))
-        all(w .≥ 0) || throw(ArgumentError("Only non-negative weights are supported."))
-    end
     Xmatrix = MLJBase.matrix(X, transpose=true) # NOTE: copies the data
     if m.algorithm == :kdtree
         tree = NN.KDTree(Xmatrix; leafsize=m.leafsize, reorder=m.reorder)
