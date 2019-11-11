@@ -70,7 +70,7 @@ end
 
 const KNN = Union{KNNRegressor, KNNClassifier}
 
-function MLJBase.fit(m::KNN, verbosity::Int, X, y)
+function MLJBase.fit(m::KNN, verbosity::Int, X, y, w=nothing)
     Xmatrix = MLJBase.matrix(X, transpose=true) # NOTE: copies the data
     if m.algorithm == :kdtree
         tree = NN.KDTree(Xmatrix; leafsize=m.leafsize, reorder=m.reorder)
@@ -80,50 +80,65 @@ function MLJBase.fit(m::KNN, verbosity::Int, X, y)
         tree = NN.BruteTree(Xmatrix; leafsize=m.leafsize, reorder=m.reorder)
     end
     report = NamedTuple{}()
-    return (tree, y), nothing, report
+    return (tree, y, w), nothing, report
 end
 
 MLJBase.fitted_params(model::KNN, (tree, _)) = (tree=tree,)
 
-function MLJBase.predict(m::KNNClassifier, (tree, y), X)
-    Xmatrix     = MLJBase.matrix(X, transpose=true) # NOTE: copies the data
+function MLJBase.predict(m::KNNClassifier, (tree, y, w), X)
+    Xmatrix = MLJBase.matrix(X, transpose=true) # NOTE: copies the data
+    # for each entry, get the K closest training point + their distance
     idxs, dists = NN.knn(tree, Xmatrix, m.K)
+
     preds       = Vector{MLJBase.UnivariateFinite}(undef, length(idxs))
     classes     = MLJBase.classes(y[1])
     probas      = zeros(length(classes))
+
+    w_ = ones(m.K)
+
+    # go over each test record, and for each go over the k nearest entries
     for i in eachindex(idxs)
-        idxs_    = idxs[i]
-        dists_   = dists[i]
-        labels   = y[idxs_]
+        idxs_  = idxs[i]
+        dists_ = dists[i]
+        labels = y[idxs_]
+        if w !== nothing
+            w_ = w[idxs_]
+        end
         probas .*= 0.0
         if m.weights == :uniform
-            for label in labels
-                probas[classes .== label] .+= 1.0 / m.K
+            for (k, label) in enumerate(labels)
+                probas[classes .== label] .+= 1.0 / m.K * w_[k]
             end
         else
-            for (i, label) in enumerate(labels)
-                probas[classes .== label] .+= 1.0 / dists_[i]
+            for (k, label) in enumerate(labels)
+                probas[classes .== label] .+= 1.0 / dists_[k] * w_[k]
             end
-            # normalize so that sum to 1
-            probas ./= sum(probas)
         end
+        # normalize so that sum to 1
+        probas ./= sum(probas)
         preds[i] = MLJBase.UnivariateFinite(classes, probas)
     end
     return preds
 end
 
-function MLJBase.predict(m::KNNRegressor, (tree, y), X)
+function MLJBase.predict(m::KNNRegressor, (tree, y, w), X)
     Xmatrix     = MLJBase.matrix(X, transpose=true) # NOTE: copies the data
     idxs, dists = NN.knn(tree, Xmatrix, m.K)
     preds       = zeros(length(idxs))
+
+    w_ = ones(m.K)
+
     for i in eachindex(idxs)
         idxs_  = idxs[i]
         dists_ = dists[i]
         values = y[idxs_]
+        if w !== nothing
+            w_ = w[idxs_]
+        end
         if m.weights == :uniform
-            preds[i] = sum(values) / m.K
+            preds[i] = sum(values .* w_) / sum(w_)
         else
-            preds[i] = sum(values .* (1.0 .- dists_ ./ sum(dists_))) / (m.K-1)
+            preds[i] = sum(values .* w_ .* (1.0 .- dists_ ./ sum(dists_))) / (sum(w_) - 1)
         end
     end
     return preds
@@ -143,14 +158,14 @@ metadata_pkg.((KNNRegressor, KNNClassifier),
 metadata_model(KNNRegressor,
     input=MLJBase.Table(MLJBase.Continuous),
     target=AbstractVector{MLJBase.Continuous},
-    weights=false,
+    weights=true,
     descr=KNNRegressorDescription
     )
 
 metadata_model(KNNClassifier,
     input=MLJBase.Table(MLJBase.Continuous),
     target=AbstractVector{<:MLJBase.Finite},
-    weights=false,
+    weights=true,
     descr=KNNClassifierDescription
     )
 
