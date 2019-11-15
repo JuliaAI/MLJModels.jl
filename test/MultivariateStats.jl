@@ -181,5 +181,84 @@ end
     @test d[:name] == "BayesianLDA"
 end
 
+@testset "BayesianSubspaceLDA" begin
+    iris=dataset("datasets","iris")
+    X=selectcols(iris,[:SepalLength, :SepalWidth, :PetalLength, :PetalWidth])
+    y=selectcols(iris, :Species)
+
+    LDA_model = BayesianSubspaceLDA()
+
+    fitresult, _, report = fit(LDA_model, 1, X, y)
+    class_means,projection_matrix,prior_probabilities = MLJBase.fitted_params(LDA_model, fitresult)
+    preds=predict(LDA_model, fitresult, X)
+    predicted_class = predict_mode(LDA_model, fitresult, X)
+    mcr = misclassification_rate(predicted_class, y)
+    mce = MLJBase.cross_entropy(preds, y) |> mean
+
+    @test class_means' ≈ [5.006 3.428 1.462 0.246;
+                          5.936 2.770 4.260 1.326;
+                          6.588 2.974 5.552 2.026]
+    
+    @test projection_matrix ≈  [0.8293776  0.02410215;
+                                1.5344731  2.16452123;
+                                -2.2012117 -0.93192121;
+                                -2.8104603  2.83918785]
+    @test round.(prior_probabilities, sigdigits=7) == [0.3333333, 0.3333333, 0.3333333]
+    @test round.(mcr, sigdigits=1) == 0.02
+    
+    @test round.(report.vproportions, digits=4) == [0.9912, 0.0088]
+    @test 0.04 ≤ mce ≤ 0.045
+
+    d = info_dict(BayesianSubspaceLDA)
+    @test d[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
+    @test d[:target_scitype] == AbstractVector{<:MLJBase.Finite}
+    @test d[:name] == "BayesianSubspaceLDA"
+end
+
+@testset "SubspaceLDA" begin
+    Random.seed!(1125)
+    X1 = -2 .+ randn(100, 2)
+    X2 = randn(100, 2)
+    X3 = 2 .+ randn(100, 2)
+    y1 = ones(100)
+    y2 = 2ones(100)
+    y3 = 3ones(100)
+    X = vcat(X1, X2, X3)
+    y = vcat(y1, y2, y3)
+    p = Random.randperm(300)
+    X = X[p, :]
+    y = y[p]
+    X = MLJBase.table(X)
+    y = categorical(y)
+    train, test = partition(eachindex(y), 0.7)
+    Xtrain = selectrows(X, train)
+    ytrain = selectrows(y, train)
+    Xtest = selectrows(X, test)
+    ytest = selectrows(y, test)
+
+    lda_model = SubspaceLDA()
+    fitresult, = fit(lda_model, 1, Xtrain, ytrain)
+    preds = predict_mode(lda_model, fitresult, Xtest)
+    mcr = misclassification_rate(preds, ytest)
+    @test mcr ≤ 0.15
+
+    # MultivariateStats Linear Discriminant Analysis transform
+     proj    = fitresult[1].projw
+     projLDA = fitresult[1].projLDA
+     proj =  proj * projLDA 
+     XWt = MLJBase.matrix(X) * proj
+     tlda_ms = MLJBase.table(XWt, prototype=X)
+ 
+    # MLJ Linear Discriminant Analysis transform
+     tlda_mlj = MLJBase.transform(lda_model, fitresult, X)
+     
+     @test tlda_mlj == tlda_ms 
+
+     d = info_dict(SubspaceLDA)
+     @test d[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
+     @test d[:target_scitype] == AbstractVector{<:MLJBase.Finite}
+     @test d[:name] == "SubspaceLDA"
+end
+
 end
 true
