@@ -52,6 +52,13 @@ yhat = MLJBase.predict(model, fitresult, X)
 yhat1 = yhat[1]
 @test all([pdf(yhat1, c) ≈ pdf(d, c) for c in MLJBase.classes(d)])
 
+# with weights:
+w = [2, 3, 2, 5]
+model = ConstantClassifier()
+fitresult, cache, report =  MLJBase.fit(model, 1, X, y, w)
+d = MLJBase.UnivariateFinite([y[1], y[2], y[4]], [1/3, 1/4, 5/12])
+@test all([pdf(d, c) ≈ pdf(fitresult, c) for c in MLJBase.classes(d)])
+
 d = MLJBase.info_dict(model)
 @test d[:input_scitype] == MLJBase.Table(MLJBase.Scientific)
 @test d[:target_scitype] == AbstractVector{<:MLJBase.Finite}

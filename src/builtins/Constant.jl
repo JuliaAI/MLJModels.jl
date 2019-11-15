@@ -66,8 +66,9 @@ obtain the training target mode instead.
 """
 struct ConstantClassifier <: MLJBase.Probabilistic end
 
-function MLJBase.fit(::ConstantClassifier, verbosity::Int, X, y)
-    fitresult = Distributions.fit(MLJBase.UnivariateFinite, y)
+# here `args` is `y` or `y, w`:
+function MLJBase.fit(::ConstantClassifier, verbosity::Int, X, args...)
+    fitresult = Distributions.fit(MLJBase.UnivariateFinite, args...)
     cache     = nothing
     report    = NamedTuple
     return fitresult, cache, report
@@ -123,7 +124,7 @@ metadata_model(DeterministicConstantRegressor,
 metadata_model(ConstantClassifier,
                input=MLJBase.Table(MLJBase.Scientific),
                target=AbstractVector{<:MLJBase.Finite},
-               weights=false,
+               weights=true,
                descr="Constant classifier (Probabilistic).",
                path="MLJModels.ConstantClassifier")
 
