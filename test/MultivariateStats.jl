@@ -260,5 +260,40 @@ end
      @test d[:name] == "SubspaceLDA"
 end
 
+@testset "BayesianQDA" begin
+    Smarket = dataset("ISLR", "Smarket")
+    X      = selectcols(Smarket, [:Lag1,:Lag2])
+    y      = selectcols(Smarket, :Direction)
+    train  = selectcols(Smarket, :Year) .< 2005
+    test   = .!train
+    Xtrain = selectrows(X, train)
+    ytrain = selectrows(y, train)
+    Xtest  = selectrows(X, test)
+    ytest  = selectrows(y, test)
+
+    BQDA_model = BayesianQDA()
+    fitresult, = fit(BQDA_model, 1, Xtrain, ytrain)
+    class_means, projection_matrix = MLJBase.fitted_params(BQDA_model, fitresult)
+
+    preds = predict(BQDA_model, fitresult, Xtest)
+    predicted_class = predict_mode(BQDA_model, fitresult, Xtest)
+
+    accuracy = 1 - misclassification_rate(predicted_class, ytest)
+
+
+    mce = MLJBase.cross_entropy(preds, ytest) |> mean
+
+    @test 0.685 ≤ mce ≤ 0.695
+
+    @test round.(accuracy, sigdigits = 3) == 0.599
+
+    @test round.(class_means', sigdigits = 3) == [0.0428 0.0339; -0.0395 -0.0313]
+
+    d = info_dict(BayesianQDA)
+    @test d[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
+    @test d[:target_scitype] == AbstractVector{<:MLJBase.Finite}
+    @test d[:name] == "BayesianQDA"
+end
+
 end
 true
