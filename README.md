@@ -1,8 +1,7 @@
 ## MLJModels
 
 Repository of [MLJ](https://github.com/alan-turing-institute/MLJ.jl)
-model interfaces, and for the MLJ model
-registry.
+model interfaces, as well as the MLJ model registry.
 
 [MLJ](https://github.com/alan-turing-institute/MLJ.jl) is a
 machine learning toolbox written entirely in julia, but which
