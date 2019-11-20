@@ -32,6 +32,16 @@ const DTR_DESCR = "Decision Tree Regressor."
 
 ## CLASSIFIER
 
+struct TreePrinter{T}
+    tree::T
+end
+(c::TreePrinter)(depth) = DecisionTree.print_tree(c.tree, depth)
+(c::TreePrinter)() = DecisionTree.print_tree(c.tree, 5)
+
+Base.show(stream::IO, c::TreePrinter) =
+    print(stream, "TreePrinter object (call with display depth)")
+
+
 """
 DecisionTreeClassifer(; kwargs...)
 
@@ -40,13 +50,25 @@ A variation on the CART decision tree classifier from [https://github.com/bensad
 Instead of predicting the mode class at each leaf, a UnivariateFinite
 distribution is fit to the leaf training classes, with smoothing
 controlled by an additional hyperparameter `pdf_smoothing`: If `n` is
-the number of classes, then each class probability is replaced by
-`pdf_smoothing/n`, if it falls below that value, and the resulting
-vector of probabilities is renormalized.
+the number of observed classes, then each class probability is
+replaced by `pdf_smoothing/n`, if it falls below that ratio, and the
+resulting vector of probabilities is renormalized. Smoothing is only
+applied to classes actually observed in training. Unseen classes
+retain zero-probability predictions.
+
+To visualize the fitted tree in the REPL, set `verbosity=2` when
+fitting, or call `report(mach).print_tree(display_depth)` where `mach`
+is the fitted machine, and `display_depth` the desired
+depth. Interpretting the results will require a knowledge of the
+internal integer encodings of classes, which are given in
+`fitted_params(mach)` (which also stores the raw learned tree object
+from the DecisionTree.jl algorithm).
 
 For post-fit pruning, set `post-prune=true` and set
 `min_purity_threshold` appropriately. Other hyperparameters as per
-package documentation cited above.
+package documentation cited above. 
+
+
 """
 @mlj_model mutable struct DecisionTreeClassifier <: MLJBase.Probabilistic
     pruning_purity::Float64         = 1.0::(_ ≤ 1)
@@ -89,7 +111,8 @@ function MLJBase.fit(model::DecisionTreeClassifier, verbosity::Int, X, y)
     #> empty values):
 
     cache = nothing
-    report = (classes_seen=classes_seen,)
+    report = (classes_seen=classes_seen,
+              print_tree=TreePrinter(tree))
 
     return fitresult, cache, report
 end
