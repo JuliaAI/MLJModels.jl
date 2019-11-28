@@ -47,6 +47,9 @@ DecisionTreeClassifer(; kwargs...)
 
 A variation on the CART decision tree classifier from [https://github.com/bensadeghi/DecisionTree.jl/blob/master/README.md](https://github.com/bensadeghi/DecisionTree.jl/blob/master/README.md).
 
+Inputs are tables with ordinal columns. That is, the element scitype
+of each column can be `Continuous`, `Count` or `OrderedFactor`.
+
 Instead of predicting the mode class at each leaf, a UnivariateFinite
 distribution is fit to the leaf training classes, with smoothing
 controlled by an additional hyperparameter `pdf_smoothing`: If `n` is
@@ -160,6 +163,9 @@ CART decision tree classifier from
 [https://github.com/bensadeghi/DecisionTree.jl/blob/master/README.md](https://github.com/bensadeghi/DecisionTree.jl/blob/master/README.md). Predictions
 are Deterministic.
 
+Inputs are tables with ordinal columns. That is, the element scitype
+of each column can be `Continuous`, `Count` or `OrderedFactor`.
+
 For post-fit pruning, set `post-prune=true` and set
 `pruning_purity_threshold` appropriately. Other hyperparameters as per
 package documentation cited above.
@@ -207,7 +213,7 @@ end
 ##
 ## METADATA
 ##
-
+;;;
 metadata_pkg.((DecisionTreeClassifier, DecisionTreeRegressor),
               name="DecisionTree",
               uuid="7806a523-6efd-50cb-b5f6-3fa6f1930dbb",
@@ -217,13 +223,13 @@ metadata_pkg.((DecisionTreeClassifier, DecisionTreeRegressor),
               is_wrapper=false)
 
 metadata_model(DecisionTreeClassifier,
-               input=MLJBase.Table(MLJBase.Continuous),
+               input=MLJBase.Table(MLJBase.Continuous, Count, OrderedFactor),
                target=AbstractVector{<:MLJBase.Finite},
                weights=false,
                descr=DTC_DESCR)
 
 metadata_model(DecisionTreeRegressor,
-               input=MLJBase.Table(MLJBase.Continuous),
+               input=MLJBase.Table(Continuous, Count, OrderedFactor),
                target=AbstractVector{MLJBase.Continuous},
                weights=false,
                descr=DTR_DESCR)
