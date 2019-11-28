@@ -369,6 +369,8 @@ function MLJBase.fit(transformer::Standardizer, verbosity::Int, X::Any)
             mach_types[j] <: AbstractFloat
         end
     else
+        issubset(transformer.features, all_features) ||
+            @warn "Some specified features not present in table to be fit. "
         cols_to_fit = filter!(eachindex(all_features) |> collect) do j
             all_features[j] in transformer.features && mach_types[j] <: Real
         end

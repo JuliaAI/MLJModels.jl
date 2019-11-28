@@ -145,6 +145,9 @@ Xt = transform(stand, f, X)
 @test Xnew[4] == X[4]
 @test std(Xnew[5]) ≈ 1.0
 
+stand = Standardizer(features=[:x1, :mickey_mouse])
+@test_logs (:warn, r"Some specified") fit(stand, 1, X)
+
 infos = info_dict(stand)
 
 @test infos[:name] == "Standardizer"
