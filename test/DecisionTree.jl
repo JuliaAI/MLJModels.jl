@@ -2,6 +2,7 @@ module TestDecisionTree
 
 using Test
 import CategoricalArrays
+import CategoricalArrays.categorical
 using MLJBase
 
 # load code to be tested:
@@ -70,6 +71,22 @@ vals1_prune = MLJBase.predict(R1Tree,model1_prune,features)
 model2, = MLJBase.fit(R2Tree, 1, features, labels)
 vals2 = MLJBase.predict(R2Tree, model2, features)
 @test DecisionTree.R2(labels, vals2) > 0.8
+
+
+## TEST ON ORDINAL FEATURES OTHER THAN CONTINUOUS
+
+N = 20
+X = (x1=rand(N), x2=categorical(rand("abc", N), ordered=true), x3=collect(1:N))
+yfinite = X.x2
+ycont = float.(X.x3)
+
+rgs = DecisionTreeRegressor()
+fitresult, _, _ = MLJBase.fit(rgs, 1, X, ycont)
+@test rms(predict(rgs, fitresult, X), ycont) < 1.5
+
+clf = DecisionTreeClassifier(pdf_smoothing=0)
+fitresult, _, _ = MLJBase.fit(clf, 1, X, yfinite)
+@test sum(predict(clf, fitresult, X) .== yfinite) == 0 # perfect prediction
 
 info_dict(R1Tree)
 
