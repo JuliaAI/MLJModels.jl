@@ -67,8 +67,8 @@ obtain the training target mode instead.
 struct ConstantClassifier <: MLJBase.Probabilistic end
 
 # here `args` is `y` or `y, w`:
-function MLJBase.fit(::ConstantClassifier, verbosity::Int, X, args...)
-    fitresult = Distributions.fit(MLJBase.UnivariateFinite, args...)
+function MLJBase.fit(::ConstantClassifier, verbosity::Int, X, y, w=nothing)
+    fitresult = Distributions.fit(MLJBase.UnivariateFinite, y, w)
     cache     = nothing
     report    = NamedTuple
     return fitresult, cache, report
