@@ -13,8 +13,8 @@ using MLJModels.DecisionTree_
 # get some test data:
 using RDatasets
 iris = dataset("datasets", "iris")
-const X = iris[:, 1:4]
-const y = iris[:, 5]
+X = iris[:, 1:4]
+y = iris[:, 5]
 
 baretree = DecisionTreeClassifier()
 
