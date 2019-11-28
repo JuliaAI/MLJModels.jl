@@ -55,9 +55,9 @@ end
 """
     XGBoostRegressor(; objective="linear", seed=0, kwargs...)
 
-The XGBoost model for targets with `Continuous` scitype. Gives
-deterministic (point) predictions. Admissible values for `objective` are
-"linear", "gamma" or "tweedie". For other `kwargs`, see
+The XGBoost model for univariate targets with `Continuous` element
+scitype. Gives deterministic (point) predictions. For possible values
+for `objective` and `kwargs`, see
 [https://xgboost.readthedocs.io/en/latest/parameter.html](https://xgboost.readthedocs.io/en/latest/parameter.html).
 
 For a time-dependent random seed, use `seed=-1`.
@@ -139,23 +139,26 @@ function XGBoostRegressor(
     ,eval_metric
     ,seed)
 
-     message = MLJBase.clean!(model)           #> future proof by including these
-     isempty(message) || @warn message #> two lines even if no clean! defined below
+     message = MLJBase.clean!(model)
+     isempty(message) || @warn message 
 
     return model
 end
 
-
 function MLJBase.clean!(model::XGBoostRegressor)
     warning = ""
-    if(!(model.objective in ["linear", "gamma", "tweedie",
-                             "reg:linear","reg:gamma","reg:tweedie"]))
-            warning *="Only \"linear\", \"gamma\" and \"tweedie\" objectives are supported . Setting objective=\"linear\". "
-            model.objective="linear"
+    if model.objective == "count:poisson"
+        warning *= "Your `objective` suggests prediction of a "*
+        "`Count` variable.\n You may want to consider XGBoostCount instead. "
+    elseif model.objective in ["reg:logistic", "binary:logistic",
+                               "binary:logitraw", "binary:hinge",
+                               "multi:softmax", "multi:softprob"]
+        warning *="Your `objective` suggests prediction of a "*
+        "`Finite` variable.\n You may want to consider XGBoostClassifier "*
+        "instead. "
     end
     return warning
 end
-
 
 #> The following optional method (the fallback does nothing, returns
 #> empty warning) is called by the constructor above but also by the
@@ -494,9 +497,9 @@ end
 """
     XGBoostClassifier(; seed=0, kwargs...)
 
-The XGBoost model for targets with `Finite` scitype (including
-`Binary=Multiclass{2}`). Gives probabilistic predictions. For
-admissible `kwargs`, see
+The XGBoost model for targets with `Finite` scitype (which includes
+`Binary=Finite{2}`). Gives probabilistic predictions. For admissible
+`kwargs`, see
 [https://xgboost.readthedocs.io/en/latest/parameter.html](https://xgboost.readthedocs.io/en/latest/parameter.html).
 
 For a time-dependent random seed, use `seed=-1`.
@@ -719,13 +722,23 @@ MLJBase.is_pure_julia(::Type{<:XGTypes}) = false
 MLJBase.load_path(::Type{<:XGBoostRegressor}) = "MLJModels.XGBoost_.XGBoostRegressor"
 MLJBase.input_scitype(::Type{<:XGBoostRegressor}) = Table(Continuous)
 MLJBase.target_scitype(::Type{<:XGBoostRegressor}) = AbstractVector{Continuous}
+MLJBase.docstring(::Type{<:XGBoostRegressor}) =
+    "The XGBoost gradient boosting method, for use with "*
+    "`Continuous` univariate targets. "
 
 MLJBase.load_path(::Type{<:XGBoostCount}) = "MLJModels.XGBoost_.XGBoostCount"
 MLJBase.input_scitype(::Type{<:XGBoostCount}) = Table(Continuous)
 MLJBase.target_scitype(::Type{<:XGBoostCount}) = AbstractVector{Count}
+MLJBase.docstring(::Type{<:XGBoostCount}) =
+    "The XGBoost gradient boosting method, for use with "*
+    "`Count` univariate targets, using a Poisson objective function. "
 
 MLJBase.load_path(::Type{<:XGBoostClassifier}) = "MLJModels.XGBoost_.XGBoostClassifier"
 MLJBase.input_scitype(::Type{<:XGBoostClassifier}) = Table(Continuous)
 MLJBase.target_scitype(::Type{<:XGBoostClassifier}) = AbstractVector{<:Finite}
+MLJBase.docstring(::Type{<:XGBoostClassifier}) =
+    "The XGBoost gradient boosting method, for use with "*
+    "`Finite` univariate targets (`Multiclass`, "*
+    "`OrderedFactor` and `Binary=Finite{2}`)."
 
 end
