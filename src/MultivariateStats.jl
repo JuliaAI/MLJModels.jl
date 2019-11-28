@@ -5,7 +5,8 @@ export RidgeRegressor, PCA, KernelPCA, ICA, LDA, BayesianLDA
 import MLJBase
 import MLJBase: @mlj_model, metadata_model, metadata_pkg
 import StatsBase: proportions, CovarianceEstimator
-using Distances, LinearAlgebra
+using Distances
+using LinearAlgebra
 using Tables, ScientificTypes
 
 import MultivariateStats
@@ -735,4 +736,4 @@ metadata_model(BayesianSubspaceLDA,
                output = MLJBase.Table(MLJBase.Continuous),
                descr=BayesianSubspaceLDA_DESCR)
 
-end # of module+
+end

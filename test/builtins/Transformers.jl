@@ -145,6 +145,9 @@ Xt = transform(stand, f, X)
 @test Xnew[4] == X[4]
 @test std(Xnew[5]) ≈ 1.0
 
+stand = Standardizer(features=[:x1, :mickey_mouse])
+@test_logs (:warn, r"Some specified") fit(stand, 1, X)
+
 infos = info_dict(stand)
 
 @test infos[:name] == "Standardizer"
@@ -174,14 +177,14 @@ infos = info_dict(t)
 
 #### ONE HOT ENCODER ####
 
-
 X = (name   = categorical(["Ben", "John", "Mary", "John"], ordered=true),
      height = [1.85, 1.67, 1.5, 1.67],
      favourite_number = categorical([7, 5, 10, 5]),
      age    = [23, 23, 14, 23])
 
 t  = OneHotEncoder()
-f, = @test_logs((:info, r"Spawning 3"), (:info, r"Spawning 3"), fit(t, 1, X))
+f, _, report = @test_logs((:info, r"Spawning 3"),
+                (:info, r"Spawning 3"), fit(t, 1, X))
 
 Xt = transform(t, f, X)
 
@@ -193,6 +196,8 @@ Xt = transform(t, f, X)
                            :height, :favourite_number__5,
                            :favourite_number__7, :favourite_number__10,
                            :age)
+
+@test report.new_features == collect(schema(Xt).names)
 
 # test that *entire* pool of categoricals is used in fit, including
 # unseen levels:

@@ -17,7 +17,8 @@ i = MLJModels.info_given_handle(metadata_file)[pca]
 end
 
 @testset "building INFO_GIVEN_HANDLE" begin
-    @test isempty(MLJModels.localmodeltypes(MLJBase))
+    loc = MLJModels.localmodeltypes(MLJBase)
+    @test length(loc) in [0, 1] 
     @test issubset(Set([DeterministicConstantClassifier,
                         DeterministicConstantRegressor, 
                         ConstantClassifier,
