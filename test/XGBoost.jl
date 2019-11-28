@@ -8,10 +8,9 @@ using CategoricalArrays
 using MLJModels.XGBoost_
 using Random: seed!
 
-@test_logs (:warn, "Only \"linear\", \"gamma\" and \"tweedie\" objectives are supported . Setting objective=\"linear\". ") XGBoostRegressor(objective="wrong")
-@test_logs (:warn, "Changing objective to \"automatic\", the only supported value. ") XGBoostClassifier(objective="wrong")
-@test_logs (:warn, "Changing objective to \"poisson\", the only supported value. ") XGBoostCount(objective="wrong")
-
+@test_logs (:warn, r"Changing ") XGBoostClassifier(objective="wrong")
+@test_logs (:warn, r"Changing ") XGBoostCount(objective="wrong")
+@test_logs (:warn, r"Your") XGBoostRegressor(objective="binary:logistic")
 
 ## REGRESSOR
 
