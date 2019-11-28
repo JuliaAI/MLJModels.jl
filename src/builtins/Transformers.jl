@@ -369,6 +369,8 @@ function MLJBase.fit(transformer::Standardizer, verbosity::Int, X::Any)
             mach_types[j] <: AbstractFloat
         end
     else
+        issubset(transformer.features, all_features) ||
+            @warn "Some specified features not present in table to be fit. "
         cols_to_fit = filter!(eachindex(all_features) |> collect) do j
             all_features[j] in transformer.features && mach_types[j] <: Real
         end
@@ -538,7 +540,7 @@ OneHotEncoder(; features=Symbol[], drop_last=false, ordered_factor=true)
 
 Unsupervised model for one-hot encoding all features of `Finite`
 scitype, within some table. If `ordered_factor=false` then
-only `Multiclass` features are considered. The features encoded is
+only `Multiclass` features are considered. The features encoded are
 further restricted to those in `features`, when specified and
 non-empty.
 
@@ -606,9 +608,27 @@ function MLJBase.fit(transformer::OneHotEncoder, verbosity::Int, X)
             end
         end
     end
-    fitresult = OneHotEncoderResult(collect(all_features), ref_name_pairs_given_feature)
-    report = (features_to_be_encoded=collect(keys(ref_name_pairs_given_feature)),)
+
+    fitresult = OneHotEncoderResult(collect(all_features),
+                                    ref_name_pairs_given_feature)
+
+    # get new feature names
+    d = ref_name_pairs_given_feature
+    new_features = Symbol[]
+    features_to_be_transformed = keys(d)
+    for ftr in all_features
+        if ftr in features_to_be_transformed
+            append!(new_features, last.(d[ftr]))
+        else
+            push!(new_features, ftr)
+        end
+    end
+
+    report = (features_to_be_encoded=
+              collect(keys(ref_name_pairs_given_feature)),
+              new_features=new_features)
     cache = nothing
+
     return fitresult, cache, report
 end
 
@@ -623,7 +643,8 @@ function MLJBase.transform(transformer::OneHotEncoder, fitresult, X)
     d = fitresult.ref_name_pairs_given_feature
     # check the features match the fit result
     all(e -> e in fitresult.all_features, features) ||
-        error("Attempting to transform table with feature labels not seen in fit. ")
+        error("Attempting to transform table with feature "*
+              "labels not seen in fit. ")
     new_features = Symbol[]
     new_cols = Vector[]
     features_to_be_transformed = keys(d)
