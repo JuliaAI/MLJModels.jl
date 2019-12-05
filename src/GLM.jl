@@ -187,7 +187,7 @@ metadata_pkg.((LinearRegressor, LinearBinaryClassifier, LinearCountRegressor),
 
 metadata_model(LinearRegressor,
     input=MLJBase.Table(MLJBase.Continuous),
-    output=AbstractVector{MLJBase.Continuous},
+    target=AbstractVector{MLJBase.Continuous},
     weights=false,
     descr=LR_DESCR
     )
