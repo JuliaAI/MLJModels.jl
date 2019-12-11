@@ -236,7 +236,7 @@ MLJBase.fitted_params(model::RandomForestRegressor, (f, _, _)) = (
     oob_prediction = model.oob_score ? f.oob_prediction_ : nothing
     )
 metadata_model(RandomForestRegressor,
-    input=MLJBase.Table(Union{MLJBase.Count,MLJBase.Continuous}),
+    input=MLJBase.Table(MLJBase.Count,MLJBase.Continuous),
     target=AbstractVector{<:MLJBase.Finite},
     weights=false,
     descr="Random forest regressor."
@@ -274,7 +274,7 @@ MLJBase.fitted_params(m::RandomForestClassifier, (f, _, _)) = (
     oob_decision_function = m.oob_score ? f.oob_decision_function_ : nothing
     )
 metadata_model(RandomForestClassifier,
-    input=MLJBase.Table(Union{MLJBase.Count,MLJBase.Continuous}),
+    input=MLJBase.Table(MLJBase.Count,MLJBase.Continuous),
     target=AbstractVector{<:MLJBase.Finite},
     weights=false,
     descr="Random forest classifier."
