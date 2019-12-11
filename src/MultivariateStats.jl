@@ -9,7 +9,7 @@ using Distances
 using LinearAlgebra
 using Tables, ScientificTypes
 
-import ..MultivariateStats
+import MultivariateStats
 
 const MS = MultivariateStats
 
