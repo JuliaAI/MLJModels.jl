@@ -97,7 +97,7 @@ end
     fp = fitted_params(m, f)
     @test keys(fp) == (:estimators, :classes, :n_classes, :n_features, :n_outputs, :feature_importances, :oob_score, :oob_decision_function)
     infos = info_dict(m)
-    @test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
+    @test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous, MLJBase.Count)
     @test infos[:target_scitype] == AbstractVector{<:MLJBase.Finite}
     @test !isempty(infos[:docstring])
 end
