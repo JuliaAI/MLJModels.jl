@@ -6,7 +6,7 @@ const CategoricalElement = MLJBase.CategoricalElement
 ## DESCRIPTIONS (see also metadata at the bottom)
 
 const STATIC_TRANSFORMER_DESCR = "Applies a given data transformation `f` (either a function or callable)."
-const FILL_IMPUTER_DESCR = "Imputes missing data with a fixed value computed on the non-missing values. The way to compute the filler depends on the scitype of the data and can be specified."
+const FILL_IMPUTER_DESCR = "Imputes missing data with a fixed value computed on the non-missing values. A different imputing function can be specified for `Continuous`, `Count` and `Finite` data. "
 const FEATURE_SELECTOR_DESCR = "Filter features (columns) of a table by name."
 const UNIVARIATE_STD_DESCR = "Standardize (whiten) univariate data."
 const UNIVARIATE_DISCR_DESCR = "Discretize continuous variables via quantiles."
@@ -19,7 +19,7 @@ const ONE_HOT_DESCR = "One-Hot-Encoding of the categorical data."
 ##
 
 """
-StaticTransformer
+    StaticTransformer(f=identity)
 
 $STATIC_TRANSFORMER_DESCR
 
@@ -47,15 +47,24 @@ _round_median = e -> skipmissing(e) |> (f -> round(eltype(f), median(f)))
 _mode         = e -> skipmissing(e) |> mode
 
 """
-FillImputer
+    FillImputer(features=[],
+                continuous_fill=<median>,
+                count_fill=<round_median>,
+                finite_fill=<mode>)
 
 $FILL_IMPUTER_DESCR
 
 ## Fields
 
-* `continuous_fill`:  function to use on Continuous data (by default the median)
-* `count_fill`:       function to use on Count data (by default the rounded median)
-* `categorical_fill`: function to use on Finite data (by default the mode)
+* `continuous_fill`: function to use on `Continuous` data, by default
+  the median
+
+* `count_fill`: function to use on `Count` data, by default the
+  rounded median
+
+* `finite_fill`: function to use on `Multiclass` and `OrderedFactor`
+  data (including binary data), by default the mode
+
 """
 @with_kw_noshow mutable struct FillImputer <: MLJBase.Unsupervised
     features::Vector{Symbol}  = Symbol[]
@@ -108,7 +117,7 @@ end
 ##
 
 """
-FeatureSelector(features=Symbol[])
+    FeatureSelector(features=Symbol[])
 
 An unsupervised model for filtering features (columns) of a table.
 Only those features encountered during fitting will appear in
@@ -180,7 +189,7 @@ end
 reftype(::CategoricalArray{<:Any,<:Any,R}) where R = R
 
 """
-UnivariateDiscretizer(n_classes=512)
+    UnivariateDiscretizer(n_classes=512)
 
 Returns an `MLJModel` for for discretizing any continuous vector `v`
  (`scitype(v) <: AbstractVector{Continuous}`), where `n_classes`
@@ -294,7 +303,7 @@ end
 ## UNIVARIATE STANDARDIZATION
 
 """
-UnivariateStandardizer()
+    UnivariateStandardizer()
 
 Unsupervised model for standardizing (whitening) univariate data.
 """
@@ -333,7 +342,7 @@ MLJBase.inverse_transform(transformer::UnivariateStandardizer, fitresult, w) =
 ## STANDARDIZATION OF ORDINAL FEATURES OF TABULAR DATA
 
 """
-Standardizer(; features=Symbol[])
+     Standardizer(; features=Symbol[])
 
 Unsupervised model for standardizing (whitening) the columns of
 tabular data. If `features` is empty then all columns `v` for which
@@ -463,7 +472,7 @@ boxcox(lambda, c, v::AbstractVector{T}) where T <: Real =
 
 
 """
-UnivariateBoxCoxTransformer(; n=171, shift=false)
+    UnivariateBoxCoxTransformer(; n=171, shift=false)
 
 Unsupervised model specifying a univariate Box-Cox
 transformation of a single variable taking non-negative values, with a
@@ -536,7 +545,7 @@ end
 ## ONE HOT ENCODING
 
 """
-OneHotEncoder(; features=Symbol[], drop_last=false, ordered_factor=true)
+    OneHotEncoder(; features=Symbol[], drop_last=false, ordered_factor=true)
 
 Unsupervised model for one-hot encoding all features of `Finite`
 scitype, within some table. If `ordered_factor=false` then
