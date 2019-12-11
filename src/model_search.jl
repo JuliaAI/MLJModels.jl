@@ -145,14 +145,14 @@ predictions.
 See also: [`localmodels`](@ref).
 
 """
-function models(conditions...)
+function MLJBase.models(conditions...)
     unsorted = filter(info.(keys(INFO_GIVEN_HANDLE))) do model
         all(c(model) for c in conditions)
     end
     return sort!(unsorted)
 end
 
-models() = models(x->true)
+MLJBase.models() = models(x->true)
 
 # function models(task::MLJBase.SupervisedTask)
 #     ret = Dict{String, Any}()
