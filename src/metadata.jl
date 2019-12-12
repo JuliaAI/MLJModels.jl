@@ -108,7 +108,7 @@ function localmodeltypes(modl)
     return filter!(ft) do M
         if M in (Supervised, Unsupervised, Deterministic,
                  Probabilistic, DeterministicNetwork, Interval,
-                 ProbabilisticNetwork, UnsupervisedNetwork)
+                 ProbabilisticNetwork, UnsupervisedNetwork, Static)
             return false
         else
             name = MLJBase.name(M)
