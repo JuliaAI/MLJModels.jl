@@ -71,7 +71,8 @@ function info_as_named_tuple(i)
     return NamedTuple{propertynames}(propertyvalues)
 end
 
-MLJBase.info(handle::Handle) = info_as_named_tuple(INFO_GIVEN_HANDLE[handle])
+ScientificTypes.info(handle::Handle) =
+    info_as_named_tuple(INFO_GIVEN_HANDLE[handle])
 
 """
     info(name::String; pkg=nothing)
@@ -81,7 +82,7 @@ Returns the metadata for the registered model type with specified
 duplicate names.
 
 """
-function MLJBase.info(name::String; pkg=nothing)
+function ScientificTypes.info(name::String; pkg=nothing)
     name in NAMES ||
         throw(ArgumentError("There is no model named \"$name\" in "*
                             "the registry. \n Run `models()` to view all "*
@@ -115,8 +116,9 @@ Return the traits associated with the specified `model`. Equivalent to
 `pkg::String` the name of the package containing it.
 
 """
-MLJBase.info(M::Type{<:MLJBase.Model}) = info_as_named_tuple(MLJBase.info_dict(M))
-MLJBase.info(model::MLJBase.Model) = info(typeof(model))
+ScientificTypes.info(M::Type{<:MLJBase.Model}) =
+    info_as_named_tuple(MLJBase.info_dict(M))
+ScientificTypes.info(model::MLJBase.Model) = info(typeof(model))
 
 """
     models()
@@ -145,14 +147,14 @@ predictions.
 See also: [`localmodels`](@ref).
 
 """
-function models(conditions...)
+function MLJBase.models(conditions...)
     unsorted = filter(info.(keys(INFO_GIVEN_HANDLE))) do model
         all(c(model) for c in conditions)
     end
     return sort!(unsorted)
 end
 
-models() = models(x->true)
+MLJBase.models() = models(x->true)
 
 # function models(task::MLJBase.SupervisedTask)
 #     ret = Dict{String, Any}()
