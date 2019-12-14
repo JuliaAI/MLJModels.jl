@@ -3,16 +3,6 @@ module TestTransformer
 using Test, MLJBase, MLJModels
 using Tables, CategoricalArrays, Random
 
-#### STATIC TRANSFORMER ####
-
-t  = StaticTransformer(f=log)
-f, = fit(t, 1, nothing)
-@test transform(t, f, 5) ≈ log(5)
-
-infos = info_dict(t)
-@test infos[:input_scitype]  == MLJBase.Table(MLJBase.Scientific)
-@test infos[:output_scitype] == MLJBase.Table(Scientific)
-
 #### FEATURE SELECTOR ####
 
 N = 100

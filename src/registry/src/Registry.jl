@@ -27,7 +27,7 @@ const project_toml = joinpath(srcdir, "../Project.toml")
 const packages = map(Symbol,
                      keys(TOML.parsefile(project_toml)["deps"])|>collect)
 filter!(packages) do pkg
-    !(pkg in (:MLJBase, :InteractiveUtils, :Pkg, :ScientificTypes))
+    !(pkg in (:InteractiveUtils, :Pkg, :ScientificTypes))
 end
 
 const package_import_commands =  [:(import $pkg) for pkg in packages]
@@ -79,7 +79,8 @@ function _update(mod, test_env_only)
             !(T in [MLJBase.ProbabilisticNetwork,
                     MLJBase.DeterministicNetwork,
                     MLJBase.UnsupervisedNetwork,
-                    MLJBase.Interval])
+                    MLJBase.Interval,
+                    MLJBase.Static])
         end
 
         # generate and write to file the model metadata:

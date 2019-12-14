@@ -235,6 +235,12 @@ MLJBase.fitted_params(model::RandomForestRegressor, (f, _, _)) = (
     oob_score      = model.oob_score ? f.oob_score_ : nothing,
     oob_prediction = model.oob_score ? f.oob_prediction_ : nothing
     )
+metadata_model(RandomForestRegressor,
+    input=MLJBase.Table(MLJBase.Count,MLJBase.Continuous),
+    target=AbstractVector{<:MLJBase.Finite},
+    weights=false,
+    descr="Random forest regressor."
+    )
 
 # ----------------------------------------------------------------------------
 RandomForestClassifier_ = SKEN.RandomForestClassifier
@@ -268,13 +274,13 @@ MLJBase.fitted_params(m::RandomForestClassifier, (f, _, _)) = (
     oob_decision_function = m.oob_score ? f.oob_decision_function_ : nothing
     )
 metadata_model(RandomForestClassifier,
-    input=MLJBase.Table(MLJBase.Continuous),
+    input=MLJBase.Table(MLJBase.Count,MLJBase.Continuous),
     target=AbstractVector{<:MLJBase.Finite},
     weights=false,
     descr="Random forest classifier."
     )
 
-const ENSEMBLE_REG = Union{Type{<:AdaBoostRegressor}, Type{<:BaggingRegressor}, Type{<:GradientBoostingRegressor}, Type{<:RandomForestRegressor}}
+const ENSEMBLE_REG = Union{Type{<:AdaBoostRegressor}, Type{<:BaggingRegressor}, Type{<:GradientBoostingRegressor}}
 
 MLJBase.input_scitype(::ENSEMBLE_REG)  = MLJBase.Table(MLJBase.Continuous)
 MLJBase.target_scitype(::ENSEMBLE_REG) = AbstractVector{MLJBase.Continuous}
