@@ -1,40 +1,3 @@
-# SINGLE TASKS
-#
-# | model                  | build  | fitted_params | report | metadata | tests 1 | tests 2 |
-# | ---------------------- | ------ | ------------- | ------ | -------- | ------- | ------- |
-# | ARDRegressor           | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
-# | BayesianRidgeRegressor | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
-# | ElasticNetRegressor    | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
-# | ElasticNetCVRegressor  | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
-# | HuberRegresssor        | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
-# | LarsRegressor          | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
-# | LarsCVRegressor        | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
-# | LassoRegressor         | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
-# | LassoCVRegressor       | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
-# | LassoLarsRegressor     | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
-# | LassoLarsCVRegressor   | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
-# | LassoLarsICRegressor   | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
-# | LinearRegressor        | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
-# | OMPRegressor           | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
-# | OMPCVRegressor         | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
-# | PassiveAgressiveReg    | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
-# | RANSACReg              | ✗      | ✗             | ✗      | ✗        |  ✗      | ✗       |
-# | RidgeRegressor         | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
-# | RidgeCVRegressor       | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
-# | SGDRegressor           | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
-# | TheilSenRegressor      | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
-
-# MULTI TASK
-
-# | model                   | build  | fitted_params | report | metadata | tests 1 | tests 2 |
-# | ----------------------- | ------ | ------------- | ------ | -------- | ------- | ------- |
-# | MutliTaskLassoRegress   | ✓      | ✓             | ✗      | ✓        |  ✓      |  ✓      |
-# | MutliTaskLassoCVRegress | ✓      | ✓             | ✗      | ✓        |  ✓      |  ✓      |
-# | MutliTaskElNetRegress   | ✓      | ✓             | ✗      | ✓        |  ✓      |  ✓      |
-# | MutliTaskElNetCVRegress | ✓      | ✓             | ✗      | ✓        |  ✓      |  ✓      |
-
-# ------------------------------------------------------------------------------
-
 ARDRegressor_ = SKLM.ARDRegression
 @sk_reg mutable struct ARDRegressor <: MLJBase.Deterministic
     n_iter::Int               = 300::(_ > 0)
@@ -160,7 +123,6 @@ LarsRegressor_ = SKLM.Lars
     eps::Float64    = eps(Float64)::(_ > 0)
     copy_X::Bool    = true
     fit_path::Bool  = true
-#    positive::Bool  = false  # this option is deprecated
 end
 MLJBase.fitted_params(model::LarsRegressor, (fitresult, _, _)) = (
     coef      = fitresult.coef_,
@@ -183,7 +145,6 @@ LarsCVRegressor_ = SKLM.LarsCV
     n_jobs::Option{Int} = nothing
     eps::Float64      = eps(Float64)::(_ > 0)
     copy_X::Bool      = true
-#    positive::Bool    = false # deprecated
 end
 MLJBase.fitted_params(model::LarsCVRegressor, (fitresult, _, _)) = (
     coef      = fitresult.coef_,
