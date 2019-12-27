@@ -1,13 +1,3 @@
-# | model                  | build  | fitted_params | report | metadata | tests 1 | tests 2 |
-# | ---------------------- | ------ | ------------- | ------ | -------- | ------- | ------- |
-# | Logistic               | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
-# | LogisticCV             | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
-# | PAClassifier           | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
-# | Perceptron             | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
-# | Ridge                  | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
-# | RidgeCV                | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
-# | SGDClassifier          | ✓      | ✓             | ✗      | ✓        |  ✓      | ✓       |
-
 LogisticClassifier_ = SKLM.LogisticRegression
 @sk_clf mutable struct LogisticClassifier <: MLJBase.Probabilistic
     penalty::String            = "l2"::(_ in ("l1", "l2", "elasticnet", "none"))
@@ -32,10 +22,10 @@ MLJBase.fitted_params(m::LogisticClassifier, (f, _, _)) = (
     intercept = ifelse(m.fit_intercept, f.intercept_, nothing)
     )
 metadata_model(LogisticClassifier,
-    input=MLJBase.Table(MLJBase.Continuous),
-    target=AbstractVector{<:MLJBase.Finite},
-    weights=false,
-    descr="Logistic regression classifier."
+    input   = MLJBase.Table(MLJBase.Continuous),
+    target  = AbstractVector{<:MLJBase.Finite},
+    weights = false,
+    descr   = "Logistic regression classifier."
     )
 
 # ============================================================================
@@ -71,10 +61,10 @@ MLJBase.fitted_params(m::LogisticCVClassifier, (f, _, _)) = (
     l1_ratio    = f.l1_ratio_
     )
 metadata_model(LogisticCVClassifier,
-    input=MLJBase.Table(MLJBase.Continuous),
-    target=AbstractVector{<:MLJBase.Finite},
-    weights=false,
-    descr="Logistic regression classifier with internal cross-validation."
+    input   = MLJBase.Table(MLJBase.Continuous),
+    target  = AbstractVector{<:MLJBase.Finite},
+    weights = false,
+    descr   = "Logistic regression classifier with internal cross-validation."
     )
 
 # ============================================================================
@@ -101,10 +91,10 @@ MLJBase.fitted_params(m::PassiveAggressiveClassifier, (f, _, _)) = (
     intercept = ifelse(m.fit_intercept, f.intercept_, nothing)
     )
 metadata_model(PassiveAggressiveClassifier,
-    input=MLJBase.Table(MLJBase.Continuous),
-    target=AbstractVector{<:MLJBase.Finite},
-    weights=false,
-    descr="Passive aggressive classifier."
+    input   = MLJBase.Table(MLJBase.Continuous),
+    target  = AbstractVector{<:MLJBase.Finite},
+    weights = false,
+    descr   = "Passive aggressive classifier."
     )
 
 # ============================================================================
@@ -131,34 +121,34 @@ MLJBase.fitted_params(m::PerceptronClassifier, (f, _, _)) = (
     intercept = ifelse(m.fit_intercept, f.intercept_, nothing)
     )
 metadata_model(PerceptronClassifier,
-    input=MLJBase.Table(MLJBase.Continuous),
-    target=AbstractVector{<:MLJBase.Finite},
-    weights=false,
-    descr="Perceptron classifier."
+    input   = MLJBase.Table(MLJBase.Continuous),
+    target  = AbstractVector{<:MLJBase.Finite},
+    weights = false,
+    descr   = "Perceptron classifier."
     )
 
 # ============================================================================
 RidgeClassifier_ = SKLM.RidgeClassifier
 @sk_clf mutable struct RidgeClassifier <: MLJBase.Deterministic
-    alpha::Float64    = 1.0
-    fit_intercept::Bool = true
-    normalize::Bool   = false
-    copy_X::Bool      = true
+    alpha::Float64        = 1.0
+    fit_intercept::Bool   = true
+    normalize::Bool       = false
+    copy_X::Bool          = true
     max_iter::Option{Int} = nothing::(_ === nothing || _ > 0)
-    tol::Float64      = 1e-3::(arg>0)
-    class_weight::Any = nothing
-    solver::String    = "auto"::(arg in ("auto","svd","cholesky","lsqr","sparse_cg","sag","saga"))
-    random_state::Any = nothing
+    tol::Float64          = 1e-3::(arg>0)
+    class_weight::Any     = nothing
+    solver::String        = "auto"::(arg in ("auto","svd","cholesky","lsqr","sparse_cg","sag","saga"))
+    random_state::Any     = nothing
 end
 MLJBase.fitted_params(m::RidgeClassifier, (f, _, _)) = (
     coef      = f.coef_,
     intercept = ifelse(m.fit_intercept, f.intercept_, nothing)
     )
 metadata_model(RidgeClassifier,
-    input=MLJBase.Table(MLJBase.Continuous),
-    target=AbstractVector{<:MLJBase.Finite},
-    weights=false,
-    descr="Ridge regression classifier."
+    input   = MLJBase.Table(MLJBase.Continuous),
+    target  = AbstractVector{<:MLJBase.Finite},
+    weights = false,
+    descr   = "Ridge regression classifier."
     )
 
 # ============================================================================
@@ -177,10 +167,10 @@ MLJBase.fitted_params(m::RidgeCVClassifier, (f, _, _)) = (
     intercept = ifelse(m.fit_intercept, f.intercept_, nothing)
     )
 metadata_model(RidgeCVClassifier,
-    input=MLJBase.Table(MLJBase.Continuous),
-    target=AbstractVector{<:MLJBase.Finite},
-    weights=false,
-    descr="Ridge regression classifier."
+    input   = MLJBase.Table(MLJBase.Continuous),
+    target  = AbstractVector{<:MLJBase.Finite},
+    weights = false,
+    descr   = "Ridge regression classifier."
     )
 
 # ============================================================================
@@ -242,8 +232,8 @@ MLJBase.fitted_params(m::ProbabilisticSGDClassifier, (f,_,_)) = (
     intercept = ifelse(m.fit_intercept, f.intercept_, nothing)
     )
 metadata_model.((SGDClassifier,ProbabilisticSGDClassifier),
-    input=MLJBase.Table(MLJBase.Continuous),
-    target=AbstractVector{<:MLJBase.Finite},
-    weights=false,
-    descr="Linear classifier with stochastic gradient descent training."
+    input   = MLJBase.Table(MLJBase.Continuous),
+    target  = AbstractVector{<:MLJBase.Finite},
+    weights = false,
+    descr   = "Linear classifier with stochastic gradient descent training."
     )
