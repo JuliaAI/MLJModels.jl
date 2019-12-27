@@ -3,53 +3,54 @@
 [![Build Status](https://travis-ci.com/alan-turing-institute/MLJModels.jl.svg?branch=master)](https://travis-ci.com/alan-turing-institute/MLJModels.jl)
 
 Repository of some [MLJ](https://github.com/alan-turing-institute/MLJ.jl)
-model _interfaces_, as well as the _MLJ model registry_.
+model _interfaces_, as well as the **MLJ model registry**.
 
 ## About
 
 This repository contains interfaces for a few "essential" Julia ML packages which do not yet provide their native interface to MLJ.
-It also provides a few "built-in" models, such as basic transformers.
+It also provides a few "built-in" models, such as basic transformers (One Hot Encoder, Standardizer, ...).
 
-Do `using MLJ` or `using MLJModels` and:
+You can do `using MLJ` or `using MLJModels` and:
 
 - `localmodels()` to list built-in models (updated when external models are loaded with `@load`)
 - `models()` to list all registered models, or see [this list](/src/registry/Models.toml).
 
-Finally, MLJModels houses the MLJ **model registry**: the list of models that can be called from MLJ using `@load`.
+MLJModels houses the MLJ **model registry**: the list of models that can be called from MLJ using `@load`.
 Package developers can register new models by implementing the MLJ interface in their package and following the instructions below.
 
 ## Writing an interface to MLJ
 
-In the instructions below, we assume you have a **registered** package `YourPackage.jl` which implements some models; that you would like to register these models with MLJ and that you have a rough idea for how things work with MLJ.
-In particular you are expected to be familiar with:
+In the instructions below, we assume you have a **registered** package `YourPackage.jl` which implements some models; that you would like to register these models with MLJ, and that you have a rough understanding of how things work with MLJ.
+In particular you are expected to be familiar with
 
-* Scientific Types are
-* `Probabilistic`, `Deterministic` and `Unsupervised` models are
+* what [Scientific Types](https://github.com/alan-turing-institute/ScientificTypes.jl) are
+* what `Probabilistic`, `Deterministic` and `Unsupervised` models are
 * the fact that MLJ works with Tables, not bare bone matrices.
 
-If you're not familiar with  this, please refer to the general [MLJ docs](https://alan-turing-institute.github.io/MLJ.jl/dev/) and specifically, read the [detailed documentation](https://alan-turing-institute.github.io/MLJ.jl/dev/adding_models_for_general_use/#Adding-Models-for-General-Use-1) to add models.
+If you're not familiar with any one of these points, please refer to the general [MLJ docs](https://alan-turing-institute.github.io/MLJ.jl/dev/) and specifically, read the [detailed documentation](https://alan-turing-institute.github.io/MLJ.jl/dev/adding_models_for_general_use/#Adding-Models-for-General-Use-1) to add models.
 
 ### Overview
 
-Writing an interface is fairly straightforward: create a file or a module in your package including:
+Writing an interface is fairly straightforward: just create a file or a module in your package including
 
 * a `using MLJBase` or `import MLJBase` statement
-* MLJ-compatible constructors for your models
-* implementation of `fit`, `predict`/`transform`, `fitted_params` for your models,
+* MLJ-compatible model types and constructors,
+* implementation of the `fit`, `predict`/`transform` and optionally `fitted_params` for your models,
 * metadata for your package and for each of your models
 
-We give some details for each step below with, each time, a few examples that you can mimic. The instructions are brief on purpose, refer to the [full documentation](https://alan-turing-institute.github.io/MLJ.jl/dev/adding_models_for_general_use/#Adding-Models-for-General-Use-1) for additional details.
+We give some details for each step below with, each time, a few examples that you can mimic.
+The instructions are brief on purpose; refer to the [full documentation](https://alan-turing-institute.github.io/MLJ.jl/dev/adding_models_for_general_use/#Adding-Models-for-General-Use-1) for additional details.
 
-### Constructor
+### Model type and constructor
 
 MLJ-compatible constructors for your models need to meet the following requirements:
 
 * be `mutable struct`,
 * be subtypes of `MLJBase.Probabilistic` or `MLJBase.Deterministic` or `MLJBase.Unsupervised`,
 * have fields corresponding exclusively to hyperparameters,
-* have a version with keywords and defaults for all hyperparameters.
+* have a keyword constructor for all hyperparameters.
 
-It is **recommended** to use the `@mlj_model` macro from `MLJBase` for all non-parametric models:
+It is **recommended** to use the `@mlj_model` macro from `MLJBase` to declare a (non parametric) model type:
 
 ```julia
 @mlj_model mutable struct YourModel <: MLJBase.Supervised
@@ -66,7 +67,7 @@ That macro specifies:
 
 Further to the last point, `a::Float64 = 0.5::(_ > 0)` indicates that the field `a` is a `Float64`, takes `0.5` as default value, and expects its value to be positive.
 
-If you decide **not** to use the `@mlj_model` macro (e.g. in the case of a parametric type), you will need to write a constructor, a keyword version and a `clean!` method:
+If you decide **not** to use the `@mlj_model` macro (e.g. in the case of a parametric type), you will need to write a keyword constructor and a `clean!` method:
 
 ```julia
 mutable struct YourModel <: MLJBase.Supervised
@@ -91,14 +92,14 @@ end
 **Additional notes**:
 
 - Please type all your fields if possible,
-- Please prefer `Symbol` over `String` if you can (e.g. to pass the name of a solver)
-- Please add constraints to your fields even if they seem obvious to you.
+- Please prefer `Symbol` over `String` if you can (e.g. to pass the name of a solver),
+- Please add constraints to your fields even if they seem obvious to you,,
 - Your model may have 0 fields, that's fine.
 
 **Examples**:
 
-- [KNNClassifier](https://github.com/alan-turing-institute/MLJModels.jl/blob/3687491b132be8493b6f7a322aedf66008caaab1/src/NearestNeighbors.jl#L62-L69) which uses `@mlj_model`
-- [XGBoostRegressor](https://github.com/alan-turing-institute/MLJModels.jl/blob/3687491b132be8493b6f7a322aedf66008caaab1/src/XGBoost.jl#L17-L161) which does not
+- [KNNClassifier](https://github.com/alan-turing-institute/MLJModels.jl/blob/3687491b132be8493b6f7a322aedf66008caaab1/src/NearestNeighbors.jl#L62-L69) which uses `@mlj_model`,
+- [XGBoostRegressor](https://github.com/alan-turing-institute/MLJModels.jl/blob/3687491b132be8493b6f7a322aedf66008caaab1/src/XGBoost.jl#L17-L161) which does not.
 
 ### Fit
 
@@ -106,7 +107,8 @@ The implementation of `fit` will look like
 
 ```julia
 function MLJBase.fit(m::YourModel, verbosity::Int, X, y, w=nothing)
-    # body
+    # body ...
+    return (fitresult, cache, report)
 end
 ```
 
@@ -120,11 +122,11 @@ In the body of the `fit` function, you should assume that `X` is a `Table` and t
 Typical steps in the body of the `fit` function will be:
 
 * forming a matrix-view of the data, possibly transposed if your model expects a `p x n` formalism (MLJ assumes columns are features by default i.e. `n x p`), use `MLJBase.matrix` for this,
-* passing the data to your model
-* returning the results as a tuple `(fitresult, cache, report)`
+* passing the data to your model,
+* returning the results as a tuple `(fitresult, cache, report)`.
 
 The `fitresult` part should contain everything that is needed at the `predict` or `transform` step, it should not be expected to be accessed by users.
-The `cache` should be `nothing` for now.
+The `cache` should be left to `nothing` for now.
 The `report` should be a `NamedTuple` with any auxiliary useful information that a user would want to know about the fit (degrees of freedom, deviance, feature importance, ...).
 
 **Example**: GLM's [LinearRegressor](https://github.com/alan-turing-institute/MLJModels.jl/blob/3687491b132be8493b6f7a322aedf66008caaab1/src/GLM.jl#L95-L105)
@@ -141,13 +143,13 @@ For a classifier, the steps are fairly similar to a regressor with two particula
 
 #### Transformer
 
-Nothing special for a  transformer.
+Nothing special for a transformer.
 
 **Example**: our [FillImputer](https://github.com/alan-turing-institute/MLJModels.jl/blob/3687491b132be8493b6f7a322aedf66008caaab1/src/builtins/Transformers.jl#L54-L64)
 
 ### Fitted params
 
-This is an optional function you can  implement for your model which will return the learned parameters that a user may want to inspect.
+This is an optional function you can implement for your model which will return the learned parameters that a user may want to inspect.
 For instance, in the case of a linear regression, the user may want to get access to the coefficients and intercept.
 
 The function will always look like:
@@ -191,7 +193,8 @@ In the case of a `Probabilistic` model, you may further want to implement a `pre
 
 ### Metadata
 
-Adding metadata for your model(s) is crucial for the discoverability of your package and its models. You should use the `metadata_model` and `metadata_pkg` functionalities from `MLJBase` to guide you.
+Adding metadata for your model(s) is crucial for the discoverability of your package and its models and to make sure your model is used with data it can handle.
+You should use the `metadata_model` and `metadata_pkg` functionalities from `MLJBase` to do this:
 
 ```julia
 const ALL_MODELS = Union{YourModel1, YourModel2, ...}
@@ -199,12 +202,13 @@ const ALL_MODELS = Union{YourModel1, YourModel2, ...}
 metadata_pkg.(ALL_MODELS
     name = "YourPackage",
     uuid = "6ee0df7b-...", # see your Project.toml
-    url  = "https://...",  # address to your package repo
+    url  = "https://...",  # URL to your package repo
     julia = true,          # is it written entirely in Julia?
     license = "MIT",       # your package license
     is_wrapper = false,    # does it wrap around some other package?
 )
 
+# Then for each model,
 metadata_model(YourModel1,
     name    = "YourModel1",                       # if not given will be String(model)
     input   = MLJBase.Table(MLJBase.Continuous),  # what input data is supported?
