@@ -19,10 +19,10 @@ MLJBase.fitted_params(m::BayesianLDA, (f, _, _)) = (
     explained_variance_ratio = f.explained_variance_ratio_
     )
 metadata_model(BayesianLDA,
-    input=MLJBase.Table(MLJBase.Continuous),
-    target=AbstractVector{<:MLJBase.Finite},
-    weights=false,
-    descr="Bayesian Linear Discriminant Analysis."
+    input   = MLJBase.Table(MLJBase.Continuous),
+    target  = AbstractVector{<:MLJBase.Finite},
+    weights = false,
+    descr   = "Bayesian Linear Discriminant Analysis."
     )
 
 BayesianQDA_ = SKDA.QuadraticDiscriminantAnalysis
@@ -40,8 +40,8 @@ MLJBase.fitted_params(m::BayesianQDA, (f, _, _)) = (
     scalings   = f.scalings_
     )
 metadata_model(BayesianQDA,
-    input=MLJBase.Table(MLJBase.Continuous),
-    target=AbstractVector{<:MLJBase.Finite},
-    weights=false,
-    descr="Bayesian Quadratic Discriminant Analysis."
+    input   = MLJBase.Table(MLJBase.Continuous),
+    target  = AbstractVector{<:MLJBase.Finite},
+    weights = false,
+    descr   = "Bayesian Quadratic Discriminant Analysis."
     )
