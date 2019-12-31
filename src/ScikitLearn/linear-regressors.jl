@@ -192,7 +192,7 @@ LassoCVRegressor_ = SKLM.LassoCV
     verbose::Union{Bool, Int} = false
     n_jobs::Option{Int} = nothing
     positive::Bool      = false
-    random_state::Int   = nothing
+    random_state::Any   = nothing
     selection::String   = "cyclic"::(_ in ("cyclic","random"))
 end
 MLJBase.fitted_params(model::LassoCVRegressor, (fitresult, _, _)) = (
