@@ -25,9 +25,18 @@ In particular you are expected to be familiar with
 
 * what [Scientific Types](https://github.com/alan-turing-institute/ScientificTypes.jl) are
 * what `Probabilistic`, `Deterministic` and `Unsupervised` models are
-* the fact that MLJ works with Tables, not bare bone matrices.
+* the fact that MLJ generally works with tables rather than bare bone
+  matrices. Here a *table* is a container satisfying the
+  [Tables.jl](https://github.com/JuliaData/Tables.jl) API (e.g., DataFrame, JuliaDB table, CSV file, named tuple of equi-length vectors)
+* [CategoricalArrays.jl](https://github.com/JuliaData/CategoricalArrays.jl) (if working with finite discrete data)
 
-If you're not familiar with any one of these points, please refer to the general [MLJ docs](https://alan-turing-institute.github.io/MLJ.jl/dev/) and specifically, read the [detailed documentation](https://alan-turing-institute.github.io/MLJ.jl/dev/adding_models_for_general_use/#Adding-Models-for-General-Use-1) to add models.
+If you're not familiar with any one of these points, please refer to the general [MLJ docs](https://alan-turing-institute.github.io/MLJ.jl/dev/) and specifically, read the [detailed documentation](https://alan-turing-institute.github.io/MLJ.jl/dev/adding_models_for_general_use/#Adding-Models-for-General-Use-1) for adding models. 
+
+If a case can be made that tabular input makes so sense for your
+particular model, then MLJ can still handle this; you just need to
+define a non-tubular `input_scitype` trait. However, you should
+probabably open an issue to clarify the appropriate declaration. The
+discussion below assumes input data is tabular.
 
 ### Overview
 
@@ -117,7 +126,7 @@ You **must** type `verbosity` to `Int` and you **must not** type `X`, `y` and `w
 
 #### Regressor
 
-In the body of the `fit` function, you should assume that `X` is a `Table` and that `y` is an `AbstractVector` (for multitask regression it may be a `Table`).
+In the body of the `fit` function, you should assume that `X` is a table and that `y` is an `AbstractVector` (for multitask regression it may be a table).
 
 Typical steps in the body of the `fit` function will be:
 
@@ -136,10 +145,23 @@ The `report` should be a `NamedTuple` with any auxiliary useful information that
 
 For a classifier, the steps are fairly similar to a regressor with two particularities:
 
-1. `y` will be a categorical vector and you will typically want to use the encoding of `y` instead of the raw labels, use `MLJBase.Int` for this,
-1. you need to pass the labels seen on the training data, a simple way to do this is to pass `y[1]` in the `fitresult`.
+1. `y` will be a categorical vector and you will typically want to use the integer encoding of `y` instead of the raw labels; use `MLJBase.int` for this,
+1.  You will need to pass the full pool of target labels (not just
+   those observed in the training data) and additionally, in the
+   `Deterministic` case, the encoding, to make these available to
+   `predict`. A simple way to do this is to pass `y[1]` in the
+   `fitresult`, for then `MLJBase.classes(y[1])` is a complete list of
+   possible categorical elements, and `d = MLJBase.decoder(y[1])` is a
+   method for recovering categorical elements from their integer
+   representations (e.g., `d(2)` is the categorical element with `2`
+   as encoding).
 
-**Example**: GLM's [BinaryClassifier](https://github.com/alan-turing-institute/MLJModels.jl/blob/3687491b132be8493b6f7a322aedf66008caaab1/src/GLM.jl#L119-L131)
+**Examples**:
+
+-  GLM's [BinaryClassifier](https://github.com/alan-turing-institute/MLJModels.jl/blob/3687491b132be8493b6f7a322aedf66008caaab1/src/GLM.jl#L119-L131) (`Probabilistic`)
+
+- LIBSVM's [SVC](https://github.com/alan-turing-institute/MLJModels.jl/blob/master/src/LIBSVM.jl) (`Deterministic`)
+
 
 #### Transformer
 
@@ -175,15 +197,18 @@ function MLJBase.predict(m::YourModel, fitresult, Xnew)
 end
 ```
 
-Where `Xnew` should be expected to be a `Table` and part of the logic in `predict` or `transform` may be similar to that in `fit`.
+Where `Xnew` should be expected to be a table and part of the logic in `predict` or `transform` may be similar to that in `fit`.
 
 The values returned should be:
 
-* (**Deterministic**): a vector of values (or Table if multitask)
+* (**Deterministic**): a vector of values (or Table if multi-target)
 * (**Probabilistic**): a vector of `Distribution` objects, for classifiers in particular, a vector of `UnivariateFinite`
 * (**Transformer**): a table
 
-In the case of a `Probabilistic` model, you may further want to implement a `predict_mean` or a `predict_mode`.
+In the case of a `Probabilistic` model, you may further want to
+implement a `predict_mean` or a `predict_mode`. However,
+MLJBase provides fallbacks, defined in terms of `predict`, whose performance may suffice. 
+
 
 **Examples**
 
@@ -210,12 +235,12 @@ metadata_pkg.(ALL_MODELS
 
 # Then for each model,
 metadata_model(YourModel1,
-    name    = "YourModel1",                       # if not given will be String(model)
     input   = MLJBase.Table(MLJBase.Continuous),  # what input data is supported?
     target  = AbstractVector{MLJBase.Continuous}, # for a supervised model, what target?
     output  = MLJBase.Table(MLJBase.Continuous),  # for an unsupervised, what output?
     weights = false,                              # does the model support sample weights?
     descr   = "A short description of your model"
+	path    = "YourPackage.ModuleContainingModelStructDefinition.YourModel1"
     )
 ```
 
