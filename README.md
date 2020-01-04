@@ -30,7 +30,7 @@ In particular you are expected to be familiar with
   [Tables.jl](https://github.com/JuliaData/Tables.jl) API (e.g., DataFrame, JuliaDB table, CSV file, named tuple of equi-length vectors)
 * [CategoricalArrays.jl](https://github.com/JuliaData/CategoricalArrays.jl) (if working with finite discrete data)
 
-If you're not familiar with any one of these points, please refer to the general [MLJ docs](https://alan-turing-institute.github.io/MLJ.jl/dev/) and specifically, read the [detailed documentation](https://alan-turing-institute.github.io/MLJ.jl/dev/adding_models_for_general_use/#Adding-Models-for-General-Use-1) for adding models. 
+If you're not familiar with any one of these points, please refer to the general [MLJ docs](https://alan-turing-institute.github.io/MLJ.jl/dev/) and specifically, read the [detailed documentation](https://alan-turing-institute.github.io/MLJ.jl/dev/adding_models_for_general_use/#Adding-Models-for-General-Use-1) for adding models.
 
 If a case can be made that tabular input makes so sense for your
 particular model, then MLJ can still handle this; you just need to
@@ -62,7 +62,7 @@ MLJ-compatible constructors for your models need to meet the following requireme
 It is **recommended** to use the `@mlj_model` macro from `MLJBase` to declare a (non parametric) model type:
 
 ```julia
-@mlj_model mutable struct YourModel <: MLJBase.Supervised
+@mlj_model mutable struct YourModel <: MLJBase.Deterministic
     a::Float64 = 0.5::(_ > 0)
     b::String  = "svd"::(_ in ("svd","qr"))
 end
@@ -79,7 +79,7 @@ Further to the last point, `a::Float64 = 0.5::(_ > 0)` indicates that the field 
 If you decide **not** to use the `@mlj_model` macro (e.g. in the case of a parametric type), you will need to write a keyword constructor and a `clean!` method:
 
 ```julia
-mutable struct YourModel <: MLJBase.Supervised
+mutable struct YourModel <: MLJBase.Deterministic
     a::Float64
 end
 function YourModel(; a=0.5)
@@ -207,7 +207,7 @@ The values returned should be:
 
 In the case of a `Probabilistic` model, you may further want to
 implement a `predict_mean` or a `predict_mode`. However,
-MLJBase provides fallbacks, defined in terms of `predict`, whose performance may suffice. 
+MLJBase provides fallbacks, defined in terms of `predict`, whose performance may suffice.
 
 
 **Examples**
