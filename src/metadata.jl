@@ -1,19 +1,17 @@
 ## UTILITIES FOR ENCODING AND DECODING MODEL METADATA
 # (for serializing/deserializing into TOML format)
 
+# fallback encoding:
 function encode_dic(s)
-    if s isa Symbol
-        return string(":", s)
-    elseif s isa AbstractString
-        return string(s)
-    else # we have some more complicated object
-        prestring = string("`", s, "`")
-        # hack for objects with gensyms in their string representation:
-        str = replace(prestring, '#'=>'_')
-        return str
-    end
+    prestring = string("`", s, "`")
+    # hack for objects with gensyms in their string representation:
+    str = replace(prestring, '#'=>'_')
+    return str
 end
 
+encode_dic(s::AbstractString) = string(s)
+encode_dic(s::Symbol) = string(":", s)
+encode_dic(s::Nothing) = "`nothing`"
 encode_dic(v::AbstractVector) = encode_dic.(v)
 function encode_dic(d::AbstractDict)
     ret = LittleDict{}()
@@ -74,16 +72,6 @@ function inverse(d::Dict{S,Set{T}}) where {S,T}
     end
     return dinv
 end
-
-
-## A UNIQUE IDENTIFIER FOR REGISTERED MODELS
-
-# struct Handle
-#     name::String
-#     pkg::Union{String,Missing}
-# end
-# Base.show(stream::IO,  h::Handle) =
-#     print(stream, "\"$(h.name)\"\t (from \"$(h.pkg)\")")
 
 Handle = NamedTuple{(:name, :pkg), Tuple{String,String}}
 (::Type{Handle})(name,string) = NamedTuple{(:name, :pkg)}((name, string))
