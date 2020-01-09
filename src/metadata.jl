@@ -108,7 +108,6 @@ end
 
 # for use in __init__ to define INFO_GIVEN_HANDLE
 function info_given_handle(metadata_file)
-
     metadata = LittleDict(TOML.parsefile(metadata_file))
     metadata_given_pkg = decode_dic(metadata)
 
