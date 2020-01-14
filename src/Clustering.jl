@@ -70,20 +70,23 @@ function MLJBase.fit(model::KMeans
     Xarray = transpose(MLJBase.matrix(X))
 
     result    = C.kmeans(Xarray, model.k; distance=model.metric)
-    fitresult = result.centers # centers (p x k)
+    cluster_labels = categorical(1:model.k)
+    fitresult = (result.centers, cluster_labels) # centers (p x k)
     cache     = nothing
-    report    = (assignments=result.assignments,) # size n
+    report    = (assignments=result.assignments, # size n
+                 cluster_labels=cluster_labels) 
 
     return fitresult, cache, report
 end
 
-MLJBase.fitted_params(::KMeans, fitresult) = (centers=fitresult,)
+MLJBase.fitted_params(::KMeans, fitresult) = (centers=fitresult[1],)
 
 function MLJBase.transform(model::KMeans
                          , fitresult
                          , X)
     # pairwise distance from samples to centers
-    X̃ = pairwise(model.metric, transpose(MLJBase.matrix(X)), fitresult, dims=2)
+    X̃ = pairwise(model.metric, transpose(MLJBase.matrix(X)),
+                 fitresult[1], dims=2)
     return MLJBase.table(X̃, prototype=X)
 end
 
@@ -97,20 +100,23 @@ function MLJBase.fit(model::KMedoids
     # cost matrix: all the pairwise distances
     Carray    = pairwise(model.metric, Xarray, dims=2) # n x n
     result    = C.kmedoids(Carray, model.k)
-    fitresult = view(Xarray, :, result.medoids) # medoids
+    cluster_labels = categorical(1:model.k)
+    fitresult = (view(Xarray, :, result.medoids), cluster_labels) # medoids
     cache     = nothing
-    report    = (assignments=result.assignments,) # size n
+    report    = (assignments=result.assignments, # size n
+                 cluster_labels=cluster_labels) 
 
     return fitresult, cache, report
 end
 
-MLJBase.fitted_params(::KMedoids, fitresult) = (medoids=fitresult,)
+MLJBase.fitted_params(::KMedoids, fitresult) = (medoids=fitresult[1],)
 
 function MLJBase.transform(model::KMedoids
                          , fitresult
                          , X)
     # pairwise distance from samples to medoids
-    X̃ = pairwise(model.metric, MLJBase.matrix(X, transpose=true), fitresult, dims=2)
+                 X̃ = pairwise(model.metric, MLJBase.matrix(X, transpose=true),
+                              fitresult[1], dims=2)
     return MLJBase.table(X̃, prototype=X)
 end
 
@@ -120,6 +126,8 @@ end
 
 function MLJBase.predict(model::Union{KMeans,KMedoids}, fitresult, Xnew)
 
+    locations, cluster_labels = fitresult
+
     Xarray = MLJBase.matrix(Xnew)
     (n, p), k = size(Xarray), model.k
 
@@ -128,13 +136,13 @@ function MLJBase.predict(model::Union{KMeans,KMedoids}, fitresult, Xnew)
         minv = Inf
         for j ∈ 1:k
             curv    = evaluate(model.metric,
-                                  view(Xarray, i, :), view(fitresult, :, j))
+                                  view(Xarray, i, :), view(locations, :, j))
             P       = curv < minv
             pred[i] =    j * P + pred[i] * !P # if P is true --> j
             minv    = curv * P +    minv * !P # if P is true --> curvalue
         end
     end
-    return pred
+    return cluster_labels[pred]
 end
 
 ####
