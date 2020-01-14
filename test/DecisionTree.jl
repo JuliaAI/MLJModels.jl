@@ -90,5 +90,26 @@ fitresult, _, _ = MLJBase.fit(clf, 1, X, yfinite)
 
 info_dict(R1Tree)
 
+# --  Ensemble
+
+rfc = RandomForestClassifier()
+abs = AdaBoostStumpClassifier()
+
+X, y = MLJBase.make_blobs(100, 3; rng=555)
+
+m = machine(rfc, X, y)
+fit!(m)
+@test accuracy(predict_mode(m, X), y) > 0.95
+
+m = machine(abs, X, y)
+fit!(m)
+@test accuracy(predict_mode(m, X), y) > 0.95
+
+X, y = MLJBase.make_regression(rng=5124)
+rfr = RandomForestRegressor()
+m = machine(rfr, X, y)
+fit!(m)
+@test rms(predict(m, X), y) < 0.2
+
 end
 true
