@@ -30,7 +30,7 @@ yhat = MLJBase.predict_mode(baretree, fitresult, X);
 
 # but pruning upsets this:
 baretree.post_prune = true
-baretree.merge_purity=0.1
+baretree.merge_purity_threshold=0.1
 fitresult, cache, report =
     MLJBase.update(baretree, 2, fitresult, cache, X, y)
 yhat = MLJBase.predict_mode(baretree, fitresult, X);
@@ -56,7 +56,7 @@ weights = rand(-1:1,m);
 labels = raw_features * weights;
 features = MLJBase.table(raw_features);
 
-R1Tree = DecisionTreeRegressor(min_samples_leaf=5, pruning_purity_threshold=0.1)
+R1Tree = DecisionTreeRegressor(min_samples_leaf=5, merge_purity_threshold=0.1)
 R2Tree = DecisionTreeRegressor(min_samples_split=5)
 model1, = MLJBase.fit(R1Tree,1, features, labels)
 
