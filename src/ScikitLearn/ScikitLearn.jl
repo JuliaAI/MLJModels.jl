@@ -1,15 +1,9 @@
 module ScikitLearn_
 
-#> for all Supervised models:
 import MLJBase
 import MLJBase: @mlj_model, metadata_model,
                 _process_model_def, _model_constructor, _model_cleaner
-using ScientificTypes
-using Tables
-
-#> for all classifiers:
-using CategoricalArrays
-using Tables
+using ScientificTypes, Tables, CategoricalArrays
 
 # NOTE: legacy code for SVM models does not use the @sk_model macro.
 
@@ -34,13 +28,14 @@ const SKDU = ((ScikitLearn.Skcore).pyimport("sklearn.dummy"))
 const SKNB = ((ScikitLearn.Skcore).pyimport("sklearn.naive_bayes"))
 const SKNE = ((ScikitLearn.Skcore).pyimport("sklearn.neighbors"))
 const SKDA = ((ScikitLearn.Skcore).pyimport("sklearn.discriminant_analysis"))
+const SKCL = ((ScikitLearn.Skcore).pyimport("sklearn.cluster"))
 # const SKNN = ((ScikitLearn.Skcore).pyimport("sklearn.neural_network"))
 
 """
 _skmodel_fit_reg
 
-Called as part of [`@sk_reg`](@ref), returns the expression corresponing to the `fit` method
-for the ScikitLearn regression model.
+Called as part of [`@sk_reg`](@ref), returns the expression corresponing to the
+`fit` method for a ScikitLearn regression model.
 """
 function _skmodel_fit_reg(modelname, params)
     quote
@@ -70,8 +65,8 @@ end
 """
 _skmodel_fit_clf
 
-Called as part of [`@sk_clf`](@ref), returns the expression corresponing to the `fit` method
-for the ScikitLearn classifier model.
+Called as part of [`@sk_clf`](@ref), returns the expression corresponing to the
+`fit` method for a ScikitLearn classifier model.
 """
 function _skmodel_fit_clf(modelname, params)
     quote
@@ -88,12 +83,30 @@ function _skmodel_fit_clf(modelname, params)
     end
 end
 
+"""
+_skmodel_fit_trf
+
+Called as part of [`@sk_trf`](@ref), returns the expression corresponing to the
+`fit` method for a ScikitLearn transformer model.
+"""
+function _skmodel_fit_trf(modelname, params)
+    quote
+        function MLJBase.fit(model::$modelname, verbosity::Int, X)
+            Xmatrix = MLJBase.matrix(X)
+            skmodel = $(Symbol(modelname, "_"))($((Expr(:kw, p, :(model.$p)) for p in params)...))
+            fitres  = ScikitLearn.fit!(skmodel, Xmatrix)
+            # TODO: we may want to use the report later on
+            report  = NamedTuple()
+            return (fitres, nothing, report)
+        end
+    end
+end
 
 """
 _skmodel_predict
 
-Called as part of [`@sk_model`](@ref), returns the expression corresponing to the `predict` method
-for the ScikitLearn model (for a deterministic model)
+Called as part of [`@sk_model`](@ref), returns the expression corresponing to
+the `predict` method for the ScikitLearn model (for a deterministic model).
 """
 function _skmodel_predict(modelname)
     quote
@@ -101,13 +114,13 @@ function _skmodel_predict(modelname)
             Xmatrix = MLJBase.matrix(Xnew)
             preds   = ScikitLearn.predict(fitresult, Xmatrix)
             if isa(preds, Matrix)
-                    # only regressors are possibly multitarget;
-                    # build a table with the appropriate column names
-                    return MLJBase.table(preds, names=targnames)
+                # only regressors are possibly multitarget;
+                # build a table with the appropriate column names
+                return MLJBase.table(preds, names=targnames)
             end
             if y1 !== nothing
-                    # if it's a classifier)
-                    return preds |> MLJBase.decoder(y1)
+                # if it's a classifier)
+                return preds |> MLJBase.decoder(y1)
             end
             return preds
         end
@@ -117,8 +130,8 @@ end
 """
 _skmodel_predict_prob
 
-Same as `_skmodel_predict` but with probabilities. Note that only classifiers are probabilistic
-in sklearn so that we always decode.
+Same as `_skmodel_predict` but with probabilities. Note that only classifiers
+are probabilistic in sklearn so that we always decode.
 """
 function _skmodel_predict_prob(modelname)
     quote
@@ -129,6 +142,23 @@ function _skmodel_predict_prob(modelname)
             preds   = ScikitLearn.predict_proba(fitresult, Xmatrix)
             classes = MLJBase.classes(y1)
             return [MLJBase.UnivariateFinite(classes, preds[i, :]) for i in 1:size(Xmatrix,1)]
+        end
+    end
+end
+
+"""
+_skmodel_fit_trf
+
+Called as part of [`@sk_trf`](@ref), returns the expression corresponing to the
+`transform` method for a ScikitLearn transformer model.
+"""
+function _skmodel_transform(modelname)
+    quote
+        # there are no multi-task classifiers in sklearn
+        function MLJBase.transform(model::$modelname, fitresult, Xnew)
+            Xmatrix = MLJBase.matrix(Xnew)
+            Xnew    = ScikitLearn.transform(fitresult, Xmatrix)
+            MLJBase.table(Xnew)
         end
     end
 end
@@ -152,11 +182,14 @@ function _sk_constructor(ex)
 end
 
 function _sk_finalize(m, clean_ex, fit_ex, ex)
-    # call a different predict based on whether probabilistic or deteterministic
-    if ex.args[2].args[2] == :(MLJBase.Probabilistic)
+    # call a different predict based on whether probabilistic, deteterministic
+    # or unsupervised
+    if ex.args[2].args[2] == :(MLJBase.Deterministic)
+        predict_ex = _skmodel_predict(m)
+    elseif ex.args[2].args[2] == :(MLJBase.Probabilistic)
         predict_ex = _skmodel_predict_prob(m)
     else
-        predict_ex = _skmodel_predict(m)
+        predict_ex = _skmodel_transform(m)
     end
     esc(
         quote
@@ -205,11 +238,21 @@ macro sk_clf(ex)
 Same as [`@sk_reg`](@ref) but for classifiers.
 """
 macro sk_clf(ex)
-        modelname, params, clean_ex, ex = _sk_constructor(ex)
-        fit_ex = _skmodel_fit_clf(modelname, params)
-        _sk_finalize(modelname, clean_ex, fit_ex, ex)
+    modelname, params, clean_ex, ex = _sk_constructor(ex)
+    fit_ex = _skmodel_fit_clf(modelname, params)
+    _sk_finalize(modelname, clean_ex, fit_ex, ex)
 end
 
+"""
+macro sk_trf(ex)
+
+Same as [`@sk_reg`](@ref) but for transformers.
+"""
+macro sk_trf(ex)
+    modelname, params, clean_ex, ex = _sk_constructor(ex)
+    fit_ex = _skmodel_fit_trf(modelname, params)
+    _sk_finalize(modelname, clean_ex, fit_ex, ex)
+end
 
 include("linear-regressors.jl")
 include("linear-classifiers.jl")
@@ -217,5 +260,7 @@ include("gaussian-process.jl")
 include("ensemble.jl")
 include("discriminant-analysis.jl")
 include("misc.jl")
+
+include("clustering.jl")
 
 end # module

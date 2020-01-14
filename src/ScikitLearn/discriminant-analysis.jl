@@ -25,6 +25,7 @@ metadata_model(BayesianLDA,
     descr   = "Bayesian Linear Discriminant Analysis."
     )
 
+# ============================================================================
 BayesianQDA_ = SKDA.QuadraticDiscriminantAnalysis
 @sk_clf mutable struct BayesianQDA <: MLJBase.Probabilistic
     priors::Option{AbstractVector} = nothing

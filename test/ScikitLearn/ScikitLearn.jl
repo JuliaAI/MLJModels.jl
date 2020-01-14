@@ -12,5 +12,7 @@ include("ensemble.jl")
 include("discriminant-analysis.jl")
 include("misc.jl")
 
+include("clustering.jl")
+
 end
 true
