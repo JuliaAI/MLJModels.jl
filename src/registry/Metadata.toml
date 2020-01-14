@@ -1,7 +1,7 @@
 
 [NearestNeighbors.KNNClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s94,1} where _s94<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s110,1} where _s110<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "NearestNeighbors"
 ":package_license" = "MIT"
@@ -64,7 +64,7 @@
 
 [MLJLinearModels.LogisticClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s93,1} where _s93<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s58,1} where _s58<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "MLJLinearModels"
 ":package_license" = "MIT"
@@ -85,7 +85,7 @@
 
 [MLJLinearModels.MultinomialClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s93,1} where _s93<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s58,1} where _s58<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "MLJLinearModels"
 ":package_license" = "MIT"
@@ -253,7 +253,7 @@
 
 [ScikitLearn.ProbabilisticSGDClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s692,1} where _s692<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s580,1} where _s580<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -274,7 +274,7 @@
 
 [ScikitLearn.RidgeCVClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s556,1} where _s556<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s444,1} where _s444<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -295,7 +295,7 @@
 
 [ScikitLearn.LogisticClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s556,1} where _s556<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s444,1} where _s444<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -316,7 +316,7 @@
 
 [ScikitLearn.RandomForestRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:Union{AbstractArray{_s12,1} where _s12<:ScientificTypes.Count, AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous}`"
-":target_scitype" = "`AbstractArray{_s782,1} where _s782<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s670,1} where _s670<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -358,7 +358,7 @@
 
 [ScikitLearn.PerceptronClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s556,1} where _s556<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s444,1} where _s444<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -505,7 +505,7 @@
 
 [ScikitLearn.RidgeClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s556,1} where _s556<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s444,1} where _s444<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -547,7 +547,7 @@
 
 [ScikitLearn.ComplementNBClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Count)`"
-":target_scitype" = "`AbstractArray{_s782,1} where _s782<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s670,1} where _s670<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -589,7 +589,7 @@
 
 [ScikitLearn.SVMNuClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s93,1} where _s93<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s109,1} where _s109<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "unknown"
@@ -610,7 +610,7 @@
 
 [ScikitLearn.GradientBoostingClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s782,1} where _s782<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s670,1} where _s670<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -673,7 +673,7 @@
 
 [ScikitLearn.SVMLClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s93,1} where _s93<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s109,1} where _s109<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "unknown"
@@ -778,7 +778,7 @@
 
 [ScikitLearn.PassiveAggressiveClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s556,1} where _s556<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s444,1} where _s444<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -820,7 +820,7 @@
 
 [ScikitLearn.BernoulliNBClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Count)`"
-":target_scitype" = "`AbstractArray{_s782,1} where _s782<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s670,1} where _s670<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -841,7 +841,7 @@
 
 [ScikitLearn.GaussianNBClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s782,1} where _s782<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s670,1} where _s670<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -862,7 +862,7 @@
 
 [ScikitLearn.ExtraTreesClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s782,1} where _s782<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s670,1} where _s670<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -946,7 +946,7 @@
 
 [ScikitLearn.AdaBoostClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s692,1} where _s692<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s580,1} where _s580<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -1030,7 +1030,7 @@
 
 [ScikitLearn.BaggingClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s692,1} where _s692<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s580,1} where _s580<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -1051,7 +1051,7 @@
 
 [ScikitLearn.GaussianProcessClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s692,1} where _s692<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s580,1} where _s580<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -1177,7 +1177,7 @@
 
 [ScikitLearn.KNeighborsClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s782,1} where _s782<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s670,1} where _s670<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -1198,7 +1198,7 @@
 
 [ScikitLearn.DummyClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s782,1} where _s782<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s670,1} where _s670<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -1240,7 +1240,7 @@
 
 [ScikitLearn.BayesianQDA]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s782,1} where _s782<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s670,1} where _s670<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -1261,7 +1261,7 @@
 
 [ScikitLearn.BayesianLDA]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s782,1} where _s782<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s670,1} where _s670<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -1282,7 +1282,7 @@
 
 [ScikitLearn.SGDClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s692,1} where _s692<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s580,1} where _s580<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -1345,7 +1345,7 @@
 
 [ScikitLearn.RandomForestClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:Union{AbstractArray{_s12,1} where _s12<:ScientificTypes.Count, AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous}`"
-":target_scitype" = "`AbstractArray{_s782,1} where _s782<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s670,1} where _s670<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -1366,7 +1366,7 @@
 
 [ScikitLearn.LogisticCVClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s556,1} where _s556<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s444,1} where _s444<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -1450,7 +1450,7 @@
 
 [ScikitLearn.MultinomialNBClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Count)`"
-":target_scitype" = "`AbstractArray{_s782,1} where _s782<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s670,1} where _s670<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -1492,7 +1492,7 @@
 
 [ScikitLearn.SVMClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s93,1} where _s93<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s109,1} where _s109<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "unknown"
@@ -1534,7 +1534,7 @@
 
 [NaiveBayes.GaussianNBClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s781,1} where _s781<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s669,1} where _s669<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "NaiveBayes"
 ":package_license" = "unknown"
@@ -1555,7 +1555,7 @@
 
 [NaiveBayes.MultinomialNBClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Count)`"
-":target_scitype" = "`AbstractArray{_s781,1} where _s781<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s669,1} where _s669<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "NaiveBayes"
 ":package_license" = "unknown"
@@ -1611,7 +1611,7 @@
 ":prediction_type" = ":unknown"
 ":implemented_methods" = [":fit", ":clean!", ":evaluate"]
 ":hyperparameters" = "`(:model, :resampling, :measure, :weights, :operation, :acceleration, :check_measure, :repeats)`"
-":hyperparameter_types" = "`(\"MLJBase.Supervised\", \"Any\", \"Any\", \"Union{Nothing, AbstractArray{_s126,1} where _s126<:Real}\", \"Any\", \"ComputationalResources.AbstractResource\", \"Bool\", \"Int64\")`"
+":hyperparameter_types" = "`(\"MLJBase.Supervised\", \"Any\", \"Any\", \"Union{Nothing, AbstractArray{_s127,1} where _s127<:Real}\", \"Any\", \"ComputationalResources.AbstractResource\", \"Bool\", \"Int64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [MultivariateStats.ICA]
@@ -1630,12 +1630,12 @@
 ":is_supervised" = "`false`"
 ":implemented_methods" = [":fit", ":fitted_params", ":transform"]
 ":hyperparameters" = "`(:k, :alg, :fun, :do_whiten, :maxiter, :tol, :winit, :mean)`"
-":hyperparameter_types" = "`(\"Int64\", \"Symbol\", \"Symbol\", \"Bool\", \"Int64\", \"Real\", \"Union{Nothing, Array{_s782,2} where _s782<:Real}\", \"Union{Nothing, Array{Float64,1}, Real}\")`"
+":hyperparameter_types" = "`(\"Int64\", \"Symbol\", \"Symbol\", \"Bool\", \"Int64\", \"Real\", \"Union{Nothing, Array{_s670,2} where _s670<:Real}\", \"Union{Nothing, Array{Float64,1}, Real}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [MultivariateStats.BayesianLDA]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s782,1} where _s782<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s670,1} where _s670<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "MultivariateStats"
 ":package_license" = "MIT"
@@ -1656,7 +1656,7 @@
 
 [MultivariateStats.BayesianSubspaceLDA]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s782,1} where _s782<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s670,1} where _s670<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "MultivariateStats"
 ":package_license" = "MIT"
@@ -1717,7 +1717,7 @@
 
 [MultivariateStats.LDA]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s782,1} where _s782<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s670,1} where _s670<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "MultivariateStats"
 ":package_license" = "MIT"
@@ -1757,7 +1757,7 @@
 
 [MultivariateStats.SubspaceLDA]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s782,1} where _s782<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s670,1} where _s670<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "MultivariateStats"
 ":package_license" = "MIT"
@@ -1776,6 +1776,27 @@
 ":hyperparameter_types" = "`(\"Bool\", \"Int64\", \"Distances.SemiMetric\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing)`"
 
+[DecisionTree.AdaBoostStumpClassifier]
+":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:Union{AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous, AbstractArray{_s12,1} where _s12<:ScientificTypes.Count, AbstractArray{_s12,1} where _s12<:ScientificTypes.OrderedFactor}`"
+":target_scitype" = "`AbstractArray{_s670,1} where _s670<:ScientificTypes.Finite`"
+":is_pure_julia" = "`true`"
+":package_name" = "DecisionTree"
+":package_license" = "MIT"
+":load_path" = "MLJModels.DecisionTree_.AdaBoostStumpClassifier"
+":package_uuid" = "7806a523-6efd-50cb-b5f6-3fa6f1930dbb"
+":package_url" = "https://github.com/bensadeghi/DecisionTree.jl"
+":is_wrapper" = "`false`"
+":supports_weights" = "`false`"
+":supports_online" = "`false`"
+":docstring" = "Ada-boosted stump classifier.\n→ based on [DecisionTree](https://github.com/bensadeghi/DecisionTree.jl).\n→ do `@load AdaBoostStumpClassifier pkg=\"DecisionTree\"` to use the model.\n→ do `?AdaBoostStumpClassifier` for documentation."
+":name" = "AdaBoostStumpClassifier"
+":is_supervised" = "`true`"
+":prediction_type" = ":probabilistic"
+":implemented_methods" = [":fit", ":predict", ":fitted_params"]
+":hyperparameters" = "`(:n_iter, :pdf_smoothing)`"
+":hyperparameter_types" = "`(\"Int64\", \"Float64\")`"
+":hyperparameter_ranges" = "`(nothing, nothing)`"
+
 [DecisionTree.DecisionTreeRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:Union{AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous, AbstractArray{_s12,1} where _s12<:ScientificTypes.Count, AbstractArray{_s12,1} where _s12<:ScientificTypes.OrderedFactor}`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
@@ -1788,18 +1809,18 @@
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
 ":supports_online" = "`false`"
-":docstring" = "Decision Tree Regressor.\n→ based on [DecisionTree](https://github.com/bensadeghi/DecisionTree.jl).\n→ do `@load DecisionTreeRegressor pkg=\"DecisionTree\"` to use the model.\n→ do `?DecisionTreeRegressor` for documentation."
+":docstring" = "CART decision tree regressor.\n→ based on [DecisionTree](https://github.com/bensadeghi/DecisionTree.jl).\n→ do `@load DecisionTreeRegressor pkg=\"DecisionTree\"` to use the model.\n→ do `?DecisionTreeRegressor` for documentation."
 ":name" = "DecisionTreeRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
 ":implemented_methods" = [":fit", ":predict", ":fitted_params"]
-":hyperparameters" = "`(:pruning_purity_threshold, :max_depth, :min_samples_leaf, :min_samples_split, :min_purity_increase, :n_subfeatures, :post_prune)`"
-":hyperparameter_types" = "`(\"Float64\", \"Int64\", \"Int64\", \"Int64\", \"Float64\", \"Int64\", \"Bool\")`"
+":hyperparameters" = "`(:max_depth, :min_samples_leaf, :min_samples_split, :min_purity_increase, :n_subfeatures, :post_prune, :merge_purity_threshold)`"
+":hyperparameter_types" = "`(\"Int64\", \"Int64\", \"Int64\", \"Float64\", \"Int64\", \"Bool\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [DecisionTree.DecisionTreeClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:Union{AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous, AbstractArray{_s12,1} where _s12<:ScientificTypes.Count, AbstractArray{_s12,1} where _s12<:ScientificTypes.OrderedFactor}`"
-":target_scitype" = "`AbstractArray{_s782,1} where _s782<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s670,1} where _s670<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "DecisionTree"
 ":package_license" = "MIT"
@@ -1809,14 +1830,56 @@
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
 ":supports_online" = "`false`"
-":docstring" = "Decision Tree Classifier.\n→ based on [DecisionTree](https://github.com/bensadeghi/DecisionTree.jl).\n→ do `@load DecisionTreeClassifier pkg=\"DecisionTree\"` to use the model.\n→ do `?DecisionTreeClassifier` for documentation."
+":docstring" = "CART decision tree classifier.\n→ based on [DecisionTree](https://github.com/bensadeghi/DecisionTree.jl).\n→ do `@load DecisionTreeClassifier pkg=\"DecisionTree\"` to use the model.\n→ do `?DecisionTreeClassifier` for documentation."
 ":name" = "DecisionTreeClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
 ":implemented_methods" = [":fit", ":predict", ":fitted_params"]
-":hyperparameters" = "`(:pruning_purity, :max_depth, :min_samples_leaf, :min_samples_split, :min_purity_increase, :n_subfeatures, :display_depth, :post_prune, :merge_purity_threshold, :pdf_smoothing)`"
-":hyperparameter_types" = "`(\"Float64\", \"Int64\", \"Int64\", \"Int64\", \"Float64\", \"Int64\", \"Int64\", \"Bool\", \"Float64\", \"Float64\")`"
-":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":hyperparameters" = "`(:max_depth, :min_samples_leaf, :min_samples_split, :min_purity_increase, :n_subfeatures, :post_prune, :merge_purity_threshold, :pdf_smoothing, :display_depth)`"
+":hyperparameter_types" = "`(\"Int64\", \"Int64\", \"Int64\", \"Float64\", \"Int64\", \"Bool\", \"Float64\", \"Float64\", \"Int64\")`"
+":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+
+[DecisionTree.RandomForestRegressor]
+":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:Union{AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous, AbstractArray{_s12,1} where _s12<:ScientificTypes.Count, AbstractArray{_s12,1} where _s12<:ScientificTypes.OrderedFactor}`"
+":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
+":is_pure_julia" = "`true`"
+":package_name" = "DecisionTree"
+":package_license" = "MIT"
+":load_path" = "MLJModels.DecisionTree_.RandomForestRegressor"
+":package_uuid" = "7806a523-6efd-50cb-b5f6-3fa6f1930dbb"
+":package_url" = "https://github.com/bensadeghi/DecisionTree.jl"
+":is_wrapper" = "`false`"
+":supports_weights" = "`false`"
+":supports_online" = "`false`"
+":docstring" = "Random forest regressor.\n→ based on [DecisionTree](https://github.com/bensadeghi/DecisionTree.jl).\n→ do `@load RandomForestRegressor pkg=\"DecisionTree\"` to use the model.\n→ do `?RandomForestRegressor` for documentation."
+":name" = "RandomForestRegressor"
+":is_supervised" = "`true`"
+":prediction_type" = ":deterministic"
+":implemented_methods" = [":fit", ":predict", ":fitted_params"]
+":hyperparameters" = "`(:max_depth, :min_samples_leaf, :min_samples_split, :min_purity_increase, :n_subfeatures, :n_trees, :sampling_fraction, :pdf_smoothing)`"
+":hyperparameter_types" = "`(\"Int64\", \"Int64\", \"Int64\", \"Float64\", \"Int64\", \"Int64\", \"Float64\", \"Float64\")`"
+":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+
+[DecisionTree.RandomForestClassifier]
+":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:Union{AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous, AbstractArray{_s12,1} where _s12<:ScientificTypes.Count, AbstractArray{_s12,1} where _s12<:ScientificTypes.OrderedFactor}`"
+":target_scitype" = "`AbstractArray{_s670,1} where _s670<:ScientificTypes.Finite`"
+":is_pure_julia" = "`true`"
+":package_name" = "DecisionTree"
+":package_license" = "MIT"
+":load_path" = "MLJModels.DecisionTree_.RandomForestClassifier"
+":package_uuid" = "7806a523-6efd-50cb-b5f6-3fa6f1930dbb"
+":package_url" = "https://github.com/bensadeghi/DecisionTree.jl"
+":is_wrapper" = "`false`"
+":supports_weights" = "`false`"
+":supports_online" = "`false`"
+":docstring" = "Random forest classifier.\n→ based on [DecisionTree](https://github.com/bensadeghi/DecisionTree.jl).\n→ do `@load RandomForestClassifier pkg=\"DecisionTree\"` to use the model.\n→ do `?RandomForestClassifier` for documentation."
+":name" = "RandomForestClassifier"
+":is_supervised" = "`true`"
+":prediction_type" = ":probabilistic"
+":implemented_methods" = [":fit", ":predict", ":fitted_params"]
+":hyperparameters" = "`(:max_depth, :min_samples_leaf, :min_samples_split, :min_purity_increase, :n_subfeatures, :n_trees, :sampling_fraction, :pdf_smoothing)`"
+":hyperparameter_types" = "`(\"Int64\", \"Int64\", \"Int64\", \"Float64\", \"Int64\", \"Int64\", \"Float64\", \"Float64\")`"
+":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [Clustering.KMeans]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
@@ -1900,7 +1963,7 @@
 
 [XGBoost.XGBoostClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s782,1} where _s782<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s670,1} where _s670<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "XGBoost"
 ":package_license" = "unknown"
@@ -1921,7 +1984,7 @@
 
 [MLJModels.ConstantClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:Union{Missing, ScientificTypes.Found})`"
-":target_scitype" = "`AbstractArray{_s61,1} where _s61<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s63,1} where _s63<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "MLJModels"
 ":package_license" = "MIT"
@@ -1961,7 +2024,7 @@
 
 [MLJModels.DeterministicConstantClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:Union{Missing, ScientificTypes.Found})`"
-":target_scitype" = "`AbstractArray{_s61,1} where _s61<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s63,1} where _s63<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "MLJModels"
 ":package_license" = "MIT"
@@ -2059,8 +2122,8 @@
 ":hyperparameter_ranges" = "`(nothing,)`"
 
 [MLJModels.UnivariateDiscretizer]
-":input_scitype" = "`AbstractArray{_s121,1} where _s121<:ScientificTypes.Continuous`"
-":output_scitype" = "`AbstractArray{_s120,1} where _s120<:ScientificTypes.OrderedFactor`"
+":input_scitype" = "`AbstractArray{_s123,1} where _s123<:ScientificTypes.Continuous`"
+":output_scitype" = "`AbstractArray{_s122,1} where _s122<:ScientificTypes.OrderedFactor`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "MLJModels"
 ":package_license" = "MIT"
@@ -2118,7 +2181,7 @@
 ":hyperparameter_ranges" = "``"
 
 [MLJModels.UnivariateStandardizer]
-":input_scitype" = "`AbstractArray{_s121,1} where _s121<:ScientificTypes.Infinite`"
+":input_scitype" = "`AbstractArray{_s123,1} where _s123<:ScientificTypes.Infinite`"
 ":output_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "MLJModels"
@@ -2159,7 +2222,7 @@
 
 [LIBSVM.LinearSVC]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s782,1} where _s782<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s670,1} where _s670<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "LIBSVM"
 ":package_license" = "unknown"
@@ -2201,7 +2264,7 @@
 
 [LIBSVM.NuSVC]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s782,1} where _s782<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s670,1} where _s670<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "LIBSVM"
 ":package_license" = "unknown"
@@ -2222,7 +2285,7 @@
 
 [LIBSVM.SVC]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s782,1} where _s782<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s670,1} where _s670<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "LIBSVM"
 ":package_license" = "unknown"
@@ -2243,7 +2306,7 @@
 
 [LIBSVM.OneClassSVM]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":output_scitype" = "`AbstractArray{_s782,1} where _s782<:ScientificTypes.Finite{2}`"
+":output_scitype" = "`AbstractArray{_s670,1} where _s670<:ScientificTypes.Finite{2}`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "LIBSVM"
 ":package_license" = "unknown"
