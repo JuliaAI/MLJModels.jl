@@ -50,13 +50,13 @@ info_dict(baretree)
 using Random: seed!
 seed!(0)
 
-n,m = 10^3, 5 ;
+n,m = 10^3, 5;
 raw_features = rand(n,m);
 weights = rand(-1:1,m);
 labels = raw_features * weights;
 features = MLJBase.table(raw_features);
 
-R1Tree = DecisionTreeRegressor(min_samples_leaf=5, pruning_purity_threshold=0.1)
+R1Tree = DecisionTreeRegressor(min_samples_leaf=5, merge_purity_threshold=0.1)
 R2Tree = DecisionTreeRegressor(min_samples_split=5)
 model1, = MLJBase.fit(R1Tree,1, features, labels)
 
@@ -89,6 +89,27 @@ fitresult, _, _ = MLJBase.fit(clf, 1, X, yfinite)
 @test sum(predict(clf, fitresult, X) .== yfinite) == 0 # perfect prediction
 
 info_dict(R1Tree)
+
+# --  Ensemble
+
+rfc = RandomForestClassifier()
+abs = AdaBoostStumpClassifier()
+
+X, y = MLJBase.make_blobs(100, 3; rng=555)
+
+m = machine(rfc, X, y)
+fit!(m)
+@test accuracy(predict_mode(m, X), y) > 0.95
+
+m = machine(abs, X, y)
+fit!(m)
+@test accuracy(predict_mode(m, X), y) > 0.95
+
+X, y = MLJBase.make_regression(rng=5124)
+rfr = RandomForestRegressor()
+m = machine(rfr, X, y)
+fit!(m)
+@test rms(predict(m, X), y) < 0.2
 
 end
 true

@@ -1,7 +1,7 @@
 name = "MLJModels"
 uuid = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
 authors = ["Anthony D. Blaom <anthony.blaom@gmail.com>"]
-version = "0.6.3"
+version = "0.7.0"
 
 [deps]
 CategoricalArrays = "324d7699-5711-5eae-9e2f-1d82baa6b597"
@@ -27,12 +27,12 @@ CategoricalArrays = "^0.7"
 Compat = "^2"
 Distances = "^0.8"
 Distributions = "^0.21"
-MLJBase = "^0.9"
+MLJBase = "^0.10"
 MultivariateStats = "^0.7"
 OrderedCollections = "^1.1"
 Parameters = "^0.12"
 Requires = "^0.5"
-ScientificTypes = "^0.3"
+ScientificTypes = "^0.5.1"
 StatsBase = "^0.32"
 Tables = "^0.2"
 julia = "1"

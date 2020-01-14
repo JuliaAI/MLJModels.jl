@@ -1,54 +1,38 @@
-#> This code implements the MLJ model interface for models in the
-#> DecisionTree.jl package. It is annotated so that it may serve as a
-#> template for other regressors of Deterministic type and classifiers
-#> of Probabilistic type. The annotations, which begin with "#>",
-#> should be removed (but copy this file first!). See also the model
-#> interface specification at "doc/adding_new_models.md".
-
-#> Note that all models need to "register" their location by setting
-#> `load_path(<:ModelType)` appropriately.
-
 module DecisionTree_
-
-#> export the new models you're going to define (and nothing else):
-export DecisionTreeClassifier, DecisionTreeRegressor
 
 import MLJBase
 import MLJBase: @mlj_model, metadata_pkg, metadata_model
-
-#> needed for metadata:
 using ScientificTypes
 
-#> needed for classifiers:
-using CategoricalArrays
+import ..DecisionTree
 
-#> import package:
-import ..DecisionTree # strange syntax b/s we are lazy-loading
-
-## DESCRIPTIONS
-
-const DTC_DESCR = "Decision Tree Classifier."
-const DTR_DESCR = "Decision Tree Regressor."
-
-## CLASSIFIER
+const DT = DecisionTree
 
 struct TreePrinter{T}
     tree::T
 end
-(c::TreePrinter)(depth) = DecisionTree.print_tree(c.tree, depth)
-(c::TreePrinter)() = DecisionTree.print_tree(c.tree, 5)
+(c::TreePrinter)(depth) = DT.print_tree(c.tree, depth)
+(c::TreePrinter)() = DT.print_tree(c.tree, 5)
 
 Base.show(stream::IO, c::TreePrinter) =
     print(stream, "TreePrinter object (call with display depth)")
 
 
+const DTC_DESCR = "CART decision tree classifier."
+const DTR_DESCR = "CART decision tree regressor."
+const RFC_DESCR = "Random forest classifier."
+const RFR_DESCR = "Random forest regressor."
+const ABS_DESCR = "Ada-boosted stump classifier."
+
+
 """
 DecisionTreeClassifer(; kwargs...)
 
-A variation on the CART decision tree classifier from [https://github.com/bensadeghi/DecisionTree.jl/blob/master/README.md](https://github.com/bensadeghi/DecisionTree.jl/blob/master/README.md).
+$DTC_DESCR
 
 Inputs are tables with ordinal columns. That is, the element scitype
 of each column can be `Continuous`, `Count` or `OrderedFactor`.
+Predictions are Probabilistic.
 
 Instead of predicting the mode class at each leaf, a UnivariateFinite
 distribution is fit to the leaf training classes, with smoothing
@@ -67,53 +51,52 @@ internal integer encodings of classes, which are given in
 `fitted_params(mach)` (which also stores the raw learned tree object
 from the DecisionTree.jl algorithm).
 
-For post-fit pruning, set `post-prune=true` and set
-`min_purity_threshold` appropriately. Other hyperparameters as per
-package documentation cited above. 
+## Hyperparameters
 
-
+- `max_depth=-1`:          max depth of the decision tree (-1=any)
+- `min_samples_leaf=1`:    max number of samples each leaf needs to have
+- `min_samples_split=2`:   min number of samples needed for a split
+- `min_purity_increase=0`: min purity needed for a split
+- `n_subfeatures=0`:       number of features to select at random (0=all)
+- `post_prune=false`:      set to `true` for post-fit pruning
+- `merge_purity_threshold=1.0`:  (post-pruning) merge leaves having `>=thresh`
+                           combined purity
+- `pdf_smoothing=0.0`:     threshold for smoothing the predicted scores
+- `display_depth=5`:       max depth to show when displaying the tree
 """
 @mlj_model mutable struct DecisionTreeClassifier <: MLJBase.Probabilistic
-    pruning_purity::Float64         = 1.0::(_ ≤ 1)
-    max_depth::Int                  = (-)(1)::(_ ≥ -1)
-    min_samples_leaf::Int           = 1::(_ ≥ 0)
-    min_samples_split::Int          = 2::(_ ≥ 2)
-    min_purity_increase::Float64    = 0.0::(_ ≥ 0)
-    n_subfeatures::Int              = 0::(_ ≥ 0)
-    display_depth::Int              = 5::(_ ≥ 1)
-    post_prune::Bool                = false
-    merge_purity_threshold::Float64 = 0.9::(0 ≤ _ ≤ 1)
-    pdf_smoothing::Float64          = 0.05::(0 ≤ _ ≤ 1)
+    max_depth::Int               = (-)(1)::(_ ≥ -1)
+    min_samples_leaf::Int        = 1::(_ ≥ 0)
+    min_samples_split::Int       = 2::(_ ≥ 2)
+    min_purity_increase::Float64 = 0.0::(_ ≥ 0)
+    n_subfeatures::Int           = 0::(_ ≥ 0)
+    post_prune::Bool             = false
+    merge_purity_threshold::Float64 = 1.0::(_ ≤ 1)
+    pdf_smoothing::Float64       = 0.0::(0 ≤ _ ≤ 1)
+    display_depth::Int           = 5::(_ ≥ 1)
 end
 
-#> A required `fit` method returns `fitresult, cache, report`. (Return
-#> `cache=nothing` unless you are overloading `update`)
-function MLJBase.fit(model::DecisionTreeClassifier, verbosity::Int, X, y)
+function MLJBase.fit(m::DecisionTreeClassifier, verbosity::Int, X, y)
     Xmatrix = MLJBase.matrix(X)
     yplain  = MLJBase.int(y)
-    classes_seen = filter(in(unique(y)), MLJBase.classes(y[1]))
-    integers_seen = MLJBase.int(classes_seen) #unique(yplain)
 
-    tree = DecisionTree.build_tree(yplain, Xmatrix,
-                                   model.n_subfeatures,
-                                   model.max_depth,
-                                   model.min_samples_leaf,
-                                   model.min_samples_split,
-                                   model.min_purity_increase)
-    if model.post_prune
-        tree = DecisionTree.prune_tree(tree, model.merge_purity_threshold)
+    classes_seen  = filter(in(unique(y)), MLJBase.classes(y[1]))
+    integers_seen = MLJBase.int(classes_seen)
+
+    tree = DT.build_tree(yplain, Xmatrix,
+                         m.n_subfeatures,
+                         m.max_depth,
+                         m.min_samples_leaf,
+                         m.min_samples_split,
+                         m.min_purity_increase)
+    if m.post_prune
+        tree = DT.prune_tree(tree, m.merge_purity_threshold)
     end
-
-    verbosity < 2 || DecisionTree.print_tree(tree, model.display_depth)
+    verbosity < 2 || DT.print_tree(tree, m.display_depth)
 
     fitresult = (tree, classes_seen, integers_seen)
 
-    #> return package-specific statistics (eg, feature rankings,
-    #> internal estimates of generalization error) in `report`, which
-    #> should be a named tuple with the same type every call (can have
-    #> empty values):
-
-    cache = nothing
+    cache  = nothing
     report = (classes_seen=classes_seen,
               print_tree=TreePrinter(tree))
 
@@ -126,95 +109,239 @@ function get_encoding(classes_seen)
 end
 
 MLJBase.fitted_params(::DecisionTreeClassifier, fitresult) =
-    (tree_or_leaf=fitresult[1], encoding=get_encoding(fitresult[2]))
+    (tree=fitresult[1], encoding=get_encoding(fitresult[2]))
 
-function smooth(prob_vector, smoothing)
-    threshold = smoothing/length(prob_vector)
-    smoothed_vector = map(prob_vector) do p
-        p < threshold ? threshold : p
-    end
-    smoothed_vector = smoothed_vector/sum(smoothed_vector)
-    return smoothed_vector
+function smooth(scores, smoothing)
+    iszero(smoothing) && return scores
+    threshold = smoothing / size(scores, 2)
+    # clip low values
+    scores[scores .< threshold] .= threshold
+    # normalize
+    return scores ./ sum(scores, dims=2)
 end
 
-function MLJBase.predict(model::DecisionTreeClassifier
-                     , fitresult
-                     , Xnew)
+function MLJBase.predict(m::DecisionTreeClassifier, fitresult, Xnew)
     Xmatrix = MLJBase.matrix(Xnew)
-
     tree, classes_seen, integers_seen = fitresult
-
-    y_probabilities =
-        DecisionTree.apply_tree_proba(tree, Xmatrix, integers_seen)
-
-    return [MLJBase.UnivariateFinite(classes_seen,
-                                     smooth(y_probabilities[i,:],
-                                            model.pdf_smoothing))
-            for i in 1:size(y_probabilities, 1)]
+    # retrieve the predicted scores
+    scores = DT.apply_tree_proba(tree, Xmatrix, integers_seen)
+    # smooth if required
+    sm_scores = smooth(scores, m.pdf_smoothing)
+    # return vector of UF
+    return [MLJBase.UnivariateFinite(classes_seen, sm_scores[i, :])
+                    for i in 1:size(sm_scores, 1)]
 end
 
+"""
+RandomForestClassifer(; kwargs...)
 
-## REGRESSOR
+$RFC_DESCR
+
+## Hyperparameters
+
+- `max_depth=-1`:          max depth of the decision tree (-1=any)
+- `min_samples_leaf=1`:    max number of samples each leaf needs to have
+- `min_samples_split=2`:   min number of samples needed for a split
+- `min_purity_increase=0`: min purity needed for a split
+- `n_subfeatures=0`:       number of features to select at random (0=all)
+- `n_trees=10`:            number of trees to train
+- `sampling_fraction=0.7`  fraction of samples to train each tree on
+- `pdf_smoothing=0.0`:     threshold for smoothing the predicted scores
+"""
+@mlj_model mutable struct RandomForestClassifier <: MLJBase.Probabilistic
+    max_depth::Int               = (-)(1)::(_ ≥ -1)
+    min_samples_leaf::Int        = 1::(_ ≥ 0)
+    min_samples_split::Int       = 2::(_ ≥ 2)
+    min_purity_increase::Float64 = 0.0::(_ ≥ 0)
+    n_subfeatures::Int           = 0::(_ ≥ 0)
+    n_trees::Int                 = 10::(_ ≥ 2)
+    sampling_fraction::Float64   = 0.7::(0 < _ ≤ 1)
+    pdf_smoothing::Float64       = 0.0::(0 ≤ _ ≤ 1)
+end
+
+function MLJBase.fit(m::RandomForestClassifier, verbosity::Int, X, y)
+    Xmatrix = MLJBase.matrix(X)
+    yplain  = MLJBase.int(y)
+
+    classes_seen  = filter(in(unique(y)), MLJBase.classes(y[1]))
+    integers_seen = MLJBase.int(classes_seen)
+
+    forest = DT.build_forest(yplain, Xmatrix,
+                             m.n_subfeatures,
+                             m.n_trees,
+                             m.sampling_fraction,
+                             m.max_depth,
+                             m.min_samples_leaf,
+                             m.min_samples_split,
+                             m.min_purity_increase)
+    cache  = nothing
+    report = NamedTuple()
+    return (forest, classes_seen, integers_seen), cache, report
+end
+
+MLJBase.fitted_params(::RandomForestClassifier, (forest,_)) = (forest=forest,)
+
+function MLJBase.predict(m::RandomForestClassifier, fitresult, Xnew)
+    Xmatrix = MLJBase.matrix(Xnew)
+    forest, classes_seen, integers_seen = fitresult
+    scores = DT.apply_forest_proba(forest, Xmatrix, integers_seen)
+    sm_scores = smooth(scores, m.pdf_smoothing)
+    return [MLJBase.UnivariateFinite(classes_seen, sm_scores[i, :])
+                    for i in 1:size(sm_scores, 1)]
+end
+
+"""
+AdaBoostStumpClassifer(; kwargs...)
+
+$RFC_DESCR
+
+## Hyperparameters
+
+- `n_iter=10`:   number of iterations of AdaBoost
+- `pdf_smoothing=0.0`: threshold for smoothing the predicted scores
+"""
+@mlj_model mutable struct AdaBoostStumpClassifier <: MLJBase.Probabilistic
+    n_iter::Int            = 10::(_ ≥ 1)
+    pdf_smoothing::Float64 = 0.0::(0 ≤ _ ≤ 1)
+end
+
+function MLJBase.fit(m::AdaBoostStumpClassifier, verbosity::Int, X, y)
+    Xmatrix = MLJBase.matrix(X)
+    yplain  = MLJBase.int(y)
+
+    classes_seen  = filter(in(unique(y)), MLJBase.classes(y[1]))
+    integers_seen = MLJBase.int(classes_seen)
+
+    stumps, coefs = DT.build_adaboost_stumps(yplain, Xmatrix,
+                                             m.n_iter)
+    cache  = nothing
+    report = NamedTuple()
+    return (stumps, coefs, classes_seen, integers_seen), cache, report
+end
+
+MLJBase.fitted_params(::AdaBoostStumpClassifier, (stumps,coefs,_)) =
+    (stumps=stumps,coefs=coefs)
+
+function MLJBase.predict(m::AdaBoostStumpClassifier, fitresult, Xnew)
+    Xmatrix = MLJBase.matrix(Xnew)
+    stumps, coefs, classes_seen, integers_seen = fitresult
+    scores = DT.apply_adaboost_stumps_proba(stumps, coefs,
+                                            Xmatrix, integers_seen)
+    sm_scores = smooth(scores, m.pdf_smoothing)
+    return [MLJBase.UnivariateFinite(classes_seen, sm_scores[i, :])
+                    for i in 1:size(sm_scores, 1)]
+end
+
+## REGRESSION
 
 """
 DecisionTreeRegressor(; kwargs...)
 
-CART decision tree classifier from
-[https://github.com/bensadeghi/DecisionTree.jl/blob/master/README.md](https://github.com/bensadeghi/DecisionTree.jl/blob/master/README.md). Predictions
-are Deterministic.
+$DTC_DESCR
 
 Inputs are tables with ordinal columns. That is, the element scitype
-of each column can be `Continuous`, `Count` or `OrderedFactor`.
+of each column can be `Continuous`, `Count` or `OrderedFactor`. Predictions
+are Deterministic.
 
-For post-fit pruning, set `post-prune=true` and set
-`pruning_purity_threshold` appropriately. Other hyperparameters as per
-package documentation cited above.
+## Hyperparameters
 
+- `max_depth=-1`:          max depth of the decision tree (-1=any)
+- `min_samples_leaf=1`:    max number of samples each leaf needs to have
+- `min_samples_split=2`:   min number of samples needed for a split
+- `min_purity_increase=0`: min purity needed for a split
+- `n_subfeatures=0`:       number of features to select at random (0=all)
+- `post_prune=false`:      set to `true` for post-fit pruning
+- `merge_purity_threshold=1.0`: (post-pruning) merge leaves having `>=thresh`
+                           combined purity
 """
 @mlj_model mutable struct DecisionTreeRegressor <: MLJBase.Deterministic
-    pruning_purity_threshold::Float64 = 0.0::(0 ≤ _ ≤ 1)
-    max_depth::Int					  = (-)(1)::(_ ≥ -1)
-    min_samples_leaf::Int			  = 5::(_ ≥ 0)
-    min_samples_split::Int			  = 2::(_ ≥ 2)
-    min_purity_increase::Float64	  = 0.0::(_ ≥ 0)
-    n_subfeatures::Int				  = 0::(_ ≥ 0)
-    post_prune::Bool				  = false
+    max_depth::Int				 = (-)(1)::(_ ≥ -1)
+    min_samples_leaf::Int		 = 5::(_ ≥ 0)
+    min_samples_split::Int		 = 2::(_ ≥ 2)
+    min_purity_increase::Float64 = 0.0::(_ ≥ 0)
+    n_subfeatures::Int			 = 0::(_ ≥ 0)
+    post_prune::Bool			 = false
+    merge_purity_threshold::Float64 = 1.0::(0 ≤ _ ≤ 1)
 end
 
-function MLJBase.fit(model::DecisionTreeRegressor, verbosity::Int, X, y)
-    Xmatrix   = MLJBase.matrix(X)
-    fitresult = DecisionTree.build_tree(float.(y), Xmatrix
-       , model.n_subfeatures
-       , model.max_depth
-       , model.min_samples_leaf
-       , model.min_samples_split
-       , model.min_purity_increase)
+function MLJBase.fit(m::DecisionTreeRegressor, verbosity::Int, X, y)
+    Xmatrix = MLJBase.matrix(X)
+    tree    = DT.build_tree(float(y), Xmatrix,
+                            m.n_subfeatures,
+                            m.max_depth,
+                            m.min_samples_leaf,
+                            m.min_samples_split,
+                            m.min_purity_increase)
 
-    if model.post_prune
-        fitresult = DecisionTree.prune_tree(fitresult,
-                                            model.pruning_purity_threshold)
+    if m.post_prune
+        tree = DT.prune_tree(tree, m.merge_purity_threshold)
     end
-    cache = nothing
+    cache  = nothing
     report = nothing
-
-    return fitresult, cache, report
+    return tree, cache, report
 end
 
-MLJBase.fitted_params(::DecisionTreeRegressor, fitresult) =
-    (tree_or_leaf = fitresult,)
+MLJBase.fitted_params(::DecisionTreeRegressor, tree) = (tree=tree,)
 
-function MLJBase.predict(model::DecisionTreeRegressor
-                     , fitresult
-                     , Xnew)
+function MLJBase.predict(::DecisionTreeRegressor, tree, Xnew)
     Xmatrix = MLJBase.matrix(Xnew)
-    return DecisionTree.apply_tree(fitresult,Xmatrix)
+    return DT.apply_tree(tree, Xmatrix)
 end
 
-##
-## METADATA
-##
-;;;
-metadata_pkg.((DecisionTreeClassifier, DecisionTreeRegressor),
+"""
+RandomForestRegressor(; kwargs...)
+
+$RFC_DESCR
+
+## Hyperparameters
+
+- `max_depth=-1`:          max depth of the decision tree (-1=any)
+- `min_samples_leaf=1`:    max number of samples each leaf needs to have
+- `min_samples_split=2`:   min number of samples needed for a split
+- `min_purity_increase=0`: min purity needed for a split
+- `n_subfeatures=0`:       number of features to select at random (0=all)
+- `n_trees=10`:            number of trees to train
+- `sampling_fraction=0.7`  fraction of samples to train each tree on
+- `pdf_smoothing=0.0`:     threshold for smoothing the predicted scores
+"""
+@mlj_model mutable struct RandomForestRegressor <: MLJBase.Deterministic
+    max_depth::Int               = (-)(1)::(_ ≥ -1)
+    min_samples_leaf::Int        = 1::(_ ≥ 0)
+    min_samples_split::Int       = 2::(_ ≥ 2)
+    min_purity_increase::Float64 = 0.0::(_ ≥ 0)
+    n_subfeatures::Int           = 0::(_ ≥ 0)
+    n_trees::Int                 = 10::(_ ≥ 2)
+    sampling_fraction::Float64   = 0.7::(0 < _ ≤ 1)
+    pdf_smoothing::Float64       = 0.0::(0 ≤ _ ≤ 1)
+end
+
+function MLJBase.fit(m::RandomForestRegressor, verbosity::Int, X, y)
+    Xmatrix = MLJBase.matrix(X)
+    forest  = DT.build_forest(float(y), Xmatrix,
+                              m.n_subfeatures,
+                              m.n_trees,
+                              m.sampling_fraction,
+                              m.max_depth,
+                              m.min_samples_leaf,
+                              m.min_samples_split,
+                              m.min_purity_increase)
+    cache  = nothing
+    report = NamedTuple()
+    return forest, cache, report
+end
+
+MLJBase.fitted_params(::RandomForestRegressor, forest) = (forest=forest,)
+
+function MLJBase.predict(::RandomForestRegressor, forest, Xnew)
+    Xmatrix = MLJBase.matrix(Xnew)
+    return DT.apply_forest(forest, Xmatrix)
+end
+
+# ===
+
+metadata_pkg.((DecisionTreeClassifier, DecisionTreeRegressor,
+               RandomForestClassifier, RandomForestRegressor,
+               AdaBoostStumpClassifier),
               name="DecisionTree",
               uuid="7806a523-6efd-50cb-b5f6-3fa6f1930dbb",
               url="https://github.com/bensadeghi/DecisionTree.jl",
@@ -223,15 +350,34 @@ metadata_pkg.((DecisionTreeClassifier, DecisionTreeRegressor),
               is_wrapper=false)
 
 metadata_model(DecisionTreeClassifier,
-               input=MLJBase.Table(MLJBase.Continuous, Count, OrderedFactor),
+               input=MLJBase.Table(Continuous, Count, OrderedFactor),
                target=AbstractVector{<:MLJBase.Finite},
                weights=false,
                descr=DTC_DESCR)
 
+metadata_model(RandomForestClassifier,
+               input=MLJBase.Table(Continuous, Count, OrderedFactor),
+               target=AbstractVector{<:MLJBase.Finite},
+               weights=false,
+               descr=RFC_DESCR)
+
+metadata_model(AdaBoostStumpClassifier,
+               input=MLJBase.Table(Continuous, Count, OrderedFactor),
+               target=AbstractVector{<:MLJBase.Finite},
+               weights=false,
+               descr=ABS_DESCR)
+
 metadata_model(DecisionTreeRegressor,
                input=MLJBase.Table(Continuous, Count, OrderedFactor),
-               target=AbstractVector{MLJBase.Continuous},
+               target=AbstractVector{Continuous},
                weights=false,
                descr=DTR_DESCR)
+
+metadata_model(RandomForestRegressor,
+               input=MLJBase.Table(Continuous, Count, OrderedFactor),
+               target=AbstractVector{Continuous},
+               weights=false,
+               descr=RFR_DESCR)
+
 
 end # module

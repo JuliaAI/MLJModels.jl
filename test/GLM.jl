@@ -53,9 +53,8 @@ infos = info_dict(atom_ols)
 @test infos[:is_supervised]
 @test infos[:package_license] == "MIT"
 @test infos[:prediction_type] == :probabilistic
-@test infos[:hyperparameters] == [:fit_intercept, :allowrankdeficient]
-@test infos[:hyperparameter_types] == ["Bool", "Bool"]
-#@test infos[:hyperparameter_defaults] == [true, false]
+@test infos[:hyperparameters] == (:fit_intercept, :allowrankdeficient)
+@test infos[:hyperparameter_types] == ("Bool", "Bool")
 
 p_distr = predict(atom_ols, fitresult, selectrows(X, test))
 
