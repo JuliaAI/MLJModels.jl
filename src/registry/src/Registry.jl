@@ -94,6 +94,9 @@ function _update(mod, test_env_only)
             pkg = _info[:package_name]
             if !(pkg in ["unknown",])
                 modelname = _info[:name]
+                haskey(meta_given_package, pkg) ||
+                    error("Bad `package_name` trait for $M: "*
+                          "$pkg not a registered package. ")
                 meta_given_package[pkg][modelname] = _info
                 println(M, "\u2714 ")
             else
