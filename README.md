@@ -32,11 +32,12 @@ In particular you are expected to be familiar with
 
 If you're not familiar with any one of these points, please refer to the general [MLJ docs](https://alan-turing-institute.github.io/MLJ.jl/dev/) and specifically, read the [detailed documentation](https://alan-turing-institute.github.io/MLJ.jl/dev/adding_models_for_general_use/#Adding-Models-for-General-Use-1) for adding models.
 
-If a case can be made that tabular input makes so sense for your
-particular model, then MLJ can still handle this; you just need to
-define a non-tubular `input_scitype` trait. However, you should
-probabably open an issue to clarify the appropriate declaration. The
-discussion below assumes input data is tabular.
+*But tables don't make sense for my model!* If a case can be made that
+tabular input makes so sense for your particular model, then MLJ can
+still handle this; you just need to define a non-tubular
+`input_scitype` trait. However, you should probabably open an issue to
+clarify the appropriate declaration. The discussion below assumes
+input data is tabular.
 
 ### Overview
 
@@ -48,7 +49,7 @@ Writing an interface is fairly straightforward: just create a file or a module i
 * metadata for your package and for each of your models
 
 We give some details for each step below with, each time, a few examples that you can mimic.
-The instructions are brief on purpose; refer to the [full documentation](https://alan-turing-institute.github.io/MLJ.jl/dev/adding_models_for_general_use/#Adding-Models-for-General-Use-1) for additional details.
+The instructions are intentionally brief; refer to the [full documentation](https://alan-turing-institute.github.io/MLJ.jl/dev/adding_models_for_general_use/#Adding-Models-for-General-Use-1) for additional details.
 
 ### Model type and constructor
 
@@ -57,9 +58,11 @@ MLJ-compatible constructors for your models need to meet the following requireme
 * be `mutable struct`,
 * be subtypes of `MLJBase.Probabilistic` or `MLJBase.Deterministic` or `MLJBase.Unsupervised`,
 * have fields corresponding exclusively to hyperparameters,
-* have a keyword constructor for all hyperparameters.
+* have a keyword constructor assigning default values to all
+  hyperparameters.
 
-It is **recommended** to use the `@mlj_model` macro from `MLJBase` to declare a (non parametric) model type:
+It is recommended that you use the `@mlj_model` macro from `MLJBase` to
+declare a (non parametric) model type:
 
 ```julia
 @mlj_model mutable struct YourModel <: MLJBase.Deterministic
@@ -134,9 +137,12 @@ Typical steps in the body of the `fit` function will be:
 * passing the data to your model,
 * returning the results as a tuple `(fitresult, cache, report)`.
 
-The `fitresult` part should contain everything that is needed at the `predict` or `transform` step, it should not be expected to be accessed by users.
-The `cache` should be left to `nothing` for now.
-The `report` should be a `NamedTuple` with any auxiliary useful information that a user would want to know about the fit (degrees of freedom, deviance, feature importance, ...).
+The `fitresult` part should contain everything that is needed at the
+`predict` or `transform` step, it should not be expected to be
+accessed by users.  The `cache` should be left to `nothing` for now.
+The `report` should be a `NamedTuple` with any auxiliary useful
+information that a user would want to know about the fit (e.g.,
+feature rankings). See more on this below.
 
 **Example**: GLM's [LinearRegressor](https://github.com/alan-turing-institute/MLJModels.jl/blob/3687491b132be8493b6f7a322aedf66008caaab1/src/GLM.jl#L95-L105)
 
@@ -169,10 +175,15 @@ Nothing special for a transformer.
 
 **Example**: our [FillImputer](https://github.com/alan-turing-institute/MLJModels.jl/blob/3687491b132be8493b6f7a322aedf66008caaab1/src/builtins/Transformers.jl#L54-L64)
 
-### Fitted params
+### Fitted parameters
 
-This is an optional function you can implement for your model which will return the learned parameters that a user may want to inspect.
-For instance, in the case of a linear regression, the user may want to get access to the coefficients and intercept.
+There is a function you can optionally implement which will return the
+learned parameters of your model for purposes of user-inspection. For
+instance, in the case of a linear regression, the user may want to get
+access to the coefficients and intercept, for use in another non-MLJ
+model, for example.  This should be as human and machine readable as
+practical (not a graphical representation) and the information combined
+in the form of a named tuple.
 
 The function will always look like:
 
@@ -187,9 +198,43 @@ end
 
 **Example**: for [GLM models](https://github.com/alan-turing-institute/MLJModels.jl/blob/3687491b132be8493b6f7a322aedf66008caaab1/src/GLM.jl#L133-L137)
 
+
+### Summary of user interface points (or, What to put where?)
+
+Recall that the `fitresult` returned as part of `fit` represents
+everything needed by `predict` (or `transform`) to make new
+predictions. It is not intended to be directly inspected by the
+user. Here is a summary of the interface points for users that your
+implementation creates:
+
+- Use `fitted_params` to expose *learned parameters*, such as linear
+  coefficients, to the user in a machine and human readable form (for
+  re-use in another model, for example).
+  
+- Use the fields of your model struct for *hyperparameters*, i.e.,
+  those parameters declared by the user ahead of time that generally
+  affect the outcome of training. It is okay to add "control"
+  parameters (such a specifying an `acceleration` parameter specifying
+  computational resources, as
+  [here](https://github.com/alan-turing-institute/MLJ.jl/blob/master/src/ensembles.jl#L193)).
+
+- Use `report` to return *everything else*, including model-specific
+  *methods* (or other callable objects). This includes: feature rankings,
+  decision boundaries, SVM support vectors, clustering centres,
+  methods for visualizing training outcomes, methods for saving
+  learned parameters in a custom format, degrees of freedom, deviance,
+  etc. If there is a performance cost to extra functionality you want
+  to expose, the functionality can be toggled on/off through a
+  hyperparameter, but this should otherwise be avoided. For, example,
+  in a decision tree model `report.print_tree(depth)` might generate
+  a pretty tree representation of the learned tree, up to the
+  specified `depth`.
+
+
 ### Predict/Transform
 
-The implementation of `predict` (for a supervised model) or `transform` (for an unsupervised one) will look like:
+The implementation of `predict` (for a supervised model) or
+`transform` (for an unsupervised one) will look like:
 
 ```julia
 function MLJBase.predict(m::YourModel, fitresult, Xnew)
@@ -279,3 +324,4 @@ The last step updates
 Assuming that worked, commit and push your changes then open a PR on MLJModels' **`dev`** branch.
 
 MLJ maintainers will merge your PR once they've had a chance at making sure your interface works and your model(s) are appropriately tested.
+[
