@@ -253,7 +253,7 @@
 
 [ScikitLearn.ProbabilisticSGDClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s580,1} where _s580<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s581,1} where _s581<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -274,7 +274,7 @@
 
 [ScikitLearn.RidgeCVClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s444,1} where _s444<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s445,1} where _s445<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -295,7 +295,7 @@
 
 [ScikitLearn.LogisticClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s444,1} where _s444<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s445,1} where _s445<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -316,7 +316,7 @@
 
 [ScikitLearn.RandomForestRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:Union{AbstractArray{_s12,1} where _s12<:ScientificTypes.Count, AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous}`"
-":target_scitype" = "`AbstractArray{_s670,1} where _s670<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s671,1} where _s671<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -358,7 +358,7 @@
 
 [ScikitLearn.PerceptronClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s444,1} where _s444<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s445,1} where _s445<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -418,6 +418,25 @@
 ":hyperparameters" = "`(:fit_intercept, :normalize, :copy_X, :n_jobs)`"
 ":hyperparameter_types" = "`(\"Bool\", \"Bool\", \"Bool\", \"Union{Nothing, Int64}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing)`"
+
+[ScikitLearn.DBSCAN]
+":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
+":output_scitype" = "`ScientificTypes.Unknown`"
+":is_pure_julia" = "`false`"
+":package_name" = "ScikitLearn"
+":package_license" = "BSD"
+":load_path" = "MLJModels.ScikitLearn_.DBSCAN"
+":package_uuid" = "3646fa90-6ef7-5e7e-9f22-8aca16db6324"
+":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
+":is_wrapper" = "`false`"
+":supports_online" = "`false`"
+":docstring" = "Density-Based Spatial Clustering of Applications with Noise. Finds core samples of high density and expands clusters from them. Good for data which contains clusters of similar density.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load DBSCAN pkg=\"ScikitLearn\"` to use the model.\n→ do `?DBSCAN` for documentation."
+":name" = "DBSCAN"
+":is_supervised" = "`false`"
+":implemented_methods" = [":fit", ":fitted_params"]
+":hyperparameters" = "`(:eps, :min_samples, :metric, :algorithm, :leaf_size, :p, :n_jobs)`"
+":hyperparameter_types" = "`(\"Float64\", \"Int64\", \"String\", \"String\", \"Int64\", \"Union{Nothing, Float64}\", \"Union{Nothing, Int64}\")`"
+":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.RidgeRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
@@ -505,7 +524,7 @@
 
 [ScikitLearn.RidgeClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s444,1} where _s444<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s445,1} where _s445<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -547,7 +566,7 @@
 
 [ScikitLearn.ComplementNBClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Count)`"
-":target_scitype" = "`AbstractArray{_s670,1} where _s670<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s671,1} where _s671<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -610,7 +629,7 @@
 
 [ScikitLearn.GradientBoostingClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s670,1} where _s670<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s671,1} where _s671<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -671,6 +690,25 @@
 ":hyperparameter_types" = "`(\"Bool\", \"Union{Bool, Int64}\", \"Bool\", \"Union{Bool, String, AbstractArray{T,2} where T}\", \"Int64\", \"Float64\", \"Bool\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
+[ScikitLearn.MeanShift]
+":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
+":output_scitype" = "`ScientificTypes.Unknown`"
+":is_pure_julia" = "`false`"
+":package_name" = "ScikitLearn"
+":package_license" = "BSD"
+":load_path" = "MLJModels.ScikitLearn_.MeanShift"
+":package_uuid" = "3646fa90-6ef7-5e7e-9f22-8aca16db6324"
+":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
+":is_wrapper" = "`false`"
+":supports_online" = "`false`"
+":docstring" = "Mean shift clustering using a flat kernel. Mean shift clustering aims to discover \"blobs\" in a smooth density of samples. It is a centroid-based algorithm, which works by updating candidates for centroids to be the mean of the points within a given region. These candidates are then filtered in a post-processing stage to eliminate near-duplicates to form the final set of centroids.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load MeanShift pkg=\"ScikitLearn\"` to use the model.\n→ do `?MeanShift` for documentation."
+":name" = "MeanShift"
+":is_supervised" = "`false`"
+":implemented_methods" = [":fit", ":predict", ":fitted_params"]
+":hyperparameters" = "`(:bandwidth, :seeds, :bin_seeding, :min_bin_freq, :cluster_all, :n_jobs)`"
+":hyperparameter_types" = "`(\"Union{Nothing, Float64}\", \"Union{Nothing, AbstractArray}\", \"Bool\", \"Int64\", \"Bool\", \"Union{Nothing, Int64}\")`"
+":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
+
 [ScikitLearn.SVMLClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
 ":target_scitype" = "`AbstractArray{_s109,1} where _s109<:ScientificTypes.Finite`"
@@ -712,6 +750,25 @@
 ":hyperparameters" = "`(:base_estimator, :n_estimators, :learning_rate, :loss, :random_state)`"
 ":hyperparameter_types" = "`(\"Any\", \"Int64\", \"Float64\", \"String\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing)`"
+
+[ScikitLearn.AffinityPropagation]
+":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
+":output_scitype" = "`ScientificTypes.Unknown`"
+":is_pure_julia" = "`false`"
+":package_name" = "ScikitLearn"
+":package_license" = "BSD"
+":load_path" = "MLJModels.ScikitLearn_.AffinityPropagation"
+":package_uuid" = "3646fa90-6ef7-5e7e-9f22-8aca16db6324"
+":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
+":is_wrapper" = "`false`"
+":supports_online" = "`false`"
+":docstring" = "Perform Affinity Propagation Clustering of data.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load AffinityPropagation pkg=\"ScikitLearn\"` to use the model.\n→ do `?AffinityPropagation` for documentation."
+":name" = "AffinityPropagation"
+":is_supervised" = "`false`"
+":implemented_methods" = [":fit", ":predict", ":fitted_params"]
+":hyperparameters" = "`(:damping, :max_iter, :convergence_iter, :copy, :preference, :affinity, :verbose)`"
+":hyperparameter_types" = "`(\"Float64\", \"Int64\", \"Int64\", \"Bool\", \"Any\", \"String\", \"Bool\")`"
+":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.MultiTaskLassoCVRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
@@ -778,7 +835,7 @@
 
 [ScikitLearn.PassiveAggressiveClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s444,1} where _s444<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s445,1} where _s445<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -820,7 +877,7 @@
 
 [ScikitLearn.BernoulliNBClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Count)`"
-":target_scitype" = "`AbstractArray{_s670,1} where _s670<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s671,1} where _s671<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -841,7 +898,7 @@
 
 [ScikitLearn.GaussianNBClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s670,1} where _s670<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s671,1} where _s671<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -862,7 +919,7 @@
 
 [ScikitLearn.ExtraTreesClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s670,1} where _s670<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s671,1} where _s671<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -880,6 +937,25 @@
 ":hyperparameters" = "`(:n_estimators, :criterion, :max_depth, :min_samples_split, :min_samples_leaf, :min_weight_fraction_leaf, :max_features, :max_leaf_nodes, :min_impurity_decrease, :bootstrap, :oob_score, :n_jobs, :random_state, :verbose, :warm_start, :class_weight)`"
 ":hyperparameter_types" = "`(\"Int64\", \"String\", \"Union{Nothing, Int64}\", \"Union{Float64, Int64}\", \"Union{Float64, Int64}\", \"Float64\", \"Union{Nothing, Float64, Int64, String}\", \"Union{Nothing, Int64}\", \"Float64\", \"Bool\", \"Bool\", \"Union{Nothing, Int64}\", \"Any\", \"Int64\", \"Bool\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+
+[ScikitLearn.KMeans]
+":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
+":output_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
+":is_pure_julia" = "`false`"
+":package_name" = "ScikitLearn"
+":package_license" = "BSD"
+":load_path" = "MLJModels.ScikitLearn_.KMeans"
+":package_uuid" = "3646fa90-6ef7-5e7e-9f22-8aca16db6324"
+":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
+":is_wrapper" = "`false`"
+":supports_online" = "`false`"
+":docstring" = "K-Means algorithm: find K centroids corresponding to K clusters in the data.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load KMeans pkg=\"ScikitLearn\"` to use the model.\n→ do `?KMeans` for documentation."
+":name" = "KMeans"
+":is_supervised" = "`false`"
+":implemented_methods" = [":fit", ":predict", ":fitted_params", ":transform"]
+":hyperparameters" = "`(:n_clusters, :n_init, :max_iter, :tol, :verbose, :random_state, :copy_x, :n_jobs, :algorithm, :precompute_distances, :init)`"
+":hyperparameter_types" = "`(\"Int64\", \"Int64\", \"Int64\", \"Float64\", \"Int64\", \"Any\", \"Bool\", \"Union{Nothing, Int64}\", \"String\", \"Union{Bool, String}\", \"Union{String, AbstractArray}\")`"
+":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.MultiTaskElasticNetCVRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
@@ -946,7 +1022,7 @@
 
 [ScikitLearn.AdaBoostClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s580,1} where _s580<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s581,1} where _s581<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -1030,7 +1106,7 @@
 
 [ScikitLearn.BaggingClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s580,1} where _s580<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s581,1} where _s581<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -1051,7 +1127,7 @@
 
 [ScikitLearn.GaussianProcessClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s580,1} where _s580<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s581,1} where _s581<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -1069,6 +1145,25 @@
 ":hyperparameters" = "`(:kernel, :optimizer, :n_restarts_optimizer, :copy_X_train, :random_state, :max_iter_predict, :warm_start, :multi_class)`"
 ":hyperparameter_types" = "`(\"Any\", \"Any\", \"Int64\", \"Bool\", \"Any\", \"Int64\", \"Bool\", \"String\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+
+[ScikitLearn.OPTICS]
+":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
+":output_scitype" = "`ScientificTypes.Unknown`"
+":is_pure_julia" = "`false`"
+":package_name" = "ScikitLearn"
+":package_license" = "BSD"
+":load_path" = "MLJModels.ScikitLearn_.OPTICS"
+":package_uuid" = "3646fa90-6ef7-5e7e-9f22-8aca16db6324"
+":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
+":is_wrapper" = "`false`"
+":supports_online" = "`false`"
+":docstring" = "OPTICS (Ordering Points To Identify the Clustering Structure), closely related to DBSCAN, finds core sample of high density and expands clusters from them. Unlike DBSCAN, keeps cluster hierarchy for a variable neighborhood radius. Better suited for usage on large datasets than the current sklearn implementation of DBSCAN.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load OPTICS pkg=\"ScikitLearn\"` to use the model.\n→ do `?OPTICS` for documentation."
+":name" = "OPTICS"
+":is_supervised" = "`false`"
+":implemented_methods" = [":fit", ":fitted_params"]
+":hyperparameters" = "`(:min_samples, :max_eps, :metric, :p, :cluster_method, :eps, :xi, :predecessor_correction, :min_cluster_size, :algorithm, :leaf_size, :n_jobs)`"
+":hyperparameter_types" = "`(\"Union{Float64, Int64}\", \"Float64\", \"String\", \"Int64\", \"String\", \"Union{Nothing, Float64}\", \"Float64\", \"Bool\", \"Union{Nothing, Float64, Int64}\", \"String\", \"Int64\", \"Union{Nothing, Int64}\")`"
+":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.KNeighborsRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
@@ -1090,6 +1185,25 @@
 ":hyperparameters" = "`(:n_neighbors, :weights, :algorithm, :leaf_size, :p, :metric, :metric_params, :n_jobs)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Union{Function, String}\", \"String\", \"Int64\", \"Int64\", \"Any\", \"Any\", \"Union{Nothing, Int64}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+
+[ScikitLearn.MiniBatchKMeans]
+":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
+":output_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
+":is_pure_julia" = "`false`"
+":package_name" = "ScikitLearn"
+":package_license" = "BSD"
+":load_path" = "MLJModels.ScikitLearn_.MiniBatchKMeans"
+":package_uuid" = "3646fa90-6ef7-5e7e-9f22-8aca16db6324"
+":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
+":is_wrapper" = "`false`"
+":supports_online" = "`false`"
+":docstring" = "Mini-Batch K-Means clustering.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load MiniBatchKMeans pkg=\"ScikitLearn\"` to use the model.\n→ do `?MiniBatchKMeans` for documentation."
+":name" = "MiniBatchKMeans"
+":is_supervised" = "`false`"
+":implemented_methods" = [":fit", ":predict", ":fitted_params", ":transform"]
+":hyperparameters" = "`(:n_clusters, :max_iter, :batch_size, :verbose, :compute_labels, :random_state, :tol, :max_no_improvement, :init_size, :n_init, :init, :reassignment_ratio)`"
+":hyperparameter_types" = "`(\"Int64\", \"Int64\", \"Int64\", \"Int64\", \"Bool\", \"Any\", \"Float64\", \"Int64\", \"Union{Nothing, Int64}\", \"Int64\", \"Union{String, AbstractArray}\", \"Float64\")`"
+":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.LassoCVRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
@@ -1177,7 +1291,7 @@
 
 [ScikitLearn.KNeighborsClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s670,1} where _s670<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s671,1} where _s671<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -1196,9 +1310,28 @@
 ":hyperparameter_types" = "`(\"Int64\", \"Union{Function, String}\", \"String\", \"Int64\", \"Int64\", \"Any\", \"Any\", \"Union{Nothing, Int64}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
+[ScikitLearn.FeatureAgglomeration]
+":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
+":output_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
+":is_pure_julia" = "`false`"
+":package_name" = "ScikitLearn"
+":package_license" = "BSD"
+":load_path" = "MLJModels.ScikitLearn_.FeatureAgglomeration"
+":package_uuid" = "3646fa90-6ef7-5e7e-9f22-8aca16db6324"
+":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
+":is_wrapper" = "`false`"
+":supports_online" = "`false`"
+":docstring" = "Similar to AgglomerativeClustering, but recursively merges features instead of samples.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load FeatureAgglomeration pkg=\"ScikitLearn\"` to use the model.\n→ do `?FeatureAgglomeration` for documentation."
+":name" = "FeatureAgglomeration"
+":is_supervised" = "`false`"
+":implemented_methods" = [":fit", ":fitted_params", ":inverse_transform", ":transform"]
+":hyperparameters" = "`(:n_clusters, :memory, :connectivity, :affinity, :compute_full_tree, :linkage, :distance_threshold)`"
+":hyperparameter_types" = "`(\"Int64\", \"Any\", \"Any\", \"Any\", \"Union{Bool, String}\", \"String\", \"Union{Nothing, Float64}\")`"
+":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+
 [ScikitLearn.DummyClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s670,1} where _s670<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s671,1} where _s671<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -1240,7 +1373,7 @@
 
 [ScikitLearn.BayesianQDA]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s670,1} where _s670<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s671,1} where _s671<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -1261,7 +1394,7 @@
 
 [ScikitLearn.BayesianLDA]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s670,1} where _s670<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s671,1} where _s671<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -1282,7 +1415,7 @@
 
 [ScikitLearn.SGDClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s580,1} where _s580<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s581,1} where _s581<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -1322,6 +1455,63 @@
 ":hyperparameter_types" = "`(\"Bool\", \"Bool\", \"Int64\", \"Union{Nothing, Int64}\", \"Int64\", \"Float64\", \"Any\", \"Union{Nothing, Int64}\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
+[ScikitLearn.SpectralClustering]
+":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
+":output_scitype" = "`ScientificTypes.Unknown`"
+":is_pure_julia" = "`false`"
+":package_name" = "ScikitLearn"
+":package_license" = "BSD"
+":load_path" = "MLJModels.ScikitLearn_.SpectralClustering"
+":package_uuid" = "3646fa90-6ef7-5e7e-9f22-8aca16db6324"
+":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
+":is_wrapper" = "`false`"
+":supports_online" = "`false`"
+":docstring" = "Apply clustering to a projection of the normalized Laplacian.\n    In practice Spectral Clustering is very useful when the structure of the individual clusters is highly non-convex or more generally when a measure of the center and spread of the cluster is not a suitable description of the complete cluster. For instance when clusters are nested circles on the 2D plane.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load SpectralClustering pkg=\"ScikitLearn\"` to use the model.\n→ do `?SpectralClustering` for documentation."
+":name" = "SpectralClustering"
+":is_supervised" = "`false`"
+":implemented_methods" = [":fit", ":fitted_params"]
+":hyperparameters" = "`(:n_clusters, :eigen_solver, :random_state, :n_init, :gamma, :affinity, :n_neighbors, :eigen_tol, :assign_labels, :n_jobs)`"
+":hyperparameter_types" = "`(\"Int64\", \"Union{Nothing, String}\", \"Any\", \"Int64\", \"Float64\", \"String\", \"Int64\", \"Float64\", \"String\", \"Union{Nothing, Int64}\")`"
+":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+
+[ScikitLearn.Birch]
+":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
+":output_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
+":is_pure_julia" = "`false`"
+":package_name" = "ScikitLearn"
+":package_license" = "BSD"
+":load_path" = "MLJModels.ScikitLearn_.Birch"
+":package_uuid" = "3646fa90-6ef7-5e7e-9f22-8aca16db6324"
+":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
+":is_wrapper" = "`false`"
+":supports_online" = "`false`"
+":docstring" = "Memory-efficient, online-learning algorithm provided as an alternative to MiniBatchKMeans. Note: noisy samples are given the label -1.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load Birch pkg=\"ScikitLearn\"` to use the model.\n→ do `?Birch` for documentation."
+":name" = "Birch"
+":is_supervised" = "`false`"
+":implemented_methods" = [":fit", ":predict", ":fitted_params", ":transform"]
+":hyperparameters" = "`(:threshold, :branching_factor, :n_clusters, :compute_labels, :copy)`"
+":hyperparameter_types" = "`(\"Float64\", \"Int64\", \"Int64\", \"Bool\", \"Bool\")`"
+":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing)`"
+
+[ScikitLearn.AgglomerativeClustering]
+":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
+":output_scitype" = "`ScientificTypes.Unknown`"
+":is_pure_julia" = "`false`"
+":package_name" = "ScikitLearn"
+":package_license" = "BSD"
+":load_path" = "MLJModels.ScikitLearn_.AgglomerativeClustering"
+":package_uuid" = "3646fa90-6ef7-5e7e-9f22-8aca16db6324"
+":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
+":is_wrapper" = "`false`"
+":supports_online" = "`false`"
+":docstring" = "Recursively merges the pair of clusters that minimally increases a given linkage distance. Note: there is no `predict` or `transform` method\n    associated with it; instead, inspect the `fitted_params`.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load AgglomerativeClustering pkg=\"ScikitLearn\"` to use the model.\n→ do `?AgglomerativeClustering` for documentation."
+":name" = "AgglomerativeClustering"
+":is_supervised" = "`false`"
+":implemented_methods" = [":fit", ":fitted_params"]
+":hyperparameters" = "`(:n_clusters, :affinity, :memory, :connectivity, :compute_full_tree, :linkage, :distance_threshold)`"
+":hyperparameter_types" = "`(\"Int64\", \"String\", \"Any\", \"Any\", \"Union{Bool, String}\", \"String\", \"Union{Nothing, Float64}\")`"
+":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+
 [ScikitLearn.ElasticNetRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
@@ -1345,7 +1535,7 @@
 
 [ScikitLearn.RandomForestClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:Union{AbstractArray{_s12,1} where _s12<:ScientificTypes.Count, AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous}`"
-":target_scitype" = "`AbstractArray{_s670,1} where _s670<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s671,1} where _s671<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -1366,7 +1556,7 @@
 
 [ScikitLearn.LogisticCVClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s444,1} where _s444<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s445,1} where _s445<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -1450,7 +1640,7 @@
 
 [ScikitLearn.MultinomialNBClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Count)`"
-":target_scitype" = "`AbstractArray{_s670,1} where _s670<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s671,1} where _s671<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -1534,7 +1724,7 @@
 
 [NaiveBayes.GaussianNBClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s669,1} where _s669<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s670,1} where _s670<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "NaiveBayes"
 ":package_license" = "unknown"
@@ -1555,7 +1745,7 @@
 
 [NaiveBayes.MultinomialNBClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Count)`"
-":target_scitype" = "`AbstractArray{_s669,1} where _s669<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s670,1} where _s670<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "NaiveBayes"
 ":package_license" = "unknown"
@@ -1630,12 +1820,12 @@
 ":is_supervised" = "`false`"
 ":implemented_methods" = [":fit", ":fitted_params", ":transform"]
 ":hyperparameters" = "`(:k, :alg, :fun, :do_whiten, :maxiter, :tol, :winit, :mean)`"
-":hyperparameter_types" = "`(\"Int64\", \"Symbol\", \"Symbol\", \"Bool\", \"Int64\", \"Real\", \"Union{Nothing, Array{_s670,2} where _s670<:Real}\", \"Union{Nothing, Array{Float64,1}, Real}\")`"
+":hyperparameter_types" = "`(\"Int64\", \"Symbol\", \"Symbol\", \"Bool\", \"Int64\", \"Real\", \"Union{Nothing, Array{_s671,2} where _s671<:Real}\", \"Union{Nothing, Array{Float64,1}, Real}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [MultivariateStats.BayesianLDA]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s670,1} where _s670<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s671,1} where _s671<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "MultivariateStats"
 ":package_license" = "MIT"
@@ -1656,7 +1846,7 @@
 
 [MultivariateStats.BayesianSubspaceLDA]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s670,1} where _s670<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s671,1} where _s671<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "MultivariateStats"
 ":package_license" = "MIT"
@@ -1717,7 +1907,7 @@
 
 [MultivariateStats.LDA]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s670,1} where _s670<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s671,1} where _s671<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "MultivariateStats"
 ":package_license" = "MIT"
@@ -1757,7 +1947,7 @@
 
 [MultivariateStats.SubspaceLDA]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s670,1} where _s670<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s671,1} where _s671<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "MultivariateStats"
 ":package_license" = "MIT"
@@ -1778,7 +1968,7 @@
 
 [DecisionTree.AdaBoostStumpClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:Union{AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous, AbstractArray{_s12,1} where _s12<:ScientificTypes.Count, AbstractArray{_s12,1} where _s12<:ScientificTypes.OrderedFactor}`"
-":target_scitype" = "`AbstractArray{_s670,1} where _s670<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s671,1} where _s671<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "DecisionTree"
 ":package_license" = "MIT"
@@ -1820,7 +2010,7 @@
 
 [DecisionTree.DecisionTreeClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:Union{AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous, AbstractArray{_s12,1} where _s12<:ScientificTypes.Count, AbstractArray{_s12,1} where _s12<:ScientificTypes.OrderedFactor}`"
-":target_scitype" = "`AbstractArray{_s670,1} where _s670<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s671,1} where _s671<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "DecisionTree"
 ":package_license" = "MIT"
@@ -1862,7 +2052,7 @@
 
 [DecisionTree.RandomForestClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:Union{AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous, AbstractArray{_s12,1} where _s12<:ScientificTypes.Count, AbstractArray{_s12,1} where _s12<:ScientificTypes.OrderedFactor}`"
-":target_scitype" = "`AbstractArray{_s670,1} where _s670<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s671,1} where _s671<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "DecisionTree"
 ":package_license" = "MIT"
@@ -1963,7 +2153,7 @@
 
 [XGBoost.XGBoostClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s670,1} where _s670<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s671,1} where _s671<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "XGBoost"
 ":package_license" = "unknown"
@@ -2222,7 +2412,7 @@
 
 [LIBSVM.LinearSVC]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s670,1} where _s670<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s671,1} where _s671<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "LIBSVM"
 ":package_license" = "unknown"
@@ -2264,7 +2454,7 @@
 
 [LIBSVM.NuSVC]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s670,1} where _s670<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s671,1} where _s671<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "LIBSVM"
 ":package_license" = "unknown"
@@ -2285,7 +2475,7 @@
 
 [LIBSVM.SVC]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{_s670,1} where _s670<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s671,1} where _s671<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "LIBSVM"
 ":package_license" = "unknown"
@@ -2306,7 +2496,7 @@
 
 [LIBSVM.OneClassSVM]
 ":input_scitype" = "`ScientificTypes.Table{_s13} where _s13<:(AbstractArray{_s12,1} where _s12<:ScientificTypes.Continuous)`"
-":output_scitype" = "`AbstractArray{_s670,1} where _s670<:ScientificTypes.Finite{2}`"
+":output_scitype" = "`AbstractArray{_s671,1} where _s671<:ScientificTypes.Finite{2}`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "LIBSVM"
 ":package_license" = "unknown"
