@@ -33,9 +33,9 @@ In particular you are expected to be familiar with
 If you're not familiar with any one of these points, please refer to the general [MLJ docs](https://alan-turing-institute.github.io/MLJ.jl/dev/) and specifically, read the [detailed documentation](https://alan-turing-institute.github.io/MLJ.jl/dev/adding_models_for_general_use/#Adding-Models-for-General-Use-1) for adding models.
 
 *But tables don't make sense for my model!* If a case can be made that
-tabular input makes so sense for your particular model, then MLJ can
-still handle this; you just need to define a non-tubular
-`input_scitype` trait. However, you should probabably open an issue to
+tabular input does not make sense for your particular model, then MLJ can
+still handle this; you just need to define a non-tabular
+`input_scitype` trait. However, you should probably open an issue to
 clarify the appropriate declaration. The discussion below assumes
 input data is tabular.
 
@@ -180,10 +180,9 @@ Nothing special for a transformer.
 There is a function you can optionally implement which will return the
 learned parameters of your model for purposes of user-inspection. For
 instance, in the case of a linear regression, the user may want to get
-access to the coefficients and intercept, for use in another non-MLJ
-model, for example.  This should be as human and machine readable as
-practical (not a graphical representation) and the information combined
-in the form of a named tuple.
+direct access to the coefficients and intercept. This should be as human and
+machine readable as practical (not a graphical representation) and the
+information should be combined in the form of a named tuple.
 
 The function will always look like:
 
@@ -210,14 +209,12 @@ implementation creates:
 - Use `fitted_params` to expose *learned parameters*, such as linear
   coefficients, to the user in a machine and human readable form (for
   re-use in another model, for example).
-  
 - Use the fields of your model struct for *hyperparameters*, i.e.,
   those parameters declared by the user ahead of time that generally
   affect the outcome of training. It is okay to add "control"
   parameters (such a specifying an `acceleration` parameter specifying
   computational resources, as
   [here](https://github.com/alan-turing-institute/MLJ.jl/blob/master/src/ensembles.jl#L193)).
-
 - Use `report` to return *everything else*, including model-specific
   *methods* (or other callable objects). This includes: feature rankings,
   decision boundaries, SVM support vectors, clustering centres,
@@ -229,7 +226,6 @@ implementation creates:
   in a decision tree model `report.print_tree(depth)` might generate
   a pretty tree representation of the learned tree, up to the
   specified `depth`.
-
 
 ### Predict/Transform
 
