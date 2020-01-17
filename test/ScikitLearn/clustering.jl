@@ -5,8 +5,10 @@ X, _ = make_blobs(500, 3, rng=555)
     mach = machine(m, X)
     fit!(mach)
     fp = fitted_params(mach)
-    p  = predict(mach, X)
-    @test p isa CategoricalArray
+    if fp.labels !== nothing
+        p  = predict(mach, X)
+        @test p isa CategoricalArray
+    end
     @test keys(fp) == (:cluster_centers_indices, :cluster_centers, :labels, :affinity_matrix)
     infos = info_dict(m)
     @test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous)

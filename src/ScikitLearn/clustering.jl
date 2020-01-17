@@ -21,7 +21,7 @@ function MLJBase.fitted_params(m::AffinityPropagation, f)
     return (
         cluster_centers_indices = f.cluster_centers_indices_,
         cluster_centers         = f.cluster_centers_,
-        labels                  = catv[f.labels_ .+ 1],
+        labels                  = nc == 0 ? nothing : catv[f.labels_ .+ 1],
         affinity_matrix         = f.affinity_matrix_)
 end
 metadata_model(AffinityPropagation,

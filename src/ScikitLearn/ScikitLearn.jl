@@ -243,10 +243,8 @@ function _skmodel_fit_uns(modelname, params)
             Xmatrix = MLJBase.matrix(X)
             skmodel = $(Symbol(modelname, "_"))($((Expr(:kw, p, :(model.$p)) for p in params)...))
             fitres  = SK.fit!(skmodel, Xmatrix)
-
-            sm = $(Symbol(modelname))
             # TODO: we may want to use the report later on
-            report = NamedTuple()
+            report  = NamedTuple()
             return (fitres, nothing, report)
         end
     end
