@@ -4,6 +4,8 @@ import MLJModels, ScikitLearn
 using MLJBase, Tables, Test, LinearAlgebra, Random, MLJModels.ScikitLearn_, CategoricalArrays, RDatasets
 include("../testutils.jl")
 
+include("clustering.jl")
+
 include("svm.jl")
 include("linear-regressors.jl")
 include("linear-classifiers.jl")
@@ -11,8 +13,6 @@ include("gaussian-process.jl")
 include("ensemble.jl")
 include("discriminant-analysis.jl")
 include("misc.jl")
-
-include("clustering.jl")
 
 end
 true
