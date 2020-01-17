@@ -300,7 +300,11 @@ macro sku_predict(modelname)
     esc(
         quote
             function MLJBase.predict(m::$modelname, fitres, X)
+                # this is due to the fact that we have nested modules
+                # so potentially have to extract the leaf node...
                 sm = Symbol($modelname)
+                ss = string(sm)
+                sm = Symbol(split(ss, ".")[end])
                 if sm in (:Birch, :KMeans, :MiniBatchKMeans)
                     catv = categorical(1:m.n_clusters)
                 elseif sm == :AffinityPropagation
