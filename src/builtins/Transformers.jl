@@ -203,7 +203,7 @@ struct UnivariateDiscretizerResult{C}
     element::C
 end
 
-function MLJBase.fit(transformer::UnivariateDiscretizer, verbosity::Int,X)
+function MLJBase.fit(transformer::UnivariateDiscretizer, verbosity::Int, X)
     n_classes = transformer.n_classes
     quantiles = quantile(X, Array(range(0, stop=1, length=2*n_classes+1)))
     clipped_quantiles = quantiles[2:2*n_classes] # drop 0% and 100% quantiles
@@ -346,7 +346,7 @@ names of features to be standardized.
     features::Vector{Symbol} = Symbol[] # features to be standardized; empty means all
 end
 
-function MLJBase.fit(transformer::Standardizer, verbosity::Int, X::Any)
+function MLJBase.fit(transformer::Standardizer, verbosity::Int, X)
     all_features = Tables.schema(X).names
     mach_types   = collect(eltype(selectcols(X, c)) for c in all_features)
 
