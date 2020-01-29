@@ -285,7 +285,7 @@ For more information about the algorithm, see the paper by Li, Zhu and Ogihara, 
     cov_w::CovarianceEstimator = MS.SimpleCovariance()
     cov_b::CovarianceEstimator = MS.SimpleCovariance()
     out_dim::Int     = 0::(_ ≥ 0)
-    regcoef::Real    = 1e-6::(_ ≥ 0)
+    regcoef::Float64    = 1e-6::(_ ≥ 0)
     dist::SemiMetric = SqEuclidean()
 end
 
@@ -311,7 +311,7 @@ function MLJBase.fit(model::LDA, ::Int, X, y)
     core_res = MS.fit(MS.MulticlassLDA, nclasses, Xm_t, Int.(yplain);
                       method=model.method,
                       outdim=out_dim,
-                      regcoef=Float64(model.regcoef),
+                      regcoef=model.regcoef,
                       covestimator_within=model.cov_w,
                       covestimator_between=model.cov_b)
 
@@ -369,7 +369,7 @@ For more information about the algorithm, see the paper by Li, Zhu and Ogihara, 
     cov_w::CovarianceEstimator = MS.SimpleCovariance()
     cov_b::CovarianceEstimator = MS.SimpleCovariance()
     out_dim::Int     = 0::(_ ≥ 0)
-    regcoef::Real    = 1e-6::(_ ≥ 0)
+    regcoef::Float64    = 1e-6::(_ ≥ 0)
     priors::Union{Nothing, MLJBase.UnivariateFinite} = nothing
 end
 
@@ -404,7 +404,7 @@ function MLJBase.fit(model::BayesianLDA, ::Int, X, y)
     core_res = MS.fit(MS.MulticlassLDA, nclasses, Xm_t, Int.(yplain);
                       method=model.method,
                       outdim=out_dim,
-                      regcoef= Float64(model.regcoef),
+                      regcoef= model.regcoef,
                       covestimator_within=model.cov_w,
                       covestimator_between=model.cov_b)
 
