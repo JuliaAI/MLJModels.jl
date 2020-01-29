@@ -274,7 +274,7 @@ $LDA_DESCR
 * `cov_w=SimpleCovariance()`: an estimator for the within-class covariance, by default set to the standard `MultivariateStats.CovarianceEstimator` but could be set to any robust estimator from `CovarianceEstimation.jl`.
 * `cov_b=SimpleCovariance()`: same as `cov_w` but for the between-class covariance.
 * `out_dim`: the output dimension, i.e dimension of the transformed space, automatically set if 0 is given (default).
-* `regcoef`: regularization coefficient. A positive value `regcoef * eigmax(Sw)` where `Sw` is the within-class covariance estimator, is added to the diagonal of Sw to improve numerical stability. This can be useful if using the standard covariance estimator.
+* `regcoef`: regularization coefficient (default value 0.0). A positive value `regcoef * eigmax(Sw)` where `Sw` is the within-class covariance estimator, is added to the diagonal of Sw to improve numerical stability. This can be useful if using the standard covariance estimator.
 * `dist=SqEuclidean`: the distance metric to use when performing classification (to compare the distance between a new point and centroids in the transformed space), an alternative choice can be the `CosineDist`.
 
 See also the [package documentation](https://multivariatestatsjl.readthedocs.io/en/latest/lda.html).
@@ -285,7 +285,7 @@ For more information about the algorithm, see the paper by Li, Zhu and Ogihara, 
     cov_w::CovarianceEstimator = MS.SimpleCovariance()
     cov_b::CovarianceEstimator = MS.SimpleCovariance()
     out_dim::Int     = 0::(_ ≥ 0)
-    regcoef::Real    = 0.0::(_ ≥ 0)
+    regcoef::Real    = 1e-6::(_ ≥ 0)
     dist::SemiMetric = SqEuclidean()
 end
 
@@ -311,7 +311,7 @@ function MLJBase.fit(model::LDA, ::Int, X, y)
     core_res = MS.fit(MS.MulticlassLDA, nclasses, Xm_t, Int.(yplain);
                       method=model.method,
                       outdim=out_dim,
-                      regcoef=model.regcoef,
+                      regcoef=Float64(model.regcoef),
                       covestimator_within=model.cov_w,
                       covestimator_between=model.cov_b)
 
@@ -359,7 +359,7 @@ $BayesianLDA_DESCR
 * `cov_w=SimpleCovariance()`: an estimator for the within-class covariance, by default set to the standard `MultivariateStats.CovarianceEstimator` but could be set to any robust estimator from `CovarianceEstimation.jl`.
 * `cov_b=SimpleCovariance()`: same as `cov_w` but for the between-class covariance.
 * `out_dim`: the output dimension, i.e dimension of the transformed space, automatically set if 0 is given (default).
-* `regcoef`: regularization coefficient. A positive value `regcoef * eigmax(Sw)` where `Sw` is the within-class covariance estimator, is added to the diagonal of Sw to improve numerical stability. This can be useful if using the standard covariance estimator.
+* `regcoef`: regularization coefficient (default value 1e-6). A positive value `regcoef * eigmax(Sw)` where `Sw` is the within-class covariance estimator, is added to the diagonal of Sw to improve numerical stability. This can be useful if using the standard covariance estimator.
 * `priors=nothing`: if `priors = nothing` estimates the prior probabilities from the data else it uses the user specified `UnivariateFinite` prior probabilities.
 See also the [package documentation](https://multivariatestatsjl.readthedocs.io/en/latest/lda.html).
 For more information about the algorithm, see the paper by Li, Zhu and Ogihara, [Using Discriminant Analysis for Multi-class Classification: An Experimental Investigation](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.89.7068&rep=rep1&type=pdf).
@@ -369,7 +369,7 @@ For more information about the algorithm, see the paper by Li, Zhu and Ogihara, 
     cov_w::CovarianceEstimator = MS.SimpleCovariance()
     cov_b::CovarianceEstimator = MS.SimpleCovariance()
     out_dim::Int     = 0::(_ ≥ 0)
-    regcoef::Real    = 0.0::(_ ≥ 0)
+    regcoef::Real    = 1e-6::(_ ≥ 0)
     priors::Union{Nothing, MLJBase.UnivariateFinite} = nothing
 end
 
@@ -404,7 +404,7 @@ function MLJBase.fit(model::BayesianLDA, ::Int, X, y)
     core_res = MS.fit(MS.MulticlassLDA, nclasses, Xm_t, Int.(yplain);
                       method=model.method,
                       outdim=out_dim,
-                      regcoef=model.regcoef,
+                      regcoef= Float64(model.regcoef),
                       covestimator_within=model.cov_w,
                       covestimator_between=model.cov_b)
 
