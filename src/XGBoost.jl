@@ -9,7 +9,52 @@ using ScientificTypes
 import ..XGBoost
 
 # TODO: Why do we need this?
-generate_seed() = mod(round(Int, time()*1e8), 10000)
+generate_seed() = rand(Int) #mod(round(Int, time()*1e8), 10000)
+
+# hack to preprocess hyper-parameters:
+function kwargs(model, silent, seed, objective)
+
+    kwargs = (booster = model.booster
+              , silent = silent
+              , disable_default_eval_metric = model.disable_default_eval_metric
+              , eta = model.eta
+              , gamma = model.gamma
+              , max_depth = model.max_depth
+              , min_child_weight = model.min_child_weight
+              , max_delta_step = model.max_delta_step
+              , subsample = model.subsample
+              , colsample_bytree = model.colsample_bytree
+              , colsample_bylevel = model.colsample_bylevel
+              , lambda = model.lambda
+              , alpha = model.alpha
+              , tree_method = model.tree_method
+              , sketch_eps = model.sketch_eps
+              , scale_pos_weight = model.scale_pos_weight
+              , refresh_leaf = model.refresh_leaf
+              , process_type = model.process_type
+              , grow_policy = model.grow_policy
+              , max_leaves = model.max_leaves
+              , max_bin = model.max_bin
+              , predictor = model.predictor
+              , sample_type = model.sample_type
+              , normalize_type = model.normalize_type
+              , rate_drop = model.rate_drop
+              , one_drop = model.one_drop
+              , skip_drop = model.skip_drop
+              , feature_selector = model.feature_selector
+              , top_k = model.top_k
+              , tweedie_variance_power = model.tweedie_variance_power
+              , objective = objective
+              , base_score = model.base_score
+              , eval_metric=model.eval_metric
+              , seed = seed)
+
+    if model.updater != "auto"
+        return merge(kwargs, (updater=model.updater,))
+    else
+        return kwargs
+    end
+end
 
 
 ## REGRESSOR
@@ -82,7 +127,7 @@ function XGBoostRegressor(
     ,tree_method="auto"
     ,sketch_eps=0.03
     ,scale_pos_weight=1
-    ,updater="grow_colmaker"
+    ,updater="auto"
     ,refresh_leaf=1
     ,process_type="default"
     ,grow_policy="depthwise"
@@ -140,7 +185,7 @@ function XGBoostRegressor(
     ,seed)
 
      message = MLJBase.clean!(model)
-     isempty(message) || @warn message 
+     isempty(message) || @warn message
 
     return model
 end
@@ -160,13 +205,6 @@ function MLJBase.clean!(model::XGBoostRegressor)
     return warning
 end
 
-#> The following optional method (the fallback does nothing, returns
-#> empty warning) is called by the constructor above but also by the
-#> fit methods below:
-
-#> A required `fit` method returns `fitresult, cache, report`. (Return
-#> `cache=nothing` unless you are overloading `update`)
-
 function MLJBase.fit(model::XGBoostRegressor
              , verbosity::Int     #> must be here even if unsupported in pkg
              , X
@@ -178,52 +216,15 @@ function MLJBase.fit(model::XGBoostRegressor
     dm = XGBoost.DMatrix(Xmatrix,label=y)
 
     objective =
-        model.objective in ["linear", "gamma", "tweedie"] ? "reg:"*model.objective : model.objective
+        model.objective in ["linear", "gamma", "tweedie"] ?
+            "reg:"*model.objective : model.objective
 
     seed =
         model.seed == -1 ? generate_seed() : model.seed
 
-    fitresult = XGBoost.xgboost(dm
-                               , model.num_round
-                               , booster = model.booster
-                               , silent = silent
-                               , disable_default_eval_metric = model.disable_default_eval_metric
-                               , eta = model.eta
-                               , gamma = model.gamma
-                               , max_depth = model.max_depth
-                               , min_child_weight = model.min_child_weight
-                               , max_delta_step = model.max_delta_step
-                               , subsample = model.subsample
-                               , colsample_bytree = model.colsample_bytree
-                               , colsample_bylevel = model.colsample_bylevel
-                               , lambda = model.lambda
-                               , alpha = model.alpha
-                               , tree_method = model.tree_method
-                               , sketch_eps = model.sketch_eps
-                               , scale_pos_weight = model.scale_pos_weight
-                               , updater = model.updater
-                               , refresh_leaf = model.refresh_leaf
-                               , process_type = model.process_type
-                               , grow_policy = model.grow_policy
-                               , max_leaves = model.max_leaves
-                               , max_bin = model.max_bin
-                               , predictor = model.predictor
-                               , sample_type = model.sample_type
-                               , normalize_type = model.normalize_type
-                               , rate_drop = model.rate_drop
-                               , one_drop = model.one_drop
-                               , skip_drop = model.skip_drop
-                               , feature_selector = model.feature_selector
-                               , top_k = model.top_k
-                               , tweedie_variance_power = model.tweedie_variance_power
-                               , objective = objective
-                               , base_score = model.base_score
-                               , eval_metric=model.eval_metric
-                               , seed = seed)
 
-    #> return package-specific statistics (eg, feature rankings,
-    #> internal estimates of generalization error) in `report`, which
-    #> should be `nothing` or a dictionary keyed on symbols.
+    fitresult = XGBoost.xgboost(dm, model.num_round;
+                                kwargs(model, silent, seed, objective)...)
 
     cache = nothing
     report = nothing
@@ -311,7 +312,7 @@ function XGBoostCount(
     ,tree_method="auto"
     ,sketch_eps=0.03
     ,scale_pos_weight=1
-    ,updater="grow_colmaker"
+    ,updater="auto"
     ,refresh_leaf=1
     ,process_type="default"
     ,grow_policy="depthwise"
@@ -377,8 +378,9 @@ end
 function MLJBase.clean!(model::XGBoostCount)
     warning = ""
     if(!(model.objective in ["count:poisson"]))
-            warning *="Changing objective to \"poisson\", the only supported value. "
-            model.objective="poisson"
+        warning *= "Changing objective to \"poisson\", "*
+                       "the only supported value. "
+        model.objective="poisson"
     end
     return warning
 end
@@ -388,8 +390,7 @@ function MLJBase.fit(model::XGBoostCount
              , X
              , y)
 
-             silent =
-                 verbosity > 0 ?  false : true
+    silent = verbosity > 0 ?  false : true
 
     Xmatrix = MLJBase.matrix(X)
     dm = XGBoost.DMatrix(Xmatrix,label=y)
@@ -397,48 +398,8 @@ function MLJBase.fit(model::XGBoostCount
     seed =
         model.seed == -1 ? generate_seed() : model.seed
 
-    fitresult = XGBoost.xgboost(dm
-                               , model.num_round
-                               , booster = model.booster
-                               , silent = silent
-                               , disable_default_eval_metric = model.disable_default_eval_metric
-                               , eta = model.eta
-                               , gamma = model.gamma
-                               , max_depth = model.max_depth
-                               , min_child_weight = model.min_child_weight
-                               , max_delta_step = model.max_delta_step
-                               , subsample = model.subsample
-                               , colsample_bytree = model.colsample_bytree
-                               , colsample_bylevel = model.colsample_bylevel
-                               , lambda = model.lambda
-                               , alpha = model.alpha
-                               , tree_method = model.tree_method
-                               , sketch_eps = model.sketch_eps
-                               , scale_pos_weight = model.scale_pos_weight
-                               , updater = model.updater
-                               , refresh_leaf = model.refresh_leaf
-                               , process_type = model.process_type
-                               , grow_policy = model.grow_policy
-                               , max_leaves = model.max_leaves
-                               , max_bin = model.max_bin
-                               , predictor = model.predictor
-                               , sample_type = model.sample_type
-                               , normalize_type = model.normalize_type
-                               , rate_drop = model.rate_drop
-                               , one_drop = model.one_drop
-                               , skip_drop = model.skip_drop
-                               , feature_selector = model.feature_selector
-                               , top_k = model.top_k
-                               , tweedie_variance_power = model.tweedie_variance_power
-                               , objective = "count:poisson"
-                               , base_score = model.base_score
-                               , eval_metric=model.eval_metric
-                               , seed = seed)
-
-    #> return package-specific statistics (eg, feature rankings,
-    #> internal estimates of generalization error) in `report`, which
-    #> should be `nothing` or a dictionary keyed on symbols.
-
+    fitresult = XGBoost.xgboost(dm, model.num_round;
+                                kwargs(model, silent, seed, "count:poisson")...)
     cache = nothing
     report = nothing
 
@@ -524,7 +485,7 @@ function XGBoostClassifier(
     ,tree_method="auto"
     ,sketch_eps=0.03
     ,scale_pos_weight=1
-    ,updater="grow_colmaker"
+    ,updater="auto"
     ,refresh_leaf=1
     ,process_type="default"
     ,grow_policy="depthwise"
@@ -631,44 +592,10 @@ function MLJBase.fit(model::XGBoostClassifier
     seed =
         model.seed == -1 ? generate_seed() : model.seed
 
-    result = XGBoost.xgboost(Xmatrix, label=y_plain
-                               , model.num_round
-                               , booster = model.booster
-                               , silent = silent
-                               , disable_default_eval_metric = model.disable_default_eval_metric
-                               , eta = model.eta
-                               , gamma = model.gamma
-                               , max_depth = model.max_depth
-                               , min_child_weight = model.min_child_weight
-                               , max_delta_step = model.max_delta_step
-                               , subsample = model.subsample
-                               , colsample_bytree = model.colsample_bytree
-                               , colsample_bylevel = model.colsample_bylevel
-                               , lambda = model.lambda
-                               , alpha = model.alpha
-                               , tree_method = model.tree_method
-                               , sketch_eps = model.sketch_eps
-                               , scale_pos_weight = model.scale_pos_weight
-                               , updater = model.updater
-                               , refresh_leaf = model.refresh_leaf
-                               , process_type = model.process_type
-                               , grow_policy = model.grow_policy
-                               , max_leaves = model.max_leaves
-                               , max_bin = model.max_bin
-                               , predictor = model.predictor
-                               , sample_type = model.sample_type
-                               , normalize_type = model.normalize_type
-                               , rate_drop = model.rate_drop
-                               , one_drop = model.one_drop
-                               , skip_drop = model.skip_drop
-                               , feature_selector = model.feature_selector
-                               , top_k = model.top_k
-                               , tweedie_variance_power = model.tweedie_variance_power
-                               , objective = objective
-                               , base_score = model.base_score
-                               , eval_metric=eval_metric
-                               , seed = seed
-                               , num_class=num_class)
+
+    result = XGBoost.xgboost(Xmatrix, label=y_plain, model.num_round;
+                             num_class=num_class,
+                             kwargs(model, silent, seed, objective)...)
 
     fitresult = (result, a_target_element)
 
