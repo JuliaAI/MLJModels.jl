@@ -8,10 +8,19 @@ using ScientificTypes
 
 import ..XGBoost
 
-# TODO: Why do we need this?
-generate_seed() = rand(Int) #mod(round(Int, time()*1e8), 10000)
+# helper for feature importances:
+# XGBoost used "f
+function named_importance(fi::XGBoost.FeatureImportance, features)
 
-# hack to preprocess hyper-parameters:
+    new_fname = features[parse(Int, fi.fname[2:end]) + 1] |> string
+    return XGBoost.FeatureImportance(new_fname, fi.gain, fi.cover, fi.freq)
+end
+
+
+# TODO: Why do we need this?
+generate_seed() = mod(round(Int, time()*1e8), 10000)
+
+# helper to preprocess hyper-parameters:
 function kwargs(model, silent, seed, objective)
 
     kwargs = (booster = model.booster
@@ -226,8 +235,12 @@ function MLJBase.fit(model::XGBoostRegressor
     fitresult = XGBoost.xgboost(dm, model.num_round;
                                 kwargs(model, silent, seed, objective)...)
 
+    features = schema(X).names
+    importances = [named_importance(fi, features) for
+                   fi in XGBoost.importance(fitresult)]
     cache = nothing
-    report = nothing
+
+    report = (feature_importances=importances, )
 
     return fitresult, cache, report
 
@@ -400,8 +413,12 @@ function MLJBase.fit(model::XGBoostCount
 
     fitresult = XGBoost.xgboost(dm, model.num_round;
                                 kwargs(model, silent, seed, "count:poisson")...)
+    features = schema(X).names
+    importances = [named_importance(fi, features) for
+                   fi in XGBoost.importance(fitresult)]
+
     cache = nothing
-    report = nothing
+    report = (feature_importances=importances, )
 
     return fitresult, cache, report
 
@@ -599,8 +616,13 @@ function MLJBase.fit(model::XGBoostClassifier
 
     fitresult = (result, a_target_element)
 
+    features = schema(X).names
+
+    importances = [named_importance(fi, features) for
+                   fi in XGBoost.importance(result)]
+
     cache = nothing
-    report = nothing
+    report = (feature_importances=importances, )
 
     return fitresult, cache, report
 
