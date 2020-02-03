@@ -30,6 +30,7 @@ labels = abs.(labels)
 fitresultR, cacheR, reportR = MLJBase.fit(plain_regressor, 0, features, labels);
 rpred = predict(plain_regressor, fitresultR, features);
 
+importances = reportR.feature_importances
 
 ## COUNT
 
@@ -51,6 +52,7 @@ fitresultC, cacheC, reportC = MLJBase.fit(count_regressor, 0, Xtable, y);
 cpred = predict(count_regressor, fitresultC, Xtable);
 info_dict(XGBoostCount)
 
+importances = reportC.feature_importances
 
 ## CLASSIFIER
 
@@ -70,6 +72,9 @@ fitresult, cache, report = MLJBase.fit(plain_classifier, 0,
 yhat = mode.(predict(plain_classifier, fitresult, selectrows(X, test)))
 misclassification_rate = sum(yhat .!= y[test])/length(test)
 @test misclassification_rate < 0.01
+
+importances = report.feature_importances
+
 
 # Multiclass{10} case:
 N=10
