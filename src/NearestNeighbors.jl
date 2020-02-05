@@ -2,6 +2,7 @@ module NearestNeighbors_
 
 import MLJBase
 import MLJBase: @mlj_model, metadata_model, metadata_pkg
+import MLJBase: Table, Continuous, Count, Finite, OrderedFactor, Multiclass
 using Distances
 
 import ..NearestNeighbors
@@ -156,15 +157,15 @@ metadata_pkg.((KNNRegressor, KNNClassifier),
     )
 
 metadata_model(KNNRegressor,
-    input=MLJBase.Table(MLJBase.Continuous),
-    target=AbstractVector{MLJBase.Continuous},
+    input=Table(Continuous),
+    target=AbstractVector{Continuous},
     weights=true,
     descr=KNNRegressorDescription
     )
 
 metadata_model(KNNClassifier,
-    input=MLJBase.Table(MLJBase.Continuous),
-    target=AbstractVector{<:MLJBase.Finite},
+    input=Table(Continuous),
+    target=AbstractVector{<:Finite},
     weights=true,
     descr=KNNClassifierDescription
     )

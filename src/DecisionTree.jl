@@ -2,7 +2,7 @@ module DecisionTree_
 
 import MLJBase
 import MLJBase: @mlj_model, metadata_pkg, metadata_model
-using ScientificTypes
+import MLJBase: Table, Continuous, Count, Finite, OrderedFactor, Multiclass
 
 import ..DecisionTree
 
@@ -342,39 +342,39 @@ end
 metadata_pkg.((DecisionTreeClassifier, DecisionTreeRegressor,
                RandomForestClassifier, RandomForestRegressor,
                AdaBoostStumpClassifier),
-              name="DecisionTree",
-              uuid="7806a523-6efd-50cb-b5f6-3fa6f1930dbb",
-              url="https://github.com/bensadeghi/DecisionTree.jl",
-              julia=true,
-              license="MIT",
-              is_wrapper=false)
+              name       = "DecisionTree",
+              uuid       = "7806a523-6efd-50cb-b5f6-3fa6f1930dbb",
+              url        = "https://github.com/bensadeghi/DecisionTree.jl",
+              julia      = true,
+              license    = "MIT",
+              is_wrapper = false)
 
 metadata_model(DecisionTreeClassifier,
-               input=MLJBase.Table(Continuous, Count, OrderedFactor),
-               target=AbstractVector{<:MLJBase.Finite},
-               weights=false,
-               descr=DTC_DESCR)
+               input   = Table(Continuous, Count, OrderedFactor),
+               target  = AbstractVector{<:Finite},
+               weights = false,
+               descr   = DTC_DESCR)
 
 metadata_model(RandomForestClassifier,
-               input=MLJBase.Table(Continuous, Count, OrderedFactor),
-               target=AbstractVector{<:MLJBase.Finite},
+               input=Table(Continuous, Count, OrderedFactor),
+               target=AbstractVector{<:Finite},
                weights=false,
                descr=RFC_DESCR)
 
 metadata_model(AdaBoostStumpClassifier,
-               input=MLJBase.Table(Continuous, Count, OrderedFactor),
-               target=AbstractVector{<:MLJBase.Finite},
+               input=Table(Continuous, Count, OrderedFactor),
+               target=AbstractVector{<:Finite},
                weights=false,
                descr=ABS_DESCR)
 
 metadata_model(DecisionTreeRegressor,
-               input=MLJBase.Table(Continuous, Count, OrderedFactor),
+               input=Table(Continuous, Count, OrderedFactor),
                target=AbstractVector{Continuous},
                weights=false,
                descr=DTR_DESCR)
 
 metadata_model(RandomForestRegressor,
-               input=MLJBase.Table(Continuous, Count, OrderedFactor),
+               input=Table(Continuous, Count, OrderedFactor),
                target=AbstractVector{Continuous},
                weights=false,
                descr=RFR_DESCR)

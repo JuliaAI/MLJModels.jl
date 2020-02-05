@@ -73,11 +73,11 @@ function MLJBase.transform(transformer::FillImputer, fitresult, X)
         col = MLJBase.selectcols(X, ftr)
         if eltype(col) >: Missing
             T    = scitype_union(col)
-            if T <: Union{MLJBase.Continuous,Missing}
+            if T <: Union{Continuous,Missing}
                 filler = transformer.continuous_fill(col)
-            elseif T <: Union{MLJBase.Count,Missing}
+            elseif T <: Union{Count,Missing}
                 filler = transformer.count_fill(col)
-            elseif T <: Union{MLJBase.Finite,Missing}
+            elseif T <: Union{Finite,Missing}
                 filler = transformer.finite_fill(col)
             end
             col = copy(col) # carries the same name but not attached to the same memory
@@ -227,7 +227,7 @@ end
 
 # acts on scalars:
 function transform_to_int(
-    result::UnivariateDiscretizerResult{<:CategoricalElement{R}},
+    result::UnivariateDiscretizerResult{<:MLJBase.CategoricalElement},
     r::Real) where R
 
     k = R(1)
@@ -671,21 +671,21 @@ metadata_pkg.((FeatureSelector, UnivariateStandardizer,
               is_wrapper=false)
 
 metadata_model(FillImputer,
-               input=MLJBase.Table(MLJBase.Scientific),
-               output=MLJBase.Table(MLJBase.Scientific),
+               input=Table(MLJBase.Scientific),
+               output=Table(MLJBase.Scientific),
                weights=false,
                descr=FILL_IMPUTER_DESCR,
                path="MLJModels.FillImputer")
 
 metadata_model(FeatureSelector,
-               input=MLJBase.Table(MLJBase.Scientific),
-               output=MLJBase.Table(MLJBase.Scientific),
+               input=Table(MLJBase.Scientific),
+               output=Table(MLJBase.Scientific),
                weights=false,
                descr=FEATURE_SELECTOR_DESCR,
                path="MLJModels.FeatureSelector")
 
 metadata_model(UnivariateDiscretizer,
-               input=AbstractVector{<:MLJBase.Continuous},
+               input=AbstractVector{<:Continuous},
                output=AbstractVector{<:MLJBase.OrderedFactor},
                weights=false,
                descr=UNIVARIATE_DISCR_DESCR,
@@ -693,28 +693,28 @@ metadata_model(UnivariateDiscretizer,
 
 metadata_model(UnivariateStandardizer,
                input=AbstractVector{<:MLJBase.Infinite},
-               output=AbstractVector{MLJBase.Continuous},
+               output=AbstractVector{Continuous},
                weights=false,
                descr=UNIVARIATE_STD_DESCR,
                path="MLJModels.UnivariateStandardizer")
 
 metadata_model(Standardizer,
-               input=MLJBase.Table(MLJBase.Scientific),
-               output=MLJBase.Table(MLJBase.Scientific),
+               input=Table(MLJBase.Scientific),
+               output=Table(MLJBase.Scientific),
                weights=false,
                descr=STANDARDIZER_DESCR,
                path="MLJModels.Standardizer")
 
 metadata_model(UnivariateBoxCoxTransformer,
-               input=AbstractVector{MLJBase.Continuous},
-               output=AbstractVector{MLJBase.Continuous},
+               input=AbstractVector{Continuous},
+               output=AbstractVector{Continuous},
                weights=false,
                descr=UNIVARIATE_BOX_COX_DESCR,
                path="MLJModels.UnivariateBoxCoxTransformer")
 
 metadata_model(OneHotEncoder,
-               input=MLJBase.Table(MLJBase.Scientific),
-               output=MLJBase.Table(MLJBase.Scientific),
+               input=Table(MLJBase.Scientific),
+               output=Table(MLJBase.Scientific),
                weights=false,
                descr=ONE_HOT_DESCR,
                path="MLJModels.OneHotEncoder")

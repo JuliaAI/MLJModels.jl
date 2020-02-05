@@ -29,8 +29,8 @@ f,       = fit(selector, 1, X)
         selectcols(selectrows(X, 1:2), [:Zn, :Crim])
 
 infos = info_dict(selector)
-@test infos[:input_scitype]  == MLJBase.Table(Scientific)
-@test infos[:output_scitype] == MLJBase.Table(Scientific)
+@test infos[:input_scitype]  == Table(Scientific)
+@test infos[:output_scitype] == Table(Scientific)
 
 
 #  To be added with FeatureSelectorRule X = (n1=["a", "b", "a"], n2=["g", "g", "g"], n3=[7, 8, 9],
@@ -141,8 +141,8 @@ stand = Standardizer(features=[:x1, :mickey_mouse])
 infos = info_dict(stand)
 
 @test infos[:name] == "Standardizer"
-@test infos[:input_scitype] == MLJBase.Table(Scientific)
-@test infos[:output_scitype] == MLJBase.Table(Scientific)
+@test infos[:input_scitype] == Table(Scientific)
+@test infos[:output_scitype] == Table(Scientific)
 
 
 #### UNIVARIATE BOX COX TRANSFORMER ####
@@ -161,8 +161,8 @@ f, = fit(t, 2, v)
 infos = info_dict(t)
 
 @test infos[:name] == "UnivariateBoxCoxTransformer"
-@test infos[:input_scitype] == AbstractVector{MLJBase.Continuous}
-@test infos[:output_scitype] == AbstractVector{MLJBase.Continuous}
+@test infos[:input_scitype] == AbstractVector{Continuous}
+@test infos[:output_scitype] == AbstractVector{Continuous}
 
 
 #### ONE HOT ENCODER ####
@@ -219,8 +219,8 @@ X = (name       = categorical(["Ben", "John", "Mary", "John"], ordered=true),
 infos = info_dict(t)
 
 @test infos[:name] == "OneHotEncoder"
-@test infos[:input_scitype] == MLJBase.Table(Scientific)
-@test infos[:output_scitype] == MLJBase.Table(Scientific)
+@test infos[:input_scitype] == Table(Scientific)
+@test infos[:output_scitype] == Table(Scientific)
 
 
 #### FILL IMPUTER ####

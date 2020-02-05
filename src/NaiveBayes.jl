@@ -3,7 +3,7 @@ module NaiveBayes_
 export GaussianNBClassifier, MultinomialNBClassifier, HybridNBClassifier
 
 import MLJBase
-using ScientificTypes
+import MLJBase: Table, Continuous, Count, Finite, OrderedFactor, Multiclass
 using CategoricalArrays
 
 import ..NaiveBayes

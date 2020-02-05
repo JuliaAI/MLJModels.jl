@@ -15,6 +15,7 @@ module GLM_
 
 import MLJBase
 import MLJBase: metadata_pkg, metadata_model
+import MLJBase: Table, Continuous, Count, Finite, OrderedFactor, Multiclass
 import Distributions
 using Parameters
 using Tables
@@ -186,22 +187,22 @@ metadata_pkg.((LinearRegressor, LinearBinaryClassifier, LinearCountRegressor),
     )
 
 metadata_model(LinearRegressor,
-    input=MLJBase.Table(MLJBase.Continuous),
-    target=AbstractVector{MLJBase.Continuous},
+    input=Table(Continuous),
+    target=AbstractVector{Continuous},
     weights=false,
     descr=LR_DESCR
     )
 
 metadata_model(LinearBinaryClassifier,
-    input=MLJBase.Table(MLJBase.Continuous),
+    input=Table(Continuous),
     target=AbstractVector{MLJBase.UnivariateFinite},
     weights=false,
     descr=LBC_DESCR
     )
 
 metadata_model(LinearCountRegressor,
-    input=MLJBase.Table(MLJBase.Continuous),
-    target=AbstractVector{MLJBase.Count},
+    input=Table(Continuous),
+    target=AbstractVector{Count},
     weights=false,
     descr=LCR_DESCR
     )

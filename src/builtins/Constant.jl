@@ -108,29 +108,29 @@ metadata_pkg.((ConstantRegressor, ConstantClassifier,
               is_wrapper=false)
 
 metadata_model(ConstantRegressor,
-               input=MLJBase.Table(MLJBase.Scientific),
-               target=AbstractVector{MLJBase.Continuous},
+               input=Table(MLJBase.Scientific),
+               target=AbstractVector{Continuous},
                weights=false,
                descr="Constant regressor (Probabilistic).",
                path="MLJModels.ConstantRegressor")
 
 metadata_model(DeterministicConstantRegressor,
-               input=MLJBase.Table(MLJBase.Scientific),
-               target=AbstractVector{MLJBase.Continuous},
+               input=Table(MLJBase.Scientific),
+               target=AbstractVector{Continuous},
                weights=false,
                descr="Constant regressor (Deterministic).",
                path="MLJModels.DeterministicConstantRegressor")
 
 metadata_model(ConstantClassifier,
-               input=MLJBase.Table(MLJBase.Scientific),
-               target=AbstractVector{<:MLJBase.Finite},
+               input=Table(MLJBase.Scientific),
+               target=AbstractVector{<:Finite},
                weights=true,
                descr="Constant classifier (Probabilistic).",
                path="MLJModels.ConstantClassifier")
 
 metadata_model(DeterministicConstantClassifier,
-               input=MLJBase.Table(MLJBase.Scientific),
-               target=AbstractVector{<:MLJBase.Finite},
+               input=Table(MLJBase.Scientific),
+               target=AbstractVector{<:Finite},
                weights=false,
                descr="Constant classifier (Deterministic).",
                path="MLJModels.DeterministicConstantClassifier")

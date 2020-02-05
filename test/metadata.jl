@@ -3,7 +3,6 @@ module TestMetadata
 using Test
 using MLJModels
 import MLJBase
-using ScientificTypes
 
 @testset "(de)serialization for TOML" begin
     d = Dict()
@@ -55,9 +54,9 @@ end
 
 @testset "building INFO_GIVEN_HANDLE" begin
     loc = MLJModels.localmodeltypes(MLJBase)
-    @test length(loc) in [0, 1] 
+    @test length(loc) in [0, 1]
     @test issubset(Set([DeterministicConstantClassifier,
-                        DeterministicConstantRegressor, 
+                        DeterministicConstantRegressor,
                         ConstantClassifier,
                         ConstantRegressor,
                         FeatureSelector,

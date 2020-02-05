@@ -45,8 +45,8 @@ infos = info_dict(barekm)
 @test infos[:is_pure_julia]
 @test infos[:package_license] == "MIT"
 
-@test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
-@test infos[:output_scitype] == MLJBase.Table(MLJBase.Continuous)
+@test infos[:input_scitype] == Table(Continuous)
+@test infos[:output_scitype] == Table(Continuous)
 
 infos[:docstring]
 
@@ -72,8 +72,8 @@ p = MLJBase.predict(barekm, fitresult, X)
 
 infos = info_dict(barekm)
 
-@test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
-@test infos[:output_scitype] == MLJBase.Table(MLJBase.Continuous)
+@test infos[:input_scitype] == Table(Continuous)
+@test infos[:output_scitype] == Table(Continuous)
 
 end # module
 true

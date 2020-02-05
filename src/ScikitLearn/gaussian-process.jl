@@ -18,8 +18,8 @@ MLJBase.fitted_params(model::GaussianProcessRegressor, (fitresult, _, _)) = (
     )
 
 metadata_model(GaussianProcessRegressor,
-    input   = MLJBase.Table(MLJBase.Continuous),
-    target  = AbstractVector{MLJBase.Continuous},
+    input   = Table(Continuous),
+    target  = AbstractVector{Continuous},
     weights = false,
     descr   = "Gaussian process regressor."
     )
@@ -43,8 +43,8 @@ MLJBase.fitted_params(m::GaussianProcessClassifier, (f, _, _)) = (
     n_classes = f.n_classes_
     )
 metadata_model(GaussianProcessClassifier,
-    input   = MLJBase.Table(MLJBase.Continuous),
-    target  = AbstractVector{<:MLJBase.Finite},
+    input   = Table(Continuous),
+    target  = AbstractVector{<:Finite},
     weights = false,
     descr   = "Gaussian process classifier."
     )

@@ -1,9 +1,11 @@
 module ScikitLearn_
 
 import MLJBase
-import MLJBase: @mlj_model, metadata_model,
-                _process_model_def, _model_constructor, _model_cleaner
-using ScientificTypes, Tables, CategoricalArrays
+import MLJBase: @mlj_model, metadata_model
+import MLJBase: Table, Continuous, Count, Finite, OrderedFactor, Multiclass
+import MLJModelInterface: _process_model_def, _model_constructor, _model_cleaner
+
+using Tables, CategoricalArrays
 
 # NOTE: legacy code for SVM models does not use the @sk_model macro.
 

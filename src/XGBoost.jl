@@ -3,8 +3,9 @@ module XGBoost_
 export XGBoostRegressor, XGBoostClassifier, XGBoostCount
 
 import MLJBase
+import MLJBase: Table, Continuous, Count, Finite, OrderedFactor, Multiclass
+
 using CategoricalArrays
-using ScientificTypes
 
 import ..XGBoost
 

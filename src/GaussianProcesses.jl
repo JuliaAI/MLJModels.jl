@@ -3,9 +3,9 @@ module GaussianProcesses_
 export GPClassifier
 
 import MLJBase
+import MLJBase: Table, Continuous, Count, Finite, OrderedFactor, Multiclass
 
 using CategoricalArrays
-using ScientificTypes
 
 import ..GaussianProcesses # strange lazy-loading syntax
 

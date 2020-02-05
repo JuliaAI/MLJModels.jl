@@ -6,7 +6,7 @@ export EpsilonSVR
 export OneClassSVM
 
 import MLJBase
-using ScientificTypes
+import MLJBase: Table, Continuous, Count, Finite, OrderedFactor, Multiclass
 using CategoricalArrays
 
 import ..LIBSVM

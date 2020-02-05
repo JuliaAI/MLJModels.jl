@@ -25,7 +25,7 @@ function MLJBase.fitted_params(m::AffinityPropagation, f)
         affinity_matrix         = f.affinity_matrix_)
 end
 metadata_model(AffinityPropagation,
-    input   = MLJBase.Table(MLJBase.Continuous),
+    input   = Table(Continuous),
     target  = AbstractVector{Multiclass},
     # no transform so no output
     weights = false,
@@ -55,7 +55,7 @@ function MLJBase.fitted_params(m::AgglomerativeClustering, f)
         children   = f.children_)
 end
 metadata_model(AgglomerativeClustering,
-    input   = MLJBase.Table(MLJBase.Continuous),
+    input   = Table(Continuous),
     # no predict nor transform so no target nor output
     weights = false,
     descr   = "Recursively merges the pair of clusters that minimally increases a given linkage distance. Note: there is no `predict` or `transform` method
@@ -86,9 +86,9 @@ function MLJBase.fitted_params(m::Birch, f)
         labels             = catv[f.labels_ .+ 1])
 end
 metadata_model(Birch,
-    input   = MLJBase.Table(MLJBase.Continuous),
+    input   = Table(Continuous),
     target  = AbstractVector{Multiclass},
-    output  = MLJBase.Table(MLJBase.Continuous),
+    output  = Table(Continuous),
     weights = false,
     descr   = "Memory-efficient, online-learning algorithm provided as an alternative to MiniBatchKMeans. Note: noisy samples are given the label -1."
     )
@@ -114,7 +114,7 @@ function MLJBase.fitted_params(m::DBSCAN, f)
         labels              = catv[f.labels_ .+ 2])
 end
 metadata_model(DBSCAN,
-    input   = MLJBase.Table(MLJBase.Continuous),
+    input   = Table(Continuous),
     weights = false,
     descr   = "Density-Based Spatial Clustering of Applications with Noise. Finds core samples of high density and expands clusters from them. Good for data which contains clusters of similar density."
     )
@@ -148,8 +148,8 @@ function MLJBase.fitted_params(m::FeatureAgglomeration, f)
         distances  = m.distance_threshold === nothing ? nothing : f.distances_)
 end
 metadata_model(FeatureAgglomeration,
-    input   = MLJBase.Table(MLJBase.Continuous),
-    output  = MLJBase.Table(MLJBase.Continuous),
+    input   = Table(Continuous),
+    output  = Table(Continuous),
     weights = false,
     descr   = "Similar to AgglomerativeClustering, but recursively merges features instead of samples."
     )
@@ -182,9 +182,9 @@ function MLJBase.fitted_params(m::KMeans, f)
         inertia         = f.inertia_)
 end
 metadata_model(KMeans,
-    input   = MLJBase.Table(MLJBase.Continuous),
+    input   = Table(Continuous),
     target  = AbstractVector{Multiclass},
-    output  = MLJBase.Table(MLJBase.Continuous),
+    output  = Table(Continuous),
     weights = false,
     descr   = "K-Means algorithm: find K centroids corresponding to K clusters in the data."
     )
@@ -217,9 +217,9 @@ function MLJBase.fitted_params(m::MiniBatchKMeans, f)
         inertia         = f.inertia_)
 end
 metadata_model(MiniBatchKMeans,
-    input   = MLJBase.Table(MLJBase.Continuous),
+    input   = Table(Continuous),
     target  = AbstractVector{Multiclass},
-    output  = MLJBase.Table(MLJBase.Continuous),
+    output  = Table(Continuous),
     weights = false,
     descr   = "Mini-Batch K-Means clustering."
     )
@@ -245,7 +245,7 @@ function MLJBase.fitted_params(m::MeanShift, f)
         labels          = catv[f.labels_ .+ 1])
 end
 metadata_model(MeanShift,
-    input   = MLJBase.Table(MLJBase.Continuous),
+    input   = Table(Continuous),
     target  = AbstractVector{Multiclass},
     weights = false,
     descr   = "Mean shift clustering using a flat kernel. Mean shift clustering aims to discover \"blobs\" in a smooth density of samples. It is a centroid-based algorithm, which works by updating candidates for centroids to be the mean of the points within a given region. These candidates are then filtered in a post-processing stage to eliminate near-duplicates to form the final set of centroids."
@@ -279,7 +279,7 @@ function MLJBase.fitted_params(m::OPTICS, f)
         cluster_hierarchy = f.cluster_hierarchy_)
 end
 metadata_model(OPTICS,
-    input   = MLJBase.Table(MLJBase.Continuous),
+    input   = Table(Continuous),
     weights = false,
     descr   = "OPTICS (Ordering Points To Identify the Clustering Structure), closely related to DBSCAN, finds core sample of high density and expands clusters from them. Unlike DBSCAN, keeps cluster hierarchy for a variable neighborhood radius. Better suited for usage on large datasets than the current sklearn implementation of DBSCAN."
     )
@@ -307,7 +307,7 @@ function MLJBase.fitted_params(m::SpectralClustering, f)
         affinity_matrix = f.affinity_matrix_)
 end
 metadata_model(SpectralClustering,
-    input   = MLJBase.Table(MLJBase.Continuous),
+    input   = Table(Continuous),
     weights = false,
     descr   = "Apply clustering to a projection of the normalized Laplacian.
     In practice Spectral Clustering is very useful when the structure of the individual clusters is highly non-convex or more generally when a measure of the center and spread of the cluster is not a suitable description of the complete cluster. For instance when clusters are nested circles on the 2D plane."

@@ -30,8 +30,8 @@ MLJBase.fitted_params(m::AdaBoostClassifier, (f, _, _)) = (
     n_classes         = f.n_classes_
     )
 metadata_model(AdaBoostClassifier,
-    input   = MLJBase.Table(MLJBase.Continuous),
-    target  = AbstractVector{<:MLJBase.Finite},
+    input   = Table(Continuous),
+    target  = AbstractVector{<:Finite},
     weights = false,
     descr   = "Adaboost ensemble classifier."
     )
@@ -85,8 +85,8 @@ MLJBase.fitted_params(m::BaggingClassifier, (f, _, _)) = (
     oob_decision_function = m.oob_score ? f.oob_decision_function_ : nothing
     )
 metadata_model(BaggingClassifier,
-    input   = MLJBase.Table(MLJBase.Continuous),
-    target  = AbstractVector{<:MLJBase.Finite},
+    input   = Table(Continuous),
+    target  = AbstractVector{<:Finite},
     weights = false,
     descr   = "Bagging ensemble classifier."
     )
@@ -159,8 +159,8 @@ MLJBase.fitted_params(m::GradientBoostingClassifier, (f, _, _)) = (
     oob_improvement     = m.subsample < 1 ? f.oob_improvement_ : nothing
     )
 metadata_model(GradientBoostingClassifier,
-    input   = MLJBase.Table(MLJBase.Continuous),
-    target  = AbstractVector{<:MLJBase.Finite},
+    input   = Table(Continuous),
+    target  = AbstractVector{<:Finite},
     weights = false,
     descr   = "Gradient boosting ensemble classifier."
     )
@@ -193,8 +193,8 @@ MLJBase.fitted_params(model::RandomForestRegressor, (f, _, _)) = (
     oob_prediction      = model.oob_score ? f.oob_prediction_ : nothing
     )
 metadata_model(RandomForestRegressor,
-    input   = MLJBase.Table(MLJBase.Count,MLJBase.Continuous),
-    target  = AbstractVector{<:MLJBase.Finite},
+    input   = Table(Count,Continuous),
+    target  = AbstractVector{<:Finite},
     weights = false,
     descr   = "Random forest regressor."
     )
@@ -230,16 +230,16 @@ MLJBase.fitted_params(m::RandomForestClassifier, (f, _, _)) = (
     oob_decision_function = m.oob_score ? f.oob_decision_function_ : nothing
     )
 metadata_model(RandomForestClassifier,
-    input   = MLJBase.Table(MLJBase.Count,MLJBase.Continuous),
-    target  = AbstractVector{<:MLJBase.Finite},
+    input   = Table(Count,Continuous),
+    target  = AbstractVector{<:Finite},
     weights = false,
     descr   = "Random forest classifier."
     )
 
 const ENSEMBLE_REG = Union{Type{<:AdaBoostRegressor}, Type{<:BaggingRegressor}, Type{<:GradientBoostingRegressor}}
 
-MLJBase.input_scitype(::ENSEMBLE_REG)  = MLJBase.Table(MLJBase.Continuous)
-MLJBase.target_scitype(::ENSEMBLE_REG) = AbstractVector{MLJBase.Continuous}
+MLJBase.input_scitype(::ENSEMBLE_REG)  = Table(Continuous)
+MLJBase.target_scitype(::ENSEMBLE_REG) = AbstractVector{Continuous}
 
 # ============================================================================
 ExtraTreesRegressor_ = SKEN.ExtraTreesRegressor
@@ -269,8 +269,8 @@ MLJBase.fitted_params(m::ExtraTreesRegressor, (f, _, _)) = (
     oob_prediction      = m.oob_score ? f.oob_prediction_ : nothing,
     )
 metadata_model(ExtraTreesRegressor,
-    input   = MLJBase.Table(MLJBase.Continuous),
-    target  = AbstractVector{MLJBase.Continuous},
+    input   = Table(Continuous),
+    target  = AbstractVector{Continuous},
     weights = false,
     descr   = "Extra trees regressor, fits a number of randomized decision trees on various sub-samples of the dataset and uses averaging to improve the predictive accuracy and control over-fitting."
     )
@@ -306,8 +306,8 @@ MLJBase.fitted_params(m::ExtraTreesClassifier, (f, _, _)) = (
     oob_decision_function = m.oob_score ? f.oob_decision_function_ : nothing,
     )
 metadata_model(ExtraTreesClassifier,
-    input   = MLJBase.Table(MLJBase.Continuous),
-    target  = AbstractVector{<:MLJBase.Finite},
+    input   = Table(Continuous),
+    target  = AbstractVector{<:Finite},
     weights = false,
     descr   = "Extra trees classifier, fits a number of randomized decision trees on various sub-samples of the dataset and uses averaging to improve the predictive accuracy and control over-fitting."
     )

@@ -7,7 +7,7 @@ import MLJBase: @mlj_model, metadata_model, metadata_pkg
 import StatsBase: proportions, CovarianceEstimator
 using Distances
 using LinearAlgebra
-using Tables, ScientificTypes
+using Tables
 
 import MultivariateStats
 
@@ -297,7 +297,7 @@ function MLJBase.fit(model::LDA, ::Int, X, y)
     Xm_t   = MLJBase.matrix(X, transpose=true) # now p x n matrix
     yplain = MLJBase.int(y) # vector of n ints in {1,..., nclasses}
     p      = size(Xm_t, 1)
-    
+
      #check to make sure we have more than one class
     nclasses >= 2 ||  throw(ArgumentError("The number of classes has to be greater than one"))
 
@@ -381,7 +381,7 @@ function MLJBase.fit(model::BayesianLDA, ::Int, X, y)
     Xm_t   = MLJBase.matrix(X, transpose=true) # now p x n matrix
     yplain = MLJBase.int(y) # vector of n ints in {1,..., nclasses}
     p, n   = size(Xm_t)
-    
+
      #check to make sure we have more than one class
     nclasses >= 2 ||  throw(ArgumentError("The number of classes has to be greater than one"))
 
@@ -482,7 +482,7 @@ function MLJBase.fit(model::BayesianSubspaceLDA, ::Int, X, y)
     Xm_t   = MLJBase.matrix(X, transpose=true) # now p x n matrix
     yplain = MLJBase.int(y) # vector of n ints in {1,..., nclasses}
     p, n   = size(Xm_t)
-    
+
      #check to make sure we have more than one class
     nclasses >= 2 ||  throw(ArgumentError("The number of classes has to be greater than one"))
 
@@ -495,7 +495,7 @@ function MLJBase.fit(model::BayesianSubspaceLDA, ::Int, X, y)
 
     # check to make sure sample size is greater or equals nclasses
     n ≥ nclasses || throw(ArgumentError("The number of samples is less than the number of classes"))
-    
+
     ## Estimates prior probabilities if unspecified by user.
     if model.priors == nothing
         priors = proportions(yplain)
@@ -507,7 +507,7 @@ function MLJBase.fit(model::BayesianSubspaceLDA, ::Int, X, y)
 
     # # Code gotten from JuliaStats/MultivariateStats.jl
     # # Compute centroids, class weights, and deviation from centroids
-    # # Note Sb = Hb*Hb', Sw = Hw*Hw' 
+    # # Note Sb = Hb*Hb', Sw = Hw*Hw'
     cmeans, cweights, Hw = MS.center(Xm_t, Int.(yplain), nclasses) # Hw is p x n matrix , cmeans is p x nclasses matrix, cweights is nclasses x 1 vector
     dmeans = cmeans .- (model.normalize ? MS.mean(cmeans, dims=2) : cmeans * (cweights / (n))) #dmeans is p x nclasses
     Hb = model.normalize ? dmeans .* sqrt(n)  : dmeans .* sqrt.(cweights) #Hb is p x nclasses
@@ -519,12 +519,12 @@ function MLJBase.fit(model::BayesianSubspaceLDA, ::Int, X, y)
     projw = Uw[:, keep]
     pHb = projw' * Hb
     pHw = projw' * Hw
-    
+
     # compute LDA projection G in the subspace spanned by the within-class variance.
-    λ, G = MS.lda_gsvd(pHb, pHw, cweights) # λ is a (nclasses -1) x 1 vector containing the eigen values sorted in descending order. 
+    λ, G = MS.lda_gsvd(pHb, pHw, cweights) # λ is a (nclasses -1) x 1 vector containing the eigen values sorted in descending order.
 
     G = G[:, 1:out_dim]
-    
+
     core_res = MS.SubspaceLDA(projw, G, λ, cmeans, cweights)
 
     ## scaled the overall projection_matrix (P = projw * G) by multiplying by sqrt(n - nclasses) this ensures Pᵀ*Σ*P=I
@@ -600,7 +600,7 @@ function MLJBase.fit(model::SubspaceLDA, ::Int, X, y)
     Xm_t   = MLJBase.matrix(X, transpose=true) # now p x n matrix
     yplain = MLJBase.int(y) # vector of n ints in {1,..., nclasses}
     p, n   = size(Xm_t)
-    
+
      #check to make sure we have more than one class
     nclasses >= 2 ||  throw(ArgumentError("The number of classes has to be greater than one"))
 
@@ -628,12 +628,12 @@ function MLJBase.fit(model::SubspaceLDA, ::Int, X, y)
     projw = Uw[:, keep]
     pHb = projw' * Hb
     pHw = projw' * Hw
-    
+
     # compute LDA projection G in the subspace spanned by the within-class variance.
-    λ, G = MS.lda_gsvd(pHb, pHw, cweights) # λ is a (nclasses -1) x 1 vector containing the eigen values sorted in descending order. 
+    λ, G = MS.lda_gsvd(pHb, pHw, cweights) # λ is a (nclasses -1) x 1 vector containing the eigen values sorted in descending order.
 
     G = G[:, 1:out_dim]
-    
+
     core_res = MS.SubspaceLDA(projw, G, λ, cmeans, cweights)
     vproportions = λ ./ sum(λ) #proportions of variance
 
@@ -688,52 +688,52 @@ metadata_pkg.((RidgeRegressor, PCA, KernelPCA, ICA, LDA, BayesianLDA, SubspaceLD
               is_wrapper=false)
 
 metadata_model(RidgeRegressor,
-               input=MLJBase.Table(MLJBase.Continuous),
-               target=AbstractVector{MLJBase.Continuous},
+               input=Table(Continuous),
+               target=AbstractVector{Continuous},
                weights=false,
                descr=RIDGE_DESCR)
 
 metadata_model(PCA,
-               input=MLJBase.Table(MLJBase.Continuous),
-               target=MLJBase.Table(MLJBase.Continuous),
+               input=Table(Continuous),
+               target=Table(Continuous),
                weights=false,
                descr=PCA_DESCR)
 
 metadata_model(KernelPCA,
-               input=MLJBase.Table(MLJBase.Continuous),
-               target=MLJBase.Table(MLJBase.Continuous),
+               input=Table(Continuous),
+               target=Table(Continuous),
                weights=false,
                descr=KPCA_DESCR)
 
 metadata_model(ICA,
-               input=MLJBase.Table(MLJBase.Continuous),
-               target=MLJBase.Table(MLJBase.Continuous),
+               input=Table(Continuous),
+               target=Table(Continuous),
                weights=false,
                descr=ICA_DESCR)
 
 metadata_model(LDA,
-               input=MLJBase.Table(MLJBase.Continuous),
-               target=AbstractVector{<:MLJBase.Finite},
+               input=Table(Continuous),
+               target=AbstractVector{<:Finite},
                weights=false,
-               output=MLJBase.Table(MLJBase.Continuous),
+               output=Table(Continuous),
                descr=LDA_DESCR)
 metadata_model(BayesianLDA,
-               input=MLJBase.Table(MLJBase.Continuous),
-               target=AbstractVector{<:MLJBase.Finite},
+               input=Table(Continuous),
+               target=AbstractVector{<:Finite},
                weights=false,
-               output=MLJBase.Table(MLJBase.Continuous),
+               output=Table(Continuous),
                descr=BayesianLDA_DESCR)
 metadata_model(SubspaceLDA,
-               input=MLJBase.Table(MLJBase.Continuous),
-               target=AbstractVector{<:MLJBase.Finite},
+               input=Table(Continuous),
+               target=AbstractVector{<:Finite},
                weights=false,
-               output=MLJBase.Table(MLJBase.Continuous),
-               descr=SubspaceLDA_DESCR)               
+               output=Table(Continuous),
+               descr=SubspaceLDA_DESCR)
 metadata_model(BayesianSubspaceLDA,
-               input=MLJBase.Table(MLJBase.Continuous),
-               target=AbstractVector{<:MLJBase.Finite},
+               input=Table(Continuous),
+               target=AbstractVector{<:Finite},
                weights=false,
-               output = MLJBase.Table(MLJBase.Continuous),
+               output = Table(Continuous),
                descr=BayesianSubspaceLDA_DESCR)
 
 end

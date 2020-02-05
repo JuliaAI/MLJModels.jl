@@ -119,8 +119,8 @@ end
     @test round.(class_means', sigdigits = 3) == [0.0428 0.0339; -0.0395 -0.0313]
 
     d = info_dict(LDA)
-    @test d[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
-    @test d[:target_scitype] == AbstractVector{<:MLJBase.Finite}
+    @test d[:input_scitype] == Table(Continuous)
+    @test d[:target_scitype] == AbstractVector{<:Finite}
     @test d[:name] == "LDA"
 end
 
@@ -176,8 +176,8 @@ end
     @test round.(class_means', sigdigits = 3) == [0.0428 0.0339; -0.0395 -0.0313]
 
     d = info_dict(BayesianLDA)
-    @test d[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
-    @test d[:target_scitype] == AbstractVector{<:MLJBase.Finite}
+    @test d[:input_scitype] == Table(Continuous)
+    @test d[:target_scitype] == AbstractVector{<:Finite}
     @test d[:name] == "BayesianLDA"
 end
 
@@ -210,8 +210,8 @@ end
     @test 0.04 ≤ mce ≤ 0.045
 
     d = info_dict(BayesianSubspaceLDA)
-    @test d[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
-    @test d[:target_scitype] == AbstractVector{<:MLJBase.Finite}
+    @test d[:input_scitype] == Table(Continuous)
+    @test d[:target_scitype] == AbstractVector{<:Finite}
     @test d[:name] == "BayesianSubspaceLDA"
 end
 
@@ -255,8 +255,8 @@ end
      @test tlda_mlj == tlda_ms 
 
      d = info_dict(SubspaceLDA)
-     @test d[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
-     @test d[:target_scitype] == AbstractVector{<:MLJBase.Finite}
+     @test d[:input_scitype] == Table(Continuous)
+     @test d[:target_scitype] == AbstractVector{<:Finite}
      @test d[:name] == "SubspaceLDA"
 end
 

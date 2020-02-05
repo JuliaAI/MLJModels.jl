@@ -459,7 +459,7 @@ const SKL_REGS_SINGLE = Union{Type{<:ARDRegressor},Type{<:BayesianRidgeRegressor
                               Type{<:RidgeRegressor},Type{<:RidgeCVRegressor},Type{<:SGDRegressor},
                               Type{<:TheilSenRegressor}}
 
-MLJBase.input_scitype(::SKL_REGS_SINGLE)  = MLJBase.Table(Continuous)
+MLJBase.input_scitype(::SKL_REGS_SINGLE)  = Table(Continuous)
 MLJBase.target_scitype(::SKL_REGS_SINGLE) = AbstractVector{Continuous}
 
 ##############
@@ -556,5 +556,5 @@ MLJBase.fitted_params(model::MultiTaskElasticNetCVRegressor, (fitresult, _, _)) 
 const SKL_REGS_MULTI = Union{Type{<:MultiTaskLassoRegressor}, Type{<:MultiTaskLassoCVRegressor},
        Type{<:MultiTaskElasticNetRegressor}, Type{<:MultiTaskElasticNetCVRegressor}}
 
-MLJBase.input_scitype(::SKL_REGS_MULTI)  = MLJBase.Table(Continuous)
-MLJBase.target_scitype(::SKL_REGS_MULTI) = MLJBase.Table(Continuous)
+MLJBase.input_scitype(::SKL_REGS_MULTI)  = Table(Continuous)
+MLJBase.target_scitype(::SKL_REGS_MULTI) = Table(Continuous)

@@ -7,8 +7,8 @@ Xr, yr   = gen_reg()
     fp = fitted_params(m, f)
     @test keys(fp) == (:constant, :n_outputs)
     infos = info_dict(m)
-    @test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
-    @test infos[:target_scitype] == AbstractVector{MLJBase.Continuous}
+    @test infos[:input_scitype] == Table(Continuous)
+    @test infos[:target_scitype] == AbstractVector{Continuous}
 end
 
 @testset "DummyClf" begin
@@ -16,8 +16,8 @@ end
     fp = fitted_params(m, f)
     @test keys(fp) == (:classes, :n_classes, :n_outputs)
     infos = info_dict(m)
-    @test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
-    @test infos[:target_scitype] == AbstractVector{<:MLJBase.Finite}
+    @test infos[:input_scitype] == Table(Continuous)
+    @test infos[:target_scitype] == AbstractVector{<:Finite}
     @test !isempty(infos[:docstring])
 end
 
@@ -26,8 +26,8 @@ end
     fp =  fitted_params(m, f)
     @test keys(fp) == (:class_prior, :class_count, :theta, :sigma, :epsilon)
     infos = info_dict(m)
-    @test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
-    @test infos[:target_scitype] == AbstractVector{<:MLJBase.Finite}
+    @test infos[:input_scitype] == Table(Continuous)
+    @test infos[:target_scitype] == AbstractVector{<:Finite}
     @test !isempty(infos[:docstring])
 end
 
@@ -36,8 +36,8 @@ end
     fp = fitted_params(m, f)
     @test keys(fp) == (:effective_metric, :effective_metric_params)
     infos = info_dict(m)
-    @test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
-    @test infos[:target_scitype] == AbstractVector{MLJBase.Continuous}
+    @test infos[:input_scitype] == Table(Continuous)
+    @test infos[:target_scitype] == AbstractVector{Continuous}
     @test !isempty(infos[:docstring])
 end
 
@@ -46,8 +46,8 @@ end
     fp = fitted_params(m, f)
     @test keys(fp) == (:classes, :effective_metric, :effective_metric_params, :outputs_2d)
     infos = info_dict(m)
-    @test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
-    @test infos[:target_scitype] == AbstractVector{<:MLJBase.Finite}
+    @test infos[:input_scitype] == Table(Continuous)
+    @test infos[:target_scitype] == AbstractVector{<:Finite}
     @test !isempty(infos[:docstring])
 end
 
@@ -61,8 +61,8 @@ Xc3 = MLJBase.table(Int.(X3))
     fp =  fitted_params(m, f)
     @test keys(fp) == (:class_log_prior, :feature_log_prob, :class_count, :feature_count)
     infos = info_dict(m)
-    @test infos[:input_scitype] == MLJBase.Table(MLJBase.Count)
-    @test infos[:target_scitype] == AbstractVector{<:MLJBase.Finite}
+    @test infos[:input_scitype] == Table(Count)
+    @test infos[:target_scitype] == AbstractVector{<:Finite}
     @test !isempty(infos[:docstring])
 end
 
@@ -71,8 +71,8 @@ end
     fp =  fitted_params(m, f)
     @test keys(fp) == (:class_log_prior, :intercept, :feature_log_prob, :coef, :class_count, :feature_count)
     infos = info_dict(m)
-    @test infos[:input_scitype] == MLJBase.Table(MLJBase.Count)
-    @test infos[:target_scitype] == AbstractVector{<:MLJBase.Finite}
+    @test infos[:input_scitype] == Table(Count)
+    @test infos[:target_scitype] == AbstractVector{<:Finite}
     @test !isempty(infos[:docstring])
 end
 
@@ -81,7 +81,7 @@ end
     fp =  fitted_params(m, f)
     @test keys(fp) == (:class_log_prior, :feature_log_prob, :class_count, :feature_count, :feature_all)
     infos = info_dict(m)
-    @test infos[:input_scitype] == MLJBase.Table(MLJBase.Count)
-    @test infos[:target_scitype] == AbstractVector{<:MLJBase.Finite}
+    @test infos[:input_scitype] == Table(Count)
+    @test infos[:target_scitype] == AbstractVector{<:Finite}
     @test !isempty(infos[:docstring])
 end

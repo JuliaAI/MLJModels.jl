@@ -11,10 +11,10 @@ X, _ = make_blobs(500, 3, rng=555)
     end
     @test keys(fp) == (:cluster_centers_indices, :cluster_centers, :labels, :affinity_matrix)
     infos = info_dict(m)
-    @test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
+    @test infos[:input_scitype] == Table(Continuous)
     @test !isempty(infos[:docstring])
     # first fix #163 on MLJBase
-    @test_broken infos[:target_scitype] == AbstractVector{MLJBase.Multiclass}
+    @test_broken infos[:target_scitype] == AbstractVector{Multiclass}
 end
 
 @testset "AgglomerativeClustering" begin
@@ -25,7 +25,7 @@ end
     @test keys(fp) == (:n_clusters, :labels, :n_leaves, :n_connected_components, :children)
     @test fp.labels isa CategoricalArray
     infos = info_dict(m)
-    @test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
+    @test infos[:input_scitype] == Table(Continuous)
     @test !isempty(infos[:docstring])
 end
 
@@ -41,11 +41,11 @@ end
     @test keys(fp) == (:root, :dummy_leaf, :subcluster_centers, :subcluster_labels, :labels)
     @test fp.labels isa CategoricalArray
     infos = info_dict(m)
-    @test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
+    @test infos[:input_scitype] == Table(Continuous)
     @test !isempty(infos[:docstring])
-    @test infos[:output_scitype] == MLJBase.Table(MLJBase.Continuous)
+    @test infos[:output_scitype] == Table(Continuous)
     # first fix #163 on MLJBase
-    @test_broken infos[:target_scitype] == AbstractVector{MLJBase.Multiclass}
+    @test_broken infos[:target_scitype] == AbstractVector{Multiclass}
 end
 
 @testset "DBSCAN" begin
@@ -56,7 +56,7 @@ end
     @test keys(fp) == (:core_sample_indices,  :components, :labels)
     @test fp.labels isa CategoricalArray
     infos = info_dict(m)
-    @test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
+    @test infos[:input_scitype] == Table(Continuous)
     @test !isempty(infos[:docstring])
 end
 
@@ -69,8 +69,8 @@ end
     @test fp.distances === nothing
     @test fp.labels isa CategoricalArray
     infos = info_dict(m)
-    @test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
-    @test infos[:output_scitype] == MLJBase.Table(MLJBase.Continuous)
+    @test infos[:input_scitype] == Table(Continuous)
+    @test infos[:output_scitype] == Table(Continuous)
     @test !isempty(infos[:docstring])
 
     # NOTE: they're not equal (not sure why)
@@ -89,11 +89,11 @@ end
     @test size(fp.cluster_centers) == (4, 3)
     @test keys(fp) == (:cluster_centers, :labels, :inertia)
     infos = info_dict(m)
-    @test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
-    @test infos[:output_scitype] == MLJBase.Table(MLJBase.Continuous)
+    @test infos[:input_scitype] == Table(Continuous)
+    @test infos[:output_scitype] == Table(Continuous)
     @test !isempty(infos[:docstring])
     # first fix #163 on MLJBase
-    @test_broken infos[:target_scitype] == AbstractVector{MLJBase.Multiclass}
+    @test_broken infos[:target_scitype] == AbstractVector{Multiclass}
 end
 
 @testset "MBKMeans" begin
@@ -106,11 +106,11 @@ end
     @test size(fp.cluster_centers) == (4, 3)
     @test keys(fp) == (:cluster_centers, :labels, :inertia)
     infos = info_dict(m)
-    @test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
-    @test infos[:output_scitype] == MLJBase.Table(MLJBase.Continuous)
+    @test infos[:input_scitype] == Table(Continuous)
+    @test infos[:output_scitype] == Table(Continuous)
     @test !isempty(infos[:docstring])
     # first fix #163 on MLJBase
-    @test_broken infos[:target_scitype] == AbstractVector{MLJBase.Multiclass}
+    @test_broken infos[:target_scitype] == AbstractVector{Multiclass}
 end
 
 @testset "MeanShift" begin
@@ -122,10 +122,10 @@ end
     @test p isa CategoricalArray
     @test keys(fp) == (:cluster_centers, :labels)
     infos = info_dict(m)
-    @test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
+    @test infos[:input_scitype] == Table(Continuous)
     @test !isempty(infos[:docstring])
     # first fix #163 on MLJBase
-    @test_broken infos[:target_scitype] == AbstractVector{MLJBase.Multiclass}
+    @test_broken infos[:target_scitype] == AbstractVector{Multiclass}
 end
 
 @testset "OPTICS" begin
@@ -136,7 +136,7 @@ end
     @test keys(fp) == (:labels, :reachability, :ordering, :core_distances, :predecessor, :cluster_hierarchy)
     @test fp.labels isa CategoricalArray
     infos = info_dict(m)
-    @test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
+    @test infos[:input_scitype] == Table(Continuous)
     @test !isempty(infos[:docstring])
 end
 
@@ -148,6 +148,6 @@ end
     @test keys(fp) == (:labels, :affinity_matrix)
     @test fp.labels isa CategoricalArray
     infos = info_dict(m)
-    @test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
+    @test infos[:input_scitype] == Table(Continuous)
     @test !isempty(infos[:docstring])
 end

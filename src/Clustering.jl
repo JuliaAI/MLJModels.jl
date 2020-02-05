@@ -6,8 +6,8 @@
 module Clustering_
 
 import MLJBase
-import MLJBase: @mlj_model
-using ScientificTypes
+import MLJBase: @mlj_model, metadata_pkg, metadata_model
+import MLJBase: Table, Continuous, Count, Finite, OrderedFactor, Multiclass
 
 import ..Clustering # strange sytax for lazy-loading
 
@@ -74,7 +74,7 @@ function MLJBase.fit(model::KMeans
     fitresult = (result.centers, cluster_labels) # centers (p x k)
     cache     = nothing
     report    = (assignments=result.assignments, # size n
-                 cluster_labels=cluster_labels) 
+                 cluster_labels=cluster_labels)
 
     return fitresult, cache, report
 end
@@ -104,7 +104,7 @@ function MLJBase.fit(model::KMedoids
     fitresult = (view(Xarray, :, result.medoids), cluster_labels) # medoids
     cache     = nothing
     report    = (assignments=result.assignments, # size n
-                 cluster_labels=cluster_labels) 
+                 cluster_labels=cluster_labels)
 
     return fitresult, cache, report
 end
@@ -149,8 +149,6 @@ end
 #### METADATA
 ####
 
-import ..metadata_pkg, ..metadata_model
-
 metadata_pkg.((KMeans, KMedoids),
     name="Clustering",
     uuid="aaaa29a8-35af-508c-8bc3-b662a17a0fe5",
@@ -161,17 +159,17 @@ metadata_pkg.((KMeans, KMedoids),
     )
 
 metadata_model(KMeans,
-    input=MLJBase.Table(MLJBase.Continuous),
-    output=MLJBase.Table(MLJBase.Continuous),
-    weights=false,
-    descr=KMeansDescription
+    input   = Table(Continuous),
+    output  = Table(Continuous),
+    weights = false,
+    descr   = KMeansDescription
     )
 
 metadata_model(KMedoids,
-    input=MLJBase.Table(MLJBase.Continuous),
-    output=MLJBase.Table(MLJBase.Continuous),
-    weights=false,
-    descr=KMedoidsDescription
+    input   = Table(Continuous),
+    output  = Table(Continuous),
+    weights = false,
+    descr   = KMedoidsDescription
     )
 
 end # module
