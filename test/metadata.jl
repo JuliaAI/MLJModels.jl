@@ -3,6 +3,7 @@ module TestMetadata
 using Test
 using MLJModels
 import MLJBase
+import MLJBase: Table, Continuous, Count, Finite, OrderedFactor, Multiclass
 
 @testset "(de)serialization for TOML" begin
     d = Dict()
