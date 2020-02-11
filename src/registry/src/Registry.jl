@@ -27,7 +27,7 @@ const project_toml = joinpath(srcdir, "../Project.toml")
 const packages = map(Symbol,
                      keys(TOML.parsefile(project_toml)["deps"])|>collect)
 filter!(packages) do pkg
-    !(pkg in (:InteractiveUtils, :Pkg, :ScientificTypes))
+    !(pkg in (:InteractiveUtils, :Pkg, :MLJModelInterface))
 end
 
 const package_import_commands =  [:(import $pkg) for pkg in packages]

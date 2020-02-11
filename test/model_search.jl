@@ -1,6 +1,5 @@
 module TestModelSearch
 
-# using Revise
 using Test
 using MLJModels
 import MLJBase.info
