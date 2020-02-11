@@ -1,36 +1,40 @@
 module TestTransformer
 
-using Test, MLJBase, MLJModels
+using Test, MLJModels
 using Tables, CategoricalArrays, Random
+
+import MLJBase
 
 #### FEATURE SELECTOR ####
 
-N = 100
-X = (Zn   = rand(N),
-     Crim = rand(N),
-     x3   = categorical(rand("YN", N)),
-     x4   = categorical(rand("YN", N)))
+@testset "Feat Selector" begin
+    N = 100
+    X = (Zn   = rand(N),
+         Crim = rand(N),
+         x3   = categorical(rand("YN", N)),
+         x4   = categorical(rand("YN", N)))
 
-namesX   = Tables.schema(X).names |> collect
-selector = FeatureSelector()
-f,       = fit(selector, 1, X)
+    namesX   = Tables.schema(X).names |> collect
+    selector = FeatureSelector()
+    f,       = MLJBase.fit(selector, 1, X)
 
-@test f == namesX
+    @test f == namesX
 
-Xt = transform(selector, f, selectrows(X, 1:2))
+    Xt = MLJBase.transform(selector, f, MLJBase.selectrows(X, 1:2))
 
-@test Set(Tables.schema(Xt).names) == Set(namesX)
-@test length(Xt.Zn) == 2
+    @test Set(Tables.schema(Xt).names) == Set(namesX)
+    @test length(Xt.Zn) == 2
 
-selector = FeatureSelector(features=[:Zn, :Crim])
-f,       = fit(selector, 1, X)
+    selector = FeatureSelector(features=[:Zn, :Crim])
+    f,       = MLJBase.fit(selector, 1, X)
 
-@test transform(selector, f, selectrows(X, 1:2)) ==
-        selectcols(selectrows(X, 1:2), [:Zn, :Crim])
+    @test MLJBase.transform(selector, f, MLJBase.selectrows(X, 1:2)) ==
+            MLJBase.select(X, 1:2, [:Zn, :Crim])
 
-infos = info_dict(selector)
-@test infos[:input_scitype]  == Table(Scientific)
-@test infos[:output_scitype] == Table(Scientific)
+    infos = MLJBase.info_dict(selector)
+    @test infos[:input_scitype]  == MLJBase.Table(MLJBase.Scientific)
+    @test infos[:output_scitype] == MLJBase.Table(MLJBase.Scientific)
+end
 
 
 #  To be added with FeatureSelectorRule X = (n1=["a", "b", "a"], n2=["g", "g", "g"], n3=[7, 8, 9],
@@ -46,235 +50,240 @@ infos = info_dict(selector)
 
 #### UNIVARIATE DISCRETIZATION ####
 
-# TODO: move this test to MLJBase:
-# test helper function:
-v = collect("qwertyuiopasdfghjklzxcvbnm1")
-X = reshape(v, (3, 9))
-Xcat = categorical(X)
-Acat = Xcat[:, 1:4] # cat vector with unseen levels
-element = Acat[1]
-@test transform(element, X) == Xcat
-@test transform(element, X[5]) == Xcat[5]
+@testset "U-Discr" begin
+    # TODO: move this test to MLJBase:
+    # test helper function:
+    v = collect("qwertyuiopasdfghjklzxcvbnm1")
+    X = reshape(v, (3, 9))
+    Xcat = categorical(X)
+    Acat = Xcat[:, 1:4] # cat vector with unseen levels
+    element = Acat[1]
+    @test MLJBase.transform(element, X) == Xcat
+    @test MLJBase.transform(element, X[5]) == Xcat[5]
 
-v = randn(10000)
-t = UnivariateDiscretizer(n_classes=100);
-result, = fit(t, 1, v)
-w = transform(t, result, v)
-bad_values = filter(v - MLJBase.inverse_transform(t, result, w)) do x
-    abs(x) > 0.05
+    v = randn(10000)
+    t = UnivariateDiscretizer(n_classes=100);
+    result, = MLJBase.fit(t, 1, v)
+    w = MLJBase.transform(t, result, v)
+    bad_values = filter(v - MLJBase.inverse_transform(t, result, w)) do x
+        abs(x) > 0.05
+    end
+    @test length(bad_values)/length(v) < 0.06
+
+    # scalars:
+    @test MLJBase.transform(t, result, v[42]) == w[42]
+    r =  MLJBase.inverse_transform(t, result, w)[43]
+    @test MLJBase.inverse_transform(t, result, w[43]) ≈ r
+
+    # test of permitted abuses of argument:
+    @test MLJBase.inverse_transform(t, result, get(w[43])) ≈ r
+    @test MLJBase.inverse_transform(t, result, map(get, w)) ≈
+        MLJBase.inverse_transform(t, result, w)
+
+    # all transformed vectors should have an identical pool (determined in
+    # call to fit):
+    v2 = v[1:3]
+    w2 = MLJBase.transform(t, result, v2)
+    @test levels(w2) == levels(w)
+
+    #### UNIVARIATE STANDARDIZER ####
+
+    stand = UnivariateStandardizer()
+    f,    = MLJBase.fit(stand, 1, [0, 2, 4])
+
+    @test round.(Int, MLJBase.transform(stand, f, [0,4,8])) == [-1.0,1.0,3.0]
+    @test round.(Int, MLJBase.inverse_transform(stand, f, [-1, 1, 3])) == [0, 4, 8]
+
+    infos = MLJBase.info_dict(stand)
 end
-@test length(bad_values)/length(v) < 0.06
-
-# scalars:
-@test transform(t, result, v[42]) == w[42]
-r =  inverse_transform(t, result, w)[43]
-@test inverse_transform(t, result, w[43]) ≈ r
-
-# test of permitted abuses of argument:
-@test inverse_transform(t, result, get(w[43])) ≈ r
-@test inverse_transform(t, result, map(get, w)) ≈
-    inverse_transform(t, result, w)
-
-# all transformed vectors should have an identical pool (determined in
-# call to fit):
-v2 = v[1:3]
-w2 = transform(t, result, v2)
-@test levels(w2) == levels(w)
-
-
-#### UNIVARIATE STANDARDIZER ####
-
-stand = UnivariateStandardizer()
-f,    = fit(stand, 1, [0, 2, 4])
-
-@test round.(Int, transform(stand, f, [0,4,8])) == [-1.0,1.0,3.0]
-@test round.(Int, inverse_transform(stand, f, [-1, 1, 3])) == [0, 4, 8]
-
-infos = info_dict(stand)
-
 
 #### STANDARDIZER ####
 
-N = 5
-X = (OverallQual  = rand(UInt8, N),
-     GrLivArea    = rand(N),
-     Neighborhood = categorical(rand("abc", N)),
-     x1stFlrSF    = rand(N),
-     TotalBsmtSF  = rand(N))
+@testset "Standardizer" begin
+    N = 5
+    X = (OverallQual  = rand(UInt8, N),
+         GrLivArea    = rand(N),
+         Neighborhood = categorical(rand("abc", N)),
+         x1stFlrSF    = rand(N),
+         TotalBsmtSF  = rand(N))
 
-# introduce a field of type `Char`:
-x1 = categorical(map(Char, (X.OverallQual |> collect)))
+    # introduce a field of type `Char`:
+    x1 = categorical(map(Char, (X.OverallQual |> collect)))
 
-# introduce field of Int type:
-x4 = [round(Int, x) for x in X.x1stFlrSF]
+    # introduce field of Int type:
+    x4 = [round(Int, x) for x in X.x1stFlrSF]
 
-X = (x1=x1, x2=X[2], x3=X[3], x4=x4, x5=X[5])
+    X = (x1=x1, x2=X[2], x3=X[3], x4=x4, x5=X[5])
 
-stand = Standardizer()
-f,    = fit(stand, 1, X)
-Xnew  = transform(stand, f, X)
+    stand = Standardizer()
+    f,    = MLJBase.fit(stand, 1, X)
+    Xnew  = MLJBase.transform(stand, f, X)
 
-@test Xnew[1] == X[1]
-@test std(Xnew[2]) ≈ 1.0
-@test Xnew[3] == X[3]
-@test Xnew[4] == X[4]
-@test std(Xnew[5]) ≈ 1.0
+    @test Xnew[1] == X[1]
+    @test MLJBase.std(Xnew[2]) ≈ 1.0
+    @test Xnew[3] == X[3]
+    @test Xnew[4] == X[4]
+    @test MLJBase.std(Xnew[5]) ≈ 1.0
 
-stand.features = [:x1, :x5]
-f,   = fit(stand, 1, X)
-Xnew = transform(stand, f, X)
-f,   = fit(stand, 1, X)
+    stand.features = [:x1, :x5]
+    f,   = MLJBase.fit(stand, 1, X)
+    Xnew = MLJBase.transform(stand, f, X)
+    f,   = MLJBase.fit(stand, 1, X)
 
-@test issubset(Set(keys(f)), Set(Tables.schema(X).names[[5,]]))
+    @test issubset(Set(keys(f)), Set(Tables.schema(X).names[[5,]]))
 
-Xt = transform(stand, f, X)
+    Xt = MLJBase.transform(stand, f, X)
 
-@test Xnew[1] == X[1]
-@test Xnew[2] == X[2]
-@test Xnew[3] == X[3]
-@test Xnew[4] == X[4]
-@test std(Xnew[5]) ≈ 1.0
+    @test Xnew[1] == X[1]
+    @test Xnew[2] == X[2]
+    @test Xnew[3] == X[3]
+    @test Xnew[4] == X[4]
+    @test MLJBase.std(Xnew[5]) ≈ 1.0
 
-stand = Standardizer(features=[:x1, :mickey_mouse])
-@test_logs (:warn, r"Some specified") fit(stand, 1, X)
+    stand = Standardizer(features=[:x1, :mickey_mouse])
+    @test_logs (:warn, r"Some specified") MLJBase.fit(stand, 1, X)
 
-infos = info_dict(stand)
+    infos = MLJBase.info_dict(stand)
 
-@test infos[:name] == "Standardizer"
-@test infos[:input_scitype] == Table(Scientific)
-@test infos[:output_scitype] == Table(Scientific)
-
+    @test infos[:name] == "Standardizer"
+    @test infos[:input_scitype] == MLJBase.Table(MLJBase.Scientific)
+    @test infos[:output_scitype] == MLJBase.Table(MLJBase.Scientific)
+end
 
 #### UNIVARIATE BOX COX TRANSFORMER ####
 
+@testset "U-boxcox" begin
+    # create skewed non-negative vector with a zero value:
+    Random.seed!(1551)
+    v = abs.(randn(1000))
+    v = v .- minimum(v)
 
-# create skewed non-negative vector with a zero value:
-Random.seed!(1551)
-v = abs.(randn(1000))
-v = v .- minimum(v)
+    t  = UnivariateBoxCoxTransformer(shift=true)
+    f, = MLJBase.fit(t, 2, v)
 
-t  = UnivariateBoxCoxTransformer(shift=true)
-f, = fit(t, 2, v)
+    e = v - MLJBase.inverse_transform(t, f, MLJBase.transform(t, f, v))
+    @test sum(abs, e) <= 5000*eps()
 
-@test sum(abs.(v - inverse_transform(t, f, transform(t, f, v)))) <= 5000*eps()
+    infos = MLJBase.info_dict(t)
 
-infos = info_dict(t)
-
-@test infos[:name] == "UnivariateBoxCoxTransformer"
-@test infos[:input_scitype] == AbstractVector{Continuous}
-@test infos[:output_scitype] == AbstractVector{Continuous}
-
+    @test infos[:name] == "UnivariateBoxCoxTransformer"
+    @test infos[:input_scitype] == AbstractVector{MLJBase.Continuous}
+    @test infos[:output_scitype] == AbstractVector{MLJBase.Continuous}
+end
 
 #### ONE HOT ENCODER ####
 
-X = (name   = categorical(["Ben", "John", "Mary", "John"], ordered=true),
-     height = [1.85, 1.67, 1.5, 1.67],
-     favourite_number = categorical([7, 5, 10, 5]),
-     age    = [23, 23, 14, 23])
+@testset "One-Hot" begin
+    X = (name   = categorical(["Ben", "John", "Mary", "John"], ordered=true),
+         height = [1.85, 1.67, 1.5, 1.67],
+         favourite_number = categorical([7, 5, 10, 5]),
+         age    = [23, 23, 14, 23])
 
-t  = OneHotEncoder()
-f, _, report = @test_logs((:info, r"Spawning 3"),
-                (:info, r"Spawning 3"), fit(t, 1, X))
+    t  = OneHotEncoder()
+    f, _, report = @test_logs((:info, r"Spawning 3"),
+                    (:info, r"Spawning 3"), MLJBase.fit(t, 1, X))
 
-Xt = transform(t, f, X)
+    Xt = MLJBase.transform(t, f, X)
 
-@test Xt.name__John == float.([false, true, false, true])
-@test Xt.height == X.height
-@test Xt.favourite_number__10 == float.([false, false, true, false])
-@test Xt.age == X.age
-@test schema(Xt).names == (:name__Ben, :name__John, :name__Mary,
-                           :height, :favourite_number__5,
-                           :favourite_number__7, :favourite_number__10,
-                           :age)
+    @test Xt.name__John == float.([false, true, false, true])
+    @test Xt.height == X.height
+    @test Xt.favourite_number__10 == float.([false, false, true, false])
+    @test Xt.age == X.age
+    @test MLJBase.schema(Xt).names == (:name__Ben, :name__John, :name__Mary,
+                               :height, :favourite_number__5,
+                               :favourite_number__7, :favourite_number__10,
+                               :age)
 
-@test report.new_features == collect(schema(Xt).names)
+    @test report.new_features == collect(MLJBase.schema(Xt).names)
 
-# test that *entire* pool of categoricals is used in fit, including
-# unseen levels:
-f, = @test_logs((:info, r"Spawning 3"), (:info, r"Spawning 3"),
-                      fit(t, 1, MLJBase.selectrows(X,1:2)))
-Xtsmall = transform(t, f, X)
-@test Xt == Xtsmall
+    # test that *entire* pool of categoricals is used in fit, including
+    # unseen levels:
+    f, = @test_logs((:info, r"Spawning 3"), (:info, r"Spawning 3"),
+                          MLJBase.fit(t, 1, MLJBase.selectrows(X,1:2)))
+    Xtsmall = MLJBase.transform(t, f, X)
+    @test Xt == Xtsmall
 
-# test that transform can be applied to subset of the data:
-@test transform(t, f, MLJBase.selectcols(X, [:name, :age])) ==
-    MLJBase.selectcols(transform(t, f, X),
-                       [:name__Ben, :name__John, :name__Mary, :age])
+    # test that transform can be applied to subset of the data:
+    @test MLJBase.transform(t, f, MLJBase.selectcols(X, [:name, :age])) ==
+        MLJBase.selectcols(MLJBase.transform(t, f, X),
+                           [:name__Ben, :name__John, :name__Mary, :age])
 
-# test exclusion of ordered factors:
-t  = OneHotEncoder(ordered_factor=false)
-f, = fit(t, 1, X)
-Xt = transform(t, f, X)
-@test :name in Tables.schema(Xt).names
-@test :favourite_number__5 in Tables.schema(Xt).names
+    # test exclusion of ordered factors:
+    t  = OneHotEncoder(ordered_factor=false)
+    f, = MLJBase.fit(t, 1, X)
+    Xt = MLJBase.transform(t, f, X)
+    @test :name in Tables.schema(Xt).names
+    @test :favourite_number__5 in Tables.schema(Xt).names
 
-# test that one may not add new columns:
-X = (name       = categorical(["Ben", "John", "Mary", "John"], ordered=true),
-     height     = [1.85, 1.67, 1.5, 1.67],
-     favourite_number = categorical([7, 5, 10, 5]),
-     age        = [23, 23, 14, 23],
-     gender     = categorical(['M', 'M', 'F', 'M']))
-@test_throws Exception transform(t, f, X)
+    # test that one may not add new columns:
+    X = (name       = categorical(["Ben", "John", "Mary", "John"], ordered=true),
+         height     = [1.85, 1.67, 1.5, 1.67],
+         favourite_number = categorical([7, 5, 10, 5]),
+         age        = [23, 23, 14, 23],
+         gender     = categorical(['M', 'M', 'F', 'M']))
+    @test_throws Exception MLJBase.transform(t, f, X)
 
-infos = info_dict(t)
+    infos = MLJBase.info_dict(t)
 
-@test infos[:name] == "OneHotEncoder"
-@test infos[:input_scitype] == Table(Scientific)
-@test infos[:output_scitype] == Table(Scientific)
-
+    @test infos[:name] == "OneHotEncoder"
+    @test infos[:input_scitype] == MLJBase.Table(MLJBase.Scientific)
+    @test infos[:output_scitype] == MLJBase.Table(MLJBase.Scientific)
+end
 
 #### FILL IMPUTER ####
 
-X = (
-    x = [missing,ones(10)...],
-    y = [missing,ones(10)...],
-    z = [missing,ones(10)...]
-    )
+@testset "Imputer" begin
+    X = (
+        x = [missing,ones(10)...],
+        y = [missing,ones(10)...],
+        z = [missing,ones(10)...]
+        )
 
-imp = FillImputer()
-f,  = fit(imp, 1, X)
-Xt  = transform(imp, f, X)
-@test all(.!ismissing.(Xt.x))
-@test Xt.x isa Vector{Float64} # no missing
-@test all(Xt.x .== 1.0)
+    imp = FillImputer()
+    f,  = MLJBase.fit(imp, 1, X)
+    Xt  = MLJBase.transform(imp, f, X)
+    @test all(.!ismissing.(Xt.x))
+    @test Xt.x isa Vector{Float64} # no missing
+    @test all(Xt.x .== 1.0)
 
-imp = FillImputer(features=[:x,:y])
-f,  = fit(imp, 1, X)
-@test_throws ErrorException transform(imp, f, X) # in X there's :z which we haven't trained on
+    imp = FillImputer(features=[:x,:y])
+    f,  = MLJBase.fit(imp, 1, X)
+    @test_throws ErrorException MLJBase.transform(imp, f, X) # in X there's :z which we haven't trained on
 
-X = (x = categorical([missing, missing, missing, missing, "Old", "Young", "Middle", "Young",
-                      "Old", "Young", "Middle", "Young"]), )
+    X = (x = categorical([missing, missing, missing, missing, "Old", "Young", "Middle", "Young",
+                          "Old", "Young", "Middle", "Young"]), )
 
-mode_ = mode(["Old", "Young", "Middle", "Young", "Old", "Young", "Middle", "Young"])
+    mode_ = MLJBase.mode(["Old", "Young", "Middle", "Young", "Old", "Young", "Middle", "Young"])
 
-imp = FillImputer()
-f,  = fit(imp, 1, X)
-Xt  = transform(imp, f, X)
-@test all(.!ismissing.(Xt.x))
-@test all(Xt.x[ismissing.(X.x)] .== mode_)
+    imp = FillImputer()
+    f,  = MLJBase.fit(imp, 1, X)
+    Xt  = MLJBase.transform(imp, f, X)
+    @test all(.!ismissing.(Xt.x))
+    @test all(Xt.x[ismissing.(X.x)] .== mode_)
 
-X  = (x = [missing, missing, 1, 1, 1, 1, 1, 5], )
-f, = fit(imp, 1, X)
-Xt = transform(imp, f, X)
-@test Xt.x == [1, 1, 1, 1, 1, 1, 1, 5]
+    X  = (x = [missing, missing, 1, 1, 1, 1, 1, 5], )
+    f, = MLJBase.fit(imp, 1, X)
+    Xt = MLJBase.transform(imp, f, X)
+    @test Xt.x == [1, 1, 1, 1, 1, 1, 1, 5]
 
-X = (x = categorical([missing, missing, missing, missing, "Old", "Young", "Middle", "Young",
-                      "Old", "Young", "Middle", "Young"]),
-     y = [missing, ones(11)...],
-     z = [missing, missing, 1,1,1,1,1,5,1,1,1,1],
-     a = rand("abc", 12))
+    X = (x = categorical([missing, missing, missing, missing, "Old", "Young", "Middle", "Young",
+                          "Old", "Young", "Middle", "Young"]),
+         y = [missing, ones(11)...],
+         z = [missing, missing, 1,1,1,1,1,5,1,1,1,1],
+         a = rand("abc", 12))
 
-f, = fit(imp, 1, X)
-Xt = transform(imp, f, X)
+    f, = MLJBase.fit(imp, 1, X)
+    Xt = MLJBase.transform(imp, f, X)
 
-@test all(.!ismissing.(Xt.x))
-@test all(.!ismissing.(Xt.y))
-@test all(.!ismissing.(Xt.z))
-@test all(.!ismissing.(Xt.a))
+    @test all(.!ismissing.(Xt.x))
+    @test all(.!ismissing.(Xt.y))
+    @test all(.!ismissing.(Xt.z))
+    @test all(.!ismissing.(Xt.a))
 
-@test Xt.x[1] == mode_
-@test Xt.y[1] == 1
-@test Xt.z[1] == 1
+    @test Xt.x[1] == mode_
+    @test Xt.y[1] == 1
+    @test Xt.z[1] == 1
+end
 
 end
 true
