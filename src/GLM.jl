@@ -13,9 +13,12 @@ module GLM_
 # - test Logit, Probit etc on Binomial once binomial case is handled
 # -------------------------------------------------------------------
 
-import MLJBase
-import MLJBase: metadata_pkg, metadata_model
-import MLJBase: Table, Continuous, Count, Finite, OrderedFactor, Multiclass
+import MLJModelInterface
+import MLJModelInterface: metadata_pkg, metadata_model,
+                          Table, Continuous, Count, Finite, OrderedFactor,
+                          Multiclass
+const MMI = MLJModelInterface
+
 import Distributions
 using Parameters
 using Tables
@@ -69,17 +72,17 @@ glm_report(fitresult) = ( deviance     = GLM.deviance(fitresult),
 # MulticlassClassifier   --> Probabilistic w Multiclass target
 
 
-@with_kw_noshow mutable struct LinearRegressor <: MLJBase.Probabilistic
+@with_kw_noshow mutable struct LinearRegressor <: MMI.Probabilistic
     fit_intercept::Bool      = true
     allowrankdeficient::Bool = false
 end
 
-@with_kw_noshow mutable struct LinearBinaryClassifier{L<:GLM.Link01} <: MLJBase.Probabilistic
+@with_kw_noshow mutable struct LinearBinaryClassifier{L<:GLM.Link01} <: MMI.Probabilistic
     fit_intercept::Bool = true
     link::L             = GLM.LogitLink()
 end
 
-@with_kw_noshow mutable struct LinearCountRegressor{D<:Distributions.Distribution,L<:GLM.Link} <: MLJBase.Probabilistic
+@with_kw_noshow mutable struct LinearCountRegressor{D<:Distributions.Distribution,L<:GLM.Link} <: MMI.Probabilistic
     fit_intercept::Bool = true
     distribution::D     = Distributions.Poisson()
     link::L 			= GLM.LogLink()
@@ -93,10 +96,10 @@ const GLM_MODELS = Union{<:LinearRegressor, <:LinearBinaryClassifier, <:LinearCo
 #### FIT FUNCTIONS
 ####
 
-function MLJBase.fit(model::LinearRegressor, verbosity::Int, X, y)
+function MMI.fit(model::LinearRegressor, verbosity::Int, X, y)
     # apply the model
     features  = Tables.schema(X).names
-    Xmatrix   = augment_X(MLJBase.matrix(X), model.fit_intercept)
+    Xmatrix   = augment_X(MMI.matrix(X), model.fit_intercept)
     fitresult = GLM.glm(Xmatrix, y, Distributions.Normal(), GLM.IdentityLink())
     # form the report
     report    = glm_report(fitresult)
@@ -105,10 +108,10 @@ function MLJBase.fit(model::LinearRegressor, verbosity::Int, X, y)
     return fitresult, cache, report
 end
 
-function MLJBase.fit(model::LinearCountRegressor, verbosity::Int, X, y)
+function MMI.fit(model::LinearCountRegressor, verbosity::Int, X, y)
     # apply the model
     features  = Tables.schema(X).names
-    Xmatrix   = augment_X(MLJBase.matrix(X), model.fit_intercept)
+    Xmatrix   = augment_X(MMI.matrix(X), model.fit_intercept)
     fitresult = GLM.glm(Xmatrix, y, model.distribution, model.link)
     # form the report
     report    = glm_report(fitresult)
@@ -117,12 +120,12 @@ function MLJBase.fit(model::LinearCountRegressor, verbosity::Int, X, y)
     return fitresult, cache, report
 end
 
-function MLJBase.fit(model::LinearBinaryClassifier, verbosity::Int, X, y)
+function MMI.fit(model::LinearBinaryClassifier, verbosity::Int, X, y)
     # apply the model
     features  = Tables.schema(X).names
-    Xmatrix   = augment_X(MLJBase.matrix(X), model.fit_intercept)
+    Xmatrix   = augment_X(MMI.matrix(X), model.fit_intercept)
     decode    = y[1]
-    y_plain   = MLJBase.int(y) .- 1 # 0, 1 of type Int
+    y_plain   = MMI.int(y) .- 1 # 0, 1 of type Int
     fitresult = GLM.glm(Xmatrix, y_plain, Distributions.Bernoulli(), model.link)
     # form the report
     report    = glm_report(fitresult)
@@ -131,7 +134,7 @@ function MLJBase.fit(model::LinearBinaryClassifier, verbosity::Int, X, y)
     return (fitresult, decode), cache, report
 end
 
-function MLJBase.fitted_params(model::GLM_MODELS, fitresult)
+function MMI.fitted_params(model::GLM_MODELS, fitresult)
     coefs = GLM.coef(fitresult)
     return (coef      = coefs[1:end-Int(model.fit_intercept)],
             intercept = ifelse(model.fit_intercept, coefs[end], nothing))
@@ -142,30 +145,30 @@ end
 ####
 
 # more efficient than MLJBase fallback
-function MLJBase.predict_mean(model::Union{LinearRegressor,<:LinearCountRegressor}, fitresult, Xnew)
-    Xmatrix = augment_X(MLJBase.matrix(Xnew), model.fit_intercept)
+function MMI.predict_mean(model::Union{LinearRegressor,<:LinearCountRegressor}, fitresult, Xnew)
+    Xmatrix = augment_X(MMI.matrix(Xnew), model.fit_intercept)
     return GLM.predict(fitresult, Xmatrix)
 end
 
-function MLJBase.predict_mean(model::LinearBinaryClassifier, (fitresult, _), Xnew)
-    Xmatrix = augment_X(MLJBase.matrix(Xnew), model.fit_intercept)
+function MMI.predict_mean(model::LinearBinaryClassifier, (fitresult, _), Xnew)
+    Xmatrix = augment_X(MMI.matrix(Xnew), model.fit_intercept)
     return GLM.predict(fitresult, Xmatrix)
 end
 
-function MLJBase.predict(model::LinearRegressor, fitresult, Xnew)
-    μ = MLJBase.predict_mean(model, fitresult, Xnew)
+function MMI.predict(model::LinearRegressor, fitresult, Xnew)
+    μ = MMI.predict_mean(model, fitresult, Xnew)
     σ̂ = GLM.dispersion(fitresult)
     return [GLM.Normal(μᵢ, σ̂) for μᵢ ∈ μ]
 end
 
-function MLJBase.predict(model::LinearCountRegressor, fitresult, Xnew)
-    λ = MLJBase.predict_mean(model, fitresult, Xnew)
+function MMI.predict(model::LinearCountRegressor, fitresult, Xnew)
+    λ = MMI.predict_mean(model, fitresult, Xnew)
     return [GLM.Poisson(λᵢ) for λᵢ ∈ λ]
 end
 
-function MLJBase.predict(model::LinearBinaryClassifier, (fitresult, decode), Xnew)
-    π = MLJBase.predict_mean(model, (fitresult, decode), Xnew)
-    return [MLJBase.UnivariateFinite(MLJBase.classes(decode), [1-πᵢ, πᵢ]) for πᵢ in π]
+function MMI.predict(model::LinearBinaryClassifier, (fitresult, decode), Xnew)
+    π = MMI.predict_mean(model, (fitresult, decode), Xnew)
+    return [MMI.UnivariateFinite(MMI.classes(decode), [1-πᵢ, πᵢ]) for πᵢ in π]
 end
 
 # NOTE: predict_mode uses MLJBase's fallback
@@ -178,33 +181,33 @@ end
 const GLM_REGS = Union{Type{<:LinearRegressor}, Type{<:LinearBinaryClassifier}, Type{<:LinearCountRegressor}}
 
 metadata_pkg.((LinearRegressor, LinearBinaryClassifier, LinearCountRegressor),
-    name="GLM",
-    uuid="38e38edf-8417-5370-95a0-9cbb8c7f171a",
-    url="https://github.com/JuliaStats/GLM.jl",
-    julia=true,
-    license="MIT",
-    is_wrapper=false
+    name       = "GLM",
+    uuid       = "38e38edf-8417-5370-95a0-9cbb8c7f171a",
+    url        = "https://github.com/JuliaStats/GLM.jl",
+    julia      = true,
+    license    = "MIT",
+    is_wrapper = false
     )
 
 metadata_model(LinearRegressor,
-    input=Table(Continuous),
-    target=AbstractVector{Continuous},
-    weights=false,
-    descr=LR_DESCR
+    input   = Table(Continuous),
+    target  = AbstractVector{Continuous},
+    weights = false,
+    descr   = LR_DESCR
     )
 
 metadata_model(LinearBinaryClassifier,
-    input=Table(Continuous),
-    target=AbstractVector{MLJBase.UnivariateFinite},
-    weights=false,
-    descr=LBC_DESCR
+    input   = Table(Continuous),
+    target  = AbstractVector{<:Finite},
+    weights = false,
+    descr   = LBC_DESCR
     )
 
 metadata_model(LinearCountRegressor,
-    input=Table(Continuous),
-    target=AbstractVector{Count},
-    weights=false,
-    descr=LCR_DESCR
+    input   = Table(Continuous),
+    target  = AbstractVector{Count},
+    weights = false,
+    descr   = LCR_DESCR
     )
 
 end # module

@@ -1,5 +1,5 @@
 BayesianLDA_ = SKDA.LinearDiscriminantAnalysis
-@sk_clf mutable struct BayesianLDA <: MLJBase.Probabilistic
+@sk_clf mutable struct BayesianLDA <: MMI.Probabilistic
     solver::String                   = "svd"::(_ in ("svd", "lsqr", "eigen"))
     shrinkage::Union{Nothing,String,Float64} = nothing::(_ === nothing || _ == "auto" || 0 < _ < 1)
     priors::Option{AbstractVector}   = nothing
@@ -7,7 +7,7 @@ BayesianLDA_ = SKDA.LinearDiscriminantAnalysis
     store_covariance::Bool           = false
     tol::Float64                     = 1e-4::(_ > 0)
 end
-MLJBase.fitted_params(m::BayesianLDA, (f, _, _)) = (
+MMI.fitted_params(m::BayesianLDA, (f, _, _)) = (
     coef       = f.coef_,
     intercept  = f.intercept_,
     covariance = m.store_covariance ? f.covariance_ : nothing,
@@ -27,13 +27,13 @@ metadata_model(BayesianLDA,
 
 # ============================================================================
 BayesianQDA_ = SKDA.QuadraticDiscriminantAnalysis
-@sk_clf mutable struct BayesianQDA <: MLJBase.Probabilistic
+@sk_clf mutable struct BayesianQDA <: MMI.Probabilistic
     priors::Option{AbstractVector} = nothing
     reg_param::Float64             = 0.0::(_ ≥ 0)
     store_covariance::Bool         = false
     tol::Float64                   = 1e-4::(_ > 0)
 end
-MLJBase.fitted_params(m::BayesianQDA, (f, _, _)) = (
+MMI.fitted_params(m::BayesianQDA, (f, _, _)) = (
     covariance = m.store_covariance ? f.covariance_ : nothing,
     means      = f.means_,
     priors     = f.priors_,

@@ -9,7 +9,7 @@ C-Support Vector classifier from
 package documentation cited above.
 See also, SVMNuClassifier, SVMLClassifier, SVMRegressor
 """
-mutable struct SVMClassifier <: MLJBase.Deterministic
+mutable struct SVMClassifier <: MMI.Deterministic
     C::Float64
     kernel::Union{String,Function}
     degree::Int
@@ -52,14 +52,14 @@ function SVMClassifier(
         , random_state
         )
 
-    message = MLJBase.clean!(model)       #> future proof by including these
+    message = MMI.clean!(model)       #> future proof by including these
     isempty(message) || @warn message #> two lines even if no clean! defined below
 
     return model
 end
 
 
-function MLJBase.clean!(model::SVMClassifier)
+function MMI.clean!(model::SVMClassifier)
     warning = ""
     if(typeof(model.kernel)==String && (!(model.kernel  in
             ["linear","poly","rbf","sigmoid","precomputed"])))
@@ -85,7 +85,7 @@ NU-Support Vector classifier from
 package documentation cited above.
 See also, SVMClassifier, SVMLClassifier, SVMNuRegressor
 """
-mutable struct SVMNuClassifier <: MLJBase.Deterministic
+mutable struct SVMNuClassifier <: MMI.Deterministic
     nu::Float64
     kernel::Union{String,Function}
     degree::Int
@@ -128,13 +128,13 @@ function SVMNuClassifier(
         , random_state
         )
 
-    message = MLJBase.clean!(model)       #> future proof by including these
+    message = MMI.clean!(model)       #> future proof by including these
     isempty(message) || @warn message #> two lines even if no clean! defined below
 
     return model
 end
 
-function MLJBase.clean!(model::SVMNuClassifier)
+function MMI.clean!(model::SVMNuClassifier)
     warning = ""
     if(typeof(model.kernel)==String && (!(model.kernel  in
             ["linear","poly","rbf","sigmoid","precomputed"])))
@@ -161,7 +161,7 @@ package documentation cited above.
 See also, SVMClassifier, SVMNuClassifier, SVMLRegressor
 """
 
-mutable struct SVMLClassifier <: MLJBase.Deterministic
+mutable struct SVMLClassifier <: MMI.Deterministic
     C::Float64
     loss::String
     dual::Bool
@@ -197,13 +197,13 @@ function SVMLClassifier(
         , random_state
         )
 
-    message = MLJBase.clean!(model)       #> future proof by including these
+    message = MMI.clean!(model)       #> future proof by including these
     isempty(message) || @warn message #> two lines even if no clean! defined below
 
     return model
 end
 
-function MLJBase.clean!(model::SVMLClassifier)
+function MMI.clean!(model::SVMLClassifier)
     warning = ""
     if(!(model.loss in ["hinge","squared_hinge"]))
             warning *="loss parameter is not valid, setting to default=\"squared_hinge\" \n"
@@ -223,7 +223,7 @@ Epsilon-Support Vector Regression from
 package documentation cited above.
 See also, SVMClassifier, SVMNuRegressor, SVMLRegressor
 """
-mutable struct SVMRegressor <: MLJBase.Deterministic
+mutable struct SVMRegressor <: MMI.Deterministic
     C::Float64
     kernel::Union{String,Function}
     degree::Int
@@ -262,13 +262,13 @@ function SVMRegressor(
         , max_iter
         , epsilon)
 
-    message = MLJBase.clean!(model)       #> future proof by including these
+    message = MMI.clean!(model)       #> future proof by including these
     isempty(message) || @warn message #> two lines even if no clean! defined below
 
     return model
 end
 
-function MLJBase.clean!(model::SVMRegressor)
+function MMI.clean!(model::SVMRegressor)
     warning = ""
     if(typeof(model.kernel)==String && (!(model.kernel  in
             ["linear","poly","rbf","sigmoid","precomputed"])))
@@ -291,7 +291,7 @@ package documentation cited above.
 See also, SVMNuClassifier, SVMRegressor, SVMLRegressor
 """
 
-mutable struct SVMNuRegressor <: MLJBase.Deterministic
+mutable struct SVMNuRegressor <: MMI.Deterministic
     nu::Float64
     C::Float64
     kernel::Union{String,Function}
@@ -330,13 +330,13 @@ function SVMNuRegressor(
         , cache_size
         , max_iter)
 
-    message = MLJBase.clean!(model)       #> future proof by including these
+    message = MMI.clean!(model)       #> future proof by including these
     isempty(message) || @warn message #> two lines even if no clean! defined below
 
     return model
 end
 
-function MLJBase.clean!(model::SVMNuRegressor)
+function MMI.clean!(model::SVMNuRegressor)
     warning = ""
     if(typeof(model.kernel)==String && (!(model.kernel  in
             ["linear","poly","rbf","sigmoid","precomputed"])))
@@ -359,7 +359,7 @@ package documentation cited above.
 See also, SVMRegressor, SVMNuRegressor, SVMLClassifier
 """
 
-mutable struct SVMLRegressor <: MLJBase.Deterministic
+mutable struct SVMLRegressor <: MMI.Deterministic
     C::Float64
     loss::String
     fit_intercept::Bool
@@ -389,13 +389,13 @@ function SVMLRegressor(
         , max_iter
         , epsilon)
 
-    message = MLJBase.clean!(model)       #> future proof by including these
+    message = MMI.clean!(model)       #> future proof by including these
     isempty(message) || @warn message #> two lines even if no clean! defined below
 
     return model
 end
 
-function MLJBase.clean!(model::SVMLRegressor)
+function MMI.clean!(model::SVMLRegressor)
     warning = ""
     if(!(model.loss in ["epsilon_insensitive","squared_epsilon_insensitive"]))
             warning *="loss parameter is not valid, setting to default=\"epsilon_insensitive\" \n"
@@ -405,14 +405,14 @@ function MLJBase.clean!(model::SVMLRegressor)
 end
 
 
-function MLJBase.fit(model::SVMClassifier
+function MMI.fit(model::SVMClassifier
                      , verbosity::Int   #> must be here (and typed) even if not used (as here)
                      , X
                      , y)
 
-    Xmatrix = MLJBase.matrix(X)
-    y_plain = MLJBase.int(y)
-    decode  = MLJBase.decoder(y[1]) # for predict method
+    Xmatrix = MMI.matrix(X)
+    y_plain = MMI.int(y)
+    decode  = MMI.decoder(y[1]) # for predict method
 
     cache = SVC(C=model.C,
                 kernel=model.kernel,
@@ -434,14 +434,14 @@ function MLJBase.fit(model::SVMClassifier
     return fitresult, nothing, report
 end
 
-function MLJBase.fit(model::SVMNuClassifier
+function MMI.fit(model::SVMNuClassifier
                      , verbosity::Int   #> must be here (and typed) even if not used (as here)
                      , X
                      , y)
 
-    Xmatrix = MLJBase.matrix(X)
-    y_plain = MLJBase.int(y)
-    decode  = MLJBase.decoder(y[1]) # for predict method
+    Xmatrix = MMI.matrix(X)
+    y_plain = MMI.int(y)
+    decode  = MMI.decoder(y[1]) # for predict method
 
     cache = NuSVC(nu=model.nu,
                   kernel=model.kernel,
@@ -463,14 +463,14 @@ function MLJBase.fit(model::SVMNuClassifier
     return fitresult, nothing, report
 end
 
-function MLJBase.fit(model::SVMLClassifier
+function MMI.fit(model::SVMLClassifier
                      , verbosity::Int   #> must be here (and typed) even if not used (as here)
                      , X
                      , y)
 
-    Xmatrix = MLJBase.matrix(X)
-    y_plain = MLJBase.int(y)
-    decode  = MLJBase.decoder(y[1]) # for predict method
+    Xmatrix = MMI.matrix(X)
+    y_plain = MMI.int(y)
+    decode  = MMI.decoder(y[1]) # for predict method
 
     cache = LinearSVC(C=model.C,
                       loss = model.loss,
@@ -489,12 +489,12 @@ function MLJBase.fit(model::SVMLClassifier
     return fitresult, nothing, report
 end
 
-function MLJBase.fit(model::SVMRegressor
+function MMI.fit(model::SVMRegressor
              , verbosity::Int   #> must be here (and typed) even if not used (as here)
              , X
              , y)
 
-    Xmatrix = MLJBase.matrix(X)
+    Xmatrix = MMI.matrix(X)
 
     cache = SVR(C=model.C,
                 kernel=model.kernel,
@@ -513,12 +513,12 @@ function MLJBase.fit(model::SVMRegressor
     return fitresult, nothing, report
 end
 
-function MLJBase.fit(model::SVMNuRegressor
+function MMI.fit(model::SVMNuRegressor
                      , verbosity::Int   #> must be here (and typed) even if not used (as here)
                      , X
                      , y)
 
-    Xmatrix = MLJBase.matrix(X)
+    Xmatrix = MMI.matrix(X)
 
     cache = NuSVR(nu=model.nu,
                   C=model.C,
@@ -538,12 +538,12 @@ function MLJBase.fit(model::SVMNuRegressor
     return fitresult, nothing, report
 end
 
-function MLJBase.fit(model::SVMLRegressor
+function MMI.fit(model::SVMLRegressor
                      , verbosity::Int   #> must be here (and typed) even if not used (as here)
                      , X
                      , y)
 
-    Xmatrix = MLJBase.matrix(X)
+    Xmatrix = MMI.matrix(X)
 
     cache = LinearSVR(C=model.C,
                       loss=model.loss,
@@ -566,38 +566,38 @@ SVMC = Union{SVMClassifier, SVMNuClassifier, SVMLClassifier}
 SVMR = Union{SVMRegressor, SVMNuRegressor, SVMLRegressor}
 SVM  = Union{SVMC, SVMR}
 
-function MLJBase.predict(model::SVMC
+function MMI.predict(model::SVMC
                          , (fitresult, decode)
                          , Xnew)
 
-    xnew       = MLJBase.matrix(Xnew)
+    xnew       = MMI.matrix(Xnew)
     prediction = ScikitLearn.predict(fitresult, xnew)
     return decode(prediction)
 end
 
-function MLJBase.predict(model::SVMR
+function MMI.predict(model::SVMR
                          , fitresult
                          , Xnew)
 
-    xnew       = MLJBase.matrix(Xnew)
+    xnew       = MMI.matrix(Xnew)
     prediction = ScikitLearn.predict(fitresult,xnew)
     return prediction
 end
 
 ## METADATA
 
-MLJBase.load_path(::Type{<:SVMClassifier})   = "MLJModels.ScikitLearn_.SVMClassifier"
-MLJBase.load_path(::Type{<:SVMNuClassifier}) = "MLJModels.ScikitLearn_.SVMNuClassifier"
-MLJBase.load_path(::Type{<:SVMLClassifier})  = "MLJModels.ScikitLearn_.SVMLClassifier"
-MLJBase.load_path(::Type{<:SVMRegressor})    = "MLJModels.ScikitLearn_.SVMRegressor"
-MLJBase.load_path(::Type{<:SVMNuRegressor})  = "MLJModels.ScikitLearn_.SVMNuRegressor"
-MLJBase.load_path(::Type{<:SVMRegressor})    = "MLJModels.ScikitLearn_.SVMRegressor"
-MLJBase.load_path(::Type{<:SVMLRegressor})   = "MLJModels.ScikitLearn_.SVMLRegressor"
+MMI.load_path(::Type{<:SVMClassifier})   = "MLJModels.ScikitLearn_.SVMClassifier"
+MMI.load_path(::Type{<:SVMNuClassifier}) = "MLJModels.ScikitLearn_.SVMNuClassifier"
+MMI.load_path(::Type{<:SVMLClassifier})  = "MLJModels.ScikitLearn_.SVMLClassifier"
+MMI.load_path(::Type{<:SVMRegressor})    = "MLJModels.ScikitLearn_.SVMRegressor"
+MMI.load_path(::Type{<:SVMNuRegressor})  = "MLJModels.ScikitLearn_.SVMNuRegressor"
+MMI.load_path(::Type{<:SVMRegressor})    = "MLJModels.ScikitLearn_.SVMRegressor"
+MMI.load_path(::Type{<:SVMLRegressor})   = "MLJModels.ScikitLearn_.SVMLRegressor"
 
-MLJBase.package_name(::Type{<:SVM})    = "ScikitLearn"
-MLJBase.package_uuid(::Type{<:SVM})    = "3646fa90-6ef7-5e7e-9f22-8aca16db6324"
-MLJBase.is_pure_julia(::Type{<:SVM})   = false
-MLJBase.package_url(::Type{<:SVM})     = "https://github.com/cstjean/ScikitLearn.jl"
-MLJBase.input_scitype(::Type{<:SVM})   = Table(Continuous)
-MLJBase.target_scitype(::Type{<:SVMC}) = AbstractVector{<:Finite}
-MLJBase.target_scitype(::Type{<:SVMR}) = AbstractVector{Continuous}
+MMI.package_name(::Type{<:SVM})    = "ScikitLearn"
+MMI.package_uuid(::Type{<:SVM})    = "3646fa90-6ef7-5e7e-9f22-8aca16db6324"
+MMI.is_pure_julia(::Type{<:SVM})   = false
+MMI.package_url(::Type{<:SVM})     = "https://github.com/cstjean/ScikitLearn.jl"
+MMI.input_scitype(::Type{<:SVM})   = Table(Continuous)
+MMI.target_scitype(::Type{<:SVMC}) = AbstractVector{<:Finite}
+MMI.target_scitype(::Type{<:SVMR}) = AbstractVector{Continuous}

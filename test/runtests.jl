@@ -3,7 +3,7 @@
 # this test code be wrapped in a module. Any new module name will do -
 # eg, `module TestDatasets` for code testing `datasets.jl`.
 
-using Test
+using Test, MLJModels
 
 @testset "metadata" begin
     @testset "reading and extracting model metadata" begin

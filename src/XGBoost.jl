@@ -2,10 +2,13 @@ module XGBoost_
 
 export XGBoostRegressor, XGBoostClassifier, XGBoostCount
 
-import MLJBase
-import MLJBase: Table, Continuous, Count, Finite, OrderedFactor, Multiclass
+import MLJModelInterface
+import MLJModelInterface: Table, Continuous, Count, Finite, OrderedFactor,
+                          Multiclass
 
-using CategoricalArrays
+const MMI = MLJModelInterface
+
+import Tables: schema
 
 import ..XGBoost
 
@@ -69,7 +72,7 @@ end
 
 ## REGRESSOR
 
-mutable struct XGBoostRegressor <:MLJBase.Deterministic
+mutable struct XGBoostRegressor <:MMI.Deterministic
     num_round::Int
     booster::String
     disable_default_eval_metric::Int
@@ -194,13 +197,13 @@ function XGBoostRegressor(
     ,eval_metric
     ,seed)
 
-     message = MLJBase.clean!(model)
+     message = MMI.clean!(model)
      isempty(message) || @warn message
 
     return model
 end
 
-function MLJBase.clean!(model::XGBoostRegressor)
+function MMI.clean!(model::XGBoostRegressor)
     warning = ""
     if model.objective == "count:poisson"
         warning *= "Your `objective` suggests prediction of a "*
@@ -215,14 +218,14 @@ function MLJBase.clean!(model::XGBoostRegressor)
     return warning
 end
 
-function MLJBase.fit(model::XGBoostRegressor
+function MMI.fit(model::XGBoostRegressor
              , verbosity::Int     #> must be here even if unsupported in pkg
              , X
              , y)
 
              silent =
                  verbosity > 0 ?  false : true
-    Xmatrix = MLJBase.matrix(X)
+    Xmatrix = MMI.matrix(X)
     dm = XGBoost.DMatrix(Xmatrix,label=y)
 
     objective =
@@ -248,17 +251,17 @@ function MLJBase.fit(model::XGBoostRegressor
 end
 
 
-function MLJBase.predict(model::XGBoostRegressor
+function MMI.predict(model::XGBoostRegressor
         , fitresult
         , Xnew)
-    Xmatrix = MLJBase.matrix(Xnew)
+    Xmatrix = MMI.matrix(Xnew)
     return XGBoost.predict(fitresult, Xmatrix)
 end
 
 
 ## COUNT REGRESSOR
 
-mutable struct XGBoostCount <:MLJBase.Deterministic
+mutable struct XGBoostCount <:MMI.Deterministic
     num_round::Int
     booster::String
     disable_default_eval_metric::Int
@@ -383,13 +386,13 @@ function XGBoostCount(
     ,eval_metric
     ,seed)
 
-     message = MLJBase.clean!(model)
+     message = MMI.clean!(model)
      isempty(message) || @warn message
 
     return model
 end
 
-function MLJBase.clean!(model::XGBoostCount)
+function MMI.clean!(model::XGBoostCount)
     warning = ""
     if(!(model.objective in ["count:poisson"]))
         warning *= "Changing objective to \"poisson\", "*
@@ -399,14 +402,14 @@ function MLJBase.clean!(model::XGBoostCount)
     return warning
 end
 
-function MLJBase.fit(model::XGBoostCount
+function MMI.fit(model::XGBoostCount
              , verbosity::Int     #> must be here even if unsupported in pkg
              , X
              , y)
 
     silent = verbosity > 0 ?  false : true
 
-    Xmatrix = MLJBase.matrix(X)
+    Xmatrix = MMI.matrix(X)
     dm = XGBoost.DMatrix(Xmatrix,label=y)
 
     seed =
@@ -425,17 +428,17 @@ function MLJBase.fit(model::XGBoostCount
 
 end
 
-function MLJBase.predict(model::XGBoostCount
+function MMI.predict(model::XGBoostCount
         , fitresult
         , Xnew)
-    Xmatrix = MLJBase.matrix(Xnew)
+    Xmatrix = MMI.matrix(Xnew)
     return XGBoost.predict(fitresult, Xmatrix)
 end
 
 
 ## CLASSIFIER
 
-mutable struct XGBoostClassifier <:MLJBase.Probabilistic
+mutable struct XGBoostClassifier <:MMI.Probabilistic
     num_round::Int
     booster::String
     disable_default_eval_metric::Int
@@ -560,14 +563,14 @@ function XGBoostClassifier(
     ,eval_metric
     ,seed)
 
-     message = MLJBase.clean!(model)           #> future proof by including these
+     message = MMI.clean!(model)           #> future proof by including these
      isempty(message) || @warn message #> two lines even if no clean! defined below
 
     return model
 end
 
 
-function MLJBase.clean!(model::XGBoostClassifier)
+function MMI.clean!(model::XGBoostClassifier)
     warning = ""
     if(!(model.objective =="automatic"))
             warning *="Changing objective to \"automatic\", the only supported value. "
@@ -576,14 +579,14 @@ function MLJBase.clean!(model::XGBoostClassifier)
     return warning
 end
 
-function MLJBase.fit(model::XGBoostClassifier
+function MMI.fit(model::XGBoostClassifier
                      , verbosity::Int     #> must be here even if unsupported in pkg
                      , X
                      , y)
-    Xmatrix = MLJBase.matrix(X)
+    Xmatrix = MMI.matrix(X)
 
     a_target_element = y[1] # a CategoricalValue or CategoricalString
-    num_class = length(MLJBase.classes(a_target_element))
+    num_class = length(MMI.classes(a_target_element))
 
     eval_metric = model.eval_metric
     if num_class == 2 && eval_metric == "mlogloss"
@@ -593,7 +596,7 @@ function MLJBase.fit(model::XGBoostClassifier
         eval_metric = "mlogloss"
     end
 
-    y_plain = MLJBase.int(y) .- 1 # integer relabeling should start at 0
+    y_plain = MMI.int(y) .- 1 # integer relabeling should start at 0
 
     # An idiosynchrony of xgboost is that num_class=1 for binary case.
     if(num_class==2)
@@ -630,19 +633,19 @@ function MLJBase.fit(model::XGBoostClassifier
 end
 
 
-function MLJBase.predict(model::XGBoostClassifier
+function MMI.predict(model::XGBoostClassifier
         , fitresult
         , Xnew)
 
     result, a_target_element = fitresult
-    decode = MLJBase.decoder(a_target_element)
-    classes = MLJBase.classes(a_target_element)
+    decode = MMI.decoder(a_target_element)
+    classes = MMI.classes(a_target_element)
 
-    Xmatrix = MLJBase.matrix(Xnew)
+    Xmatrix = MMI.matrix(Xnew)
     XGBpredictions = XGBoost.predict(result, Xmatrix)
 
     nlevels = length(classes)
-    npatterns = MLJBase.nrows(Xnew)
+    npatterns = MMI.nrows(Xnew)
 
     if nlevels == 2
         true_class_probabilities = reshape(XGBpredictions, 1, npatterns)
@@ -652,41 +655,40 @@ function MLJBase.predict(model::XGBoostClassifier
 
     prediction_probabilities = reshape(XGBpredictions, nlevels, npatterns)
 
-    predictions = [MLJBase.UnivariateFinite(classes,
+    predictions = [MMI.UnivariateFinite(classes,
                                              prediction_probabilities[:,i])
                    for i in 1:npatterns]
 
     return predictions
 end
 
-
 ## METADATA
 
 XGTypes=Union{XGBoostRegressor,XGBoostCount,XGBoostClassifier}
 
-MLJBase.package_name(::Type{<:XGTypes}) = "XGBoost"
-MLJBase.package_uuid(::Type{<:XGTypes}) = "009559a3-9522-5dbb-924b-0b6ed2b22bb9"
-MLJBase.package_url(::Type{<:XGTypes}) = "https://github.com/dmlc/XGBoost.jl"
-MLJBase.is_pure_julia(::Type{<:XGTypes}) = false
+MMI.package_name(::Type{<:XGTypes}) = "XGBoost"
+MMI.package_uuid(::Type{<:XGTypes}) = "009559a3-9522-5dbb-924b-0b6ed2b22bb9"
+MMI.package_url(::Type{<:XGTypes}) = "https://github.com/dmlc/XGBoost.jl"
+MMI.is_pure_julia(::Type{<:XGTypes}) = false
 
-MLJBase.load_path(::Type{<:XGBoostRegressor}) = "MLJModels.XGBoost_.XGBoostRegressor"
-MLJBase.input_scitype(::Type{<:XGBoostRegressor}) = Table(Continuous)
-MLJBase.target_scitype(::Type{<:XGBoostRegressor}) = AbstractVector{Continuous}
-MLJBase.docstring(::Type{<:XGBoostRegressor}) =
+MMI.load_path(::Type{<:XGBoostRegressor}) = "MLJModels.XGBoost_.XGBoostRegressor"
+MMI.input_scitype(::Type{<:XGBoostRegressor}) = Table(Continuous)
+MMI.target_scitype(::Type{<:XGBoostRegressor}) = AbstractVector{Continuous}
+MMI.docstring(::Type{<:XGBoostRegressor}) =
     "The XGBoost gradient boosting method, for use with "*
     "`Continuous` univariate targets. "
 
-MLJBase.load_path(::Type{<:XGBoostCount}) = "MLJModels.XGBoost_.XGBoostCount"
-MLJBase.input_scitype(::Type{<:XGBoostCount}) = Table(Continuous)
-MLJBase.target_scitype(::Type{<:XGBoostCount}) = AbstractVector{Count}
-MLJBase.docstring(::Type{<:XGBoostCount}) =
+MMI.load_path(::Type{<:XGBoostCount}) = "MLJModels.XGBoost_.XGBoostCount"
+MMI.input_scitype(::Type{<:XGBoostCount}) = Table(Continuous)
+MMI.target_scitype(::Type{<:XGBoostCount}) = AbstractVector{Count}
+MMI.docstring(::Type{<:XGBoostCount}) =
     "The XGBoost gradient boosting method, for use with "*
     "`Count` univariate targets, using a Poisson objective function. "
 
-MLJBase.load_path(::Type{<:XGBoostClassifier}) = "MLJModels.XGBoost_.XGBoostClassifier"
-MLJBase.input_scitype(::Type{<:XGBoostClassifier}) = Table(Continuous)
-MLJBase.target_scitype(::Type{<:XGBoostClassifier}) = AbstractVector{<:Finite}
-MLJBase.docstring(::Type{<:XGBoostClassifier}) =
+MMI.load_path(::Type{<:XGBoostClassifier}) = "MLJModels.XGBoost_.XGBoostClassifier"
+MMI.input_scitype(::Type{<:XGBoostClassifier}) = Table(Continuous)
+MMI.target_scitype(::Type{<:XGBoostClassifier}) = AbstractVector{<:Finite}
+MMI.docstring(::Type{<:XGBoostClassifier}) =
     "The XGBoost gradient boosting method, for use with "*
     "`Finite` univariate targets (`Multiclass`, "*
     "`OrderedFactor` and `Binary=Finite{2}`)."

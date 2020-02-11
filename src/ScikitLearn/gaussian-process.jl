@@ -1,5 +1,5 @@
 GaussianProcessRegressor_ = SKGP.GaussianProcessRegressor
-@sk_reg mutable struct GaussianProcessRegressor <: MLJBase.Deterministic
+@sk_reg mutable struct GaussianProcessRegressor <: MMI.Deterministic
     kernel::Any               = nothing
     alpha::Union{Float64,AbstractArray} = 1.0e-10
     optimizer::Any            = "fmin_l_bfgs_b"
@@ -8,7 +8,7 @@ GaussianProcessRegressor_ = SKGP.GaussianProcessRegressor
     copy_X_train::Bool        = true
     random_state::Any         = nothing
 end
-MLJBase.fitted_params(model::GaussianProcessRegressor, (fitresult, _, _)) = (
+MMI.fitted_params(model::GaussianProcessRegressor, (fitresult, _, _)) = (
     X_train = fitresult.X_train_,
     y_train = fitresult.y_train_,
     kernel  = fitresult.kernel_,
@@ -26,7 +26,7 @@ metadata_model(GaussianProcessRegressor,
 
 # ============================================================================
 GaussianProcessClassifier_ = SKGP.GaussianProcessClassifier
-@sk_clf mutable struct GaussianProcessClassifier <: MLJBase.Probabilistic
+@sk_clf mutable struct GaussianProcessClassifier <: MMI.Probabilistic
     kernel::Any           = nothing
     optimizer::Any        = "fmin_l_bfgs_b"
     n_restarts_optimizer::Int = 0
@@ -36,7 +36,7 @@ GaussianProcessClassifier_ = SKGP.GaussianProcessClassifier
     warm_start::Bool      = false
     multi_class::String   = "one_vs_rest"::(_ in ("one_vs_one", "one_vs_rest"))
 end
-MLJBase.fitted_params(m::GaussianProcessClassifier, (f, _, _)) = (
+MMI.fitted_params(m::GaussianProcessClassifier, (f, _, _)) = (
     kernel    = f.kernel_,
     log_marginal_likelihood_value = f.log_marginal_likelihood_value_,
     classes   = f.classes_,
