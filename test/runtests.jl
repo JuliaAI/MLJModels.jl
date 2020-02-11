@@ -8,17 +8,17 @@ using Test, MLJModels
 # XXX THESE DO NOT PASS, I DON'T KNOW WHY (can't find PCA but PCA can
 # be found with models()...)
 #
-# @testset "metadata" begin
-#     @testset "reading and extracting model metadata" begin
-#         @test include("metadata.jl")
-#     end
-#     @testset "model search" begin
-#         @test include("model_search.jl")
-#     end
-#     @testset "loading model code" begin
-#         @test include("loading.jl")
-#     end
-# end
+@testset "metadata" begin
+    @testset "reading and extracting model metadata" begin
+        @test include("metadata.jl")
+    end
+    @testset "model search" begin
+        @test include("model_search.jl")
+    end
+    @testset "loading model code" begin
+        @test include("loading.jl")
+    end
+end
 
 @testset "built-in models" begin
     @testset "Constant" begin
