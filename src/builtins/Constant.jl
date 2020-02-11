@@ -1,7 +1,7 @@
 ## THE CONSTANT REGRESSOR
 
 """
-ConstantRegressor(; distribution_type=Distributions.Normal)
+    ConstantRegressor(; distribution_type=Distributions.Normal)
 
 A regressor that, for any new input pattern, predicts the univariate
 probability distribution best fitting the training target data. Use
@@ -45,7 +45,7 @@ MLJBase.predict(::DeterministicConstantRegressor, fitresult, Xnew) = fill(fitres
 ##
 
 """
-ConstantClassifier()
+    ConstantClassifier()
 
 A classifier that, for any new input pattern, `predict`s the
 `UnivariateFinite` probability distribution `d` best fitting the

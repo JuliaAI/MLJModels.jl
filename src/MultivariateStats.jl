@@ -2,8 +2,14 @@ module MultivariateStats_
 
 export RidgeRegressor, PCA, KernelPCA, ICA, LDA, BayesianLDA
 
-import MLJBase
-import MLJBase: @mlj_model, metadata_model, metadata_pkg
+import MLJModelInterface
+import MLJModelInterface: @mlj_model, metadata_pkg, metadata_model,
+                          Table, Continuous, Finite
+
+import MLJBase # needed for UnivariateFinite (the Type)
+
+const MMI = MLJModelInterface
+
 import StatsBase: proportions, CovarianceEstimator
 using Distances
 using LinearAlgebra
@@ -13,7 +19,7 @@ import MultivariateStats
 
 const MS = MultivariateStats
 
-struct LinearFitresult{F} <: MLJBase.MLJType
+struct LinearFitresult{F} <: MMI.MLJType
     coefficients::Vector{F}
     intercept::F
 end
@@ -23,7 +29,7 @@ const PCA_DESCR = "Principal component analysis. Learns a linear transformation 
 const KPCA_DESCR = "Kernel principal component analysis."
 const ICA_DESCR = "Independent component analysis."
 const LDA_DESCR = "Multiclass linear discriminant analysis. The algorithm learns a projection matrix `W` that projects the feature matrix `Xtrain` onto a lower dimensional space of dimension `out_dim` such that the between-class variance in the transformed space is maximized relative to the within-class variance."
-const BayesianLDA_DESCR= "Bayesian Multiclass linear discriminant analysis. The algorithm learns a projection matrix `W` that projects the feature matrix `Xtrain` onto a lower dimensional space of dimension `out_dim` such that the between-class variance in the transformed space is maximized relative to the within-class variance and classifies using Bayes rule."
+const BayesianLDA_DESCR = "Bayesian Multiclass linear discriminant analysis. The algorithm learns a projection matrix `W` that projects the feature matrix `Xtrain` onto a lower dimensional space of dimension `out_dim` such that the between-class variance in the transformed space is maximized relative to the within-class variance and classifies using Bayes rule."
 const BayesianSubspaceLDA_DESCR = "Bayesian Multiclass linear discriminant analysis. Suitable for high dimensional data. The algorithm learns a projection matrix `W` (without computing covariance matrices Sw ,Sb) in the subspace spanned by the within class scatter matrix, that projects the feature matrix `Xtrain` onto a lower dimensional space of dimension `out_dim` such that the between-class variance in the transformed space is maximized relative to the within-class variance and classifies using Bayes rule."
 const SubspaceLDA_DESCR = "Multiclass linear discriminant analysis. Suitable for high dimensional data. The algorithm learns a projection matrix `W` (without computing covariance matrices Sw ,Sb) in the subspace spanned by the within class scatter matrix, that projects the feature matrix `Xtrain` onto a lower dimensional space of dimension `out_dim` such that the between-class variance in the transformed space is maximized relative to the within-class variance."
 
@@ -32,7 +38,7 @@ const SubspaceLDA_DESCR = "Multiclass linear discriminant analysis. Suitable for
 ####
 
 """
-RidgeRegressor(; lambda=1.0)
+    RidgeRegressor(; lambda=1.0)
 
 $RIDGE_DESCR
 
@@ -40,12 +46,12 @@ $RIDGE_DESCR
 
 * `lambda=1.0`: non-negative parameter for the regularization strength.
 """
-@mlj_model mutable struct RidgeRegressor <: MLJBase.Deterministic
+@mlj_model mutable struct RidgeRegressor <: MMI.Deterministic
     lambda::Real = 1.0::(_ ≥ 0)
 end
 
-function MLJBase.fit(model::RidgeRegressor, verbosity::Int, X, y)
-    Xmatrix   = MLJBase.matrix(X)
+function MMI.fit(model::RidgeRegressor, verbosity::Int, X, y)
+    Xmatrix   = MMI.matrix(X)
     features  = Tables.schema(X).names
     θ         = MS.ridge(Xmatrix, y, model.lambda)
     coefs     = θ[1:end-1]
@@ -58,11 +64,11 @@ function MLJBase.fit(model::RidgeRegressor, verbosity::Int, X, y)
     return fitresult, cache, report
 end
 
-MLJBase.fitted_params(::RidgeRegressor, fr) =
+MMI.fitted_params(::RidgeRegressor, fr) =
     (coefficients=fr.coefficients, intercept=fr.intercept)
 
-function MLJBase.predict(::RidgeRegressor, fr, Xnew)
-    Xmatrix = MLJBase.matrix(Xnew)
+function MMI.predict(::RidgeRegressor, fr, Xnew)
+    Xmatrix = MMI.matrix(Xnew)
     return Xmatrix * fr.coefficients .+ fr.intercept
 end
 
@@ -73,26 +79,31 @@ end
 const PCAFitResultType = MS.PCA
 
 """
-PCA(; maxoutdim=nothing, method=:auto, pratio=0.99, mean=nothing)
+    PCA(; maxoutdim=nothing, method=:auto, pratio=0.99, mean=nothing)
 
 $PCA_DESCR
 
 ## Parameters
 
-* `maxoutdim=nothing`: maximum number of output dimensions, unconstrained if nothing.
-* `method=:auto`: method to use to solve the problem, one of `:auto`, `:cov` or `:svd`
-* `pratio=0.99`: ratio of variance preserved
-* `mean=nothing`: if set to nothing centering will be computed and applied, if set to `0` no centering (assumed pre-centered), if a vector is passed, the centering is done with that vector.
+* `maxoutdim=nothing`: maximum number of output dimensions, unconstrained if
+                       nothing.
+* `method=:auto`:      method to use to solve the problem, one of `:auto`,
+                       `:cov` or `:svd`
+* `pratio=0.99`:       ratio of variance preserved
+* `mean=nothing`:      if set to nothing centering will be computed and
+                       applied, if set to `0` no centering (assumed pre-
+                       centered), if a vector is passed, the centering is done
+                       with that vector.
 """
-@mlj_model mutable struct PCA <: MLJBase.Unsupervised
+@mlj_model mutable struct PCA <: MMI.Unsupervised
     maxoutdim::Union{Nothing,Int} = nothing::(_ === nothing || _ ≥ 1)
     method::Symbol  = :auto::(_ in (:auto, :cov, :svd))
     pratio::Float64 = 0.99::(0.0 < _ ≤ 1.0)
     mean::Union{Nothing, Real, Vector{Float64}} = nothing::(_ === nothing || (_ isa Real && iszero(_)) || true)
 end
 
-function MLJBase.fit(model::PCA, verbosity::Int, X)
-    Xarray = MLJBase.matrix(X)
+function MMI.fit(model::PCA, verbosity::Int, X)
+    Xarray = MMI.matrix(X)
     mindim = minimum(size(Xarray))
 
     maxoutdim = model.maxoutdim === nothing ? mindim : model.maxoutdim
@@ -116,14 +127,14 @@ function MLJBase.fit(model::PCA, verbosity::Int, X)
     return fitresult, cache, report
 end
 
-MLJBase.fitted_params(::PCA, fr) = (projection=fr,)
+MMI.fitted_params(::PCA, fr) = (projection=fr,)
 
 
-function MLJBase.transform(::PCA, fr::PCAFitResultType, X)
+function MMI.transform(::PCA, fr::PCAFitResultType, X)
     # X is n x d, need to transpose and copy twice...
-    Xarray = MLJBase.matrix(X)
+    Xarray = MMI.matrix(X)
     Xnew   = permutedims(MS.transform(fr, permutedims(Xarray)))
-    return MLJBase.table(Xnew, prototype=X)
+    return MMI.table(Xnew, prototype=X)
 end
 
 ####
@@ -135,21 +146,25 @@ const KernelPCAFitResultType = MS.KernelPCA
 default_kernel = (x, y) -> x'y
 
 """
-KernelPCA(; maxoutdim=nothing, kernel=(x,y)->x'y, solver=:auto, pratio=0.99, mean=nothing)
+    KernelPCA(; maxoutdim=nothing, kernel=(x,y)->x'y, solver=:auto, pratio=0.99, mean=nothing)
 
 $KPCA_DESCR
 
 ## Parameters
 
-* `maxoutdim=nothing`: maximum number of output dimensions, unconstrained if nothing.
-* `kernel=nothing`: kernel function of 2 vector arguments x and y, returns a scalar value, (x,y)->x'y if nothing
-* `solver=:auto`: solver to use for the eigenvalues, one of `:eig` (default), `:eigs`
-* `inverse=false`: perform calculation for inverse transform
-* `beta=1.0`: strength of the ridge regression that learns the inverse transform when inverse is true
-* `tol=0.0`: Convergence tolerance for eigs solver
-* `maxiter=300`: maximum number of iterations for eigs solver
+* `maxoutdim=nothing`: maximum number of output dimensions, unconstrained if
+                       nothing.
+* `kernel=nothing`:    kernel function of 2 vector arguments x and y, returns a
+                       scalar value, (x,y)->x'y if nothing
+* `solver=:auto`:      solver to use for the eigenvalues, one of `:eig`
+                       (default), `:eigs`
+* `inverse=false`:     perform calculation for inverse transform
+* `beta=1.0`:          strength of the ridge regression that learns the inverse
+                       transform when inverse is true
+* `tol=0.0`:           Convergence tolerance for eigs solver
+* `maxiter=300`:       maximum number of iterations for eigs solver
 """
-@mlj_model mutable struct KernelPCA <: MLJBase.Unsupervised
+@mlj_model mutable struct KernelPCA <: MMI.Unsupervised
     maxoutdim::Union{Nothing,Int} = nothing::(_ === nothing || _ ≥ 1)
     kernel::Function = default_kernel
     solver::Symbol   = :eig::(_ in (:eig, :eigs))
@@ -159,8 +174,8 @@ $KPCA_DESCR
     maxiter::Int     = 300::(_ ≥ 1)
 end
 
-function MLJBase.fit(model::KernelPCA, verbosity::Int, X)
-    Xarray = MLJBase.matrix(X)
+function MMI.fit(model::KernelPCA, verbosity::Int, X)
+    Xarray = MMI.matrix(X)
     mindim = minimum(size(Xarray))
     # default max out dim if not given
     maxoutdim = model.maxoutdim === nothing ? mindim : model.maxoutdim
@@ -183,13 +198,13 @@ function MLJBase.fit(model::KernelPCA, verbosity::Int, X)
     return fitresult, cache, report
 end
 
-MLJBase.fitted_params(::KernelPCA, fr) = (projection=fr,)
+MMI.fitted_params(::KernelPCA, fr) = (projection=fr,)
 
-function MLJBase.transform(::KernelPCA, fr::KernelPCAFitResultType, X)
+function MMI.transform(::KernelPCA, fr::KernelPCAFitResultType, X)
     # X is n x d, need to transpose and copy twice...
-    Xarray = MLJBase.matrix(X)
+    Xarray = MMI.matrix(X)
     Xnew   = permutedims(MS.transform(fr, permutedims(Xarray)))
-    return MLJBase.table(Xnew, prototype=X)
+    return MMI.table(Xnew, prototype=X)
 end
 
 ####
@@ -199,23 +214,30 @@ end
 const ICAFitResultType = MS.ICA
 
 """
-ICA(; k=0, alg=:fastica, fun=:tanh, do_whiten=true, maxiter=100,
+    ICA(; k=0, alg=:fastica, fun=:tanh, do_whiten=true, maxiter=100,
       tol=1e-6, mean=nothing, winit=zeros(0,0))
 
 $ICA_DESCR
 
 ## Parameters
 
-* `k=0`: number of independent components to recover, set automatically if `0`
-* `alg=:fastica`: algorithm to use (only `:fastica` is supported at the moment)
-* `fun=:tanh`: approximate neg-entropy functor, via the function `MultivariateStats.icagfun`, one of `:tanh` and `:gaus`
-* `do_whiten=true`: whether to perform pre-whitening
-* `maxiter=100`: maximum number of iterations
-* `tol=1e-6`:  convergence tolerance for change in matrix W
-* `mean=nothing`: mean to use, if nothing centering is computed and applied, if zero, no centering, a vector of means can be passed
-* `winit=zeros(0,0)`: initial guess for matrix `W` either an empty matrix (random init), a matrix of size `k × k` (if `do_whiten` is true), a matrix of size `m × k` otherwise
+* `k=0`:              number of independent components to recover, set
+                      automatically if `0`
+* `alg=:fastica`:     algorithm to use (only `:fastica` is supported at the
+                      moment)
+* `fun=:tanh`:        approximate neg-entropy functor, via the function
+                      `MultivariateStats.icagfun`, one of `:tanh` and `:gaus`
+* `do_whiten=true`:   whether to perform pre-whitening
+* `maxiter=100`:      maximum number of iterations
+* `tol=1e-6`:         convergence tolerance for change in matrix W
+* `mean=nothing`:     mean to use, if nothing centering is computed and
+                      applied, if zero, no centering, a vector of means can be
+                      passed
+* `winit=zeros(0,0)`: initial guess for matrix `W` either an empty matrix
+                      (random init), a matrix of size `k × k` (if `do_whiten`
+                      is true), a matrix of size `m × k` otherwise
 """
-@mlj_model mutable struct ICA <: MLJBase.Unsupervised
+@mlj_model mutable struct ICA <: MMI.Unsupervised
     k::Int          = 0::(_ ≥ 0)
     alg::Symbol     = :fastica::(_ in (:fastica,))
     fun::Symbol     = :tanh::(_ in (:tanh, :gaus))
@@ -226,8 +248,8 @@ $ICA_DESCR
     mean::Union{Nothing, Real, Vector{Float64}} = nothing::(_ === nothing || (_ isa Real && iszero(_)) || true)
 end
 
-function MLJBase.fit(model::ICA, verbosity::Int, X)
-    Xarray = MLJBase.matrix(X)
+function MMI.fit(model::ICA, verbosity::Int, X)
+    Xarray = MMI.matrix(X)
     n, p   = size(Xarray)
 
     m = min(n, p)
@@ -250,13 +272,13 @@ function MLJBase.fit(model::ICA, verbosity::Int, X)
     return fitresult, cache, report
 end
 
-MLJBase.fitted_params(::ICA, fr) = (projection=fr,)
+MMI.fitted_params(::ICA, fr) = (projection=fr,)
 
-function MLJBase.transform(::ICA, fr::ICAFitResultType, X)
+function MMI.transform(::ICA, fr::ICAFitResultType, X)
     # X is n x d, need to transpose and copy twice...
-    Xarray = MLJBase.matrix(X)
+    Xarray = MMI.matrix(X)
     Xnew   = permutedims(MS.transform(fr, permutedims(Xarray)))
-    return MLJBase.table(Xnew, prototype=X)
+    return MMI.table(Xnew, prototype=X)
 end
 
 ####
@@ -264,23 +286,35 @@ end
 ####
 
 """
-LDA(; kwargs...)
+    LDA(; kwargs...)
 
 $LDA_DESCR
 
 ## Parameters
 
-* `method=:gev`: choice of solver, one of `:gevd` or `:whiten` methods
-* `cov_w=SimpleCovariance()`: an estimator for the within-class covariance, by default set to the standard `MultivariateStats.CovarianceEstimator` but could be set to any robust estimator from `CovarianceEstimation.jl`.
-* `cov_b=SimpleCovariance()`: same as `cov_w` but for the between-class covariance.
-* `out_dim`: the output dimension, i.e dimension of the transformed space, automatically set if 0 is given (default).
-* `regcoef`: regularization coefficient (default value 0.0). A positive value `regcoef * eigmax(Sw)` where `Sw` is the within-class covariance estimator, is added to the diagonal of Sw to improve numerical stability. This can be useful if using the standard covariance estimator.
-* `dist=SqEuclidean`: the distance metric to use when performing classification (to compare the distance between a new point and centroids in the transformed space), an alternative choice can be the `CosineDist`.
+* `method=:gev`:      choice of solver, one of `:gevd` or `:whiten` methods
+* `cov_w=SimpleCovariance()`: an estimator for the within-class covariance, by
+                              default set to the standard
+                              `MultivariateStats.CovarianceEstimator` but could
+                              be set to any robust estimator from `CovarianceEstimation.jl`.
+* `cov_b=SimpleCovariance()`: same as `cov_w` but for the between-class
+                              covariance.
+* `out_dim`:          the output dimension, i.e dimension of the transformed
+                      space, automatically set if 0 is given (default).
+* `regcoef`:          regularization coefficient (default value 0.0). A
+                      positive value `regcoef * eigmax(Sw)` where `Sw` is the
+                      within-class covariance estimator, is added to the
+                      diagonal of Sw to improve numerical stability. This can
+                      be useful if using the standard covariance estimator.
+* `dist=SqEuclidean`: the distance metric to use when performing classification
+                      (to compare the distance between a new point and
+                      centroids in the transformed space), an alternative
+                      choice can be the `CosineDist`.
 
 See also the [package documentation](https://multivariatestatsjl.readthedocs.io/en/latest/lda.html).
 For more information about the algorithm, see the paper by Li, Zhu and Ogihara, [Using Discriminant Analysis for Multi-class Classification: An Experimental Investigation](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.89.7068&rep=rep1&type=pdf).
 """
-@mlj_model mutable struct LDA <: MLJBase.Probabilistic
+@mlj_model mutable struct LDA <: MMI.Probabilistic
     method::Symbol   = :gevd::(_ in (:gevd, :whiten))
     cov_w::CovarianceEstimator = MS.SimpleCovariance()
     cov_b::CovarianceEstimator = MS.SimpleCovariance()
@@ -289,13 +323,13 @@ For more information about the algorithm, see the paper by Li, Zhu and Ogihara, 
     dist::SemiMetric = SqEuclidean()
 end
 
-function MLJBase.fit(model::LDA, ::Int, X, y)
-    class_list = MLJBase.classes(y[1]) #class list containing unique entries in y
+function MMI.fit(model::LDA, ::Int, X, y)
+    class_list = MMI.classes(y[1]) #class list containing unique entries in y
     nclasses   = length(class_list)
 
     # NOTE: copy/transpose
-    Xm_t   = MLJBase.matrix(X, transpose=true) # now p x n matrix
-    yplain = MLJBase.int(y) # vector of n ints in {1,..., nclasses}
+    Xm_t   = MMI.matrix(X, transpose=true) # now p x n matrix
+    yplain = MMI.int(y) # vector of n ints in {1,..., nclasses}
     p      = size(Xm_t, 1)
 
      #check to make sure we have more than one class
@@ -322,14 +356,14 @@ function MLJBase.fit(model::LDA, ::Int, X, y)
     return fitresult, cache, report
 end
 
-function MLJBase.fitted_params(::LDA, (core_res, class_list))
+function MMI.fitted_params(::LDA, (core_res, class_list))
     return (class_means       = MS.classmeans(core_res),
             projection_matrix = MS.projection(core_res))
 end
 
-function MLJBase.predict(m::LDA, (core_res, class_list), Xnew)
+function MMI.predict(m::LDA, (core_res, class_list), Xnew)
     # projection of Xnew XWt is n x o  where o = number of out dims
-    XWt = MLJBase.matrix(Xnew) * core_res.proj
+    XWt = MMI.matrix(Xnew) * core_res.proj
     # centroids in the transformed space, nc x o
     centroids = permutedims(core_res.pmeans)
 
@@ -341,7 +375,7 @@ function MLJBase.predict(m::LDA, (core_res, class_list), Xnew)
     P  .= exp.(-P)
     P ./= sum(P, dims=2)
 
-    return [MLJBase.UnivariateFinite(class_list, P[j, :]) for j in 1:size(P, 1)]
+    return [MMI.UnivariateFinite(class_list, P[j, :]) for j in 1:size(P, 1)]
 end
 
 ####
@@ -349,37 +383,52 @@ end
 ####
 
 """
-BayesianLDA(; kwargs...)
+    BayesianLDA(; kwargs...)
 
 $BayesianLDA_DESCR
 
 ## Parameters
 
-* `method=:gev`: choice of solver, one of `:gevd` or `:whiten` methods
-* `cov_w=SimpleCovariance()`: an estimator for the within-class covariance, by default set to the standard `MultivariateStats.CovarianceEstimator` but could be set to any robust estimator from `CovarianceEstimation.jl`.
-* `cov_b=SimpleCovariance()`: same as `cov_w` but for the between-class covariance.
-* `out_dim`: the output dimension, i.e dimension of the transformed space, automatically set if 0 is given (default).
-* `regcoef`: regularization coefficient (default value 1e-6). A positive value `regcoef * eigmax(Sw)` where `Sw` is the within-class covariance estimator, is added to the diagonal of Sw to improve numerical stability. This can be useful if using the standard covariance estimator.
-* `priors=nothing`: if `priors = nothing` estimates the prior probabilities from the data else it uses the user specified `UnivariateFinite` prior probabilities.
+* `method=:gev`:    choice of solver, one of `:gevd` or `:whiten`
+                    methods
+* `cov_w=SimpleCovariance()`: an estimator for the within-class covariance, by
+                              default set to the standard
+                              `MultivariateStats.CovarianceEstimator` but could
+                              be set to any robust estimator from
+                              `CovarianceEstimation.jl`.
+* `cov_b=SimpleCovariance()`: same as `cov_w` but for the between-class
+                              covariance.
+* `out_dim`:                  the output dimension, i.e dimension of the
+                    transformed space, automatically set if 0 is
+                    given (default).
+* `regcoef`:        regularization coefficient (default value 1e-6).
+                    A positive value `regcoef * eigmax(Sw)` where `Sw` is the
+                    within-class covariance estimator, is added to the diagonal
+                    of Sw to improve numerical stability. This can be useful if
+                    using the standard covariance estimator.
+* `priors=nothing`: if `priors = nothing` estimates the prior probabilities
+                    from the data else it uses the user specified
+                    `UnivariateFinite` prior probabilities.
+
 See also the [package documentation](https://multivariatestatsjl.readthedocs.io/en/latest/lda.html).
 For more information about the algorithm, see the paper by Li, Zhu and Ogihara, [Using Discriminant Analysis for Multi-class Classification: An Experimental Investigation](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.89.7068&rep=rep1&type=pdf).
 """
-@mlj_model mutable struct BayesianLDA <: MLJBase.Probabilistic
+@mlj_model mutable struct BayesianLDA <: MMI.Probabilistic
     method::Symbol   = :gevd::(_ in (:gevd, :whiten))
     cov_w::CovarianceEstimator = MS.SimpleCovariance()
     cov_b::CovarianceEstimator = MS.SimpleCovariance()
     out_dim::Int     = 0::(_ ≥ 0)
     regcoef::Float64    = 1e-6::(_ ≥ 0)
-    priors::Union{Nothing, MLJBase.UnivariateFinite} = nothing
+    priors::Union{Nothing,MLJBase.UnivariateFinite} = nothing
 end
 
-function MLJBase.fit(model::BayesianLDA, ::Int, X, y)
-    class_list = MLJBase.classes(y[1]) #class list containing unique entries in y
+function MMI.fit(model::BayesianLDA, ::Int, X, y)
+    class_list = MMI.classes(y[1]) #class list containing unique entries in y
     nclasses   = length(class_list)
 
     # NOTE: copy/transpose
-    Xm_t   = MLJBase.matrix(X, transpose=true) # now p x n matrix
-    yplain = MLJBase.int(y) # vector of n ints in {1,..., nclasses}
+    Xm_t   = MMI.matrix(X, transpose=true) # now p x n matrix
+    yplain = MMI.int(y) # vector of n ints in {1,..., nclasses}
     p, n   = size(Xm_t)
 
      #check to make sure we have more than one class
@@ -397,8 +446,8 @@ function MLJBase.fit(model::BayesianLDA, ::Int, X, y)
         priors = proportions(yplain)
     else
         #check if the length of priors is same as nclasses
-        length(MLJBase.levels(model.priors)) == nclasses || throw(ArgumentError("Invalid size of `priors`"))
-        priors = MLJBase.pdf.(model.priors, class_list)
+        length(MMI.levels(model.priors)) == nclasses || throw(ArgumentError("Invalid size of `priors`"))
+        priors = MMI.pdf.(model.priors, class_list)
     end
 
     core_res = MS.fit(MS.MulticlassLDA, nclasses, Xm_t, Int.(yplain);
@@ -421,15 +470,15 @@ function MLJBase.fit(model::BayesianLDA, ::Int, X, y)
     return fitresult, cache, report
 end
 
-function MLJBase.fitted_params(::BayesianLDA, (core_res, class_list, priors))
+function MMI.fitted_params(::BayesianLDA, (core_res, class_list, priors))
     return (class_means       = MS.classmeans(core_res),
             projection_matrix = MS.projection(core_res),
             priors            = priors)
 end
 
-function MLJBase.predict(m::BayesianLDA, (core_res, class_list, priors), Xnew)
+function MMI.predict(m::BayesianLDA, (core_res, class_list, priors), Xnew)
     # projection of Xnew XWt is n x o  where o = number of out dims
-    XWt = MLJBase.matrix(Xnew) * core_res.proj
+    XWt = MMI.matrix(Xnew) * core_res.proj
     # centroids in the transformed space, nc x o
     centroids = permutedims(core_res.pmeans)
 
@@ -448,7 +497,7 @@ function MLJBase.predict(m::BayesianLDA, (core_res, class_list, priors), Xnew)
     P  .= exp.(P)
     P ./= sum(P, dims=2)
 
-    return [MLJBase.UnivariateFinite(class_list, P[j, :]) for j in 1:size(P, 1)]
+    return [MMI.UnivariateFinite(class_list, P[j, :]) for j in 1:size(P, 1)]
 end
 
 ####
@@ -456,31 +505,36 @@ end
 ####
 
 """
-BayesianSubspaceLDA(; kwargs...)
+    BayesianSubspaceLDA(; kwargs...)
 
 $BayesianSubspaceLDA_DESCR
 
 ## Parameters
 
-* `normalize=true`: Option to normalize the between class variance by number of observations in each class, one of `true` or `false`.
-* `out_dim`: the output dimension, i.e dimension of the transformed space, automatically set if 0 is given (default).
-* `priors=nothing`: if `priors = nothing` estimates the prior probabilities from the data, else it uses the user specified `UnivariateFinite` prior probabilities.
+* `normalize=true`: Option to normalize the between class variance by number of
+                    observations in each class, one of `true` or `false`.
+* `out_dim`:        the output dimension, i.e dimension of the transformed
+                    space, automatically set if 0 is given (default).
+* `priors=nothing`: if `priors = nothing` estimates the prior probabilities
+                    from the data, else it uses the user specified
+                    `UnivariateFinite` prior probabilities.
+
 See also the [package documentation](https://multivariatestatsjl.readthedocs.io/en/latest/lda.html).
 For more information about the algorithm, see the paper by Howland & Park (2006), "Generalizing discriminant analysis using the generalized singular value decomposition", IEEE Trans. Patt. Anal. & Mach. Int., 26: 995-1006.
 """
-@mlj_model mutable struct BayesianSubspaceLDA <: MLJBase.Probabilistic
+@mlj_model mutable struct BayesianSubspaceLDA <: MMI.Probabilistic
     normalize::Bool=true
     out_dim::Int   = 0::(_ ≥ 0)
-    priors::Union{Nothing, MLJBase.UnivariateFinite} = nothing
+    priors::Union{Nothing,MLJBase.UnivariateFinite} = nothing
 end
 
-function MLJBase.fit(model::BayesianSubspaceLDA, ::Int, X, y)
-    class_list = MLJBase.classes(y[1]) #class list containing unique entries in y
+function MMI.fit(model::BayesianSubspaceLDA, ::Int, X, y)
+    class_list = MMI.classes(y[1]) #class list containing unique entries in y
     nclasses   = length(class_list)
 
     # NOTE: copy/transpose
-    Xm_t   = MLJBase.matrix(X, transpose=true) # now p x n matrix
-    yplain = MLJBase.int(y) # vector of n ints in {1,..., nclasses}
+    Xm_t   = MMI.matrix(X, transpose=true) # now p x n matrix
+    yplain = MMI.int(y) # vector of n ints in {1,..., nclasses}
     p, n   = size(Xm_t)
 
      #check to make sure we have more than one class
@@ -501,8 +555,8 @@ function MLJBase.fit(model::BayesianSubspaceLDA, ::Int, X, y)
         priors = proportions(yplain)
     else
         #check if the length of priors is same as nclasses
-        length(MLJBase.levels(model.priors)) == nclasses || throw(ArgumentError("Invalid size of `priors`"))
-        priors = MLJBase.pdf.(model.priors, class_list)
+        length(MMI.levels(model.priors)) == nclasses || throw(ArgumentError("Invalid size of `priors`"))
+        priors = MMI.pdf.(model.priors, class_list)
     end
 
     # # Code gotten from JuliaStats/MultivariateStats.jl
@@ -539,16 +593,16 @@ function MLJBase.fit(model::BayesianSubspaceLDA, ::Int, X, y)
     return fitresult, cache, report
 end
 
-function MLJBase.fitted_params(::BayesianSubspaceLDA, (core_res, class_list, priors))
+function MMI.fitted_params(::BayesianSubspaceLDA, (core_res, class_list, priors))
     return (class_means       = MS.classmeans(core_res),
             projection_matrix = MS.projection(core_res),
             priors            = priors)
 end
 
-function MLJBase.predict(m::BayesianSubspaceLDA, (core_res, class_list, priors), Xnew)
+function MMI.predict(m::BayesianSubspaceLDA, (core_res, class_list, priors), Xnew)
     # projection of Xnew XWt is n x o  where o = number of out dims
     proj = core_res.projw * core_res.projLDA #proj is the projection_matrix
-    XWt = MLJBase.matrix(Xnew) * proj
+    XWt = MMI.matrix(Xnew) * proj
     # centroids in the transformed space, nc x o
     centroids = permutedims(proj' * core_res.cmeans)
 
@@ -564,7 +618,7 @@ function MLJBase.predict(m::BayesianSubspaceLDA, (core_res, class_list, priors),
     P  .= exp.(P)
     P ./= sum(P, dims=2)
 
-    return [MLJBase.UnivariateFinite(class_list, P[j, :]) for j in 1:size(P, 1)]
+    return [MMI.UnivariateFinite(class_list, P[j, :]) for j in 1:size(P, 1)]
 end
 
 ####
@@ -572,33 +626,38 @@ end
 ####
 
 """
-SubspaceLDA(; kwargs...)
+    SubspaceLDA(; kwargs...)
 
 $SubspaceLDA_DESCR
 
 ## Parameters
 
-* `normalize=true`: Option to normalize the between class variance by number of observations in each class, one of `true` or `false`.
-* `out_dim`: the output dimension, i.e dimension of the transformed space, automatically set if 0 is given (default).
-* `dist=SqEuclidean`: the distance metric to use when performing classification (to compare the distance between a new point and centroids in the transformed space), an alternative choice can be the `CosineDist`.
+* `normalize=true`:   Option to normalize the between class variance by number
+                      of observations in each class, one of `true` or `false`.
+* `out_dim`:          the output dimension, i.e dimension of the transformed
+                      space, automatically set if 0 is given (default).
+* `dist=SqEuclidean`: the distance metric to use when performing classification
+                      (to compare the distance between a new point and
+                      centroids in the transformed space), an alternative
+                      choice can be the `CosineDist`.
 
 See also the [package documentation](https://multivariatestatsjl.readthedocs.io/en/latest/lda.html).
 For more information about the algorithm, see the paper by Howland & Park (2006), "Generalizing discriminant analysis using the generalized singular value decomposition", IEEE Trans. Patt. Anal. & Mach. Int., 26: 995-1006.
 """
-@mlj_model mutable struct SubspaceLDA <: MLJBase.Probabilistic
+@mlj_model mutable struct SubspaceLDA <: MMI.Probabilistic
     normalize::Bool=true
     out_dim::Int   = 0::(_ ≥ 0)
     dist::SemiMetric = SqEuclidean()
 end
 
-function MLJBase.fit(model::SubspaceLDA, ::Int, X, y)
-    features   = MLJBase.schema(X).names
-    class_list = MLJBase.classes(y[1]) #class list containing unique entries in y
+function MMI.fit(model::SubspaceLDA, ::Int, X, y)
+    features   = Tables.schema(X).names
+    class_list = MMI.classes(y[1]) #class list containing unique entries in y
     nclasses   = length(class_list)
 
     # NOTE: copy/transpose
-    Xm_t   = MLJBase.matrix(X, transpose=true) # now p x n matrix
-    yplain = MLJBase.int(y) # vector of n ints in {1,..., nclasses}
+    Xm_t   = MMI.matrix(X, transpose=true) # now p x n matrix
+    yplain = MMI.int(y) # vector of n ints in {1,..., nclasses}
     p, n   = size(Xm_t)
 
      #check to make sure we have more than one class
@@ -644,15 +703,15 @@ function MLJBase.fit(model::SubspaceLDA, ::Int, X, y)
     return fitresult, cache, report
 end
 
-function MLJBase.fitted_params(::SubspaceLDA, (core_res, class_list))
+function MMI.fitted_params(::SubspaceLDA, (core_res, class_list))
     return (class_means       = MS.classmeans(core_res),
             projection_matrix = MS.projection(core_res))
 end
 
-function MLJBase.predict(m::SubspaceLDA, (core_res, class_list), Xnew)
+function MMI.predict(m::SubspaceLDA, (core_res, class_list), Xnew)
     # projection of Xnew, XWt is n x o  where o = number of out dims
     proj = core_res.projw * core_res.projLDA #proj is the projection_matrix
-    XWt = MLJBase.matrix(Xnew) * proj
+    XWt = MMI.matrix(Xnew) * proj
     # centroids in the transformed space, nc x o
     centroids = permutedims(proj' * core_res.cmeans)
 
@@ -664,14 +723,14 @@ function MLJBase.predict(m::SubspaceLDA, (core_res, class_list), Xnew)
     P  .= exp.(-P)
     P ./= sum(P, dims=2)
 
-    return [MLJBase.UnivariateFinite(class_list, P[j, :]) for j in 1:size(P, 1)]
+    return [MMI.UnivariateFinite(class_list, P[j, :]) for j in 1:size(P, 1)]
 end
 
-function MLJBase.transform(m::T, (core_res,), X) where T<:Union{LDA, SubspaceLDA, BayesianLDA, BayesianSubspaceLDA}
+function MMI.transform(m::T, (core_res,), X) where T<:Union{LDA, SubspaceLDA, BayesianLDA, BayesianSubspaceLDA}
     # projection of X, XWt is n x o  where o = number of out dims
     proj = core_res.projw * core_res.projLDA #proj is the projection_matrix
-    XWt = MLJBase.matrix(X) * proj
-    return MLJBase.table(XWt, prototype = X)
+    XWt = MMI.matrix(X) * proj
+    return MMI.table(XWt, prototype = X)
 end
 
 
@@ -679,61 +738,66 @@ end
 #### METADATA
 ####
 
-metadata_pkg.((RidgeRegressor, PCA, KernelPCA, ICA, LDA, BayesianLDA, SubspaceLDA, BayesianSubspaceLDA),
-              name="MultivariateStats",
-              uuid="6f286f6a-111f-5878-ab1e-185364afe411",
-              url="https://github.com/JuliaStats/MultivariateStats.jl",
-              license="MIT",
-              julia=true,
-              is_wrapper=false)
+metadata_pkg.(
+    (RidgeRegressor, PCA, KernelPCA, ICA, LDA,
+     BayesianLDA, SubspaceLDA,  BayesianSubspaceLDA),
+    name       = "MultivariateStats",
+    uuid       = "6f286f6a-111f-5878-ab1e-185364afe411",
+    url        = "https://github.com/JuliaStats/MultivariateStats.jl",
+    license    = "MIT",
+    julia      = true,
+    is_wrapper = false)
 
 metadata_model(RidgeRegressor,
-               input=Table(Continuous),
-               target=AbstractVector{Continuous},
-               weights=false,
-               descr=RIDGE_DESCR)
+    input   = Table(Continuous),
+    target  = AbstractVector{Continuous},
+    weights = false,
+    descr   = RIDGE_DESCR)
 
 metadata_model(PCA,
-               input=Table(Continuous),
-               target=Table(Continuous),
-               weights=false,
-               descr=PCA_DESCR)
+    input   = Table(Continuous),
+    target  = Table(Continuous),
+    weights = false,
+    descr   = PCA_DESCR)
 
 metadata_model(KernelPCA,
-               input=Table(Continuous),
-               target=Table(Continuous),
-               weights=false,
-               descr=KPCA_DESCR)
+    input   = Table(Continuous),
+    target  = Table(Continuous),
+    weights = false,
+    descr   = KPCA_DESCR)
 
 metadata_model(ICA,
-               input=Table(Continuous),
-               target=Table(Continuous),
-               weights=false,
-               descr=ICA_DESCR)
+    input   = Table(Continuous),
+    target  = Table(Continuous),
+    weights = false,
+    descr   = ICA_DESCR)
 
 metadata_model(LDA,
-               input=Table(Continuous),
-               target=AbstractVector{<:Finite},
-               weights=false,
-               output=Table(Continuous),
-               descr=LDA_DESCR)
+    input   = Table(Continuous),
+    target  = AbstractVector{<:Finite},
+    weights = false,
+    output  = Table(Continuous),
+    descr   = LDA_DESCR)
+
 metadata_model(BayesianLDA,
-               input=Table(Continuous),
-               target=AbstractVector{<:Finite},
-               weights=false,
-               output=Table(Continuous),
-               descr=BayesianLDA_DESCR)
+    input   = Table(Continuous),
+    target  = AbstractVector{<:Finite},
+    weights = false,
+    output  = Table(Continuous),
+    descr   = BayesianLDA_DESCR)
+
 metadata_model(SubspaceLDA,
-               input=Table(Continuous),
-               target=AbstractVector{<:Finite},
-               weights=false,
-               output=Table(Continuous),
-               descr=SubspaceLDA_DESCR)
+    input   = Table(Continuous),
+    target  = AbstractVector{<:Finite},
+    weights = false,
+    output  = Table(Continuous),
+    descr   = SubspaceLDA_DESCR)
+
 metadata_model(BayesianSubspaceLDA,
-               input=Table(Continuous),
-               target=AbstractVector{<:Finite},
-               weights=false,
-               output = Table(Continuous),
-               descr=BayesianSubspaceLDA_DESCR)
+    input   = Table(Continuous),
+    target  = AbstractVector{<:Finite},
+    weights = false,
+    output  = Table(Continuous),
+    descr   = BayesianSubspaceLDA_DESCR)
 
 end
