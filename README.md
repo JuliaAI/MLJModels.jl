@@ -9,7 +9,7 @@ interfaces, and home of the MLJ model registry.
 ### Contents
 
  - [Who is this repo for?](#who-is-this-repo-for)
- - [What's provided here?](#what-is-provided-here)
+ - [What is provided here?](#what-is-provided-here)
  - [Instructions for updating the MLJ model registry](#instructions-for-updating-the-mlj-model-registry)
 
 ## Who is this repo for?
@@ -37,11 +37,11 @@ To list *all* model interfaces currently registered, do `using MLJ` or `using ML
 
 Recall that an interface is loaded from within MLJ, together with the
 package providing the underlying algorithm, using the syntax `@load
-RidgeRegressor pkg=GLM`, with the `pkg` only necessary in ambiguous
-cases.
+RidgeRegressor pkg=GLM`, where the `pkg` keyword is only necessary in
+ambiguous cases.
 
 
-## What's provided here?
+## What is provided here?
 
 MLJModels contains:
 
@@ -68,9 +68,8 @@ have an interface you would like registered, open an issue on this repo.
 
 To register all the models in GreatNewPackage with MLJ:
 
-- In a clone of the dev branch of
-  [MLJModels](https://github.com/alan-turing-institute/MLJModels.jl),
-  change to the `/src/registry/` directory and, in Julia, activate the
+- In the dev branch of a clone of the dev branch of MLJModels, change
+  to the `/src/registry/` directory and, in Julia, activate the
   environment specified by the Project.toml there, after checking the
   [compat] conditions there are up to date.
   
