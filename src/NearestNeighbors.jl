@@ -1,7 +1,14 @@
 module NearestNeighbors_
 
-import MLJBase
-import MLJBase: @mlj_model, metadata_model, metadata_pkg
+import MLJModelInterface
+import MLJModelInterface: @mlj_model, metadata_model, metadata_pkg,
+                          Table, Continuous, Count, Finite, OrderedFactor,
+                          Multiclass
+
+import MLJBase # Needed for UnivariateFinite Type
+
+const MMI = MLJModelInterface
+
 using Distances
 
 import ..NearestNeighbors
@@ -43,7 +50,7 @@ $KNNRegressorDescription
 
 $KNNFields
 """
-@mlj_model mutable struct KNNRegressor <: MLJBase.Deterministic
+@mlj_model mutable struct KNNRegressor <: MMI.Deterministic
     K::Int            = 5::(_ > 0)
     algorithm::Symbol = :kdtree::(_ in (:kdtree, :brutetree, :balltree))
     metric::Metric    = Euclidean()
@@ -59,7 +66,7 @@ $KNNClassifierDescription
 
 $KNNFields
 """
-@mlj_model mutable struct KNNClassifier <: MLJBase.Probabilistic
+@mlj_model mutable struct KNNClassifier <: MMI.Probabilistic
     K::Int            = 5::(_ > 0)
     algorithm::Symbol = :kdtree::(_ in (:kdtree, :brutetree, :balltree))
     metric::Metric    = Euclidean()
@@ -70,8 +77,8 @@ end
 
 const KNN = Union{KNNRegressor, KNNClassifier}
 
-function MLJBase.fit(m::KNN, verbosity::Int, X, y, w=nothing)
-    Xmatrix = MLJBase.matrix(X, transpose=true) # NOTE: copies the data
+function MMI.fit(m::KNN, verbosity::Int, X, y, w=nothing)
+    Xmatrix = MMI.matrix(X, transpose=true) # NOTE: copies the data
     if m.algorithm == :kdtree
         tree = NN.KDTree(Xmatrix; leafsize=m.leafsize, reorder=m.reorder)
     elseif m.algorithm == :balltree
@@ -83,15 +90,15 @@ function MLJBase.fit(m::KNN, verbosity::Int, X, y, w=nothing)
     return (tree, y, w), nothing, report
 end
 
-MLJBase.fitted_params(model::KNN, (tree, _)) = (tree=tree,)
+MMI.fitted_params(model::KNN, (tree, _)) = (tree=tree,)
 
-function MLJBase.predict(m::KNNClassifier, (tree, y, w), X)
-    Xmatrix = MLJBase.matrix(X, transpose=true) # NOTE: copies the data
+function MMI.predict(m::KNNClassifier, (tree, y, w), X)
+    Xmatrix = MMI.matrix(X, transpose=true) # NOTE: copies the data
     # for each entry, get the K closest training point + their distance
     idxs, dists = NN.knn(tree, Xmatrix, m.K)
 
     preds       = Vector{MLJBase.UnivariateFinite}(undef, length(idxs))
-    classes     = MLJBase.classes(y[1])
+    classes     = MMI.classes(y[1])
     probas      = zeros(length(classes))
 
     w_ = ones(m.K)
@@ -116,13 +123,13 @@ function MLJBase.predict(m::KNNClassifier, (tree, y, w), X)
         end
         # normalize so that sum to 1
         probas ./= sum(probas)
-        preds[i] = MLJBase.UnivariateFinite(classes, probas)
+        preds[i] = MMI.UnivariateFinite(classes, probas)
     end
     return preds
 end
 
-function MLJBase.predict(m::KNNRegressor, (tree, y, w), X)
-    Xmatrix     = MLJBase.matrix(X, transpose=true) # NOTE: copies the data
+function MMI.predict(m::KNNRegressor, (tree, y, w), X)
+    Xmatrix     = MMI.matrix(X, transpose=true) # NOTE: copies the data
     idxs, dists = NN.knn(tree, Xmatrix, m.K)
     preds       = zeros(length(idxs))
 
@@ -147,26 +154,26 @@ end
 # ====
 
 metadata_pkg.((KNNRegressor, KNNClassifier),
-    name="NearestNeighbors",
-    uuid="b8a86587-4115-5ab1-83bc-aa920d37bbce",
-    url="https://github.com/KristofferC/NearestNeighbors.jl",
-    julia=true,
-    license="MIT",
-    is_wrapper=false
+    name       = "NearestNeighbors",
+    uuid       = "b8a86587-4115-5ab1-83bc-aa920d37bbce",
+    url        = "https://github.com/KristofferC/NearestNeighbors.jl",
+    julia      = true,
+    license    = "MIT",
+    is_wrapper = false
     )
 
 metadata_model(KNNRegressor,
-    input=MLJBase.Table(MLJBase.Continuous),
-    target=AbstractVector{MLJBase.Continuous},
-    weights=true,
-    descr=KNNRegressorDescription
+    input   = Table(Continuous),
+    target  = AbstractVector{Continuous},
+    weights = true,
+    descr   = KNNRegressorDescription
     )
 
 metadata_model(KNNClassifier,
-    input=MLJBase.Table(MLJBase.Continuous),
-    target=AbstractVector{<:MLJBase.Finite},
-    weights=true,
-    descr=KNNClassifierDescription
+    input   = Table(Continuous),
+    target  = AbstractVector{<:Finite},
+    weights = true,
+    descr   = KNNClassifierDescription
     )
 
 end # module

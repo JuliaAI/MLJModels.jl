@@ -7,8 +7,8 @@ Xc2, yc2 = gen_classif(classes=["A", "B", "C"])
                        :priors, :scalings, :xbar, :classes,
                        :explained_variance_ratio)
     infos = info_dict(m)
-    @test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
-    @test infos[:target_scitype] == AbstractVector{<:MLJBase.Finite}
+    @test infos[:input_scitype] == Table(Continuous)
+    @test infos[:target_scitype] == AbstractVector{<:Finite}
     @test !isempty(infos[:docstring])
 end
 
@@ -18,7 +18,7 @@ end
     @test keys(fp) == (:covariance, :means, :priors,
                        :rotations, :scalings)
     infos = info_dict(m)
-    @test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
-    @test infos[:target_scitype] == AbstractVector{<:MLJBase.Finite}
+    @test infos[:input_scitype] == Table(Continuous)
+    @test infos[:target_scitype] == AbstractVector{<:Finite}
     @test !isempty(infos[:docstring])
 end

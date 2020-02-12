@@ -2,16 +2,19 @@ module GaussianProcesses_
 
 export GPClassifier
 
-import MLJBase
+import MLJModelInterface
+import MLJModelInterface: Table, Continuous, Count, Finite, OrderedFactor,
+                          Multiclass
+
+const MMI = MLJModelInterface
 
 using CategoricalArrays
-using ScientificTypes
 
 import ..GaussianProcesses # strange lazy-loading syntax
 
 const GP = GaussianProcesses
 
-mutable struct GPClassifier{M<:GP.Mean, K<:GP.Kernel} <: MLJBase.Deterministic
+mutable struct GPClassifier{M<:GP.Mean, K<:GP.Kernel} <: MMI.Deterministic
     mean::M
     kernel::K
 end
@@ -24,26 +27,26 @@ function GPClassifier(
         mean
         , kernel)
 
-    message = MLJBase.clean!(model)
+    message = MMI.clean!(model)
     isempty(message) || @warn message
 
     return model
 end
 
-# function MLJBase.clean! not provided
+# function MMI.clean! not provided
 
-function MLJBase.fit(model::GPClassifier{M,K}
+function MMI.fit(model::GPClassifier{M,K}
             , verbosity::Int
             , X
             , y) where {M,K}
 
-    Xmatrix = MLJBase.matrix(X)
+    Xmatrix = MMI.matrix(X)
 
-    y_plain = MLJBase.int(y)
+    y_plain = MMI.int(y)
 
     a_target_element = y[1]
-    nclasses = length(MLJBase.classes(a_target_element))
-    decode = MLJBase.decoder(a_target_element)
+    nclasses = length(MMI.classes(a_target_element))
+    decode = MMI.decoder(a_target_element)
 
     gp = GP.GPE(transpose(Xmatrix)
                 , y_plain
@@ -59,11 +62,11 @@ function MLJBase.fit(model::GPClassifier{M,K}
     return fitresult, cache, report
 end
 
-function MLJBase.predict(model::GPClassifier
+function MMI.predict(model::GPClassifier
                        , fitresult
                        , Xnew)
 
-    Xmatrix = MLJBase.matrix(Xnew)
+    Xmatrix = MMI.matrix(Xnew)
 
     gp, nclasses, decode = fitresult
 
@@ -75,12 +78,12 @@ function MLJBase.predict(model::GPClassifier
 end
 
 # metadata:
-MLJBase.load_path(::Type{<:GPClassifier}) = "MLJModels.GaussianProcesses_.GPClassifier" # lazy-loaded from MLJ
-MLJBase.package_name(::Type{<:GPClassifier}) = "GaussianProcesses"
-MLJBase.package_uuid(::Type{<:GPClassifier}) = "891a1506-143c-57d2-908e-e1f8e92e6de9"
-MLJBase.package_url(::Type{<:GPClassifier}) = "https://github.com/STOR-i/GaussianProcesses.jl"
-MLJBase.is_pure_julia(::Type{<:GPClassifier}) = true
-MLJBase.input_scitype(::Type{<:GPClassifier}) = Table(Continuous)
-MLJBase.target_scitype(::Type{<:GPClassifier}) = AbstractVector{<:Finite}
+MMI.load_path(::Type{<:GPClassifier}) = "MLJModels.GaussianProcesses_.GPClassifier" # lazy-loaded from MLJ
+MMI.package_name(::Type{<:GPClassifier}) = "GaussianProcesses"
+MMI.package_uuid(::Type{<:GPClassifier}) = "891a1506-143c-57d2-908e-e1f8e92e6de9"
+MMI.package_url(::Type{<:GPClassifier}) = "https://github.com/STOR-i/GaussianProcesses.jl"
+MMI.is_pure_julia(::Type{<:GPClassifier}) = true
+MMI.input_scitype(::Type{<:GPClassifier}) = Table(Continuous)
+MMI.target_scitype(::Type{<:GPClassifier}) = AbstractVector{<:Finite}
 
 end # module

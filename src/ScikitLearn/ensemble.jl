@@ -1,12 +1,12 @@
 AdaBoostRegressor_ = SKEN.AdaBoostRegressor
-@sk_reg mutable struct AdaBoostRegressor <: MLJBase.Deterministic
+@sk_reg mutable struct AdaBoostRegressor <: MMI.Deterministic
     base_estimator::Any    = nothing
     n_estimators::Int      = 50::(_ > 0)
     learning_rate::Float64 = 1.0::(_ > 0)
     loss::String           = "linear"::(_ in ("linear","square","exponential"))
     random_state::Any      = nothing
 end
-MLJBase.fitted_params(model::AdaBoostRegressor, (f, _, _)) = (
+MMI.fitted_params(model::AdaBoostRegressor, (f, _, _)) = (
     estimators           = f.estimators_,
     estimator_weights    = f.estimator_weights_,
     estimator_errors     = f.estimator_errors_,
@@ -15,14 +15,14 @@ MLJBase.fitted_params(model::AdaBoostRegressor, (f, _, _)) = (
 
 # ----------------------------------------------------------------------------
 AdaBoostClassifier_ = SKEN.AdaBoostClassifier
-@sk_clf mutable struct AdaBoostClassifier <: MLJBase.Probabilistic
+@sk_clf mutable struct AdaBoostClassifier <: MMI.Probabilistic
     base_estimator::Any    = nothing
     n_estimators::Int      = 50::(_ > 0)
     learning_rate::Float64 = 1.0::(_ > 0)
     algorithm::String      = "SAMME.R"::(_ in ("SAMME", "SAMME.R"))
     random_state::Any      = nothing
 end
-MLJBase.fitted_params(m::AdaBoostClassifier, (f, _, _)) = (
+MMI.fitted_params(m::AdaBoostClassifier, (f, _, _)) = (
     estimators        = f.estimators_,
     estimator_weights = f.estimator_weights_,
     estimator_errors  = f.estimator_errors_,
@@ -30,15 +30,15 @@ MLJBase.fitted_params(m::AdaBoostClassifier, (f, _, _)) = (
     n_classes         = f.n_classes_
     )
 metadata_model(AdaBoostClassifier,
-    input   = MLJBase.Table(MLJBase.Continuous),
-    target  = AbstractVector{<:MLJBase.Finite},
+    input   = Table(Continuous),
+    target  = AbstractVector{<:Finite},
     weights = false,
     descr   = "Adaboost ensemble classifier."
     )
 
 # ============================================================================
 BaggingRegressor_ = SKEN.BaggingRegressor
-@sk_reg mutable struct BaggingRegressor <: MLJBase.Deterministic
+@sk_reg mutable struct BaggingRegressor <: MMI.Deterministic
     base_estimator::Any      = nothing
     n_estimators::Int        = 10::(_>0)
     max_samples::Union{Int,Float64}  = 1.0::(_>0)
@@ -51,7 +51,7 @@ BaggingRegressor_ = SKEN.BaggingRegressor
     random_state::Any        = nothing
     verbose::Int             = 0
 end
-MLJBase.fitted_params(model::BaggingRegressor, (f, _, _)) = (
+MMI.fitted_params(model::BaggingRegressor, (f, _, _)) = (
     estimators          = f.estimators_,
     estimators_samples  = f.estimators_samples_,
     estimators_features = f.estimators_features_,
@@ -61,7 +61,7 @@ MLJBase.fitted_params(model::BaggingRegressor, (f, _, _)) = (
 
 # ----------------------------------------------------------------------------
 BaggingClassifier_ = SKEN.BaggingClassifier
-@sk_clf mutable struct BaggingClassifier <: MLJBase.Probabilistic
+@sk_clf mutable struct BaggingClassifier <: MMI.Probabilistic
     base_estimator::Any      = nothing
     n_estimators::Int        = 10::(_>0)
     max_samples::Union{Int,Float64}  = 1.0::(_>0)
@@ -74,7 +74,7 @@ BaggingClassifier_ = SKEN.BaggingClassifier
     random_state::Any        = nothing
     verbose::Int             = 0
 end
-MLJBase.fitted_params(m::BaggingClassifier, (f, _, _)) = (
+MMI.fitted_params(m::BaggingClassifier, (f, _, _)) = (
     base_estimator        = f.base_estimator_,
     estimators            = f.estimators_,
     estimators_samples    = f.estimators_samples_,
@@ -85,15 +85,15 @@ MLJBase.fitted_params(m::BaggingClassifier, (f, _, _)) = (
     oob_decision_function = m.oob_score ? f.oob_decision_function_ : nothing
     )
 metadata_model(BaggingClassifier,
-    input   = MLJBase.Table(MLJBase.Continuous),
-    target  = AbstractVector{<:MLJBase.Finite},
+    input   = Table(Continuous),
+    target  = AbstractVector{<:Finite},
     weights = false,
     descr   = "Bagging ensemble classifier."
     )
 
 # ============================================================================
 GradientBoostingRegressor_ = SKEN.GradientBoostingRegressor
-@sk_reg mutable struct GradientBoostingRegressor <: MLJBase.Deterministic
+@sk_reg mutable struct GradientBoostingRegressor <: MMI.Deterministic
     loss::String                    = "ls"::(_ in ("ls","lad","huber","quantile"))
     learning_rate::Float64          = 0.1::(_>0)
     n_estimators::Int               = 100::(_>0)
@@ -116,7 +116,7 @@ GradientBoostingRegressor_ = SKEN.GradientBoostingRegressor
     n_iter_no_change::Option{Int}  = nothing
     tol::Float64                   = 1e-4::(_>0)
 end
-MLJBase.fitted_params(m::GradientBoostingRegressor, (f, _, _)) = (
+MMI.fitted_params(m::GradientBoostingRegressor, (f, _, _)) = (
     feature_importances = f.feature_importances_,
     train_score         = f.train_score_,
     loss                = f.loss_,
@@ -127,7 +127,7 @@ MLJBase.fitted_params(m::GradientBoostingRegressor, (f, _, _)) = (
 
 # ----------------------------------------------------------------------------
 GradientBoostingClassifier_ = SKEN.GradientBoostingClassifier
-@sk_clf mutable struct GradientBoostingClassifier <: MLJBase.Probabilistic
+@sk_clf mutable struct GradientBoostingClassifier <: MMI.Probabilistic
     loss::String                    = "deviance"::(_ in ("deviance","exponential"))
     learning_rate::Float64          = 0.1::(_>0)
     n_estimators::Int               = 100::(_>0)
@@ -149,7 +149,7 @@ GradientBoostingClassifier_ = SKEN.GradientBoostingClassifier
     n_iter_no_change::Option{Int}  = nothing
     tol::Float64                   = 1e-4::(_>0)
 end
-MLJBase.fitted_params(m::GradientBoostingClassifier, (f, _, _)) = (
+MMI.fitted_params(m::GradientBoostingClassifier, (f, _, _)) = (
     n_estimators        = f.n_estimators_,
     feature_importances = f.feature_importances_,
     train_score         = f.train_score_,
@@ -159,15 +159,15 @@ MLJBase.fitted_params(m::GradientBoostingClassifier, (f, _, _)) = (
     oob_improvement     = m.subsample < 1 ? f.oob_improvement_ : nothing
     )
 metadata_model(GradientBoostingClassifier,
-    input   = MLJBase.Table(MLJBase.Continuous),
-    target  = AbstractVector{<:MLJBase.Finite},
+    input   = Table(Continuous),
+    target  = AbstractVector{<:Finite},
     weights = false,
     descr   = "Gradient boosting ensemble classifier."
     )
 
 # ============================================================================
 RandomForestRegressor_ = SKEN.RandomForestRegressor
-@sk_reg mutable struct RandomForestRegressor <: MLJBase.Deterministic
+@sk_reg mutable struct RandomForestRegressor <: MMI.Deterministic
     n_estimators::Int              = 100::(_ > 0)
     criterion::String              = "mse"::(_ in ("mae", "mse"))
     max_depth::Option{Int}         = nothing::(_ === nothing || _ > 0)
@@ -184,7 +184,7 @@ RandomForestRegressor_ = SKEN.RandomForestRegressor
     verbose::Int                   = 0
     warm_start::Bool               = false
 end
-MLJBase.fitted_params(model::RandomForestRegressor, (f, _, _)) = (
+MMI.fitted_params(model::RandomForestRegressor, (f, _, _)) = (
     estimators          = f.estimators_,
     feature_importances = f.feature_importances_,
     n_features          = f.n_features_,
@@ -193,15 +193,15 @@ MLJBase.fitted_params(model::RandomForestRegressor, (f, _, _)) = (
     oob_prediction      = model.oob_score ? f.oob_prediction_ : nothing
     )
 metadata_model(RandomForestRegressor,
-    input   = MLJBase.Table(MLJBase.Count,MLJBase.Continuous),
-    target  = AbstractVector{<:MLJBase.Finite},
+    input   = Table(Count,Continuous),
+    target  = AbstractVector{<:Finite},
     weights = false,
     descr   = "Random forest regressor."
     )
 
 # ----------------------------------------------------------------------------
 RandomForestClassifier_ = SKEN.RandomForestClassifier
-@sk_clf mutable struct RandomForestClassifier <: MLJBase.Probabilistic
+@sk_clf mutable struct RandomForestClassifier <: MMI.Probabilistic
     n_estimators::Int              = 100::(_ > 0)
     criterion::String              = "gini"::(_ in ("gini","entropy"))
     max_depth::Option{Int}         = nothing::(_ === nothing || _ > 0)
@@ -219,7 +219,7 @@ RandomForestClassifier_ = SKEN.RandomForestClassifier
     warm_start::Bool               = false
     class_weight::Any              = nothing
 end
-MLJBase.fitted_params(m::RandomForestClassifier, (f, _, _)) = (
+MMI.fitted_params(m::RandomForestClassifier, (f, _, _)) = (
     estimators            = f.estimators_,
     classes               = f.classes_,
     n_classes             = f.n_classes_,
@@ -230,20 +230,20 @@ MLJBase.fitted_params(m::RandomForestClassifier, (f, _, _)) = (
     oob_decision_function = m.oob_score ? f.oob_decision_function_ : nothing
     )
 metadata_model(RandomForestClassifier,
-    input   = MLJBase.Table(MLJBase.Count,MLJBase.Continuous),
-    target  = AbstractVector{<:MLJBase.Finite},
+    input   = Table(Count,Continuous),
+    target  = AbstractVector{<:Finite},
     weights = false,
     descr   = "Random forest classifier."
     )
 
 const ENSEMBLE_REG = Union{Type{<:AdaBoostRegressor}, Type{<:BaggingRegressor}, Type{<:GradientBoostingRegressor}}
 
-MLJBase.input_scitype(::ENSEMBLE_REG)  = MLJBase.Table(MLJBase.Continuous)
-MLJBase.target_scitype(::ENSEMBLE_REG) = AbstractVector{MLJBase.Continuous}
+MMI.input_scitype(::ENSEMBLE_REG)  = Table(Continuous)
+MMI.target_scitype(::ENSEMBLE_REG) = AbstractVector{Continuous}
 
 # ============================================================================
 ExtraTreesRegressor_ = SKEN.ExtraTreesRegressor
-@sk_reg mutable struct ExtraTreesRegressor <: MLJBase.Deterministic
+@sk_reg mutable struct ExtraTreesRegressor <: MMI.Deterministic
     n_estimators::Int              = 100::(_>0)
     criterion::String              = "mse"::(_ in ("mae", "mse"))
     max_depth::Option{Int}         = nothing::(_ === nothing || _ > 0)
@@ -260,7 +260,7 @@ ExtraTreesRegressor_ = SKEN.ExtraTreesRegressor
     verbose::Int                   = 0
     warm_start::Bool               = false
 end
-MLJBase.fitted_params(m::ExtraTreesRegressor, (f, _, _)) = (
+MMI.fitted_params(m::ExtraTreesRegressor, (f, _, _)) = (
     estimators          = f.estimators_,
     feature_importances = f.feature_importances_,
     n_features          = f.n_features_,
@@ -269,15 +269,15 @@ MLJBase.fitted_params(m::ExtraTreesRegressor, (f, _, _)) = (
     oob_prediction      = m.oob_score ? f.oob_prediction_ : nothing,
     )
 metadata_model(ExtraTreesRegressor,
-    input   = MLJBase.Table(MLJBase.Continuous),
-    target  = AbstractVector{MLJBase.Continuous},
+    input   = Table(Continuous),
+    target  = AbstractVector{Continuous},
     weights = false,
     descr   = "Extra trees regressor, fits a number of randomized decision trees on various sub-samples of the dataset and uses averaging to improve the predictive accuracy and control over-fitting."
     )
 
 # ----------------------------------------------------------------------------
 ExtraTreesClassifier_ = SKEN.ExtraTreesClassifier
-@sk_clf mutable struct ExtraTreesClassifier <: MLJBase.Probabilistic
+@sk_clf mutable struct ExtraTreesClassifier <: MMI.Probabilistic
     n_estimators::Int              = 100::(_>0)
     criterion::String              = "gini"::(_ in ("gini", "entropy"))
     max_depth::Option{Int}         = nothing::(_ === nothing || _ > 0)
@@ -295,7 +295,7 @@ ExtraTreesClassifier_ = SKEN.ExtraTreesClassifier
     warm_start::Bool               = false
     class_weight::Any              = nothing
 end
-MLJBase.fitted_params(m::ExtraTreesClassifier, (f, _, _)) = (
+MMI.fitted_params(m::ExtraTreesClassifier, (f, _, _)) = (
     estimators            = f.estimators_,
     classes               = f.classes_,
     n_classes             = f.n_classes_,
@@ -306,8 +306,8 @@ MLJBase.fitted_params(m::ExtraTreesClassifier, (f, _, _)) = (
     oob_decision_function = m.oob_score ? f.oob_decision_function_ : nothing,
     )
 metadata_model(ExtraTreesClassifier,
-    input   = MLJBase.Table(MLJBase.Continuous),
-    target  = AbstractVector{<:MLJBase.Finite},
+    input   = Table(Continuous),
+    target  = AbstractVector{<:Finite},
     weights = false,
     descr   = "Extra trees classifier, fits a number of randomized decision trees on various sub-samples of the dataset and uses averaging to improve the predictive accuracy and control over-fitting."
     )

@@ -120,15 +120,15 @@ infos = info_dict(knn)
 # PKG
 @test infos[:package_name] == "NearestNeighbors"
 
-@test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
-@test infos[:target_scitype] == AbstractVector{<:MLJBase.Finite}
+@test infos[:input_scitype] == Table(Continuous)
+@test infos[:target_scitype] == AbstractVector{<:Finite}
 
 infos[:docstring]
 
 infos = info_dict(knnr)
 
-@test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
-@test infos[:target_scitype] == AbstractVector{MLJBase.Continuous}
+@test infos[:input_scitype] == Table(Continuous)
+@test infos[:target_scitype] == AbstractVector{Continuous}
 
 infos[:docstring]
 

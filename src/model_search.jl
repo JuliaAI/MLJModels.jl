@@ -1,10 +1,10 @@
 ## FUNCTIONS TO INSPECT METADATA OF REGISTERED MODELS AND TO
-## FACILITATE MODEL SEARCH 
+## FACILITATE MODEL SEARCH
 
 is_supervised(::Type{<:MLJBase.Supervised}) = true
 is_supervised(::Type{<:MLJBase.Unsupervised}) = false
 
-supervised_propertynames = sort(MLJBase.SUPERVISED_TRAITS)
+supervised_propertynames = sort(SUPERVISED_TRAITS)
 alpha = [:name, :package_name, :is_supervised]
 omega = [:input_scitype, :target_scitype]
 both = vcat(alpha, omega)
@@ -13,7 +13,7 @@ prepend!(supervised_propertynames, alpha)
 append!(supervised_propertynames, omega)
 const SUPERVISED_PROPERTYNAMES = Tuple(supervised_propertynames)
 
-unsupervised_propertynames = sort(MLJBase.UNSUPERVISED_TRAITS)
+unsupervised_propertynames = sort(UNSUPERVISED_TRAITS)
 alpha = [:name, :package_name, :is_supervised]
 omega = [:input_scitype, :output_scitype]
 both = vcat(alpha, omega)
@@ -71,7 +71,7 @@ function info_as_named_tuple(i)
     return NamedTuple{propertynames}(propertyvalues)
 end
 
-ScientificTypes.info(handle::Handle) =
+MLJBase.info(handle::Handle) =
     info_as_named_tuple(INFO_GIVEN_HANDLE[handle])
 
 """
@@ -82,7 +82,7 @@ Returns the metadata for the registered model type with specified
 duplicate names.
 
 """
-function ScientificTypes.info(name::String; pkg=nothing)
+function MLJBase.info(name::String; pkg=nothing)
     name in NAMES ||
         throw(ArgumentError("There is no model named \"$name\" in "*
                             "the registry. \n Run `models()` to view all "*
@@ -116,9 +116,9 @@ Return the traits associated with the specified `model`. Equivalent to
 `pkg::String` the name of the package containing it.
 
 """
-ScientificTypes.info(M::Type{<:MLJBase.Model}) =
+MLJBase.info(M::Type{<:MLJBase.Model}) =
     info_as_named_tuple(MLJBase.info_dict(M))
-ScientificTypes.info(model::MLJBase.Model) = info(typeof(model))
+MLJBase.info(model::MLJBase.Model) = info(typeof(model))
 
 """
     models()

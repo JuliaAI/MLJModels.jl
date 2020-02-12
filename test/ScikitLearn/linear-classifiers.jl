@@ -6,8 +6,8 @@ Xc2, yc2 = gen_classif(classes=["A", "B", "C"])
     fp = fitted_params(m, f)
     @test keys(fp) == (:classes, :coef, :intercept)
     infos = info_dict(m)
-    @test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
-    @test infos[:target_scitype] == AbstractVector{<:MLJBase.Finite}
+    @test infos[:input_scitype] == Table(Continuous)
+    @test infos[:target_scitype] == AbstractVector{<:Finite}
     @test !isempty(infos[:docstring])
 end
 
@@ -16,8 +16,8 @@ end
     fp = fitted_params(m, f)
     @test keys(fp) == (:classes, :coef, :intercept, :Cs, :l1_ratios, :coefs_paths, :scores, :C, :l1_ratio)
     infos = info_dict(m)
-    @test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
-    @test infos[:target_scitype] == AbstractVector{<:MLJBase.Finite}
+    @test infos[:input_scitype] == Table(Continuous)
+    @test infos[:target_scitype] == AbstractVector{<:Finite}
     @test !isempty(infos[:docstring])
 end
 
@@ -26,8 +26,8 @@ end
     fp = fitted_params(m, f)
     @test keys(fp) == (:coef, :intercept)
     infos = info_dict(m)
-    @test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
-    @test infos[:target_scitype] == AbstractVector{<:MLJBase.Finite}
+    @test infos[:input_scitype] == Table(Continuous)
+    @test infos[:target_scitype] == AbstractVector{<:Finite}
     @test !isempty(infos[:docstring])
 end
 
@@ -36,8 +36,8 @@ end
     fp = fitted_params(m, f)
     @test keys(fp) == (:coef, :intercept)
     infos = info_dict(m)
-    @test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
-    @test infos[:target_scitype] == AbstractVector{<:MLJBase.Finite}
+    @test infos[:input_scitype] == Table(Continuous)
+    @test infos[:target_scitype] == AbstractVector{<:Finite}
     @test !isempty(infos[:docstring])
 end
 
@@ -46,8 +46,8 @@ end
     fp = fitted_params(m, f)
     @test keys(fp) == (:coef, :intercept)
     infos = info_dict(m)
-    @test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
-    @test infos[:target_scitype] == AbstractVector{<:MLJBase.Finite}
+    @test infos[:input_scitype] == Table(Continuous)
+    @test infos[:target_scitype] == AbstractVector{<:Finite}
     @test !isempty(infos[:docstring])
 end
 
@@ -64,8 +64,8 @@ end
     fp = fitted_params(m, f)
     @test keys(fp) == (:coef, :intercept)
     infos = info_dict(m)
-    @test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
-    @test infos[:target_scitype] == AbstractVector{<:MLJBase.Finite}
+    @test infos[:input_scitype] == Table(Continuous)
+    @test infos[:target_scitype] == AbstractVector{<:Finite}
     @test !isempty(infos[:docstring])
 end
 
@@ -76,15 +76,15 @@ end
     fp = fitted_params(m, f)
     @test keys(fp) == (:coef, :intercept)
     infos = info_dict(m)
-    @test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
-    @test infos[:target_scitype] == AbstractVector{<:MLJBase.Finite}
+    @test infos[:input_scitype] == Table(Continuous)
+    @test infos[:target_scitype] == AbstractVector{<:Finite}
     @test !isempty(infos[:docstring])
     ((ScikitLearn.Skcore).pyimport("numpy.random")).seed(0)
     m, f = simple_test_classif_prob(ProbabilisticSGDClassifier(), Xc2, yc2; nodummy=true)
     fp = fitted_params(m, f)
     @test keys(fp) == (:coef, :intercept)
     infos = info_dict(m)
-    @test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
-    @test infos[:target_scitype] == AbstractVector{<:MLJBase.Finite}
+    @test infos[:input_scitype] == Table(Continuous)
+    @test infos[:target_scitype] == AbstractVector{<:Finite}
     @test !isempty(infos[:docstring])
 end

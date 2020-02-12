@@ -5,9 +5,11 @@ export NuSVC, NuSVR
 export EpsilonSVR
 export OneClassSVM
 
-import MLJBase
-using ScientificTypes
-using CategoricalArrays
+import MLJModelInterface
+import MLJModelInterface: Table, Continuous, Count, Finite, OrderedFactor,
+                          Multiclass
+
+const MMI = MLJModelInterface
 
 import ..LIBSVM
 
@@ -18,7 +20,7 @@ Linear support vector machine classifier using LIBLINEAR: https://www.csie.ntu.e
 
 See also SVC, NuSVC
 """
-mutable struct LinearSVC <: MLJBase.Deterministic
+mutable struct LinearSVC <: MMI.Deterministic
     solver::LIBSVM.Linearsolver.LINEARSOLVER
     weights::Union{Dict, Nothing}
     tolerance::Float64
@@ -44,7 +46,7 @@ function LinearSVC(
         ,bias
     )
 
-    message = MLJBase.clean!(model)   #> future proof by including these
+    message = MMI.clean!(model)   #> future proof by including these
     isempty(message) || @warn message #> two lines even if no clean! defined below
 
     return model
@@ -60,7 +62,7 @@ fitting. Use the `report` method to inspect value used.
 
 See also LinearSVC, NuSVC
 """
-mutable struct SVC <: MLJBase.Deterministic
+mutable struct SVC <: MMI.Deterministic
     kernel::LIBSVM.Kernel.KERNEL
     gamma::Float64
     weights::Union{Dict, Nothing}
@@ -95,7 +97,7 @@ function SVC(
         ,probability
     )
 
-    message = MLJBase.clean!(model)   #> future proof by including these
+    message = MMI.clean!(model)   #> future proof by including these
     isempty(message) || @warn message #> two lines even if no clean! defined below
 
     return model
@@ -111,7 +113,7 @@ fitting. Use the `report` method to inspect value used.
 
 See also LinearSVC, SVC
 """
-mutable struct NuSVC <: MLJBase.Deterministic
+mutable struct NuSVC <: MMI.Deterministic
     kernel::LIBSVM.Kernel.KERNEL
     gamma::Float64
     weights::Union{Dict, Nothing}
@@ -146,13 +148,13 @@ function NuSVC(
         ,shrinking
     )
 
-    message = MLJBase.clean!(model)   #> future proof by including these
+    message = MMI.clean!(model)   #> future proof by including these
     isempty(message) || @warn message #> two lines even if no clean! defined below
 
     return model
 end
 
-mutable struct OneClassSVM <: MLJBase.Unsupervised
+mutable struct OneClassSVM <: MMI.Unsupervised
     kernel::LIBSVM.Kernel.KERNEL
     gamma::Float64
     nu::Float64
@@ -184,7 +186,7 @@ function OneClassSVM(
         ,shrinking
     )
 
-    message = MLJBase.clean!(model)   #> future proof by including these
+    message = MMI.clean!(model)   #> future proof by including these
     isempty(message) || @warn message #> two lines even if no clean! defined below
 
     return model
@@ -197,7 +199,7 @@ Kernel support vector machine regressor using LIBSVM: https://www.csie.ntu.edu.t
 
 See also EpsilonSVR
 """
-mutable struct NuSVR <: MLJBase.Deterministic
+mutable struct NuSVR <: MMI.Deterministic
     kernel::LIBSVM.Kernel.KERNEL
     gamma::Float64
     nu::Float64
@@ -229,7 +231,7 @@ function NuSVR(
         ,shrinking
     )
 
-    message = MLJBase.clean!(model)   #> future proof by including these
+    message = MMI.clean!(model)   #> future proof by including these
     isempty(message) || @warn message #> two lines even if no clean! defined below
 
     return model
@@ -242,7 +244,7 @@ Kernel support vector machine regressor using LIBSVM: https://www.csie.ntu.edu.t
 
 See also NuSVR
 """
-mutable struct EpsilonSVR <: MLJBase.Deterministic
+mutable struct EpsilonSVR <: MMI.Deterministic
     kernel::LIBSVM.Kernel.KERNEL
     gamma::Float64
     epsilon::Float64
@@ -274,7 +276,7 @@ function EpsilonSVR(
         ,shrinking
     )
 
-    message = MLJBase.clean!(model)   #> future proof by including these
+    message = MMI.clean!(model)   #> future proof by including these
     isempty(message) || @warn message #> two lines even if no clean! defined below
 
     return model
@@ -324,11 +326,11 @@ function get_svm_parameters(model::Union{SVC, NuSVC, NuSVR, EpsilonSVR, OneClass
 end
 
 
-function MLJBase.fit(model::LinearSVC, verbosity::Int, X, y)
+function MMI.fit(model::LinearSVC, verbosity::Int, X, y)
 
-    Xmatrix = MLJBase.matrix(X)' # notice the transpose
-    y_plain = MLJBase.int(y)
-    decode  = MLJBase.decoder(y[1]) # for predict method
+    Xmatrix = MMI.matrix(X)' # notice the transpose
+    y_plain = MMI.int(y)
+    decode  = MMI.decoder(y[1]) # for predict method
 
     cache = nothing
 
@@ -344,11 +346,11 @@ function MLJBase.fit(model::LinearSVC, verbosity::Int, X, y)
     return fitresult, cache, report
 end
 
-function MLJBase.fit(model::Union{SVC, NuSVC}, verbosity::Int, X, y)
+function MMI.fit(model::Union{SVC, NuSVC}, verbosity::Int, X, y)
 
-    Xmatrix = MLJBase.matrix(X)' # notice the transpose
-    y_plain = MLJBase.int(y)
-    decode  = MLJBase.decoder(y[1]) # for predict method
+    Xmatrix = MMI.matrix(X)' # notice the transpose
+    y_plain = MMI.int(y)
+    decode  = MMI.decoder(y[1]) # for predict method
 
     cache = nothing
 
@@ -365,9 +367,9 @@ function MLJBase.fit(model::Union{SVC, NuSVC}, verbosity::Int, X, y)
     return fitresult, cache, report
 end
 
-function MLJBase.fit(model::Union{NuSVR, EpsilonSVR}, verbosity::Int, X, y)
+function MMI.fit(model::Union{NuSVR, EpsilonSVR}, verbosity::Int, X, y)
 
-    Xmatrix = MLJBase.matrix(X)' # notice the transpose
+    Xmatrix = MMI.matrix(X)' # notice the transpose
 
     cache = nothing
 
@@ -383,9 +385,9 @@ function MLJBase.fit(model::Union{NuSVR, EpsilonSVR}, verbosity::Int, X, y)
     return fitresult, cache, report
 end
 
-function MLJBase.fit(model::OneClassSVM, verbosity::Int, X)
+function MMI.fit(model::OneClassSVM, verbosity::Int, X)
 
-    Xmatrix = MLJBase.matrix(X)' # notice the transpose
+    Xmatrix = MMI.matrix(X)' # notice the transpose
 
     cache = nothing
 
@@ -402,44 +404,44 @@ function MLJBase.fit(model::OneClassSVM, verbosity::Int, X)
 end
 
 
-function MLJBase.predict(model::LinearSVC, fitresult, Xnew)
+function MMI.predict(model::LinearSVC, fitresult, Xnew)
     result, decode = fitresult
-    (p,d) = LIBSVM.LIBLINEAR.linear_predict(result, MLJBase.matrix(Xnew)')
+    (p,d) = LIBSVM.LIBLINEAR.linear_predict(result, MMI.matrix(Xnew)')
     return decode(p)
 end
 
-function MLJBase.predict(model::Union{SVC, NuSVC}, fitresult, Xnew)
+function MMI.predict(model::Union{SVC, NuSVC}, fitresult, Xnew)
     result, decode = fitresult
-    (p,d) = LIBSVM.svmpredict(result, MLJBase.matrix(Xnew)')
+    (p,d) = LIBSVM.svmpredict(result, MMI.matrix(Xnew)')
     return decode(p)
 end
 
-function MLJBase.predict(model::Union{NuSVR, EpsilonSVR}, fitresult, Xnew)
-    (p,d) = LIBSVM.svmpredict(fitresult, MLJBase.matrix(Xnew)')
+function MMI.predict(model::Union{NuSVR, EpsilonSVR}, fitresult, Xnew)
+    (p,d) = LIBSVM.svmpredict(fitresult, MMI.matrix(Xnew)')
     return p
 end
 
-function MLJBase.transform(model::OneClassSVM, fitresult, Xnew)
-    (p,d) = LIBSVM.svmpredict(fitresult, MLJBase.matrix(Xnew)')
-    return categorical(p)
+function MMI.transform(model::OneClassSVM, fitresult, Xnew)
+    (p,d) = LIBSVM.svmpredict(fitresult, MMI.matrix(Xnew)')
+    return MMI.categorical(p)
 end
 
 
 # metadata
-MLJBase.load_path(::Type{<:LinearSVC}) = "MLJModels.LIBSVM_.LinearSVC"
-MLJBase.load_path(::Type{<:SVC}) = "MLJModels.LIBSVM_.SVC"
-MLJBase.load_path(::Type{<:NuSVC}) = "MLJModels.LIBSVM_.NuSVC"
-MLJBase.load_path(::Type{<:NuSVR}) = "MLJModels.LIBSVM_.NuSVR"
-MLJBase.load_path(::Type{<:EpsilonSVR}) = "MLJModels.LIBSVM_.EpsilonSVR"
-MLJBase.load_path(::Type{<:OneClassSVM}) = "MLJModels.LIBSVM_.OneClassSVM"
+MMI.load_path(::Type{<:LinearSVC}) = "MLJModels.LIBSVM_.LinearSVC"
+MMI.load_path(::Type{<:SVC}) = "MLJModels.LIBSVM_.SVC"
+MMI.load_path(::Type{<:NuSVC}) = "MLJModels.LIBSVM_.NuSVC"
+MMI.load_path(::Type{<:NuSVR}) = "MLJModels.LIBSVM_.NuSVR"
+MMI.load_path(::Type{<:EpsilonSVR}) = "MLJModels.LIBSVM_.EpsilonSVR"
+MMI.load_path(::Type{<:OneClassSVM}) = "MLJModels.LIBSVM_.OneClassSVM"
 
-MLJBase.package_name(::Type{<:SVM}) = "LIBSVM"
-MLJBase.package_uuid(::Type{<:SVM}) = "b1bec4e5-fd48-53fe-b0cb-9723c09d164b"
-MLJBase.is_pure_julia(::Type{<:SVM}) = false
-MLJBase.package_url(::Type{<:SVM}) = "https://github.com/mpastell/LIBSVM.jl"
-MLJBase.input_scitype(::Type{<:SVM}) = Table(Continuous)
-MLJBase.target_scitype(::Type{<:Union{LinearSVC, SVC, NuSVC}}) = AbstractVector{<:Finite}
-MLJBase.target_scitype(::Type{<:Union{NuSVR, EpsilonSVR}}) = AbstractVector{Continuous}
-MLJBase.output_scitype(::Type{<:OneClassSVM}) = AbstractVector{<:Finite{2}} # Bool (true means inlier)
+MMI.package_name(::Type{<:SVM}) = "LIBSVM"
+MMI.package_uuid(::Type{<:SVM}) = "b1bec4e5-fd48-53fe-b0cb-9723c09d164b"
+MMI.is_pure_julia(::Type{<:SVM}) = false
+MMI.package_url(::Type{<:SVM}) = "https://github.com/mpastell/LIBSVM.jl"
+MMI.input_scitype(::Type{<:SVM}) = Table(Continuous)
+MMI.target_scitype(::Type{<:Union{LinearSVC, SVC, NuSVC}}) = AbstractVector{<:Finite}
+MMI.target_scitype(::Type{<:Union{NuSVR, EpsilonSVR}}) = AbstractVector{Continuous}
+MMI.output_scitype(::Type{<:OneClassSVM}) = AbstractVector{<:Finite{2}} # Bool (true means inlier)
 
 end # module

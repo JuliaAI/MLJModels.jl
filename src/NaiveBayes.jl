@@ -2,20 +2,22 @@ module NaiveBayes_
 
 export GaussianNBClassifier, MultinomialNBClassifier, HybridNBClassifier
 
-import MLJBase
-using ScientificTypes
-using CategoricalArrays
+import MLJModelInterface
+import MLJModelInterface: Table, Continuous, Count, Finite, OrderedFactor,
+                          Multiclass
+
+const MMI = MLJModelInterface
 
 import ..NaiveBayes
 
-mutable struct GaussianNBClassifier <: MLJBase.Probabilistic
+mutable struct GaussianNBClassifier <: MMI.Probabilistic
 end
 
-function MLJBase.fit(model::GaussianNBClassifier, verbosity::Int
+function MMI.fit(model::GaussianNBClassifier, verbosity::Int
                 , X
                 , y)
 
-    Xmatrix = MLJBase.matrix(X)' |> collect
+    Xmatrix = MMI.matrix(X)' |> collect
     p = size(Xmatrix, 1)
 
     yplain = Any[y...] # y as Vector
@@ -32,7 +34,7 @@ function MLJBase.fit(model::GaussianNBClassifier, verbosity::Int
 
 end
 
-function MLJBase.fitted_params(model::GaussianNBClassifier, fitresult)
+function MMI.fitted_params(model::GaussianNBClassifier, fitresult)
     res = fitresult[1]
     return (c_counts=res.c_counts,
             c_stats=res.c_stats,
@@ -40,9 +42,9 @@ function MLJBase.fitted_params(model::GaussianNBClassifier, fitresult)
             n_obs=res.n_obs)
 end
 
-function MLJBase.predict(model::GaussianNBClassifier, fitresult, Xnew)
+function MMI.predict(model::GaussianNBClassifier, fitresult, Xnew)
 
-    Xmatrix = MLJBase.matrix(Xnew)' |> collect
+    Xmatrix = MMI.matrix(Xnew)' |> collect
     n = size(Xmatrix, 2)
 
     classes_observed, logprobs = NaiveBayes.predict_logprobs(fitresult, Xmatrix)
@@ -54,14 +56,14 @@ function MLJBase.predict(model::GaussianNBClassifier, fitresult, Xnew)
 
     # UnivariateFinite constructor automatically adds unobserved
     # classes with zero probability:
-    return [MLJBase.UnivariateFinite([classes_observed...], probs[:,i])
+    return [MMI.UnivariateFinite([classes_observed...], probs[:,i])
             for i in 1:n]
 
 end
 
 # MultinomialNBClassifier
 
-mutable struct MultinomialNBClassifier <: MLJBase.Probabilistic
+mutable struct MultinomialNBClassifier <: MMI.Probabilistic
     alpha::Int
 end
 
@@ -70,11 +72,11 @@ function MultinomialNBClassifier(; alpha=1)
     return m
 end
 
-function MLJBase.fit(model::MultinomialNBClassifier, verbosity::Int
+function MMI.fit(model::MultinomialNBClassifier, verbosity::Int
                 , X
                 , y)
 
-    Xmatrix = MLJBase.matrix(X) |> permutedims
+    Xmatrix = MMI.matrix(X) |> permutedims
     p = size(Xmatrix, 1)
     yplain = Any[y...] # ordinary Vector
     classes_observed = unique(yplain)
@@ -87,7 +89,7 @@ function MLJBase.fit(model::MultinomialNBClassifier, verbosity::Int
     return fitresult, nothing, report
 end
 
-function MLJBase.fitted_params(model::MultinomialNBClassifier, fitresult)
+function MMI.fitted_params(model::MultinomialNBClassifier, fitresult)
     res = fitresult[1]
     return (c_counts=res.c_counts,
             x_counts=res.x_counts,
@@ -95,9 +97,9 @@ function MLJBase.fitted_params(model::MultinomialNBClassifier, fitresult)
             n_obs=res.n_obs)
 end
 
-function MLJBase.predict(model::MultinomialNBClassifier, fitresult, Xnew)
+function MMI.predict(model::MultinomialNBClassifier, fitresult, Xnew)
 
-    Xmatrix = MLJBase.matrix(Xnew) |> collect |> permutedims
+    Xmatrix = MMI.matrix(Xnew) |> collect |> permutedims
     n = size(Xmatrix, 2)
 
     # Note that NaiveBayes.predict_logprobs returns probabilities that
@@ -109,25 +111,25 @@ function MLJBase.predict(model::MultinomialNBClassifier, fitresult, Xnew)
     col_sums = sum(probs, dims=1)
     probs = probs ./ col_sums
 
-    return [MLJBase.UnivariateFinite([classes_observed...],
+    return [MMI.UnivariateFinite([classes_observed...],
                                      probs[:,i]) for i in 1:n]
 end
 
 # metadata:
-MLJBase.load_path(::Type{<:GaussianNBClassifier}) = "MLJModels.NaiveBayes_.GaussianNBClassifier"
-MLJBase.package_name(::Type{<:GaussianNBClassifier}) = "NaiveBayes"
-MLJBase.package_uuid(::Type{<:GaussianNBClassifier}) = "9bbee03b-0db5-5f46-924f-b5c9c21b8c60"
-MLJBase.package_url(::Type{<:GaussianNBClassifier}) = "https://github.com/dfdx/NaiveBayes.jl"
-MLJBase.is_pure_julia(::Type{<:GaussianNBClassifier}) = true
-MLJBase.input_scitype(::Type{<:GaussianNBClassifier}) = Table(Continuous)
-MLJBase.target_scitype(::Type{<:GaussianNBClassifier}) = AbstractVector{<:Finite}
+MMI.load_path(::Type{<:GaussianNBClassifier}) = "MLJModels.NaiveBayes_.GaussianNBClassifier"
+MMI.package_name(::Type{<:GaussianNBClassifier}) = "NaiveBayes"
+MMI.package_uuid(::Type{<:GaussianNBClassifier}) = "9bbee03b-0db5-5f46-924f-b5c9c21b8c60"
+MMI.package_url(::Type{<:GaussianNBClassifier}) = "https://github.com/dfdx/NaiveBayes.jl"
+MMI.is_pure_julia(::Type{<:GaussianNBClassifier}) = true
+MMI.input_scitype(::Type{<:GaussianNBClassifier}) = Table(Continuous)
+MMI.target_scitype(::Type{<:GaussianNBClassifier}) = AbstractVector{<:Finite}
 
-MLJBase.load_path(::Type{<:MultinomialNBClassifier}) = "MLJModels.NaiveBayes_.MultinomialNBClassifier"
-MLJBase.package_name(::Type{<:MultinomialNBClassifier}) = "NaiveBayes"
-MLJBase.package_uuid(::Type{<:MultinomialNBClassifier}) = "9bbee03b-0db5-5f46-924f-b5c9c21b8c60"
-MLJBase.package_url(::Type{<:MultinomialNBClassifier}) = "https://github.com/dfdx/NaiveBayes.jl"
-MLJBase.is_pure_julia(::Type{<:MultinomialNBClassifier}) = true
-MLJBase.input_scitype(::Type{<:MultinomialNBClassifier}) = Table(Count)
-MLJBase.target_scitype(::Type{<:MultinomialNBClassifier}) = AbstractVector{<:Finite}
+MMI.load_path(::Type{<:MultinomialNBClassifier}) = "MLJModels.NaiveBayes_.MultinomialNBClassifier"
+MMI.package_name(::Type{<:MultinomialNBClassifier}) = "NaiveBayes"
+MMI.package_uuid(::Type{<:MultinomialNBClassifier}) = "9bbee03b-0db5-5f46-924f-b5c9c21b8c60"
+MMI.package_url(::Type{<:MultinomialNBClassifier}) = "https://github.com/dfdx/NaiveBayes.jl"
+MMI.is_pure_julia(::Type{<:MultinomialNBClassifier}) = true
+MMI.input_scitype(::Type{<:MultinomialNBClassifier}) = Table(Count)
+MMI.target_scitype(::Type{<:MultinomialNBClassifier}) = AbstractVector{<:Finite}
 
 end     #module

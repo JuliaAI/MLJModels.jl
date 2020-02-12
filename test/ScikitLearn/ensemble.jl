@@ -67,8 +67,8 @@ Xc2, yc2 = gen_classif(classes=["A", "B", "C"])
     fp = fitted_params(m, f)
     @test keys(fp) == (:estimators, :estimator_weights, :estimator_errors, :classes, :n_classes)
     infos = info_dict(m)
-    @test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
-    @test infos[:target_scitype] == AbstractVector{<:MLJBase.Finite}
+    @test infos[:input_scitype] == Table(Continuous)
+    @test infos[:target_scitype] == AbstractVector{<:Finite}
     @test !isempty(infos[:docstring])
 end
 
@@ -77,8 +77,8 @@ end
     fp = fitted_params(m, f)
     @test keys(fp) == (:base_estimator, :estimators, :estimators_samples, :estimators_features, :classes, :n_classes, :oob_score, :oob_decision_function)
     infos = info_dict(m)
-    @test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
-    @test infos[:target_scitype] == AbstractVector{<:MLJBase.Finite}
+    @test infos[:input_scitype] == Table(Continuous)
+    @test infos[:target_scitype] == AbstractVector{<:Finite}
     @test !isempty(infos[:docstring])
 end
 
@@ -87,8 +87,8 @@ end
     fp = fitted_params(m, f)
     @test keys(fp) == (:n_estimators, :feature_importances, :train_score, :loss, :init, :estimators, :oob_improvement)
     infos = info_dict(m)
-    @test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
-    @test infos[:target_scitype] == AbstractVector{<:MLJBase.Finite}
+    @test infos[:input_scitype] == Table(Continuous)
+    @test infos[:target_scitype] == AbstractVector{<:Finite}
     @test !isempty(infos[:docstring])
 end
 
@@ -97,8 +97,8 @@ end
     fp = fitted_params(m, f)
     @test keys(fp) == (:estimators, :classes, :n_classes, :n_features, :n_outputs, :feature_importances, :oob_score, :oob_decision_function)
     infos = info_dict(m)
-    @test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous, MLJBase.Count)
-    @test infos[:target_scitype] == AbstractVector{<:MLJBase.Finite}
+    @test infos[:input_scitype] == Table(Continuous, Count)
+    @test infos[:target_scitype] == AbstractVector{<:Finite}
     @test !isempty(infos[:docstring])
 end
 
@@ -107,7 +107,7 @@ end
     fp = fitted_params(m, f)
     @test keys(fp) == (:estimators, :classes, :n_classes, :feature_importances, :n_features, :n_outputs, :oob_score, :oob_decision_function)
     infos = info_dict(m)
-    @test infos[:input_scitype] == MLJBase.Table(MLJBase.Continuous)
-    @test infos[:target_scitype] == AbstractVector{<:MLJBase.Finite}
+    @test infos[:input_scitype] == Table(Continuous)
+    @test infos[:target_scitype] == AbstractVector{<:Finite}
     @test !isempty(infos[:docstring])
 end

@@ -4,7 +4,7 @@ https://scikit-learn.org/stable/modules/clustering.html#overview-of-clustering-m
 
 # https://scikit-learn.org/stable/modules/generated/sklearn.cluster.AffinityPropagation.html#sklearn.cluster.AffinityPropagation
 AffinityPropagation_ = SKCL.AffinityPropagation
-@sk_uns mutable struct AffinityPropagation <: MLJBase.Unsupervised
+@sk_uns mutable struct AffinityPropagation <: MMI.Unsupervised
     damping::Float64      = 0.5::(0.5 ≤ _ ≤ 1)
     max_iter::Int         = 200::(_ ≥ 1)
     convergence_iter::Int = 15::(_ ≥ 1)
@@ -15,9 +15,9 @@ AffinityPropagation_ = SKCL.AffinityPropagation
 end
 @sku_predict AffinityPropagation
 
-function MLJBase.fitted_params(m::AffinityPropagation, f)
+function MMI.fitted_params(m::AffinityPropagation, f)
     nc   = length(f.cluster_centers_indices_)
-    catv = categorical(1:nc)
+    catv = MMI.categorical(1:nc)
     return (
         cluster_centers_indices = f.cluster_centers_indices_,
         cluster_centers         = f.cluster_centers_,
@@ -25,7 +25,7 @@ function MLJBase.fitted_params(m::AffinityPropagation, f)
         affinity_matrix         = f.affinity_matrix_)
 end
 metadata_model(AffinityPropagation,
-    input   = MLJBase.Table(MLJBase.Continuous),
+    input   = Table(Continuous),
     target  = AbstractVector{Multiclass},
     # no transform so no output
     weights = false,
@@ -35,7 +35,7 @@ metadata_model(AffinityPropagation,
 # ============================================================================
 # https://scikit-learn.org/stable/modules/generated/sklearn.cluster.AgglomerativeClustering.html#sklearn.cluster.AgglomerativeClustering
 AgglomerativeClustering_ = SKCL.AgglomerativeClustering
-@sk_uns mutable struct AgglomerativeClustering <: MLJBase.Unsupervised
+@sk_uns mutable struct AgglomerativeClustering <: MMI.Unsupervised
     n_clusters::Int     = 2::(_ ≥ 1)
     affinity::String    = "euclidean"::(_ in ("euclidean", "l1", "l2", "manhattan", "cosine", "precomputed"))
     memory::Any         = nothing
@@ -44,9 +44,9 @@ AgglomerativeClustering_ = SKCL.AgglomerativeClustering
     linkage::String     = "ward"::(_ in ("ward", "complete", "average", "single"))
     distance_threshold::Option{Float64}   = nothing::(_ === nothing || _ > 0)
 end
-function MLJBase.fitted_params(m::AgglomerativeClustering, f)
+function MMI.fitted_params(m::AgglomerativeClustering, f)
     nc   = f.n_clusters_
-    catv = categorical(1:nc)
+    catv = MMI.categorical(1:nc)
     return (
         n_clusters = f.n_clusters_,
         labels     = catv[f.labels_ .+ 1],
@@ -55,7 +55,7 @@ function MLJBase.fitted_params(m::AgglomerativeClustering, f)
         children   = f.children_)
 end
 metadata_model(AgglomerativeClustering,
-    input   = MLJBase.Table(MLJBase.Continuous),
+    input   = Table(Continuous),
     # no predict nor transform so no target nor output
     weights = false,
     descr   = "Recursively merges the pair of clusters that minimally increases a given linkage distance. Note: there is no `predict` or `transform` method
@@ -65,7 +65,7 @@ metadata_model(AgglomerativeClustering,
 # ============================================================================
 # https://scikit-learn.org/stable/modules/generated/sklearn.cluster.Birch.html#sklearn.cluster.Birch
 Birch_ = SKCL.Birch
-@sk_uns mutable struct Birch <: MLJBase.Unsupervised
+@sk_uns mutable struct Birch <: MMI.Unsupervised
     threshold::Float64    = 0.5::(_ > 0)
     branching_factor::Int = 50::(_ > 0)
     n_clusters::Int       = 3::(_ > 0)
@@ -75,9 +75,9 @@ end
 @sku_predict Birch
 @sku_transform Birch
 
-function MLJBase.fitted_params(m::Birch, f)
+function MMI.fitted_params(m::Birch, f)
     nc   = m.n_clusters
-    catv = categorical(1:nc)
+    catv = MMI.categorical(1:nc)
     return (
         root               = f.root_,
         dummy_leaf         = f.dummy_leaf_,
@@ -86,9 +86,9 @@ function MLJBase.fitted_params(m::Birch, f)
         labels             = catv[f.labels_ .+ 1])
 end
 metadata_model(Birch,
-    input   = MLJBase.Table(MLJBase.Continuous),
+    input   = Table(Continuous),
     target  = AbstractVector{Multiclass},
-    output  = MLJBase.Table(MLJBase.Continuous),
+    output  = Table(Continuous),
     weights = false,
     descr   = "Memory-efficient, online-learning algorithm provided as an alternative to MiniBatchKMeans. Note: noisy samples are given the label -1."
     )
@@ -96,7 +96,7 @@ metadata_model(Birch,
 # ============================================================================
 # https://scikit-learn.org/stable/modules/generated/sklearn.cluster.DBSCAN.html#sklearn.cluster.DBSCAN
 DBSCAN_ = SKCL.DBSCAN
-@sk_uns mutable struct DBSCAN <: MLJBase.Unsupervised
+@sk_uns mutable struct DBSCAN <: MMI.Unsupervised
     eps::Float64        = 0.5::(_ > 0)
     min_samples::Int    = 5::(_ > 1)
     metric::String      = "euclidean"::(_ in ("euclidean", "precomputed"))
@@ -105,16 +105,16 @@ DBSCAN_ = SKCL.DBSCAN
     p::Option{Float64}  = nothing
     n_jobs::Option{Int} = nothing
 end
-function MLJBase.fitted_params(m::DBSCAN, f)
+function MMI.fitted_params(m::DBSCAN, f)
     nc   = length(f.core_sample_indices_)
-    catv = categorical([-1, (1:nc)...])
+    catv = MMI.categorical([-1, (1:nc)...])
     return (
         core_sample_indices = f.core_sample_indices_,
         components          = f.components_,
         labels              = catv[f.labels_ .+ 2])
 end
 metadata_model(DBSCAN,
-    input   = MLJBase.Table(MLJBase.Continuous),
+    input   = Table(Continuous),
     weights = false,
     descr   = "Density-Based Spatial Clustering of Applications with Noise. Finds core samples of high density and expands clusters from them. Good for data which contains clusters of similar density."
     )
@@ -122,7 +122,7 @@ metadata_model(DBSCAN,
 # ============================================================================
 # https://scikit-learn.org/stable/modules/generated/sklearn.cluster.FeatureAgglomeration.html#sklearn.cluster.FeatureAgglomeration
 FeatureAgglomeration_ = SKCL.FeatureAgglomeration
-@sk_uns mutable struct FeatureAgglomeration <: MLJBase.Unsupervised
+@sk_uns mutable struct FeatureAgglomeration <: MMI.Unsupervised
     n_clusters::Int        = 2::(_ > 0)
     memory::Any            = nothing
     connectivity::Any      = nothing
@@ -136,9 +136,9 @@ end
 @sku_transform FeatureAgglomeration
 @sku_inverse_transform FeatureAgglomeration
 
-function MLJBase.fitted_params(m::FeatureAgglomeration, f)
+function MMI.fitted_params(m::FeatureAgglomeration, f)
     nc   = m.n_clusters
-    catv = categorical(1:nc)
+    catv = MMI.categorical(1:nc)
     return (
         n_clusters = f.n_clusters_,
         labels     = catv[f.labels_ .+ 1],
@@ -148,15 +148,15 @@ function MLJBase.fitted_params(m::FeatureAgglomeration, f)
         distances  = m.distance_threshold === nothing ? nothing : f.distances_)
 end
 metadata_model(FeatureAgglomeration,
-    input   = MLJBase.Table(MLJBase.Continuous),
-    output  = MLJBase.Table(MLJBase.Continuous),
+    input   = Table(Continuous),
+    output  = Table(Continuous),
     weights = false,
     descr   = "Similar to AgglomerativeClustering, but recursively merges features instead of samples."
     )
 
 # ============================================================================
 KMeans_ = SKCL.KMeans
-@sk_uns mutable struct KMeans <: MLJBase.Unsupervised
+@sk_uns mutable struct KMeans <: MMI.Unsupervised
     n_clusters::Int     = 8::(_ ≥ 1)
     n_init::Int         = 10::(_ ≥ 1)
     max_iter::Int       = 300::(_ ≥ 1)
@@ -173,25 +173,25 @@ end
 @sku_transform KMeans
 @sku_predict KMeans
 
-function MLJBase.fitted_params(m::KMeans, f)
+function MMI.fitted_params(m::KMeans, f)
     nc   = m.n_clusters
-    catv = categorical(1:nc)
+    catv = MMI.categorical(1:nc)
     return (
         cluster_centers = f.cluster_centers_,
         labels          = catv[f.labels_ .+ 1],
         inertia         = f.inertia_)
 end
 metadata_model(KMeans,
-    input   = MLJBase.Table(MLJBase.Continuous),
+    input   = Table(Continuous),
     target  = AbstractVector{Multiclass},
-    output  = MLJBase.Table(MLJBase.Continuous),
+    output  = Table(Continuous),
     weights = false,
     descr   = "K-Means algorithm: find K centroids corresponding to K clusters in the data."
     )
 
 # ============================================================================
 MiniBatchKMeans_ = SKCL.MiniBatchKMeans
-@sk_uns mutable struct MiniBatchKMeans <: MLJBase.Unsupervised
+@sk_uns mutable struct MiniBatchKMeans <: MMI.Unsupervised
     n_clusters::Int         = 8::(_ ≥ 1)
     max_iter::Int           = 100::(_ > 1)
     batch_size::Int         = 100::(_ > 1)
@@ -208,25 +208,25 @@ end
 @sku_predict MiniBatchKMeans
 @sku_transform MiniBatchKMeans
 
-function MLJBase.fitted_params(m::MiniBatchKMeans, f)
+function MMI.fitted_params(m::MiniBatchKMeans, f)
     nc   = m.n_clusters
-    catv = categorical(1:nc)
+    catv = MMI.categorical(1:nc)
     return (
         cluster_centers = f.cluster_centers_,
         labels          = catv[f.labels_ .+ 1],
         inertia         = f.inertia_)
 end
 metadata_model(MiniBatchKMeans,
-    input   = MLJBase.Table(MLJBase.Continuous),
+    input   = Table(Continuous),
     target  = AbstractVector{Multiclass},
-    output  = MLJBase.Table(MLJBase.Continuous),
+    output  = Table(Continuous),
     weights = false,
     descr   = "Mini-Batch K-Means clustering."
     )
 
 # ============================================================================
 MeanShift_ = SKCL.MeanShift
-@sk_uns mutable struct MeanShift <: MLJBase.Unsupervised
+@sk_uns mutable struct MeanShift <: MMI.Unsupervised
     bandwidth::Option{Float64}   = nothing
     seeds::Option{AbstractArray} = nothing
     bin_seeding::Bool            = false
@@ -237,15 +237,15 @@ MeanShift_ = SKCL.MeanShift
 end
 @sku_predict MeanShift
 
-function MLJBase.fitted_params(m::MeanShift, f)
+function MMI.fitted_params(m::MeanShift, f)
     nc   = size(f.cluster_centers_, 1)
-    catv = categorical(1:nc)
+    catv = MMI.categorical(1:nc)
     return (
         cluster_centers = f.cluster_centers_,
         labels          = catv[f.labels_ .+ 1])
 end
 metadata_model(MeanShift,
-    input   = MLJBase.Table(MLJBase.Continuous),
+    input   = Table(Continuous),
     target  = AbstractVector{Multiclass},
     weights = false,
     descr   = "Mean shift clustering using a flat kernel. Mean shift clustering aims to discover \"blobs\" in a smooth density of samples. It is a centroid-based algorithm, which works by updating candidates for centroids to be the mean of the points within a given region. These candidates are then filtered in a post-processing stage to eliminate near-duplicates to form the final set of centroids."
@@ -253,7 +253,7 @@ metadata_model(MeanShift,
 
 # ============================================================================
 OPTICS_ = SKCL.OPTICS
-@sk_uns mutable struct OPTICS <: MLJBase.Unsupervised
+@sk_uns mutable struct OPTICS <: MMI.Unsupervised
     min_samples::Union{Float64,Int} = 5::((_ isa Int && _ > 1) || 0 < _ < 1)
     max_eps::Float64       = Inf
     metric::String         = "minkowski"::(_ in ("precomputed", "cityblock", "cosine", "euclidean", "l1", "l2", "manhattan", "braycurtis", "canberra", "chebyshev", "correlation", "dice", "hamming", "jaccard", "kulsinski", "mahalanobis", "minkowski", "rogerstanimoto", "russellrao", "seuclidean", "sokalmichener", "sokalsneath", "sqeuclidean", "yule"))
@@ -267,9 +267,9 @@ OPTICS_ = SKCL.OPTICS
     leaf_size::Int         = 30::(_ > 1)
     n_jobs::Option{Int}    = nothing
 end
-function MLJBase.fitted_params(m::OPTICS, f)
+function MMI.fitted_params(m::OPTICS, f)
     nc   = size(f.cluster_hierarchy_, 1)
-    catv = categorical([-1, (1:nc)...])
+    catv = MMI.categorical([-1, (1:nc)...])
     return (
         labels            = catv[f.labels_ .+ 2],
         reachability      = f.reachability_,
@@ -279,14 +279,14 @@ function MLJBase.fitted_params(m::OPTICS, f)
         cluster_hierarchy = f.cluster_hierarchy_)
 end
 metadata_model(OPTICS,
-    input   = MLJBase.Table(MLJBase.Continuous),
+    input   = Table(Continuous),
     weights = false,
     descr   = "OPTICS (Ordering Points To Identify the Clustering Structure), closely related to DBSCAN, finds core sample of high density and expands clusters from them. Unlike DBSCAN, keeps cluster hierarchy for a variable neighborhood radius. Better suited for usage on large datasets than the current sklearn implementation of DBSCAN."
     )
 
 # ============================================================================
 SpectralClustering_ = SKCL.SpectralClustering
-@sk_uns mutable struct SpectralClustering <: MLJBase.Unsupervised
+@sk_uns mutable struct SpectralClustering <: MMI.Unsupervised
     n_clusters::Int      = 8::(_ ≥ 1)
     eigen_solver::Option{String} = nothing::(_ === nothing || _ in ("arpack", "lobpcg", "amg"))
 #    n_components::Option{Int}    = nothing::(_ === nothing || _ ≥ 1)
@@ -299,15 +299,15 @@ SpectralClustering_ = SKCL.SpectralClustering
     assign_labels::String = "kmeans"::(_ in ("kmeans", "discretize"))
     n_jobs::Option{Int}   = nothing
 end
-function MLJBase.fitted_params(m::SpectralClustering, f)
+function MMI.fitted_params(m::SpectralClustering, f)
     nc   = m.n_clusters
-    catv = categorical(1:nc)
+    catv = MMI.categorical(1:nc)
     return (
         labels          = catv[f.labels_ .+ 1],
         affinity_matrix = f.affinity_matrix_)
 end
 metadata_model(SpectralClustering,
-    input   = MLJBase.Table(MLJBase.Continuous),
+    input   = Table(Continuous),
     weights = false,
     descr   = "Apply clustering to a projection of the normalized Laplacian.
     In practice Spectral Clustering is very useful when the structure of the individual clusters is highly non-convex or more generally when a measure of the center and spread of the cluster is not a suitable description of the complete cluster. For instance when clusters are nested circles on the 2D plane."
@@ -316,10 +316,10 @@ metadata_model(SpectralClustering,
 # NOTE: the two models below are weird, not bothering with them for now
 # # ============================================================================
 # SpectralBiclustering_ = SKCL.SpectralBiclustering
-# @sk_uns mutable struct SpectralBiclustering <: MLJBase.Unsupervised
+# @sk_uns mutable struct SpectralBiclustering <: MMI.Unsupervised
 # end
 #
 # # ============================================================================
 # SpectralCoclustering_ = SKCL.SpectralCoclustering
-# @sk_uns mutable struct SpectralCoclustering <: MLJBase.Unsupervised
+# @sk_uns mutable struct SpectralCoclustering <: MMI.Unsupervised
 # end

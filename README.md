@@ -276,9 +276,9 @@ metadata_pkg.(ALL_MODELS
 
 # Then for each model,
 metadata_model(YourModel1,
-    input   = MLJBase.Table(MLJBase.Continuous),  # what input data is supported?
-    target  = AbstractVector{MLJBase.Continuous}, # for a supervised model, what target?
-    output  = MLJBase.Table(MLJBase.Continuous),  # for an unsupervised, what output?
+    input   = Table(Continuous),  # what input data is supported?
+    target  = AbstractVector{Continuous}, # for a supervised model, what target?
+    output  = Table(Continuous),  # for an unsupervised, what output?
     weights = false,                              # does the model support sample weights?
     descr   = "A short description of your model"
 	path    = "YourPackage.ModuleContainingModelStructDefinition.YourModel1"
