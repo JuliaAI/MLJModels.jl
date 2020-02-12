@@ -1,9 +1,4 @@
-# It is suggested that test code for each include file be placed in
-# a file of the same name under "test/" (and included below) and that
-# this test code be wrapped in a module. Any new module name will do -
-# eg, `module TestDatasets` for code testing `datasets.jl`.
-
-using Test
+using Test, MLJModels
 
 @testset "metadata" begin
     @testset "reading and extracting model metadata" begin

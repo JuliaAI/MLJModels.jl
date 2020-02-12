@@ -5,14 +5,18 @@
 
 module Clustering_
 
-import MLJBase
-import MLJBase: @mlj_model
-using ScientificTypes
+import MLJModelInterface
+import MLJModelInterface: @mlj_model, metadata_pkg, metadata_model,
+                          Table, Continuous, Count, Finite, OrderedFactor,
+                          Multiclass
+
+const MMI = MLJModelInterface
 
 import ..Clustering # strange sytax for lazy-loading
 
 using Distances
 using LinearAlgebra: norm
+using CategoricalArrays
 
 const C = Clustering
 
@@ -44,7 +48,7 @@ $KMFields
 
 See also the [package documentation](http://juliastats.github.io/Clustering.jl/latest/kmeans.html).
 """
-@mlj_model mutable struct KMeans <: MLJBase.Unsupervised
+@mlj_model mutable struct KMeans <: MMI.Unsupervised
     k::Int = 3::(_ ≥ 2)
     metric::SemiMetric = SqEuclidean()
 end
@@ -58,77 +62,77 @@ $KMFields
 
 See also the [package documentation](http://juliastats.github.io/Clustering.jl/latest/kmedoids.html).
 """
-@mlj_model mutable struct KMedoids <: MLJBase.Unsupervised
+@mlj_model mutable struct KMedoids <: MMI.Unsupervised
     k::Int = 3::(_ ≥ 2)
     metric::SemiMetric = SqEuclidean()
 end
 
-function MLJBase.fit(model::KMeans
+function MMI.fit(model::KMeans
                    , verbosity::Int
                    , X)
     # NOTE: using transpose here to get a LinearAlgebra.Transpose object which Kmeans can handle
-    Xarray = transpose(MLJBase.matrix(X))
+    Xarray = transpose(MMI.matrix(X))
 
     result    = C.kmeans(Xarray, model.k; distance=model.metric)
-    cluster_labels = categorical(1:model.k)
+    cluster_labels = MMI.categorical(1:model.k)
     fitresult = (result.centers, cluster_labels) # centers (p x k)
     cache     = nothing
     report    = (assignments=result.assignments, # size n
-                 cluster_labels=cluster_labels) 
+                 cluster_labels=cluster_labels)
 
     return fitresult, cache, report
 end
 
-MLJBase.fitted_params(::KMeans, fitresult) = (centers=fitresult[1],)
+MMI.fitted_params(::KMeans, fitresult) = (centers=fitresult[1],)
 
-function MLJBase.transform(model::KMeans
+function MMI.transform(model::KMeans
                          , fitresult
                          , X)
     # pairwise distance from samples to centers
-    X̃ = pairwise(model.metric, transpose(MLJBase.matrix(X)),
+    X̃ = pairwise(model.metric, transpose(MMI.matrix(X)),
                  fitresult[1], dims=2)
-    return MLJBase.table(X̃, prototype=X)
+    return MMI.table(X̃, prototype=X)
 end
 
-function MLJBase.fit(model::KMedoids
+function MMI.fit(model::KMedoids
                    , verbosity::Int
                    , X)
 
     # NOTE: using transpose=true will materialize the transpose (~ permutedims), KMedoids
     # does not yet accept LinearAlgebra.Transpose
-    Xarray = MLJBase.matrix(X, transpose=true)
+    Xarray = MMI.matrix(X, transpose=true)
     # cost matrix: all the pairwise distances
     Carray    = pairwise(model.metric, Xarray, dims=2) # n x n
     result    = C.kmedoids(Carray, model.k)
-    cluster_labels = categorical(1:model.k)
+    cluster_labels = MMI.categorical(1:model.k)
     fitresult = (view(Xarray, :, result.medoids), cluster_labels) # medoids
     cache     = nothing
     report    = (assignments=result.assignments, # size n
-                 cluster_labels=cluster_labels) 
+                 cluster_labels=cluster_labels)
 
     return fitresult, cache, report
 end
 
-MLJBase.fitted_params(::KMedoids, fitresult) = (medoids=fitresult[1],)
+MMI.fitted_params(::KMedoids, fitresult) = (medoids=fitresult[1],)
 
-function MLJBase.transform(model::KMedoids
+function MMI.transform(model::KMedoids
                          , fitresult
                          , X)
     # pairwise distance from samples to medoids
-                 X̃ = pairwise(model.metric, MLJBase.matrix(X, transpose=true),
+                 X̃ = pairwise(model.metric, MMI.matrix(X, transpose=true),
                               fitresult[1], dims=2)
-    return MLJBase.table(X̃, prototype=X)
+    return MMI.table(X̃, prototype=X)
 end
 
 ####
 #### Predict methods
 ####
 
-function MLJBase.predict(model::Union{KMeans,KMedoids}, fitresult, Xnew)
+function MMI.predict(model::Union{KMeans,KMedoids}, fitresult, Xnew)
 
     locations, cluster_labels = fitresult
 
-    Xarray = MLJBase.matrix(Xnew)
+    Xarray = MMI.matrix(Xnew)
     (n, p), k = size(Xarray), model.k
 
     pred = zeros(Int, n)
@@ -149,8 +153,6 @@ end
 #### METADATA
 ####
 
-import ..metadata_pkg, ..metadata_model
-
 metadata_pkg.((KMeans, KMedoids),
     name="Clustering",
     uuid="aaaa29a8-35af-508c-8bc3-b662a17a0fe5",
@@ -161,17 +163,17 @@ metadata_pkg.((KMeans, KMedoids),
     )
 
 metadata_model(KMeans,
-    input=MLJBase.Table(MLJBase.Continuous),
-    output=MLJBase.Table(MLJBase.Continuous),
-    weights=false,
-    descr=KMeansDescription
+    input   = Table(Continuous),
+    output  = Table(Continuous),
+    weights = false,
+    descr   = KMeansDescription
     )
 
 metadata_model(KMedoids,
-    input=MLJBase.Table(MLJBase.Continuous),
-    output=MLJBase.Table(MLJBase.Continuous),
-    weights=false,
-    descr=KMedoidsDescription
+    input   = Table(Continuous),
+    output  = Table(Continuous),
+    weights = false,
+    descr   = KMedoidsDescription
     )
 
 end # module

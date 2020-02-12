@@ -44,7 +44,7 @@ $FILL_IMPUTER_DESCR
   data (including binary data), by default the mode
 
 """
-@with_kw_noshow mutable struct FillImputer <: MLJBase.Unsupervised
+@with_kw_noshow mutable struct FillImputer <: Unsupervised
     features::Vector{Symbol}  = Symbol[]
     continuous_fill::Function = _median
     count_fill::Function      = _round_median
@@ -73,11 +73,11 @@ function MLJBase.transform(transformer::FillImputer, fitresult, X)
         col = MLJBase.selectcols(X, ftr)
         if eltype(col) >: Missing
             T    = scitype_union(col)
-            if T <: Union{MLJBase.Continuous,Missing}
+            if T <: Union{Continuous,Missing}
                 filler = transformer.continuous_fill(col)
-            elseif T <: Union{MLJBase.Count,Missing}
+            elseif T <: Union{Count,Missing}
                 filler = transformer.count_fill(col)
-            elseif T <: Union{MLJBase.Finite,Missing}
+            elseif T <: Union{Finite,Missing}
                 filler = transformer.finite_fill(col)
             end
             col = copy(col) # carries the same name but not attached to the same memory
@@ -104,7 +104,7 @@ Alternatively, if a non-empty `features` is specified, then only the
 specified features are used. Throws an error if a recorded or
 specified feature is not present in the transformation input.
 """
-@with_kw_noshow mutable struct FeatureSelector <: MLJBase.Unsupervised
+@with_kw_noshow mutable struct FeatureSelector <: Unsupervised
     features::Vector{Symbol} = Symbol[]
 end
 
@@ -141,7 +141,7 @@ const message1 = "Attempting to transform a level not in pool of specified "*
 
 # Transform a raw level `x` in the pool of some categorical element,
 # `element`, into a categorical element (with the same pool):
-function MLJBase.transform(element::C, x) where C<:CategoricalElement
+function MLJBase.transform(element::C, x) where C <: CategoricalElement
     pool = element.pool
     x in levels(pool) || error(message1)
     ref = pool.invindex[x]
@@ -193,7 +193,7 @@ The transformation is chosen so that the vector on which the
     v_approx = inverse_transform(discretizer, w) # reconstruction of v from w
 
 """
-@with_kw_noshow mutable struct UnivariateDiscretizer <:MLJBase.Unsupervised
+@with_kw_noshow mutable struct UnivariateDiscretizer <:Unsupervised
     n_classes::Int = 512
 end
 
@@ -227,13 +227,12 @@ end
 
 # acts on scalars:
 function transform_to_int(
-    result::UnivariateDiscretizerResult{<:CategoricalElement{R}},
-    r::Real) where R
-
-    k = R(1)
-    for q in result.odd_quantiles
+            result::UnivariateDiscretizerResult{<:CategoricalValue{R}},
+            r::Real) where R
+    k = oneR = R(1)
+    @inbounds for q in result.odd_quantiles
         if r > q
-            k += R(1)
+            k += oneR
         end
     end
     return k
@@ -285,7 +284,7 @@ end
 
 Unsupervised model for standardizing (whitening) univariate data.
 """
-mutable struct UnivariateStandardizer <: MLJBase.Unsupervised end
+mutable struct UnivariateStandardizer <: Unsupervised end
 
 function MLJBase.fit(transformer::UnivariateStandardizer, verbosity::Int,
              v::AbstractVector{T}) where T<:Real
@@ -342,7 +341,7 @@ names of features to be standardized.
     │ 3   │ 1.14708   │ 3     │
 
 """
-@with_kw_noshow mutable struct Standardizer <: MLJBase.Unsupervised
+@with_kw_noshow mutable struct Standardizer <: Unsupervised
     features::Vector{Symbol} = Symbol[] # features to be standardized; empty means all
 end
 
@@ -369,7 +368,8 @@ function MLJBase.fit(transformer::Standardizer, verbosity::Int, X)
     verbosity < 2 || @info "Features standarized: "
     for j in cols_to_fit
         col_fitresult, cache, report =
-            fit(UnivariateStandardizer(), verbosity - 1, selectcols(X, j))
+            MLJBase.fit(UnivariateStandardizer(), verbosity - 1,
+                        selectcols(X, j))
         fitresult_given_feature[all_features[j]] = col_fitresult
         verbosity < 2 ||
             @info "  :$(all_features[j])    mu=$(col_fitresult[1])  sigma=$(col_fitresult[2])"
@@ -467,7 +467,7 @@ positive shift `c` of `0.2` times the data mean. If there are no zero
 values, then no shift is applied.
 
 """
-@with_kw_noshow mutable struct UnivariateBoxCoxTransformer <: MLJBase.Unsupervised
+@with_kw_noshow mutable struct UnivariateBoxCoxTransformer <: Unsupervised
     n::Int      = 171   # nbr values tried in optimizing exponent lambda
     shift::Bool = false # whether to shift data away from zero
 end
@@ -540,7 +540,7 @@ features present in the fit data, but no new features can be present.
  CategoricalPool object encountered during the fit.
 
 """
-@with_kw_noshow mutable struct OneHotEncoder <: MLJBase.Unsupervised
+@with_kw_noshow mutable struct OneHotEncoder <: Unsupervised
     features::Vector{Symbol} = Symbol[]
     drop_last::Bool          = false
     ordered_factor::Bool     = true
@@ -659,62 +659,63 @@ end
 ## Metadata for all built-in transformers
 ##
 
-metadata_pkg.((FeatureSelector, UnivariateStandardizer,
-               UnivariateDiscretizer, Standardizer,
-               UnivariateBoxCoxTransformer,
-               OneHotEncoder, FillImputer),
-              name="MLJModels",
-              uuid="d491faf4-2d78-11e9-2867-c94bc002c0b7",
-              url="https://github.com/alan-turing-institute/MLJModels.jl",
-              julia=true,
-              license="MIT",
-              is_wrapper=false)
+metadata_pkg.(
+    (FeatureSelector, UnivariateStandardizer,
+     UnivariateDiscretizer, Standardizer,
+     UnivariateBoxCoxTransformer,
+     OneHotEncoder, FillImputer),
+    name       = "MLJModels",
+    uuid       = "d491faf4-2d78-11e9-2867-c94bc002c0b7",
+    url        = "https://github.com/alan-turing-institute/MLJModels.jl",
+    julia      = true,
+    license    = "MIT",
+    is_wrapper = false)
 
 metadata_model(FillImputer,
-               input=MLJBase.Table(MLJBase.Scientific),
-               output=MLJBase.Table(MLJBase.Scientific),
-               weights=false,
-               descr=FILL_IMPUTER_DESCR,
-               path="MLJModels.FillImputer")
+    input   = Table(Scientific),
+    output  = Table(Scientific),
+    weights = false,
+    descr   = FILL_IMPUTER_DESCR,
+    path    = "MLJModels.FillImputer")
 
 metadata_model(FeatureSelector,
-               input=MLJBase.Table(MLJBase.Scientific),
-               output=MLJBase.Table(MLJBase.Scientific),
-               weights=false,
-               descr=FEATURE_SELECTOR_DESCR,
-               path="MLJModels.FeatureSelector")
+    input   = Table(Scientific),
+    output  = Table(Scientific),
+    weights = false,
+    descr   = FEATURE_SELECTOR_DESCR,
+    path    = "MLJModels.FeatureSelector")
 
 metadata_model(UnivariateDiscretizer,
-               input=AbstractVector{<:MLJBase.Continuous},
-               output=AbstractVector{<:MLJBase.OrderedFactor},
-               weights=false,
-               descr=UNIVARIATE_DISCR_DESCR,
-               path="MLJModels.UnivariateDiscretizer")
+    input   = AbstractVector{<:Continuous},
+    output  = AbstractVector{<:OrderedFactor},
+    weights = false,
+    descr   = UNIVARIATE_DISCR_DESCR,
+    path    = "MLJModels.UnivariateDiscretizer")
 
 metadata_model(UnivariateStandardizer,
-               input=AbstractVector{<:MLJBase.Infinite},
-               output=AbstractVector{MLJBase.Continuous},
-               weights=false,
-               descr=UNIVARIATE_STD_DESCR,
-               path="MLJModels.UnivariateStandardizer")
+    input   = AbstractVector{<:Infinite},
+    output  = AbstractVector{Continuous},
+    weights = false,
+    descr   = UNIVARIATE_STD_DESCR,
+    path    = "MLJModels.UnivariateStandardizer")
 
 metadata_model(Standardizer,
-               input=MLJBase.Table(MLJBase.Scientific),
-               output=MLJBase.Table(MLJBase.Scientific),
-               weights=false,
-               descr=STANDARDIZER_DESCR,
-               path="MLJModels.Standardizer")
+    input   = Table(Scientific),
+    output  = Table(Scientific),
+    weights = false,
+    descr   = STANDARDIZER_DESCR,
+    path    = "MLJModels.Standardizer")
 
 metadata_model(UnivariateBoxCoxTransformer,
-               input=AbstractVector{MLJBase.Continuous},
-               output=AbstractVector{MLJBase.Continuous},
-               weights=false,
-               descr=UNIVARIATE_BOX_COX_DESCR,
-               path="MLJModels.UnivariateBoxCoxTransformer")
+    input   = AbstractVector{Continuous},
+    output  = AbstractVector{Continuous},
+    weights = false,
+    descr   = UNIVARIATE_BOX_COX_DESCR,
+    path    = "MLJModels.UnivariateBoxCoxTransformer")
 
 metadata_model(OneHotEncoder,
-               input=MLJBase.Table(MLJBase.Scientific),
-               output=MLJBase.Table(MLJBase.Scientific),
-               weights=false,
-               descr=ONE_HOT_DESCR,
-               path="MLJModels.OneHotEncoder")
+    input   = Table(Scientific),
+    output  = Table(Scientific),
+    weights = false,
+    descr   = ONE_HOT_DESCR,
+    path    = "MLJModels.OneHotEncoder")
