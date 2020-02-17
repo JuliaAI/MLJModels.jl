@@ -15,7 +15,7 @@ const SUPERVISED_PROPERTYNAMES = Tuple(supervised_propertynames)
 
 unsupervised_propertynames = sort(UNSUPERVISED_TRAITS)
 alpha = [:name, :package_name, :is_supervised]
-omega = [:input_scitype, :output_scitype]
+omega = [:input_scitype, :target_scitype, :output_scitype]
 both = vcat(alpha, omega)
 filter!(!in(both), unsupervised_propertynames)
 prepend!(unsupervised_propertynames, alpha)
