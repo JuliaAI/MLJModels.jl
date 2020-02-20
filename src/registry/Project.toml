@@ -1,6 +1,7 @@
 [deps]
 Clustering = "aaaa29a8-35af-508c-8bc3-b662a17a0fe5"
 DecisionTree = "7806a523-6efd-50cb-b5f6-3fa6f1930dbb"
+EvoTrees = "f6006082-12f8-11e9-0c9c-0d5d367ab1e5"
 GLM = "38e38edf-8417-5370-95a0-9cbb8c7f171a"
 InteractiveUtils = "b77e0a4c-d291-57a0-90e8-8db25a27a240"
 LIBSVM = "b1bec4e5-fd48-53fe-b0cb-9723c09d164b"
@@ -17,7 +18,7 @@ XGBoost = "009559a3-9522-5dbb-924b-0b6ed2b22bb9"
 
 [compat]
 MLJBase = "^0.11"
-MLJModelInterface = "^0.1"
+MLJModelInterface = "^0.1.7"
 
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
