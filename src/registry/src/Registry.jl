@@ -125,8 +125,9 @@ function _update(mod, test_env_only)
     mod.eval(program1)
     test_env_only || mod.eval(program2)
 
-    println("If you have called @update from the REPL then your namespace "*
-            "is now polluted. Restart your REPL. ")
+    println("You can now check the registry by running "*
+            "`MLJModels.check_registry().\n\n"*
+            "You can safely ignore \"conflicting import\" warnings. ")
 
     true
 end

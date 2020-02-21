@@ -6,6 +6,10 @@ Repository of selected
 [MLJ](https://github.com/alan-turing-institute/MLJ.jl) model
 interfaces, and home of the MLJ model registry.
 
+For instructions on integrating a new model with MLJ visit
+[here](https://alan-turing-institute.github.io/MLJ.jl/dev/adding_models_for_general_use/)
+
+
 ### Contents
 
  - [Who is this repo for?](#who-is-this-repo-for)
@@ -64,25 +68,30 @@ MLJModels contains:
 ## Instructions for updating the MLJ model registry
 
 Generally model registration is performed by administrators. If you
-have an interface you would like registered, open an issue on this repo. 
+have an interface you would like registered, open an issue
+[here](https://github.com/alan-turing-institute/MLJ.jl/issues).
 
 To register all the models in GreatNewPackage with MLJ:
 
 - In the dev branch of a clone of the dev branch of MLJModels, change
   to the `/src/registry/` directory and, in Julia, activate the
   environment specified by the Project.toml there, after checking the
-  [compat] conditions there are up to date.
+  [compat] conditions there are up to date. **Do not use** `Revise`.
   
 - Add `GreatNewPackage` to the environment.
 
-- In some environment in which your MLJModels clone has been added
-  using `Pkg.dev`, execute `using MLJModels; @update`. This updates
+- In some environment to which your MLJModels clone has been added
+  (using `Pkg.dev`) execute `using MLJModels; @update`. This updates
   `src/registry/Metadata.toml` and `src/registry/Models.toml` (the
   latter is generated for convenience and not used by MLJ).
   
 - Test that interfaces load with `MLJModels.check_registry()`
 
--  Quit your REPL session, whose namespace is now polluted.
+- Quit your REPL session, whose namespace is now polluted.
+
+- *Note.* that your local MLJModels will not immediately adopt the
+  updated registry because that requires pre-compilation; for
+  technical reasons the registry is not loaded in `__init__`()`.
 
 - Push your changes to an appropriate branch of MLJModels to make
   the updated metadata available to users of the next MLJModels tagged

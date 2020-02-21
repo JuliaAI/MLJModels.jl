@@ -7,6 +7,7 @@ MultivariateStats = ["ICA", "BayesianLDA", "BayesianSubspaceLDA", "RidgeRegresso
 DecisionTree = ["AdaBoostStumpClassifier", "DecisionTreeRegressor", "DecisionTreeClassifier", "RandomForestRegressor", "RandomForestClassifier"]
 Clustering = ["KMeans", "KMedoids"]
 XGBoost = ["XGBoostCount", "XGBoostRegressor", "XGBoostClassifier"]
+EvoTrees = ["EvoTreeClassifier", "EvoTreeGaussian", "EvoTreeRegressor", "EvoTreeCount"]
 MLJModels = ["ConstantClassifier", "Standardizer", "DeterministicConstantClassifier", "OneHotEncoder", "UnivariateBoxCoxTransformer", "ConstantRegressor", "FeatureSelector", "UnivariateDiscretizer", "FillImputer", "DeterministicConstantRegressor", "UnivariateStandardizer"]
 LIBSVM = ["EpsilonSVR", "LinearSVC", "NuSVR", "NuSVC", "SVC", "OneClassSVM"]
 GLM = ["LinearBinaryClassifier", "LinearCountRegressor", "LinearRegressor"]

@@ -4,6 +4,8 @@ using Test
 import CategoricalArrays
 import CategoricalArrays.categorical
 using MLJBase
+using Random
+Random.seed!(1234)
 
 # load code to be tested:
 import MLJModels
