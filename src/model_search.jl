@@ -185,7 +185,7 @@ List all models whose names are in the namespace of the specified
 module `modl`, or meeting the `conditions`, if specified. Here a
 *condition* is a `Bool`-valued function on models.
 
-See also [models](@ref)
+See also [`models`](@ref)
 
 """
 function localmodels(args...; modl=Main)

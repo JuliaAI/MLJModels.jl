@@ -20,3 +20,4 @@ function check_registry()
         end
     end
 end
+
