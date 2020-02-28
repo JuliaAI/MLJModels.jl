@@ -194,7 +194,7 @@ MMI.fitted_params(model::RandomForestRegressor, (f, _, _)) = (
     )
 metadata_model(RandomForestRegressor,
     input   = Table(Count,Continuous),
-    target  = AbstractVector{<:Finite},
+    target  = AbstractVector{Continuous},
     weights = false,
     descr   = "Random forest regressor."
     )
