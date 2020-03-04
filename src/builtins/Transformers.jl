@@ -319,13 +319,15 @@ MLJBase.inverse_transform(transformer::UnivariateStandardizer, fitresult, w) =
 ## STANDARDIZATION OF ORDINAL FEATURES OF TABULAR DATA
 
 """
-     Standardizer(; features=Symbol[])
+     Standardizer(; features=Symbol[], features_ignored=Symbol[])
 
 Unsupervised model for standardizing (whitening) the columns of
 tabular data. If `features` is empty then all columns `v` for which
 all elements have `Continuous` scitypes are standardized. For
 different behaviour (e.g. standardizing counts as well), specify the
-names of features to be standardized.
+names of features to be standardized. If `features_ignored` is empty,
+all features (or features specified in `features`) will be used,
+otherwise, ignore specified features.
 
     using DataFrames
     X = DataFrame(x1=[0.2, 0.3, 1.0], x2=[4, 2, 3])
@@ -343,22 +345,28 @@ names of features to be standardized.
 """
 @with_kw_noshow mutable struct Standardizer <: Unsupervised
     features::Vector{Symbol} = Symbol[] # features to be standardized; empty means all
+    features_ignored::Vector{Symbol} = Symbol[] # features to be ignored
 end
 
 function MLJBase.fit(transformer::Standardizer, verbosity::Int, X)
     all_features = Tables.schema(X).names
     mach_types   = collect(eltype(selectcols(X, c)) for c in all_features)
 
+    issubset(transformer.features_ignored, all_features) ||
+        @warn "Some ignored features not present in table to be fit. "
     # determine indices of all_features to be transformed
     if isempty(transformer.features)
         cols_to_fit = filter!(eachindex(all_features) |> collect) do j
-            mach_types[j] <: AbstractFloat
+            !(all_features[j] in transformer.features_ignored) &&
+                mach_types[j] <: AbstractFloat
         end
     else
         issubset(transformer.features, all_features) ||
             @warn "Some specified features not present in table to be fit. "
         cols_to_fit = filter!(eachindex(all_features) |> collect) do j
-            all_features[j] in transformer.features && mach_types[j] <: Real
+            all_features[j] in transformer.features &&
+                !(all_features[j] in transformer.features_ignored) &&
+                mach_types[j] <: Real
         end
     end
 

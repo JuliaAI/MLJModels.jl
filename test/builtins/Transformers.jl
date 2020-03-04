@@ -140,8 +140,28 @@ end
     @test Xnew[4] == X[4]
     @test MLJBase.std(Xnew[5]) ≈ 1.0
 
+    # test on ignoring a feature, even if it's listed in the `features`
+    stand.features_ignored = [:x5]
+    f,   = MLJBase.fit(stand, 1, X)
+    Xnew = MLJBase.transform(stand, f, X)
+    f,   = MLJBase.fit(stand, 1, X)
+
+    @test issubset(Set(keys(f)), Set(Tables.schema(X).names[[5,]]))
+
+    Xt = MLJBase.transform(stand, f, X)
+
+    @test Xnew[1] == X[1]
+    @test Xnew[2] == X[2]
+    @test Xnew[3] == X[3]
+    @test Xnew[4] == X[4]
+    @test Xnew[5] == X[5]
+
     stand = Standardizer(features=[:x1, :mickey_mouse])
     @test_logs (:warn, r"Some specified") MLJBase.fit(stand, 1, X)
+
+    stand = Standardizer(features_ignored=[:x1, :mickey_mouse])
+    @test_logs (:warn, r"Some ignored") MLJBase.fit(stand, 1, X)
+
 
     infos = MLJBase.info_dict(stand)
 
