@@ -141,7 +141,7 @@ end
     @test MLJBase.std(Xnew[5]) ≈ 1.0
 
     # test on ignoring a feature, even if it's listed in the `features`
-    stand.features_ignored = [:x5]
+    stand.ignore = [:x5]
     f,   = MLJBase.fit(stand, 1, X)
     Xnew = MLJBase.transform(stand, f, X)
     f,   = MLJBase.fit(stand, 1, X)
@@ -159,9 +159,8 @@ end
     stand = Standardizer(features=[:x1, :mickey_mouse])
     @test_logs (:warn, r"Some specified") MLJBase.fit(stand, 1, X)
 
-    stand = Standardizer(features_ignored=[:x1, :mickey_mouse])
+    stand = Standardizer(ignore=[:x1, :mickey_mouse])
     @test_logs (:warn, r"Some ignored") MLJBase.fit(stand, 1, X)
-
 
     infos = MLJBase.info_dict(stand)
 

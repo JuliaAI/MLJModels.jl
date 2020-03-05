@@ -319,13 +319,13 @@ MLJBase.inverse_transform(transformer::UnivariateStandardizer, fitresult, w) =
 ## STANDARDIZATION OF ORDINAL FEATURES OF TABULAR DATA
 
 """
-     Standardizer(; features=Symbol[], features_ignored=Symbol[])
+     Standardizer(; features=Symbol[], ignore=Symbol[])
 
 Unsupervised model for standardizing (whitening) the columns of
 tabular data. If `features` is empty then all columns `v` for which
 all elements have `Continuous` scitypes are standardized. For
 different behaviour (e.g. standardizing counts as well), specify the
-names of features to be standardized. If `features_ignored` is empty,
+names of features to be standardized. If `ignore` is empty,
 all features (or features specified in `features`) will be used,
 otherwise, ignore specified features.
 
@@ -345,19 +345,19 @@ otherwise, ignore specified features.
 """
 @with_kw_noshow mutable struct Standardizer <: Unsupervised
     features::Vector{Symbol} = Symbol[] # features to be standardized; empty means all
-    features_ignored::Vector{Symbol} = Symbol[] # features to be ignored
+    ignore::Vector{Symbol} = Symbol[] # features to be ignored
 end
 
 function MLJBase.fit(transformer::Standardizer, verbosity::Int, X)
     all_features = Tables.schema(X).names
     mach_types   = collect(eltype(selectcols(X, c)) for c in all_features)
 
-    issubset(transformer.features_ignored, all_features) ||
+    issubset(transformer.ignore, all_features) ||
         @warn "Some ignored features not present in table to be fit. "
     # determine indices of all_features to be transformed
     if isempty(transformer.features)
         cols_to_fit = filter!(eachindex(all_features) |> collect) do j
-            !(all_features[j] in transformer.features_ignored) &&
+            !(all_features[j] in transformer.ignore) &&
                 mach_types[j] <: AbstractFloat
         end
     else
@@ -365,7 +365,7 @@ function MLJBase.fit(transformer::Standardizer, verbosity::Int, X)
             @warn "Some specified features not present in table to be fit. "
         cols_to_fit = filter!(eachindex(all_features) |> collect) do j
             all_features[j] in transformer.features &&
-                !(all_features[j] in transformer.features_ignored) &&
+                !(all_features[j] in transformer.ignore) &&
                 mach_types[j] <: Real
         end
     end
