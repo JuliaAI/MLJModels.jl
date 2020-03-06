@@ -319,20 +319,21 @@ MLJBase.inverse_transform(transformer::UnivariateStandardizer, fitresult, w) =
 ## STANDARDIZATION OF ORDINAL FEATURES OF TABULAR DATA
 
 """
-     Standardizer(; features=Symbol[], ignore=false, ordered_factor=false, count=false)
+    Standardizer(; features=Symbol[], ignore=false, ordered_factor=false, count=false)
 
 Unsupervised model for standardizing (whitening) the columns of tabular data.
 If features is empty then all columns `v` having Continuous element scitype are
-standardized. Otherwise, the features standardized are `Continuous` named in features
-(`ignore=false`) or `Continuous` features not named in features (`ignore=true`). To allow
-standarization of `Count` or `OrderedFactor` features as well, set the appropriate flag to
-true.
+standardized. Otherwise, the features standardized are `Continuous` named in
+features (`ignore=false`) or `Continuous` features not named in features
+(`ignore=true`). To allow standarization of `Count` or `OrderedFactor` features
+as well, set the appropriate flag to true.
 
-Instead of supplying a features vector, a Bool-valued callable can be also be specified.
-For example, specifying `Standardizer(features = name -> name in [:x1, :x3], ignore = true,
-count=true)` has the same effect as `Standardizer(features = [:x1, :x3], ignore = true,
-count=true)`, namely to standardise all `Continuous` and `Count` features, with the
-exception of `:x1` and `:x3`.
+Instead of supplying a features vector, a Bool-valued callable can be also be
+specified. For example, specifying `Standardizer(features = name -> name in
+[:x1, :x3], ignore = true, count=true)` has the same effect as
+`Standardizer(features = [:x1, :x3], ignore = true, count=true)`, namely to
+standardise all `Continuous` and `Count` features, with the exception of `:x1`
+and `:x3`.
 
 # Example
 
@@ -410,8 +411,8 @@ function MLJBase.fit(transformer::Standardizer, verbosity::Int, X)
     #  Continuous
 
     # julia> push!(scitypes, OrderedFactor)
-    # ERROR: MethodError: Cannot `convert` an object of type Type{OrderedFactor} to an
-    # object of type DataType
+    # ERROR: MethodError: Cannot `convert` an object of type Type{OrderedFactor}
+    # to an object of type DataType
     scitypes = Vector{Any}([Continuous])
     transformer.ordered_factor && push!(scitypes, OrderedFactor)
     transformer.count && push!(scitypes, Count)
