@@ -321,13 +321,17 @@ MLJBase.inverse_transform(transformer::UnivariateStandardizer, fitresult, w) =
 """
      Standardizer(; features=Symbol[], ignore=false)
 
-Unsupervised model for standardizing (whitening) the columns of
-tabular data. If `features` is empty then all columns `v` for which
-all elements have `Continuous` scitypes are standardized. For
-different behaviour (e.g. standardizing counts as well), specify the
-names of features to be standardized. If `ignore` is empty,
-all features (or features specified in `features`) will be used,
-otherwise, ignore specified features.
+Unsupervised model for standardizing (whitening) the columns of tabular data.
+If features is empty then all columns v having Continuous element scitype are standardized.
+Otherwise, the features standardized are those named in features (ignore=false) or those
+not named in features (ignore=true). To allow standarization of Count or OrderedFactor
+features as well, set the appropriate flag to true.
+
+Instead of supplying a features vector, a Bool-valued callable can be also be specified.
+For example, specifying Standardizer(features = name -> name in [:x1, :x3], ignore = true,
+count=true) has the same effect as Standardizer(features = [:x1, :x3], ignore = true,
+count=true), namely to standardise all Continuous and Count features, with the exception
+of :x1 and :x3.
 
     using DataFrames
     X = DataFrame(x1=[0.2, 0.3, 1.0], x2=[4, 2, 3])
