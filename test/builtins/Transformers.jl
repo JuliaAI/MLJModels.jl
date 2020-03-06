@@ -104,7 +104,7 @@ end
     N = 5
     X = (OverallQual  = rand(UInt8, N),
          GrLivArea    = rand(N),
-         Neighborhood = categorical(rand("abc", N)),
+         Neighborhood = categorical(rand("abc", N), ordered=true),
          x1stFlrSF    = rand(N),
          TotalBsmtSF  = rand(N))
 
@@ -145,12 +145,12 @@ end
     f,   = MLJBase.fit(stand, 1, X)
     Xnew = MLJBase.transform(stand, f, X)
 
-    @test issubset(Set(keys(f)), Set(Tables.schema(X).names[[5,]]))
+    @test issubset(Set(keys(f)), Set(Tables.schema(X).names[[2,]]))
 
     Xt = MLJBase.transform(stand, f, X)
 
     @test Xnew[1] == X[1]
-    @test Xnew[2] == X[2]
+    @test MLJBase.std(Xnew[2]) ≈ 1.0
     @test Xnew[3] == X[3]
     @test Xnew[4] == X[4]
     @test Xnew[5] == X[5]
@@ -163,18 +163,20 @@ end
 
     @test_throws ArgumentError Standardizer(ignore=true)
 
-    stand = Standardizer(features=[:x4], count=true)
+    stand = Standardizer(features=[:x3, :x4], count=true, ordered_factor=true)
     f,   = MLJBase.fit(stand, 1, X)
     Xnew = MLJBase.transform(stand, f, X)
-
-    @test issubset(Set(keys(f)), Set(Tables.schema(X).names[[4,]]))
+    @test issubset(Set(keys(f)), Set(Tables.schema(X).names[3:4,]))
 
     Xt = MLJBase.transform(stand, f, X)
 
     @test Xnew[1] == X[1]
     @test Xnew[2] == X[2]
-    @test Xnew[3] == X[3]
+    @test elscitype(X[3]) <: OrderedFactor
+    @test elscitype(Xnew[3]) <: Continuous
+    @test MLJBase.std(Xnew[3]) ≈ 1.0
     @test elscitype(X[4]) == Count
+    @test elscitype(Xnew[4]) <: Continuous
     @test MLJBase.std(Xnew[4]) ≈ 1.0
     @test Xnew[5] == X[5]
 

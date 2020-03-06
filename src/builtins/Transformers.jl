@@ -323,28 +323,47 @@ MLJBase.inverse_transform(transformer::UnivariateStandardizer, fitresult, w) =
 
 Unsupervised model for standardizing (whitening) the columns of tabular data.
 If features is empty then all columns v having Continuous element scitype are standardized.
-Otherwise, the features standardized are those named in features (ignore=false) or those
-not named in features (ignore=true). To allow standarization of `Count` or `OrderedFactor`
-features as well, set the appropriate flag to true.
+Otherwise, the features standardized are `Continuous` named in features (`ignore=false`) or
+`Continuous` features not named in features (`ignore=true`). To allow standarization of
+`Count` or `OrderedFactor` features as well, set the appropriate flag to true.
 
 Instead of supplying a features vector, a Bool-valued callable can be also be specified.
 For example, specifying `Standardizer(features = name -> name in [:x1, :x3], ignore = true,
 count=true)` has the same effect as `Standardizer(features = [:x1, :x3], ignore = true,
 count=true)`, namely to standardise all `Continuous` and `Count` features, with the
-exception of :x1 and :x3.
+exception of `:x1` and `:x3`.
 
-    using DataFrames
-    X = DataFrame(x1=[0.2, 0.3, 1.0], x2=[4, 2, 3])
-    stand_model = Standardizer()
-    transform(fit!(machine(stand_model, X)), X)
+# Example
 
-    3×2 DataFrame
-    │ Row │ x1        │ x2    │
-    │     │ Float64   │ Int64 │
-    ├─────┼───────────┼───────┤
-    │ 1   │ -0.688247 │ 4     │
-    │ 2   │ -0.458831 │ 2     │
-    │ 3   │ 1.14708   │ 3     │
+```
+julia> using MLJModels, CategoricalArrays, MLJBase
+
+julia> X = (ordinal1 = [1, 2, 3],
+            ordinal2 = categorical([:x, :y, :x], ordered=true),
+            ordinal3 = [10.0, 20.0, 30.0],
+            ordinal4 = [-20.0, -30.0, -40.0],
+            nominal = categorical(["Your father", "he", "is"]));
+
+julia> stand1 = Standardizer();
+
+julia> transform(fit!(machine(stand1, X)), X)
+[ Info: Training Machine{Standardizer} @ 7…97.
+(ordinal1 = [1, 2, 3],
+ ordinal2 = CategoricalValue{Symbol,UInt32}[:x, :y, :x],
+ ordinal3 = [-1.0, 0.0, 1.0],
+ ordinal4 = [1.0, 0.0, -1.0],
+ nominal = CategoricalString{UInt32}["Your father", "he", "is"],)
+
+julia> stand2 = Standardizer(features=[:ordinal3, ], ignore=true, count=true);
+
+julia> transform(fit!(machine(stand2, X)), X)
+[ Info: Training Machine{Standardizer} @ 1…87.
+(ordinal1 = [-1.0, 0.0, 1.0],
+ ordinal2 = CategoricalValue{Symbol,UInt32}[:x, :y, :x],
+ ordinal3 = [10.0, 20.0, 30.0],
+ ordinal4 = [1.0, 0.0, -1.0],
+ nominal = CategoricalString{UInt32}["Your father", "he", "is"],)
+```
 
 """
 mutable struct Standardizer <: Unsupervised
@@ -384,7 +403,15 @@ end
 function MLJBase.fit(transformer::Standardizer, verbosity::Int, X)
     all_features = Tables.schema(X).names
     mach_types   = collect(elscitype(selectcols(X, c)) for c in all_features)
-    scitypes = [Continuous]
+    # Use any for workaround as OrderedFactor can't be converted into DataType
+    # julia> scitypes = [Continuous]
+    # 1-element Array{DataType,1}:
+    #  Continuous
+
+    # julia> push!(scitypes, OrderedFactor)
+    # ERROR: MethodError: Cannot `convert` an object of type Type{OrderedFactor} to an
+    # object of type DataType
+    scitypes = Vector{Any}([Continuous])
     transformer.ordered_factor && push!(scitypes, OrderedFactor)
     transformer.count && push!(scitypes, Count)
     AllowedScitype = Union{scitypes...}
@@ -399,14 +426,24 @@ function MLJBase.fit(transformer::Standardizer, verbosity::Int, X)
             issubset(transformer.features, all_features) ||
                 @warn "Some specified features not present in table to be fit. "
             cols_to_fit = filter!(eachindex(all_features) |> collect) do j
-                (all_features[j] in transformer.features && !transformer.ignore) &&
-                    mach_types[j] <: AllowedScitype
+                ifelse(
+                    transformer.ignore,
+                    !(all_features[j] in transformer.features) &&
+                        mach_types[j] <: AllowedScitype,
+                    (all_features[j] in transformer.features) &&
+                        mach_types[j] <: AllowedScitype
+                )
             end
         end
     else
         cols_to_fit = filter!(eachindex(all_features) |> collect) do j
-            (transformer.features(all_features[j]) && !transformer.ignore) &&
-                mach_types[j] <: AllowedScitype
+            ifelse(
+                transformer.ignore,
+                !(transformer.features(all_features[j])) &&
+                    mach_types[j] <: AllowedScitype,
+                (transformer.features(all_features[j])) &&
+                    mach_types[j] <: AllowedScitype
+            )
         end
     end
     fitresult_given_feature = Dict{Symbol,Tuple{Float64,Float64}}()
@@ -414,9 +451,13 @@ function MLJBase.fit(transformer::Standardizer, verbosity::Int, X)
     # fit each feature
     verbosity < 2 || @info "Features standarized: "
     for j in cols_to_fit
+        col_data = if (mach_types[j] <: OrderedFactor)
+            coerce(selectcols(X, j), Continuous)
+        else
+            selectcols(X, j)
+        end
         col_fitresult, cache, report =
-            MLJBase.fit(UnivariateStandardizer(), verbosity - 1,
-                        selectcols(X, j))
+            MLJBase.fit(UnivariateStandardizer(), verbosity - 1, col_data)
         fitresult_given_feature[all_features[j]] = col_fitresult
         verbosity < 2 ||
             @info "  :$(all_features[j])    mu=$(col_fitresult[1])  sigma=$(col_fitresult[2])"
@@ -432,7 +473,7 @@ end
 MLJBase.fitted_params(::Standardizer, fitresult) = (mean_and_std_given_feature=fitresult,)
 
 function MLJBase.transform(transformer::Standardizer, fitresult, X)
-    scitypes = [Continuous]
+    scitypes = Vector{Any}([Continuous])
     transformer.ordered_factor && push!(scitypes, OrderedFactor)
     transformer.count && push!(scitypes, Count)
     AllowedScitype = Union{scitypes...}
@@ -450,8 +491,11 @@ function MLJBase.transform(transformer::Standardizer, fitresult, X)
     cols = map(all_features) do ftr
         ftr_data = selectcols(X, ftr)
         if ftr in features_to_be_transformed
-            col_to_transform = elscitype(ftr_data) <: AllowedScitype ?
-                coerce(ftr_data, Continuous) : ftr_data
+            col_to_transform = if (elscitype(ftr_data) <: AllowedScitype)
+                coerce(ftr_data, Continuous)
+            else
+                ftr_data
+            end
             transform(col_transformer, fitresult[ftr], col_to_transform)
         else
             ftr_data
