@@ -319,7 +319,7 @@ MLJBase.inverse_transform(transformer::UnivariateStandardizer, fitresult, w) =
 ## STANDARDIZATION OF ORDINAL FEATURES OF TABULAR DATA
 
 """
-     Standardizer(; features=Symbol[], ignore=false)
+     Standardizer(; features=Symbol[], ignore=false, ordered_factor=false, count=false)
 
 Unsupervised model for standardizing (whitening) the columns of tabular data.
 If features is empty then all columns v having Continuous element scitype are standardized.
