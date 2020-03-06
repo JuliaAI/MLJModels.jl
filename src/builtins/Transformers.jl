@@ -369,24 +369,23 @@ end
 
 function MLJBase.fit(transformer::Standardizer, verbosity::Int, X)
     all_features = Tables.schema(X).names
-    mach_types   = collect(eltype(selectcols(X, c)) for c in all_features)
-    type_tup = [
-        (transformer.ordered_factor, Union{Continuous, OrderedFactor}),
-        (transformer.count, Count)
-    ]
-    additional_types = Union{last.(filter!(x->x[1], type_tup))...}
+    mach_types   = collect(elscitype(selectcols(X, c)) for c in all_features)
+    scitypes = [Continuous]
+    transformer.ordered_factor && push!(scitypes, OrderedFactor)
+    transformer.count && push!(scitypes, Count)
+    AllowedScitype = Union{scitypes...}
 
     # determine indices of all_features to be transformed
     if isempty(transformer.features)
         cols_to_fit = filter!(eachindex(all_features) |> collect) do j
-            mach_types[j] <: Union{AbstractFloat, additional_types}
+            mach_types[j] <: AllowedScitype
         end
     else
         issubset(transformer.features, all_features) ||
             @warn "Some specified features not present in table to be fit. "
         cols_to_fit = filter!(eachindex(all_features) |> collect) do j
             (all_features[j] in transformer.features && !transformer.ignore) &&
-                mach_types[j] <: Union{Real, additional_types}
+                mach_types[j] <: AllowedScitype
         end
     end
 
@@ -413,11 +412,10 @@ end
 MLJBase.fitted_params(::Standardizer, fitresult) = (mean_and_std_given_feature=fitresult,)
 
 function MLJBase.transform(transformer::Standardizer, fitresult, X)
-    type_tup = [
-        (transformer.ordered_factor, Union{Continuous, OrderedFactor}),
-        (transformer.count, Count)
-    ]
-    additional_types = Union{last.(filter!(x->x[1], type_tup))...}
+    scitypes = [Continuous]
+    transformer.ordered_factor && push!(scitypes, OrderedFactor)
+    transformer.count && push!(scitypes, Count)
+    AllowedScitype = Union{scitypes...}
 
     # `fitresult` is dict of column fitresults, keyed on feature names
     features_to_be_transformed = keys(fitresult)
@@ -432,7 +430,7 @@ function MLJBase.transform(transformer::Standardizer, fitresult, X)
     cols = map(all_features) do ftr
         ftr_data = selectcols(X, ftr)
         if ftr in features_to_be_transformed
-            col_to_transform = elscitype(ftr_data) <: additional_types ?
+            col_to_transform = elscitype(ftr_data) <: AllowedScitype ?
                 coerce(ftr_data, Continuous) : ftr_data
             transform(col_transformer, fitresult[ftr], col_to_transform)
         else

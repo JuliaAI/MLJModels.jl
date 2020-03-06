@@ -2,6 +2,7 @@ module TestTransformer
 
 using Test, MLJModels
 using Tables, CategoricalArrays, Random
+using ScientificTypes
 
 import MLJBase
 
@@ -128,7 +129,6 @@ end
     stand.features = [:x1, :x5]
     f,   = MLJBase.fit(stand, 1, X)
     Xnew = MLJBase.transform(stand, f, X)
-    f,   = MLJBase.fit(stand, 1, X)
 
     @test issubset(Set(keys(f)), Set(Tables.schema(X).names[[5,]]))
 
@@ -144,7 +144,6 @@ end
     stand.ignore = true
     f,   = MLJBase.fit(stand, 1, X)
     Xnew = MLJBase.transform(stand, f, X)
-    f,   = MLJBase.fit(stand, 1, X)
 
     @test issubset(Set(keys(f)), Set(Tables.schema(X).names[[5,]]))
 
@@ -163,6 +162,21 @@ end
     @test_logs (:warn, r"Some specified") MLJBase.fit(stand, 1, X)
 
     @test_throws ArgumentError Standardizer(ignore=true)
+
+    stand = Standardizer(features=[:x4], count=true)
+    f,   = MLJBase.fit(stand, 1, X)
+    Xnew = MLJBase.transform(stand, f, X)
+
+    @test issubset(Set(keys(f)), Set(Tables.schema(X).names[[4,]]))
+
+    Xt = MLJBase.transform(stand, f, X)
+
+    @test Xnew[1] == X[1]
+    @test Xnew[2] == X[2]
+    @test Xnew[3] == X[3]
+    @test elscitype(X[4]) == Count
+    @test MLJBase.std(Xnew[4]) ≈ 1.0
+    @test Xnew[5] == X[5]
 
     infos = MLJBase.info_dict(stand)
 
