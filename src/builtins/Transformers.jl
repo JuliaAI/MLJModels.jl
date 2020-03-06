@@ -324,14 +324,14 @@ MLJBase.inverse_transform(transformer::UnivariateStandardizer, fitresult, w) =
 Unsupervised model for standardizing (whitening) the columns of tabular data.
 If features is empty then all columns v having Continuous element scitype are standardized.
 Otherwise, the features standardized are those named in features (ignore=false) or those
-not named in features (ignore=true). To allow standarization of Count or OrderedFactor
+not named in features (ignore=true). To allow standarization of `Count` or `OrderedFactor`
 features as well, set the appropriate flag to true.
 
 Instead of supplying a features vector, a Bool-valued callable can be also be specified.
-For example, specifying Standardizer(features = name -> name in [:x1, :x3], ignore = true,
-count=true) has the same effect as Standardizer(features = [:x1, :x3], ignore = true,
-count=true), namely to standardise all Continuous and Count features, with the exception
-of :x1 and :x3.
+For example, specifying `Standardizer(features = name -> name in [:x1, :x3], ignore = true,
+count=true)` has the same effect as `Standardizer(features = [:x1, :x3], ignore = true,
+count=true)`, namely to standardise all `Continuous` and `Count` features, with the
+exception of :x1 and :x3.
 
     using DataFrames
     X = DataFrame(x1=[0.2, 0.3, 1.0], x2=[4, 2, 3])
@@ -348,7 +348,8 @@ of :x1 and :x3.
 
 """
 mutable struct Standardizer <: Unsupervised
-    features::Vector{Symbol} # features to be standardized; empty means all
+    # features to be standardized; empty means all
+    features::Union{AbstractVector{Symbol}, Function}
     ignore::Bool # features to be ignored
     ordered_factor::Bool
     count::Bool
@@ -356,7 +357,11 @@ end
 
 function MLJBase.clean!(transformer::Standardizer)
     err = ""
-    if isempty(transformer.features) && transformer.ignore
+    if (
+        typeof(transformer.features) <: AbstractVector{Symbol} &&
+        isempty(transformer.features) &&
+        transformer.ignore
+    )
         err *= "Features to be ignored must be specified in features field."
     end
     return err
@@ -364,7 +369,12 @@ end
 
 # keyword constructor
 function Standardizer(
-    ; features=Symbol[], ignore=false, ordered_factor=false, count=false)
+    ;
+    features::Union{AbstractVector{Symbol}, Function}=Symbol[],
+    ignore::Bool=false,
+    ordered_factor::Bool=false,
+    count::Bool=false
+)
     transformer = Standardizer(features, ignore, ordered_factor, count)
     message = MLJBase.clean!(transformer)
     isempty(message) || throw(ArgumentError(message))
@@ -380,19 +390,25 @@ function MLJBase.fit(transformer::Standardizer, verbosity::Int, X)
     AllowedScitype = Union{scitypes...}
 
     # determine indices of all_features to be transformed
-    if isempty(transformer.features)
-        cols_to_fit = filter!(eachindex(all_features) |> collect) do j
-            mach_types[j] <: AllowedScitype
+    if typeof(transformer.features) <: AbstractVector{Symbol}
+        if isempty(transformer.features)
+            cols_to_fit = filter!(eachindex(all_features) |> collect) do j
+                mach_types[j] <: AllowedScitype
+            end
+        else
+            issubset(transformer.features, all_features) ||
+                @warn "Some specified features not present in table to be fit. "
+            cols_to_fit = filter!(eachindex(all_features) |> collect) do j
+                (all_features[j] in transformer.features && !transformer.ignore) &&
+                    mach_types[j] <: AllowedScitype
+            end
         end
     else
-        issubset(transformer.features, all_features) ||
-            @warn "Some specified features not present in table to be fit. "
         cols_to_fit = filter!(eachindex(all_features) |> collect) do j
-            (all_features[j] in transformer.features && !transformer.ignore) &&
+            (transformer.features(all_features[j]) && !transformer.ignore) &&
                 mach_types[j] <: AllowedScitype
         end
     end
-
     fitresult_given_feature = Dict{Symbol,Tuple{Float64,Float64}}()
 
     # fit each feature

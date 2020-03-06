@@ -178,6 +178,16 @@ end
     @test MLJBase.std(Xnew[4]) ≈ 1.0
     @test Xnew[5] == X[5]
 
+    stand = Standardizer(features= x-> x == (:x2))
+    f,    = MLJBase.fit(stand, 1, X)
+    Xnew  = MLJBase.transform(stand, f, X)
+
+    @test Xnew[1] == X[1]
+    @test MLJBase.std(Xnew[2]) ≈ 1.0
+    @test Xnew[3] == X[3]
+    @test Xnew[4] == X[4]
+    @test Xnew[5] == X[5]
+
     infos = MLJBase.info_dict(stand)
 
     @test infos[:name] == "Standardizer"
