@@ -156,7 +156,11 @@ end
     @test Xnew[5] == X[5]
 
     stand = Standardizer(features=[:x1, :mickey_mouse])
-    @test_logs (:warn, r"Some specified") MLJBase.fit(stand, 1, X)
+    @test_logs(
+        (:warn, r"Some specified"),
+        (:warn, r"No features left"),
+        MLJBase.fit(stand, 1, X)
+    )
 
     stand.ignore = true
     @test_logs (:warn, r"Some specified") MLJBase.fit(stand, 1, X)

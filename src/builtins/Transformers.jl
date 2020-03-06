@@ -448,6 +448,8 @@ function MLJBase.fit(transformer::Standardizer, verbosity::Int, X)
     end
     fitresult_given_feature = Dict{Symbol,Tuple{Float64,Float64}}()
 
+    isempty(cols_to_fit) && @warn "No features left to standarize."
+
     # fit each feature
     verbosity < 2 || @info "Features standarized: "
     for j in cols_to_fit
