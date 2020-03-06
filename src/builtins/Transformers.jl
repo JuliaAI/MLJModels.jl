@@ -319,7 +319,7 @@ MLJBase.inverse_transform(transformer::UnivariateStandardizer, fitresult, w) =
 ## STANDARDIZATION OF ORDINAL FEATURES OF TABULAR DATA
 
 """
-     Standardizer(; features=Symbol[], ignore=Symbol[])
+     Standardizer(; features=Symbol[], ignore=false)
 
 Unsupervised model for standardizing (whitening) the columns of
 tabular data. If `features` is empty then all columns `v` for which
@@ -343,30 +343,50 @@ otherwise, ignore specified features.
     │ 3   │ 1.14708   │ 3     │
 
 """
-@with_kw_noshow mutable struct Standardizer <: Unsupervised
-    features::Vector{Symbol} = Symbol[] # features to be standardized; empty means all
-    ignore::Vector{Symbol} = Symbol[] # features to be ignored
+mutable struct Standardizer <: Unsupervised
+    features::Vector{Symbol} # features to be standardized; empty means all
+    ignore::Bool # features to be ignored
+    ordered_factor::Bool
+    count::Bool
+end
+
+function MLJBase.clean!(transformer::Standardizer)
+    err = ""
+    if isempty(transformer.features) && transformer.ignore
+        err *= "Features to be ignored must be specified in features field."
+    end
+    return err
+end
+
+# keyword constructor
+function Standardizer(
+    ; features=Symbol[], ignore=false, ordered_factor=false, count=false)
+    transformer = Standardizer(features, ignore, ordered_factor, count)
+    message = MLJBase.clean!(transformer)
+    isempty(message) || throw(ArgumentError(message))
+    return transformer
 end
 
 function MLJBase.fit(transformer::Standardizer, verbosity::Int, X)
     all_features = Tables.schema(X).names
     mach_types   = collect(eltype(selectcols(X, c)) for c in all_features)
+    type_tup = [
+        (transformer.ordered_factor, Union{Continuous, OrderedFactor}),
+        (transformer.count, Count)
+    ]
+    additional_types = Union{last.(filter!(x->x[1], type_tup))...}
 
-    issubset(transformer.ignore, all_features) ||
-        @warn "Some ignored features not present in table to be fit. "
     # determine indices of all_features to be transformed
     if isempty(transformer.features)
         cols_to_fit = filter!(eachindex(all_features) |> collect) do j
-            !(all_features[j] in transformer.ignore) &&
-                mach_types[j] <: AbstractFloat
+            mach_types[j] <: Union{AbstractFloat, additional_types}
         end
     else
         issubset(transformer.features, all_features) ||
             @warn "Some specified features not present in table to be fit. "
         cols_to_fit = filter!(eachindex(all_features) |> collect) do j
-            all_features[j] in transformer.features &&
-                !(all_features[j] in transformer.ignore) &&
-                mach_types[j] <: Real
+            (all_features[j] in transformer.features && !transformer.ignore) &&
+                mach_types[j] <: Union{Real, additional_types}
         end
     end
 
@@ -393,6 +413,12 @@ end
 MLJBase.fitted_params(::Standardizer, fitresult) = (mean_and_std_given_feature=fitresult,)
 
 function MLJBase.transform(transformer::Standardizer, fitresult, X)
+    type_tup = [
+        (transformer.ordered_factor, Union{Continuous, OrderedFactor}),
+        (transformer.count, Count)
+    ]
+    additional_types = Union{last.(filter!(x->x[1], type_tup))...}
+
     # `fitresult` is dict of column fitresults, keyed on feature names
     features_to_be_transformed = keys(fitresult)
 
@@ -404,10 +430,13 @@ function MLJBase.transform(transformer::Standardizer, fitresult, X)
     col_transformer = UnivariateStandardizer()
 
     cols = map(all_features) do ftr
+        ftr_data = selectcols(X, ftr)
         if ftr in features_to_be_transformed
-            transform(col_transformer, fitresult[ftr], selectcols(X, ftr))
+            col_to_transform = elscitype(ftr_data) <: additional_types ?
+                coerce(ftr_data, Continuous) : ftr_data
+            transform(col_transformer, fitresult[ftr], col_to_transform)
         else
-            selectcols(X, ftr)
+            ftr_data
         end
     end
 
