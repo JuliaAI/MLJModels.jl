@@ -3,6 +3,7 @@ module TestTransformer
 using Test, MLJModels
 using Tables, CategoricalArrays, Random
 using ScientificTypes
+using StatsBase
 
 import MLJBase
 
@@ -102,19 +103,20 @@ end
 
 @testset "Standardizer" begin
     N = 5
+    rand_char = rand("abcefgh", N)
+    while length(unique(rand_char)) < 2
+        rand_char = rand("abcefgh", N)
+    end
     X = (OverallQual  = rand(UInt8, N),
          GrLivArea    = rand(N),
-         Neighborhood = categorical(rand("abc", N), ordered=true),
-         x1stFlrSF    = rand(N),
+         Neighborhood = categorical(rand_char, ordered=true),
+         x1stFlrSF    = sample(1:10, N, replace=false),
          TotalBsmtSF  = rand(N))
 
     # introduce a field of type `Char`:
     x1 = categorical(map(Char, (X.OverallQual |> collect)))
 
-    # introduce field of Int type:
-    x4 = [round(Int, x) for x in X.x1stFlrSF]
-
-    X = (x1=x1, x2=X[2], x3=X[3], x4=x4, x5=X[5])
+    X = (x1=x1, x2=X[2], x3=X[3], x4=X[4], x5=X[5])
 
     stand = Standardizer()
     f,    = MLJBase.fit(stand, 1, X)
