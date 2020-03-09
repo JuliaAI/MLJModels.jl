@@ -2,6 +2,8 @@ module TestTransformer
 
 using Test, MLJModels
 using Tables, CategoricalArrays, Random
+using ScientificTypes
+using StatsBase
 
 import MLJBase
 
@@ -101,19 +103,20 @@ end
 
 @testset "Standardizer" begin
     N = 5
+    rand_char = rand("abcefgh", N)
+    while length(unique(rand_char)) < 2
+        rand_char = rand("abcefgh", N)
+    end
     X = (OverallQual  = rand(UInt8, N),
          GrLivArea    = rand(N),
-         Neighborhood = categorical(rand("abc", N)),
-         x1stFlrSF    = rand(N),
+         Neighborhood = categorical(rand_char, ordered=true),
+         x1stFlrSF    = sample(1:10, N, replace=false),
          TotalBsmtSF  = rand(N))
 
     # introduce a field of type `Char`:
     x1 = categorical(map(Char, (X.OverallQual |> collect)))
 
-    # introduce field of Int type:
-    x4 = [round(Int, x) for x in X.x1stFlrSF]
-
-    X = (x1=x1, x2=X[2], x3=X[3], x4=x4, x5=X[5])
+    X = (x1=x1, x2=X[2], x3=X[3], x4=X[4], x5=X[5])
 
     stand = Standardizer()
     f,    = MLJBase.fit(stand, 1, X)
@@ -128,7 +131,6 @@ end
     stand.features = [:x1, :x5]
     f,   = MLJBase.fit(stand, 1, X)
     Xnew = MLJBase.transform(stand, f, X)
-    f,   = MLJBase.fit(stand, 1, X)
 
     @test issubset(Set(keys(f)), Set(Tables.schema(X).names[[5,]]))
 
@@ -140,8 +142,59 @@ end
     @test Xnew[4] == X[4]
     @test MLJBase.std(Xnew[5]) ≈ 1.0
 
+    # test on ignoring a feature, even if it's listed in the `features`
+    stand.ignore = true
+    f,   = MLJBase.fit(stand, 1, X)
+    Xnew = MLJBase.transform(stand, f, X)
+
+    @test issubset(Set(keys(f)), Set(Tables.schema(X).names[[2,]]))
+
+    Xt = MLJBase.transform(stand, f, X)
+
+    @test Xnew[1] == X[1]
+    @test MLJBase.std(Xnew[2]) ≈ 1.0
+    @test Xnew[3] == X[3]
+    @test Xnew[4] == X[4]
+    @test Xnew[5] == X[5]
+
     stand = Standardizer(features=[:x1, :mickey_mouse])
+    @test_logs(
+        (:warn, r"Some specified"),
+        (:warn, r"No features left"),
+        MLJBase.fit(stand, 1, X)
+    )
+
+    stand.ignore = true
     @test_logs (:warn, r"Some specified") MLJBase.fit(stand, 1, X)
+
+    @test_throws ArgumentError Standardizer(ignore=true)
+
+    stand = Standardizer(features=[:x3, :x4], count=true, ordered_factor=true)
+    f,   = MLJBase.fit(stand, 1, X)
+    Xnew = MLJBase.transform(stand, f, X)
+    @test issubset(Set(keys(f)), Set(Tables.schema(X).names[3:4,]))
+
+    Xt = MLJBase.transform(stand, f, X)
+
+    @test Xnew[1] == X[1]
+    @test Xnew[2] == X[2]
+    @test elscitype(X[3]) <: OrderedFactor
+    @test elscitype(Xnew[3]) <: Continuous
+    @test MLJBase.std(Xnew[3]) ≈ 1.0
+    @test elscitype(X[4]) == Count
+    @test elscitype(Xnew[4]) <: Continuous
+    @test MLJBase.std(Xnew[4]) ≈ 1.0
+    @test Xnew[5] == X[5]
+
+    stand = Standardizer(features= x-> x == (:x2))
+    f,    = MLJBase.fit(stand, 1, X)
+    Xnew  = MLJBase.transform(stand, f, X)
+
+    @test Xnew[1] == X[1]
+    @test MLJBase.std(Xnew[2]) ≈ 1.0
+    @test Xnew[3] == X[3]
+    @test Xnew[4] == X[4]
+    @test Xnew[5] == X[5]
 
     infos = MLJBase.info_dict(stand)
 
