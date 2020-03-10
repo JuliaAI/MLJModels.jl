@@ -1,4 +1,5 @@
 function check_registry()
+    println("It is safe to ignore \"conflicting import\" warnings. ")
     basedir = joinpath(dirname(pathof(MLJModels)), "registry")
     Pkg.activate(basedir)
 
