@@ -1,7 +1,7 @@
 ## FUNTIONS TO LOAD MODEL IMPLEMENTATION CODE
 
 """
-load(name::String; pkg=nothing, modl=Main, verbosity=1, allow_ambiguous=false)
+    load(name::String; pkg=nothing, modl=Main, verbosity=1, allow_ambiguous=false)
 
 Load the model implementation code for the model type with specified
 `name` into the module `modl`, specifying `pkg` if necesssary, to
@@ -43,7 +43,7 @@ function load(proxy::ModelProxy; modl=Main, verbosity=0, allow_ambiguous=false)
         @info "A model type \"$name\" is already loaded. \n"*
         "No new code loaded. "
         return
-    end
+    end 
 
     verbosity > 1 && @info "Loading into module \"$modl\": "
 

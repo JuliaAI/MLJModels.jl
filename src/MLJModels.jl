@@ -1,7 +1,7 @@
 module MLJModels
 
 import MLJModelInterface
-import MLJModelInterface: SUPERVISED_TRAITS, UNSUPERVISED_TRAITS
+import MLJModelInterface: MODEL_TRAITS
 
 using ScientificTypes
 using MLJBase

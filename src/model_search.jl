@@ -1,29 +1,16 @@
 ## FUNCTIONS TO INSPECT METADATA OF REGISTERED MODELS AND TO
 ## FACILITATE MODEL SEARCH
 
-is_supervised(::Type{<:MLJBase.Supervised}) = true
-is_supervised(::Type{<:MLJBase.Unsupervised}) = false
-
-supervised_propertynames = sort(SUPERVISED_TRAITS)
+property_names = sort(MODEL_TRAITS)
 alpha = [:name, :package_name, :is_supervised]
-omega = [:input_scitype, :target_scitype]
+omega = [:input_scitype, :target_scitype, :output_scitype]
 both = vcat(alpha, omega)
-filter!(!in(both), supervised_propertynames)
-prepend!(supervised_propertynames, alpha)
-append!(supervised_propertynames, omega)
-const SUPERVISED_PROPERTYNAMES = Tuple(supervised_propertynames)
+filter!(!in(both), property_names)
+prepend!(property_names, alpha)
+append!(property_names, omega)
+const PROPERTY_NAMES = Tuple(property_names)
 
-unsupervised_propertynames = sort(UNSUPERVISED_TRAITS)
-alpha = [:name, :package_name, :is_supervised]
-omega = [:input_scitype, :output_scitype]
-both = vcat(alpha, omega)
-filter!(!in(both), unsupervised_propertynames)
-prepend!(unsupervised_propertynames, alpha)
-append!(unsupervised_propertynames, omega)
-const UNSUPERVISED_PROPERTYNAMES = Tuple(unsupervised_propertynames)
-
-ModelProxy = Union{NamedTuple{SUPERVISED_PROPERTYNAMES},
-                   NamedTuple{UNSUPERVISED_PROPERTYNAMES}}
+ModelProxy = NamedTuple{PROPERTY_NAMES}
 
 function Base.isless(p1::ModelProxy, p2::ModelProxy)
     if isless(p1.name, p2.name)
@@ -50,8 +37,6 @@ function ==(m1::ModelProxy, m2::ModelProxy)
     # return all(tests)
 end
 
-
-
 Base.show(stream::IO, p::ModelProxy) =
     print(stream, "(name = $(p.name), package_name = $(p.package_name), "*
           "... )")
@@ -65,10 +50,8 @@ end
 
 # returns named tuple version of the dictionary i=info_dict(SomeModelType):
 function info_as_named_tuple(i)
-    propertynames = ifelse(i[:is_supervised], SUPERVISED_PROPERTYNAMES,
-                           UNSUPERVISED_PROPERTYNAMES)
-    propertyvalues = Tuple(i[property] for property in propertynames)
-    return NamedTuple{propertynames}(propertyvalues)
+    property_values = Tuple(i[property] for property in PROPERTY_NAMES)
+    return NamedTuple{PROPERTY_NAMES}(property_values)
 end
 
 MLJBase.info(handle::Handle) =
