@@ -13,8 +13,7 @@ X, _ = make_blobs(500, 3, rng=555)
     infos = info_dict(m)
     @test infos[:input_scitype] == Table(Continuous)
     @test !isempty(infos[:docstring])
-    # first fix #163 on MLJBase
-    @test_broken infos[:target_scitype] == AbstractVector{Multiclass}
+    @test infos[:target_scitype] == AbstractVector{Multiclass}
 end
 
 @testset "AgglomerativeClustering" begin
@@ -44,8 +43,7 @@ end
     @test infos[:input_scitype] == Table(Continuous)
     @test !isempty(infos[:docstring])
     @test infos[:output_scitype] == Table(Continuous)
-    # first fix #163 on MLJBase
-    @test_broken infos[:target_scitype] == AbstractVector{Multiclass}
+    @test infos[:target_scitype] == AbstractVector{Multiclass}
 end
 
 @testset "DBSCAN" begin
@@ -93,7 +91,7 @@ end
     @test infos[:output_scitype] == Table(Continuous)
     @test !isempty(infos[:docstring])
     # first fix #163 on MLJBase
-    @test_broken infos[:target_scitype] == AbstractVector{Multiclass}
+    @test infos[:target_scitype] == AbstractVector{Multiclass}
 end
 
 @testset "MBKMeans" begin
@@ -109,8 +107,7 @@ end
     @test infos[:input_scitype] == Table(Continuous)
     @test infos[:output_scitype] == Table(Continuous)
     @test !isempty(infos[:docstring])
-    # first fix #163 on MLJBase
-    @test_broken infos[:target_scitype] == AbstractVector{Multiclass}
+    @test infos[:target_scitype] == AbstractVector{Multiclass}
 end
 
 @testset "MeanShift" begin
@@ -124,8 +121,7 @@ end
     infos = info_dict(m)
     @test infos[:input_scitype] == Table(Continuous)
     @test !isempty(infos[:docstring])
-    # first fix #163 on MLJBase
-    @test_broken infos[:target_scitype] == AbstractVector{Multiclass}
+    @test infos[:target_scitype] == AbstractVector{Multiclass}
 end
 
 @testset "OPTICS" begin

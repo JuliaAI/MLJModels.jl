@@ -124,7 +124,7 @@ See also: XGBoostCount, XGBoostClassifier
 
 """
 function XGBoostRegressor(
-    ;num_round=1
+    ;num_round=100
     ,booster="gbtree"
     ,disable_default_eval_metric=0
     ,eta=0.3
@@ -313,7 +313,7 @@ See also: XGBoostRegressor, XGBoostClassifier
 
 """
 function XGBoostCount(
-    ;num_round=1
+    ;num_round=100
     ,booster="gbtree"
     ,disable_default_eval_metric=0
     ,eta=0.3
@@ -490,7 +490,7 @@ See also: XGBoostCount, XGBoostRegressor
 
 """
 function XGBoostClassifier(
-    ;num_round=1
+    ;num_round=100
     ,booster="gbtree"
     ,disable_default_eval_metric=0
     ,eta=0.3
