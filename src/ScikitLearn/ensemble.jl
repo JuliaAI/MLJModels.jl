@@ -111,7 +111,7 @@ GradientBoostingRegressor_ = SKEN.GradientBoostingRegressor
     verbose::Int                   = 0
     max_leaf_nodes::Option{Int}    = nothing::(_===nothing || _>0)
     warm_start::Bool               = false
-    presort::Union{Bool,String}    = "auto"::(isa(_, Bool) || _ == "auto")
+#    presort::Union{Bool,String}    = "auto"::(isa(_, Bool) || _ == "auto")
     validation_fraction::Float64   = 0.1::(_>0)
     n_iter_no_change::Option{Int}  = nothing
     tol::Float64                   = 1e-4::(_>0)
@@ -144,7 +144,7 @@ GradientBoostingClassifier_ = SKEN.GradientBoostingClassifier
     verbose::Int                   = 0
     max_leaf_nodes::Option{Int}    = nothing::(_===nothing || _>0)
     warm_start::Bool               = false
-    presort::Union{Bool,String}    = "auto"::(isa(_, Bool) || _ == "auto")
+#    presort::Union{Bool,String}    = "auto"::(isa(_, Bool) || _ == "auto")
     validation_fraction::Float64   = 0.1::(_>0)
     n_iter_no_change::Option{Int}  = nothing
     tol::Float64                   = 1e-4::(_>0)
