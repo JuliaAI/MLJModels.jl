@@ -53,4 +53,4 @@ Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 XGBoost = "009559a3-9522-5dbb-924b-0b6ed2b22bb9"
 
 [targets]
-test = ["Clustering", "DecisionTree", "Distances", "GLM", "GaussianProcesses", "LIBSVM", "NaiveBayes", "NearestNeighbors", "ScikitLearn", "RDatasets", "Test", "XGBoost"]
+test = ["Clustering", "DecisionTree", "Distances", "GLM", "GaussianProcesses", "LIBSVM", "NaiveBayes", "NearestNeighbors", "ScikitLearn", "Test", "XGBoost"]
