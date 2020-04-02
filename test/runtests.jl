@@ -1,5 +1,9 @@
 using Test, MLJModels
 
+@testset "ScikitLearn        " begin
+    @test include("ScikitLearn/ScikitLearn.jl")
+end
+
 @testset "metadata" begin
     @testset "reading and extracting model metadata" begin
         @test include("metadata.jl")
@@ -37,13 +41,11 @@ end
     @test include("Clustering.jl")
 end
 
-@testset "GLM                " begin
-    @test include("GLM.jl")
-end
+#@testset "GLM                " begin
+ #   @test include("GLM.jl")
+#end
 
-@testset "ScikitLearn        " begin
-    @test include("ScikitLearn/ScikitLearn.jl")
-end
+
 
 @testset "LIBSVM             " begin
     @test include("LIBSVM.jl")
