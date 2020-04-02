@@ -1,8 +1,3 @@
-name = "MLJModels"
-uuid = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
-authors = ["Anthony D. Blaom <anthony.blaom@gmail.com>"]
-version = "0.9.1"
-
 
 [deps]
 Clustering = "aaaa29a8-35af-508c-8bc3-b662a17a0fe5"
