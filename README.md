@@ -1,4 +1,4 @@
-# MLJModels 
+# MLJModels
 
 [![Build Status](https://travis-ci.com/alan-turing-institute/MLJModels.jl.svg?branch=master)](https://travis-ci.com/alan-turing-institute/MLJModels.jl)
 
