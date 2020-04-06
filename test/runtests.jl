@@ -25,9 +25,9 @@ using Test, MLJModels
 #     @test include("MultivariateStats.jl")
 # end
 
-@testset "DecisionTree       " begin
-    @test include("DecisionTree.jl")
-end
+# @testset "DecisionTree       " begin
+#     @test include("DecisionTree.jl")
+# end
 
 # @testset "GaussianProcesses  " begin
 #     @test include("GaussianProcesses.jl")
@@ -49,9 +49,9 @@ end
 #     @test include("LIBSVM.jl")
 # end
 
-# @testset "NaiveBayes         " begin
-#     @test include("NaiveBayes.jl")
-# end
+@testset "NaiveBayes         " begin
+    @test include("NaiveBayes.jl")
+end
 
 # @testset "XGBoost" begin
 #     @test include("XGBoost.jl")
