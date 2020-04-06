@@ -29,9 +29,9 @@ using Test, MLJModels
 #     @test include("DecisionTree.jl")
 # end
 
-# @testset "GaussianProcesses  " begin
-#     @test include("GaussianProcesses.jl")
-# end
+@testset "GaussianProcesses  " begin
+    @test include("GaussianProcesses.jl")
+end
 
 # @testset "Clustering         " begin
 #     @test include("Clustering.jl")
@@ -45,9 +45,9 @@ using Test, MLJModels
 #     @test include("ScikitLearn/ScikitLearn.jl")
 # end
 
-@testset "LIBSVM             " begin
-    @test include("LIBSVM.jl")
-end
+# @testset "LIBSVM             " begin
+#     @test include("LIBSVM.jl")
+# end
 
 # @testset "NaiveBayes         " begin
 #     @test include("NaiveBayes.jl")
