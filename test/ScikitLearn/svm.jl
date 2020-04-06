@@ -34,10 +34,7 @@ end
 
 # test preservation of categorical levels:
 
-iris = dataset("datasets", "iris")
-
-X = iris[:, 1:4]
-y = iris[:, 5]
+X, y = @load_iris
 
 train, test = partition(eachindex(y), 0.6) # levels of y are split across split
 

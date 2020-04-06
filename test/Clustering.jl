@@ -5,7 +5,6 @@ using Test
 using Random:seed!
 import LinearAlgebra: norm
 import Distances: evaluate
-using RDatasets
 using CategoricalArrays
 
 # load code to be tested:
@@ -15,9 +14,7 @@ using MLJModels.Clustering_
 
 seed!(132442)
 
-data = dataset("MASS", "crabs")
-X = selectcols(data, [:FL, :RW, :CL, :CW, :BD])
-y = selectcols(data, :Sp)
+X, y = @load_crabs
 
 ####
 #### KMEANS

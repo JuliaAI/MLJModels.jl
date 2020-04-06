@@ -2,9 +2,9 @@ module TestMultivariateStats
 
 using Test
 using MLJBase
-using RDatasets
 import MultivariateStats, Random
 using MLJModels.MultivariateStats_
+import Dates
 
 using LinearAlgebra
 import Random.seed!
@@ -39,17 +39,18 @@ seed!(1234)
     info_dict(ridge)
 end
 
-data = dataset("MASS", "crabs")
-X = selectcols(data, [:FL, :RW, :CL, :CW, :BD])
-y = selectcols(data, :Sp)
+X, y = @load_crabs
 
 @testset "PCA" begin
     X_array = matrix(X)
     pratio = 0.9999
 
     # MultivariateStats PCA
-    pca_ms = MultivariateStats.fit(MultivariateStats.PCA, permutedims(X_array), pratio=pratio)
-    Xtr_ms = permutedims(MultivariateStats.transform(pca_ms, permutedims(X_array)))
+    pca_ms = MultivariateStats.fit(MultivariateStats.PCA,
+                                   permutedims(X_array),
+                                   pratio=pratio)
+    Xtr_ms = permutedims(MultivariateStats.transform(pca_ms,
+                                                     permutedims(X_array)))
 
     # MLJ PCA
     pca_mlj = PCA(pratio=pratio)
@@ -65,7 +66,8 @@ end
     # MultivariateStats KernelPCA
     kpca_ms = MultivariateStats.fit(MultivariateStats.KernelPCA
                                   , permutedims(X_array))
-    Xtr_ms = permutedims(MultivariateStats.transform(kpca_ms, permutedims(X_array)))
+    Xtr_ms = permutedims(MultivariateStats.transform(kpca_ms,
+                                                     permutedims(X_array)))
 
     # MLJ KernelPCA
     kpca_mlj = KernelPCA()
@@ -82,9 +84,12 @@ end
 
     # MultivariateStats ICA
     seed!(1234) # winit gets randomly initialised
-    ica_ms = MultivariateStats.fit(MultivariateStats.ICA, permutedims(X_array), k;
+    ica_ms = MultivariateStats.fit(MultivariateStats.ICA,
+                                   permutedims(X_array),
+                                   k;
                                    tol=tolerance)
-    Xtr_ms = permutedims(MultivariateStats.transform(ica_ms, permutedims(X_array)))
+    Xtr_ms = permutedims(MultivariateStats.transform(ica_ms,
+                                                     permutedims(X_array)))
 
     # MLJ ICA
     seed!(1234) # winit gets randomly initialised
@@ -96,10 +101,10 @@ end
 end
 
 @testset "MulticlassLDA" begin
-    Smarket = dataset("ISLR", "Smarket")
-    X      = selectcols(Smarket, [:Lag1,:Lag2])
-    y      = selectcols(Smarket, :Direction)
-    train  = selectcols(Smarket, :Year) .< 2005
+    Xfull, y = @load_smarket
+    X = selectcols(Xfull, [:Lag1,:Lag2])
+
+    train  = selectcols(Xfull, :Year) .< Dates.Date(2005)
     test   = .!train
     Xtrain = selectrows(X, train)
     ytrain = selectrows(y, train)
@@ -153,10 +158,10 @@ end
 end
 
 @testset "BayesianMulticlassLDA" begin
-    Smarket = dataset("ISLR", "Smarket")
-    X      = selectcols(Smarket, [:Lag1,:Lag2])
-    y      = selectcols(Smarket, :Direction)
-    train  = selectcols(Smarket, :Year) .< 2005
+    Xfull, y = @load_smarket
+    X = selectcols(Xfull, [:Lag1,:Lag2])
+
+    train  = selectcols(Xfull, :Year) .< Dates.Date(2005)
     test   = .!train
     Xtrain = selectrows(X, train)
     ytrain = selectrows(y, train)
@@ -173,7 +178,8 @@ end
 
     @test 0.685 ≤ mce ≤ 0.695
 
-    @test round.(class_means', sigdigits = 3) == [0.0428 0.0339; -0.0395 -0.0313]
+    @test round.(class_means', sigdigits = 3) ==
+        [0.0428 0.0339; -0.0395 -0.0313]
 
     d = info_dict(BayesianLDA)
     @test d[:input_scitype] == Table(Continuous)
@@ -182,31 +188,32 @@ end
 end
 
 @testset "BayesianSubspaceLDA" begin
-    iris=dataset("datasets","iris")
-    X=selectcols(iris,[:SepalLength, :SepalWidth, :PetalLength, :PetalWidth])
-    y=selectcols(iris, :Species)
+    X, y = @load_iris
 
     LDA_model = BayesianSubspaceLDA()
 
     fitresult, _, report = fit(LDA_model, 1, X, y)
-    class_means,projection_matrix,prior_probabilities = fitted_params(LDA_model, fitresult)
+    class_means,projection_matrix,prior_probabilities =
+        fitted_params(LDA_model, fitresult)
     preds=predict(LDA_model, fitresult, X)
     predicted_class = predict_mode(LDA_model, fitresult, X)
     mcr = misclassification_rate(predicted_class, y)
     mce = cross_entropy(preds, y) |> mean
 
-    @test class_means' ≈ [5.006 3.428 1.462 0.246;
+    @test mean(abs.(class_means' - [5.006 3.428 1.462 0.246;
                           5.936 2.770 4.260 1.326;
-                          6.588 2.974 5.552 2.026]
+                          6.588 2.974 5.552 2.026])) < 0.01
 
-    @test projection_matrix ≈  [0.8293776  0.02410215;
+    @test mean(abs.(projection_matrix ≈  [0.8293776  0.02410215;
                                 1.5344731  2.16452123;
                                 -2.2012117 -0.93192121;
-                                -2.8104603  2.83918785]
-    @test round.(prior_probabilities, sigdigits=7) == [0.3333333, 0.3333333, 0.3333333]
+                                          -2.8104603  2.83918785])) < 0.05
+
+    @test round.(prior_probabilities, sigdigits=7) ==
+        [0.3333333, 0.3333333, 0.3333333]
     @test round.(mcr, sigdigits=1) == 0.02
 
-    @test round.(report.vproportions, digits=4) == [0.9912, 0.0088]
+    @test round.(report.vproportions, digits=4) == [0.9915, 0.0085]
     @test 0.04 ≤ mce ≤ 0.045
 
     d = info_dict(BayesianSubspaceLDA)

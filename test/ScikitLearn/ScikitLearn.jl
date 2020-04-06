@@ -1,11 +1,16 @@
 module TestScikitLearn
 
 import MLJModels, ScikitLearn
-using MLJBase, Tables, Test, LinearAlgebra, Random, MLJModels.ScikitLearn_, CategoricalArrays, RDatasets
+using MLJBase
+using Tables
+using Test
+using LinearAlgebra
+using Random
+using MLJModels.ScikitLearn_
+using CategoricalArrays
+
 include("../testutils.jl")
-
 include("clustering.jl")
-
 include("svm.jl")
 include("linear-regressors.jl")
 include("linear-classifiers.jl")

@@ -13,10 +13,7 @@ import DecisionTree
 using MLJModels.DecisionTree_
 
 # get some test data:
-using RDatasets
-iris = dataset("datasets", "iris")
-X = iris[:, 1:4]
-y = iris[:, 5]
+X, y = @load_iris
 
 baretree = DecisionTreeClassifier()
 
