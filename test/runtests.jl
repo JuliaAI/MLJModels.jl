@@ -21,9 +21,9 @@ using Test, MLJModels
 #     end
 # end
 
-# @testset "MultivariateStats  " begin
-#     @test include("MultivariateStats.jl")
-# end
+@testset "MultivariateStats  " begin
+    @test include("MultivariateStats.jl")
+end
 
 # @testset "DecisionTree       " begin
 #     @test include("DecisionTree.jl")
@@ -33,9 +33,9 @@ using Test, MLJModels
 #     @test include("GaussianProcesses.jl")
 # end
 
-@testset "Clustering         " begin
-    @test include("Clustering.jl")
-end
+# @testset "Clustering         " begin
+#     @test include("Clustering.jl")
+# end
 
 # @testset "GLM                " begin
 #     @test include("GLM.jl")
