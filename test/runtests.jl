@@ -41,13 +41,13 @@ using Test, MLJModels
 #     @test include("GLM.jl")
 # end
 
-@testset "ScikitLearn        " begin
-    @test include("ScikitLearn/ScikitLearn.jl")
-end
-
-# @testset "LIBSVM             " begin
-#     @test include("LIBSVM.jl")
+# @testset "ScikitLearn        " begin
+#     @test include("ScikitLearn/ScikitLearn.jl")
 # end
+
+@testset "LIBSVM             " begin
+    @test include("LIBSVM.jl")
+end
 
 # @testset "NaiveBayes         " begin
 #     @test include("NaiveBayes.jl")
