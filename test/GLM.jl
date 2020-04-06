@@ -3,25 +3,21 @@ module TestGLM
 using Test
 
 using MLJBase
-using RDatasets
 using LinearAlgebra
+using Statistics
 
 import MLJModels
 import Distributions
 import GLM
 using MLJModels.GLM_
 using Random: seed!
-using RDatasets
+using Tables
 
 ###
 ### OLSREGRESSOR
 ###
 
-boston = dataset("MASS", "Boston")
-X = MLJBase.selectcols(boston, [:Crim, :Zn, :Indus, :NOx, :Rm, :Age,
-                                :Dis, :Rad, :Tax, :PTRatio, :Black,
-                                :LStat])
-y = MLJBase.selectcols(boston, :MedV)
+X, y = @load_boston
 
 train, test = partition(eachindex(y), 0.7)
 
@@ -66,35 +62,22 @@ p_distr = predict(atom_ols, fitresult, selectrows(X, test))
 
 seed!(0)
 
-# data drawn from https://stats.idre.ucla.edu/r/dae/poisson-regression/
-data = dataset("MASS", "Melanoma")
-
-X = data[:, [:Status, :Sex, :Age, :Year, :Thickness]]
-y_plain = data.Ulcer
-y = categorical(y_plain)
-
-n = length(y)
-
-baseline_y = convert.(Int, rand(n) .> 0.5)
-baseline_mse = sum((baseline_y - y_plain).^2)/n
-
-@test baseline_mse ≤ 0.55
+N = 100
+X = MLJBase.table(rand(N, 4));
+ycont = 2*X.x1 - X.x3 + 0.6*rand(N)
+y = (ycont .> mean(ycont)) |> categorical;
 
 lr = LinearBinaryClassifier()
 fitresult, _, report = fit(lr, 1, X, y)
 
-p_mean  = predict_mean(lr, fitresult, X)
-p_mode1 = convert.(Int, p_mean .> 0.5)
-@test sum((p_mode1 - y_plain).^2)/n < 0.26
-
-p_mode = predict_mode(lr, fitresult, X)
-
-@test p_mode1 == convert.(Int, p_mode)
+yhat = predict(lr, fitresult, X)
+@test mean(cross_entropy(yhat, y)) < 0.25
 
 pr = LinearBinaryClassifier(link=GLM.ProbitLink())
 fitresult, _, report = fit(pr, 1, X, y)
-p_mode = convert.(Int, predict_mode(pr, fitresult, X))
-@test sum((p_mode - y_plain).^2)/n < 0.26
+yhat = predict(lr, fitresult, X)
+@test mean(cross_entropy(yhat, y)) < 0.25
+
 
 # info_dict(atom_glmcount)
 
