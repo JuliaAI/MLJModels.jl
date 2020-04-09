@@ -71,7 +71,8 @@ Generally model registration is performed by administrators. If you
 have an interface you would like registered, open an issue
 [here](https://github.com/alan-turing-institute/MLJ.jl/issues).
 
-To register all the models in GreatNewPackage with MLJ:
+**Administrator instructions.** To register all the models in
+GreatNewPackage with MLJ:
 
 - In the dev branch of a clone of the dev branch of MLJModels, change
   to the `/src/registry/` directory and, in Julia, activate the
