@@ -24,6 +24,8 @@ env:
 matrix:
   allow_failures:
   - julia: nightly
+  script:
+    - julia -e 'using Pkg; Pkg.develop(PackageSpec(url="https://github.com/tlienart/OpenSpecFun_jll.jl"))'
 
 ## uncomment following lines to deploy documentation
 #jobs:
