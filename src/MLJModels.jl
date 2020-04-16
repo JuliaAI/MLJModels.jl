@@ -87,4 +87,7 @@ function __init__()
              include("MultivariateStats.jl"))
 end
 
+# Temporary fix for #212
+include("build.jl")
+
 end # module
