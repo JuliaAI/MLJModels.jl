@@ -316,25 +316,25 @@ end
 MLJBase.inverse_transform(transformer::UnivariateStandardizer, fitresult, w) =
     [inverse_transform(transformer, fitresult, y) for y in w]
 
-## STANDARDIZATION OF ORDINAL FEATURES OF TABULAR DATA
+## STANDARDIZATION OF ORDINAL FEATURES OF TABULAR DATA;;;
 
 """
     Standardizer(; features=Symbol[], ignore=false, ordered_factor=false, count=false)
 
 Unsupervised model for standardizing (whitening) the columns of
-tabular data.  If features is empty then all columns `v` having
-Continuous element scitype are standardized. Otherwise, the features
-standardized are the `Continuous` features named in features
-(`ignore=false`) or `Continuous` features not named in features
-(`ignore=true`). To allow standarization of `Count` or `OrderedFactor`
-features as well, set the appropriate flag to true.
+tabular data.  If `features` is unspecified then all columns `v`
+having Continuous element scitype are standardized. Otherwise, the
+features standardized are the `Continuous` features named in
+`features` (`ignore=false`) or `Continuous` features not named in
+`features` (`ignore=true`). To allow standarization of `Count` or
+`OrderedFactor` features as well, set the appropriate flag to true.
 
-Instead of supplying a features vector, a Bool-valued callable can be also be
-specified. For example, specifying `Standardizer(features = name -> name in
-[:x1, :x3], ignore = true, count=true)` has the same effect as
-`Standardizer(features = [:x1, :x3], ignore = true, count=true)`, namely to
-standardise all `Continuous` and `Count` features, with the exception of `:x1`
-and `:x3`.
+Instead of supplying a features vector, a Bool-valued callable can be
+also be specified. For example, specifying `Standardizer(features =
+name -> name in [:x1, :x3], ignore = true, count=true)` has the same
+effect as `Standardizer(features = [:x1, :x3], ignore = true,
+count=true)`, namely to standardise all `Continuous` and `Count`
+features, with the exception of `:x1` and `:x3`.
 
 # Example
 
@@ -627,17 +627,25 @@ end
 ## ONE HOT ENCODING
 
 """
-    OneHotEncoder(; features=Symbol[], drop_last=false, ordered_factor=true)
+    OneHotEncoder(; features=Symbol[],
+                    ignore=false,
+                    ordered_factor=true,
+                    drop_last=false)
 
-Unsupervised model for one-hot encoding all features of `Finite`
-scitype, within some table. If `ordered_factor=false` then
-only `Multiclass` features are considered. The features encoded are
-further restricted to those in `features`, when specified and
-non-empty.
+Unsupervised model for one-hot encoding the `Finite` features of some
+table. If `features` is unspecified all features with `Finite` element
+scitype are encoded. Otherwise, encoding is applied to all `Finite`
+features named in `features` (`ignore=false`) or all `Finite` features
+not named in features (`ignore=true`).
 
-If `drop_last` is true, the column for the last level of each
-categorical feature is dropped. New data to be transformed may lack
-features present in the fit data, but no new features can be present.
+If `ordered_factor=false` then the above holds with `Finite` replaced
+with `Multiclass`.
+
+Specify `drop_last=true` if the column for the last level of each
+categorical feature is to be dropped.
+
+New data to be transformed may lack features present in the fit data,
+but no *new* features can be present.
 
 *Warning:* This transformer assumes that the elements of a categorical
  feature in new data to be transformed point to the same
@@ -645,9 +653,10 @@ features present in the fit data, but no new features can be present.
 
 """
 @with_kw_noshow mutable struct OneHotEncoder <: Unsupervised
-    features::Vector{Symbol} = Symbol[]
-    drop_last::Bool          = false
-    ordered_factor::Bool     = true
+    features::Vector{Symbol}   = Symbol[]
+    drop_last::Bool            = false
+    ordered_factor::Bool       = true
+    ignore::Bool               = false
 end
 
 # we store the categorical refs for each feature to be encoded and the
@@ -673,10 +682,22 @@ end
 function MLJBase.fit(transformer::OneHotEncoder, verbosity::Int, X)
 
     all_features = Tables.schema(X).names # a tuple not vector
-    specified_features =
-        isempty(transformer.features) ? collect(all_features) : transformer.features
-    #
-    ref_name_pairs_given_feature = Dict{Symbol,Vector{Pair{<:Unsigned,Symbol}}}()
+
+    if isempty(transformer.features)
+        specified_features = collect(all_features)
+    else
+        if transformer.ignore
+            specified_features = filter(all_features) do ftr
+                !(ftr in transformer.features)
+            end
+        else
+            specified_features = transformer.features
+        end
+    end
+
+    ref_name_pairs_given_feature =
+        Dict{Symbol,Vector{Pair{<:Unsigned,Symbol}}}()
+
     allowed_scitypes = ifelse(transformer.ordered_factor, Finite, Multiclass)
     col_scitypes = schema(X).scitypes
     # apply on each feature
@@ -730,8 +751,10 @@ _hot(v::AbstractVector{<:CategoricalElement}, ref) = map(v) do c
 end
 
 function MLJBase.transform(transformer::OneHotEncoder, fitresult, X)
-    features = Tables.schema(X).names # tuple not vector
+    features = Tables.schema(X).names     # tuple not vector
+
     d = fitresult.ref_name_pairs_given_feature
+
     # check the features match the fit result
     all(e -> e in fitresult.all_features, features) ||
         error("Attempting to transform table with feature "*

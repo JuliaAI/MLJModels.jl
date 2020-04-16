@@ -261,10 +261,18 @@ end
         MLJBase.selectcols(MLJBase.transform(t, f, X),
                            [:name__Ben, :name__John, :name__Mary, :age])
 
+    # test ignore
+    t = OneHotEncoder(features=[:name,], ignore=true)
+    f, = MLJBase.fit(t, 0, X)
+    Xt = MLJBase.transform(t, f, X)
+
     # test exclusion of ordered factors:
     t  = OneHotEncoder(ordered_factor=false)
-    f, = MLJBase.fit(t, 1, X)
+    f, = MLJBase.fit(t, 0, X)
     Xt = MLJBase.transform(t, f, X)
+    @test keys(Xt) == (:name, :height, :favourite_number__5,
+                       :favourite_number__7, :favourite_number__10, :age)
+
     @test :name in Tables.schema(Xt).names
     @test :favourite_number__5 in Tables.schema(Xt).names
     @test MLJBase.schema(Xt).scitypes == (OrderedFactor{3}, Continuous,
