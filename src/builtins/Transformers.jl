@@ -795,8 +795,7 @@ end
 ## CONTINUOUS_ENCODING
 
 """
-    ContinuousEncoder(one_hot_ordered_factors=true,
-                      drop_last=false)
+    ContinuousEncoder(one_hot_ordered_factors=false, drop_last=false)
 
 Unsupervised model for arranging all features (columns) of a table to
 have `Continuous` element scitype, by applying following protocol
