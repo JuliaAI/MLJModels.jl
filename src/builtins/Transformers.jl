@@ -736,7 +736,7 @@ function MLJBase.transform(transformer::OneHotEncoder, fitresult, X)
         error("Attempting to transform table with feature "*
               "labels not seen in fit. ")
     new_features = Symbol[]
-    new_cols = Vector[]
+    new_cols = [] # not Vector[] !!
     features_to_be_transformed = keys(d)
     for ftr in features
         col = MLJBase.selectcols(X, ftr)
