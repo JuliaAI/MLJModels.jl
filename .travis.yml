@@ -21,6 +21,8 @@ env:
 matrix:
   allow_failures:
   - julia: nightly
+  script:
+    - julia -e 'using MKL_jll'
 
 ## uncomment following lines to deploy documentation
 #jobs:
