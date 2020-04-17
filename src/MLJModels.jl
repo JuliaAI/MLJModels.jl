@@ -1,4 +1,7 @@
-module MLJModels 
+module MLJModels
+
+# temporary fix for #212
+using MKL_jll
 
 import MLJModelInterface
 import MLJModelInterface: MODEL_TRAITS
@@ -86,8 +89,5 @@ function __init__()
     @require(MultivariateStats = "6f286f6a-111f-5878-ab1e-185364afe411",
              include("MultivariateStats.jl"))
 end
-
-# Temporary fix for #212
-include("build.jl")
 
 end # module
