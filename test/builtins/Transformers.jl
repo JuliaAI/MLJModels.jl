@@ -267,6 +267,9 @@ end
     Xt = MLJBase.transform(t, f, X)
     @test :name in Tables.schema(Xt).names
     @test :favourite_number__5 in Tables.schema(Xt).names
+    @test MLJBase.schema(Xt).scitypes == (OrderedFactor{3}, Continuous,
+                                          Continuous, Continuous,
+                                          Continuous, Count)
 
     # test that one may not add new columns:
     X = (name       = categorical(["Ben", "John", "Mary", "John"], ordered=true),
