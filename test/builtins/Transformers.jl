@@ -360,9 +360,7 @@ end
          age    = [23, 23, 14, 23])
 
     t  = ContinuousEncoder()
-    f, _, _ = @test_logs((:info, r"Some features cannot be replaced "*
-                               "with `Continuous` features and will be "*
-                               "dropped: Symbol[:rubbish]"),
+    f, _, _ = @test_logs((:info, r"Some.*dropped\: Symbol\[\:rubbish\]"),
                               MLJBase.fit(t, 1, X))
 
     Xt = MLJBase.transform(t, f, X)
