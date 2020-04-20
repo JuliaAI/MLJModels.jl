@@ -26,8 +26,9 @@ export ConstantRegressor, ConstantClassifier,
         DeterministicConstantRegressor, DeterministicConstantClassifier
 
 # from model/Transformers
-export FeatureSelector, StaticTransformer, UnivariateDiscretizer, UnivariateStandardizer,
-        Standardizer, UnivariateBoxCoxTransformer, OneHotEncoder, FillImputer
+export FeatureSelector, StaticTransformer, UnivariateDiscretizer,
+    UnivariateStandardizer, Standardizer, UnivariateBoxCoxTransformer,
+    OneHotEncoder, ContinuousEncoder, FillImputer
 
 const srcdir = dirname(@__FILE__) # the directory containing this file
 

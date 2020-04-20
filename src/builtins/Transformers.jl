@@ -6,13 +6,22 @@ const CategoricalElement = MLJBase.CategoricalElement
 
 ## DESCRIPTIONS (see also metadata at the bottom)
 
-const FILL_IMPUTER_DESCR = "Imputes missing data with a fixed value computed on the non-missing values. A different imputing function can be specified for `Continuous`, `Count` and `Finite` data. "
+const FILL_IMPUTER_DESCR = "Imputes missing data with a fixed value "*
+"computed on the non-missing values. A different imputing function "*
+"can be specified for `Continuous`, `Count` and `Finite` data. "
 const FEATURE_SELECTOR_DESCR = "Filter features (columns) of a table by name."
 const UNIVARIATE_STD_DESCR = "Standardize (whiten) univariate data."
-const UNIVARIATE_DISCR_DESCR = "Discretize continuous variables via quantiles."
-const STANDARDIZER_DESCR = "Standardize (whiten) data."
-const UNIVARIATE_BOX_COX_DESCR = "Box-Cox transformation of univariate data."
-const ONE_HOT_DESCR = "One-Hot-Encoding of the categorical data."
+const UNIVARIATE_DISCR_DESCR = "Discretize a continuous variable via "*
+"quantiles."
+const STANDARDIZER_DESCR = "Standardize (whiten) features (columns) "*
+"of a table."
+const UNIVARIATE_BOX_COX_DESCR = "Box-Cox transform univariate data."
+const ONE_HOT_DESCR = "One-hot encode `Finite` (categorical) features "*
+"(columns) of a table."
+const CONTINUOUS_ENCODER_DESCR = "Convert all `Finite` (categorical) and "*
+"`Count` features (columns) of a table to `Continuous` and drop all "*
+" remaining non-`Continuous` features. "
+"features. "
 
 ##
 ## IMPUTER
@@ -321,19 +330,20 @@ MLJBase.inverse_transform(transformer::UnivariateStandardizer, fitresult, w) =
 """
     Standardizer(; features=Symbol[], ignore=false, ordered_factor=false, count=false)
 
-Unsupervised model for standardizing (whitening) the columns of tabular data.
-If features is empty then all columns `v` having Continuous element scitype are
-standardized. Otherwise, the features standardized are `Continuous` named in
-features (`ignore=false`) or `Continuous` features not named in features
-(`ignore=true`). To allow standarization of `Count` or `OrderedFactor` features
-as well, set the appropriate flag to true.
+Unsupervised model for standardizing (whitening) the columns of
+tabular data.  If `features` is unspecified then all columns `v`
+having Continuous element scitype are standardized. Otherwise, the
+features standardized are the `Continuous` features named in
+`features` (`ignore=false`) or `Continuous` features not named in
+`features` (`ignore=true`). To allow standarization of `Count` or
+`OrderedFactor` features as well, set the appropriate flag to true.
 
-Instead of supplying a features vector, a Bool-valued callable can be also be
-specified. For example, specifying `Standardizer(features = name -> name in
-[:x1, :x3], ignore = true, count=true)` has the same effect as
-`Standardizer(features = [:x1, :x3], ignore = true, count=true)`, namely to
-standardise all `Continuous` and `Count` features, with the exception of `:x1`
-and `:x3`.
+Instead of supplying a features vector, a Bool-valued callable can be
+also be specified. For example, specifying `Standardizer(features =
+name -> name in [:x1, :x3], ignore = true, count=true)` has the same
+effect as `Standardizer(features = [:x1, :x3], ignore = true,
+count=true)`, namely to standardise all `Continuous` and `Count`
+features, with the exception of `:x1` and `:x3`.
 
 # Example
 
@@ -626,27 +636,75 @@ end
 ## ONE HOT ENCODING
 
 """
-    OneHotEncoder(; features=Symbol[], drop_last=false, ordered_factor=true)
+    OneHotEncoder(; features=Symbol[],
+                    ignore=false,
+                    ordered_factor=true,
+                    drop_last=false)
 
-Unsupervised model for one-hot encoding all features of `Finite`
-scitype, within some table. If `ordered_factor=false` then
-only `Multiclass` features are considered. The features encoded are
-further restricted to those in `features`, when specified and
-non-empty.
+Unsupervised model for one-hot encoding the `Finite` features
+(columns) of some table. If `features` is unspecified all features
+with `Finite` element scitype are encoded. Otherwise, encoding is
+applied to all `Finite` features named in `features` (`ignore=false`)
+or all `Finite` features not named in features (`ignore=true`).
 
-If `drop_last` is true, the column for the last level of each
-categorical feature is dropped. New data to be transformed may lack
-features present in the fit data, but no new features can be present.
+If `ordered_factor=false` then the above holds with `Finite` replaced
+with `Multiclass`, ie `OrderedFactor` features are not transformed.
 
-*Warning:* This transformer assumes that the elements of a categorical
- feature in new data to be transformed point to the same
- CategoricalPool object encountered during the fit.
+Specify `drop_last=true` if the column for the last level of each
+categorical feature is to be dropped.
+
+New data to be transformed may lack features present in the fit data,
+but no *new* features can be present.
+
+*Warning:* This transformer assumes that `levels(col)` for any
+`Multiclass` or `OrderedFactor` column is the same in new data being
+transformed as it is in the data used to fit the transformer.
+
+### Example
+
+```julia
+X = (name=categorical(["Danesh", "Lee", "Mary", "John"]),
+     grade=categorical([:A, :B, :A, :C], ordered=true),
+     height=[1.85, 1.67, 1.5, 1.67],
+     n_devices=[3, 2, 4, 3])
+schema(X)
+
+┌───────────┬─────────────────────────────────┬──────────────────┐
+│ _.names   │ _.types                         │ _.scitypes       │
+├───────────┼─────────────────────────────────┼──────────────────┤
+│ name      │ CategoricalString{UInt32}       │ Multiclass{4}    │
+│ grade     │ CategoricalValue{Symbol,UInt32} │ OrderedFactor{3} │
+│ height    │ Float64                         │ Continuous       │
+│ n_devices │ Int64                           │ Count            │
+└───────────┴─────────────────────────────────┴──────────────────┘
+_.nrows = 4
+
+hot = OneHotEncoder(ordered_factor=true);
+mach = fit!(machine(hot, X))
+transform(mach, X) |> schema
+
+┌──────────────┬─────────┬────────────┐
+│ _.names      │ _.types │ _.scitypes │
+├──────────────┼─────────┼────────────┤
+│ name__Danesh │ Float64 │ Continuous │
+│ name__John   │ Float64 │ Continuous │
+│ name__Lee    │ Float64 │ Continuous │
+│ name__Mary   │ Float64 │ Continuous │
+│ grade__A     │ Float64 │ Continuous │
+│ grade__B     │ Float64 │ Continuous │
+│ grade__C     │ Float64 │ Continuous │
+│ height       │ Float64 │ Continuous │
+│ n_devices    │ Int64   │ Count      │
+└──────────────┴─────────┴────────────┘
+_.nrows = 4
+```
 
 """
 @with_kw_noshow mutable struct OneHotEncoder <: Unsupervised
-    features::Vector{Symbol} = Symbol[]
-    drop_last::Bool          = false
-    ordered_factor::Bool     = true
+    features::Vector{Symbol}   = Symbol[]
+    drop_last::Bool            = false
+    ordered_factor::Bool       = true
+    ignore::Bool               = false
 end
 
 # we store the categorical refs for each feature to be encoded and the
@@ -672,10 +730,22 @@ end
 function MLJBase.fit(transformer::OneHotEncoder, verbosity::Int, X)
 
     all_features = Tables.schema(X).names # a tuple not vector
-    specified_features =
-        isempty(transformer.features) ? collect(all_features) : transformer.features
-    #
-    ref_name_pairs_given_feature = Dict{Symbol,Vector{Pair{<:Unsigned,Symbol}}}()
+
+    if isempty(transformer.features)
+        specified_features = collect(all_features)
+    else
+        if transformer.ignore
+            specified_features = filter(all_features) do ftr
+                !(ftr in transformer.features)
+            end
+        else
+            specified_features = transformer.features
+        end
+    end
+
+    ref_name_pairs_given_feature =
+        Dict{Symbol,Vector{Pair{<:Unsigned,Symbol}}}()
+
     allowed_scitypes = ifelse(transformer.ordered_factor, Finite, Multiclass)
     col_scitypes = schema(X).scitypes
     # apply on each feature
@@ -729,12 +799,14 @@ _hot(v::AbstractVector{<:CategoricalElement}, ref) = map(v) do c
 end
 
 function MLJBase.transform(transformer::OneHotEncoder, fitresult, X)
-    features = Tables.schema(X).names # tuple not vector
+    features = Tables.schema(X).names     # tuple not vector
+
     d = fitresult.ref_name_pairs_given_feature
+
     # check the features match the fit result
     all(e -> e in fitresult.all_features, features) ||
         error("Attempting to transform table with feature "*
-              "labels not seen in fit. ")
+              "names not seen in fit. ")
     new_features = Symbol[]
     new_cols = [] # not Vector[] !!
     features_to_be_transformed = keys(d)
@@ -756,6 +828,140 @@ function MLJBase.transform(transformer::OneHotEncoder, fitresult, X)
     end
     named_cols = NamedTuple{tuple(new_features...)}(tuple(new_cols)...)
     return MLJBase.table(named_cols, prototype=X)
+end
+
+
+## CONTINUOUS_ENCODING
+
+"""
+    ContinuousEncoder(one_hot_ordered_factors=false, drop_last=false)
+
+Unsupervised model for arranging all features (columns) of a table to
+have `Continuous` element scitype, by applying following protocol
+to each feature `ftr`:
+
+- If `ftr` is already `Continuous` retain it.
+
+- If `ftr` is `Multiclass`, one-hot encode it.
+
+- If `ftr` is `OrderedFactor`, replace it with `coerce(ftr,
+Continuous)` (vector of floating point integers), unless
+`ordered_factors=false` is specified, in which case one-hot
+encoded it.
+
+- If `ftr` is `Count`, replace it with `coerce(ftr, Continuous)`.
+
+- If `ftr` is of some other element scitype, or was not observed in
+  fitting the encoder, drop it from the table.
+
+If `drop_last=true` is specified, then one-hot encoding always drops
+the last class indicator column.
+
+*Warning:* This transformer assumes that `levels(col)` for any
+`Multiclass` or `OrderedFactor` column is the same in new data being
+transformed as it is in the data used to fit the transformer.
+
+### Example 
+
+```julia
+X = (name=categorical(["Danesh", "Lee", "Mary", "John"]),
+     grade=categorical([:A, :B, :A, :C], ordered=true),
+     height=[1.85, 1.67, 1.5, 1.67],
+     n_devices=[3, 2, 4, 3],
+     comments=["the force", "be", "with you", "too"])
+schema(X)
+
+┌───────────┬─────────────────────────────────┬──────────────────┐
+│ _.names   │ _.types                         │ _.scitypes       │
+├───────────┼─────────────────────────────────┼──────────────────┤
+│ name      │ CategoricalString{UInt32}       │ Multiclass{4}    │
+│ grade     │ CategoricalValue{Symbol,UInt32} │ OrderedFactor{3} │
+│ height    │ Float64                         │ Continuous       │
+│ n_devices │ Int64                           │ Count            │
+│ comments  │ String                          │ Textual          │
+└───────────┴─────────────────────────────────┴──────────────────┘
+_.nrows = 4
+
+cont = ContinuousEncoder(drop_last=true);
+mach = fit!(machine(cont, X))
+transform(mach, X) |> schema
+
+┌──────────────┬─────────┬────────────┐
+│ _.names      │ _.types │ _.scitypes │
+├──────────────┼─────────┼────────────┤
+│ name__Danesh │ Float64 │ Continuous │
+│ name__John   │ Float64 │ Continuous │
+│ name__Lee    │ Float64 │ Continuous │
+│ grade        │ Float64 │ Continuous │
+│ height       │ Float64 │ Continuous │
+│ n_devices    │ Float64 │ Continuous │
+└──────────────┴─────────┴────────────┘
+_.nrows = 4
+```
+
+"""
+@with_kw_noshow mutable struct ContinuousEncoder <: Unsupervised
+    drop_last::Bool                = false
+    one_hot_ordered_factors::Bool  = false
+end
+
+function MLJBase.fit(transformer::ContinuousEncoder, verbosity::Int, X)
+
+    # what features can be converted and therefore kept?
+    s = schema(X)
+    features = s.names
+    scitypes = s.scitypes
+    Convertible = Union{Continuous, Finite, Count}
+    feature_scitype_tuples = zip(features, scitypes) |> collect
+    features_to_keep  =
+        first.(filter(t -> last(t) <: Convertible, feature_scitype_tuples))
+    features_to_be_dropped = setdiff(collect(features), features_to_keep)
+
+    if verbosity > 0
+        if !isempty(features_to_be_dropped)
+            @info "Some features cannot be replaced with "*
+            "`Continuous` features and will be dropped: "*
+            "$features_to_be_dropped. "
+        end
+    end
+
+    # fit the one-hot encoder:
+    hot_encoder =
+        OneHotEncoder(ordered_factor=transformer.one_hot_ordered_factors,
+                      drop_last=transformer.drop_last)
+    hot_fitresult, _, hot_report = MLJBase.fit(hot_encoder, verbosity - 1, X)
+
+    new_features = setdiff(hot_report.new_features, features_to_be_dropped)
+
+    fitresult = (features_to_keep=features_to_keep,
+                 one_hot_encoder=hot_encoder,
+                 one_hot_encoder_fitresult=hot_fitresult)
+
+    # generate the report:
+    report = (features_to_keep=features_to_keep,
+              new_features=new_features)
+
+    cache = nothing
+
+    return fitresult, cache, report
+
+end
+
+function MLJBase.transform(transformer::ContinuousEncoder, fitresult, X)
+
+    features_to_keep, hot_encoder, hot_fitresult = values(fitresult)
+
+    # dump unseen or untransformable features:
+    selector = FeatureSelector(features=features_to_keep)
+    selector_fitresult, _, _ = MLJBase.fit(selector, 0, X)
+    X0 = transform(selector, selector_fitresult, X)
+
+    # one-hot encode:
+    X1 = transform(hot_encoder, hot_fitresult, X0)
+
+    # convert remaining to continuous:
+    return coerce(X1, Count=>Continuous, OrderedFactor=>Continuous)
+
 end
 
 ##
@@ -822,3 +1028,11 @@ metadata_model(OneHotEncoder,
     weights = false,
     descr   = ONE_HOT_DESCR,
     path    = "MLJModels.OneHotEncoder")
+
+metadata_model(ContinuousEncoder,
+    input   = Table(Scientific),
+    output  = Table(Continuous),
+    weights = false,
+    descr   = CONTINUOUS_ENCODER_DESCR,
+    path    = "MLJModels.ContinuousEncoder")
+
