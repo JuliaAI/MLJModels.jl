@@ -641,11 +641,11 @@ end
                     ordered_factor=true,
                     drop_last=false)
 
-Unsupervised model for one-hot encoding the `Finite` features of some
-table. If `features` is unspecified all features with `Finite` element
-scitype are encoded. Otherwise, encoding is applied to all `Finite`
-features named in `features` (`ignore=false`) or all `Finite` features
-not named in features (`ignore=true`).
+Unsupervised model for one-hot encoding the `Finite` features
+(columns) of some table. If `features` is unspecified all features
+with `Finite` element scitype are encoded. Otherwise, encoding is
+applied to all `Finite` features named in `features` (`ignore=false`)
+or all `Finite` features not named in features (`ignore=true`).
 
 If `ordered_factor=false` then the above holds with `Finite` replaced
 with `Multiclass`, ie `OrderedFactor` features are not transformed.
@@ -656,9 +656,48 @@ categorical feature is to be dropped.
 New data to be transformed may lack features present in the fit data,
 but no *new* features can be present.
 
-*Warning:* This transformer assumes that the `Multiclass` or
- `OrderedFactor` features in new data to be transformed have the same
- underlying `CategoricalVector` encodings as those during the fit.
+*Warning:* This transformer assumes that `levels(col)` for any
+`Multiclass` or `OrderedFactor` column is the same in new data being
+transformed as it is in the data used to fit the transformer.
+
+### Example
+
+```julia
+X = (name=categorical(["Danesh", "Lee", "Mary", "John"]),
+     grade=categorical([:A, :B, :A, :C], ordered=true),
+     height=[1.85, 1.67, 1.5, 1.67],
+     n_devices=[3, 2, 4, 3])
+schema(X)
+
+┌───────────┬─────────────────────────────────┬──────────────────┐
+│ _.names   │ _.types                         │ _.scitypes       │
+├───────────┼─────────────────────────────────┼──────────────────┤
+│ name      │ CategoricalString{UInt32}       │ Multiclass{4}    │
+│ grade     │ CategoricalValue{Symbol,UInt32} │ OrderedFactor{3} │
+│ height    │ Float64                         │ Continuous       │
+│ n_devices │ Int64                           │ Count            │
+└───────────┴─────────────────────────────────┴──────────────────┘
+_.nrows = 4
+
+hot = OneHotEncoder(ordered_factor=true);
+mach = fit!(machine(hot, X))
+transform(mach, X) |> schema
+
+┌──────────────┬─────────┬────────────┐
+│ _.names      │ _.types │ _.scitypes │
+├──────────────┼─────────┼────────────┤
+│ name__Danesh │ Float64 │ Continuous │
+│ name__John   │ Float64 │ Continuous │
+│ name__Lee    │ Float64 │ Continuous │
+│ name__Mary   │ Float64 │ Continuous │
+│ grade__A     │ Float64 │ Continuous │
+│ grade__B     │ Float64 │ Continuous │
+│ grade__C     │ Float64 │ Continuous │
+│ height       │ Float64 │ Continuous │
+│ n_devices    │ Int64   │ Count      │
+└──────────────┴─────────┴────────────┘
+_.nrows = 4
+```
 
 """
 @with_kw_noshow mutable struct OneHotEncoder <: Unsupervised
@@ -818,9 +857,47 @@ encoded it.
 If `drop_last=true` is specified, then one-hot encoding always drops
 the last class indicator column.
 
-*Warning:* This transformer assumes that the `Multiclass` or
- `OrderedFactor` features in new data to be transformed have the same
- underlying `CategoricalVector` encodings as those during the fit.
+*Warning:* This transformer assumes that `levels(col)` for any
+`Multiclass` or `OrderedFactor` column is the same in new data being
+transformed as it is in the data used to fit the transformer.
+
+### Example 
+
+```julia
+X = (name=categorical(["Danesh", "Lee", "Mary", "John"]),
+     grade=categorical([:A, :B, :A, :C], ordered=true),
+     height=[1.85, 1.67, 1.5, 1.67],
+     n_devices=[3, 2, 4, 3],
+     comments=["the force", "be", "with you", "too"])
+schema(X)
+
+┌───────────┬─────────────────────────────────┬──────────────────┐
+│ _.names   │ _.types                         │ _.scitypes       │
+├───────────┼─────────────────────────────────┼──────────────────┤
+│ name      │ CategoricalString{UInt32}       │ Multiclass{4}    │
+│ grade     │ CategoricalValue{Symbol,UInt32} │ OrderedFactor{3} │
+│ height    │ Float64                         │ Continuous       │
+│ n_devices │ Int64                           │ Count            │
+│ comments  │ String                          │ Textual          │
+└───────────┴─────────────────────────────────┴──────────────────┘
+_.nrows = 4
+
+cont = ContinuousEncoder(drop_last=true);
+mach = fit!(machine(cont, X))
+transform(mach, X) |> schema
+
+┌──────────────┬─────────┬────────────┐
+│ _.names      │ _.types │ _.scitypes │
+├──────────────┼─────────┼────────────┤
+│ name__Danesh │ Float64 │ Continuous │
+│ name__John   │ Float64 │ Continuous │
+│ name__Lee    │ Float64 │ Continuous │
+│ grade        │ Float64 │ Continuous │
+│ height       │ Float64 │ Continuous │
+│ n_devices    │ Float64 │ Continuous │
+└──────────────┴─────────┴────────────┘
+_.nrows = 4
+```
 
 """
 @with_kw_noshow mutable struct ContinuousEncoder <: Unsupervised
