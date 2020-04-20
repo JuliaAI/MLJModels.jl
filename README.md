@@ -84,7 +84,9 @@ GreatNewPackage with MLJ:
 - In some environment to which your MLJModels clone has been added
   (using `Pkg.dev`) execute `using MLJModels; @update`. This updates
   `src/registry/Metadata.toml` and `src/registry/Models.toml` (the
-  latter is generated for convenience and not used by MLJ).
+  latter is generated for convenience and not used by MLJ). If the new
+  package does not appear in the list of packages generated, you may
+  have to force precompilation of MLJModels.
   
 - Test that interfaces load with `MLJModels.check_registry()`
 
