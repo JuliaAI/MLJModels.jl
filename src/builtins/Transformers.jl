@@ -838,7 +838,7 @@ end
 
 Unsupervised model for arranging all features (columns) of a table to
 have `Continuous` element scitype, by applying following protocol
-applied to each feature `ftr`:
+to each feature `ftr`:
 
 - If `ftr` is already `Continuous` retain it.
 
