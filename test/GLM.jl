@@ -78,8 +78,8 @@ fitresult, _, report = fit(pr, 1, X, y)
 yhat = predict(lr, fitresult, X)
 @test mean(cross_entropy(yhat, y)) < 0.25
 
+fitted_params(pr, fitresult)
 
-# info_dict(atom_glmcount)
 
 ###
 ### Count regression
@@ -102,3 +102,4 @@ fitresult, _, _ = fit(lcr, 1, XTable, y)
 
 end # module
 true
+
