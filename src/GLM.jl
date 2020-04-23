@@ -134,11 +134,16 @@ function MMI.fit(model::LinearBinaryClassifier, verbosity::Int, X, y)
     return (fitresult, decode), cache, report
 end
 
+glm_fitresult(::LinearRegressor, fitresult)  = fitresult
+glm_fitresult(::LinearCountRegressor, fitresult)  = fitresult
+glm_fitresult(::LinearBinaryClassifier, fitresult)  = fitresult[1]
+
 function MMI.fitted_params(model::GLM_MODELS, fitresult)
-    coefs = GLM.coef(fitresult)
+    coefs = GLM.coef(glm_fitresult(model,fitresult))
     return (coef      = coefs[1:end-Int(model.fit_intercept)],
             intercept = ifelse(model.fit_intercept, coefs[end], nothing))
 end
+
 
 ####
 #### PREDICT FUNCTIONS
@@ -198,7 +203,7 @@ metadata_model(LinearRegressor,
 
 metadata_model(LinearBinaryClassifier,
     input   = Table(Continuous),
-    target  = AbstractVector{<:Finite},
+    target  = AbstractVector{<:Finite{2}},
     weights = false,
     descr   = LBC_DESCR
     )
