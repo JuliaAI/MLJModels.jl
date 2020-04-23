@@ -203,7 +203,7 @@ metadata_model(LinearRegressor,
 
 metadata_model(LinearBinaryClassifier,
     input   = Table(Continuous),
-    target  = AbstractVector{<:Finite},
+    target  = AbstractVector{<:Finite{2}},
     weights = false,
     descr   = LBC_DESCR
     )
