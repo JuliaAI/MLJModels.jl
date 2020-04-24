@@ -34,10 +34,11 @@ _round_median = e -> skipmissing(e) |> (f -> round(eltype(f), median(f)))
 _mode         = e -> skipmissing(e) |> mode
 
 """
-    FillImputer(features=[],
-                continuous_fill=<median>,
-                count_fill=<round_median>,
-                finite_fill=<mode>)
+    FillImputer(
+     features        = [],
+     continuous_fill = e -> skipmissing(e) |> median
+     count_fill      = e -> skipmissing(e) |> (f -> round(eltype(f), median(f)))
+     finite_fill     = e -> skipmissing(e) |> mode
 
 $FILL_IMPUTER_DESCR
 
@@ -837,7 +838,7 @@ end
     ContinuousEncoder(one_hot_ordered_factors=false, drop_last=false)
 
 Unsupervised model for arranging all features (columns) of a table to
-have `Continuous` element scitype, by applying following protocol
+have `Continuous` element scitype, by applying the following protocol
 to each feature `ftr`:
 
 - If `ftr` is already `Continuous` retain it.
@@ -845,9 +846,9 @@ to each feature `ftr`:
 - If `ftr` is `Multiclass`, one-hot encode it.
 
 - If `ftr` is `OrderedFactor`, replace it with `coerce(ftr,
-Continuous)` (vector of floating point integers), unless
-`ordered_factors=false` is specified, in which case one-hot
-encoded it.
+  Continuous)` (vector of floating point integers), unless
+  `ordered_factors=false` is specified, in which case one-hot encode
+  it.
 
 - If `ftr` is `Count`, replace it with `coerce(ftr, Continuous)`.
 
