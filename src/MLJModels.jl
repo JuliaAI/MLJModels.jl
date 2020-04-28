@@ -1,4 +1,4 @@
-module MLJModels 
+module MLJModels
 
 import MLJModelInterface
 import MLJModelInterface: MODEL_TRAITS
@@ -9,7 +9,7 @@ import MLJBase: @load
 import MLJBase: Table, Continuous, Count, Finite, OrderedFactor, Multiclass
 
 using Requires, Pkg, Pkg.TOML, OrderedCollections, Parameters
-using Tables, CategoricalArrays, StatsBase, Statistics
+using Tables, CategoricalArrays, StatsBase, Statistics, Dates
 import Distributions
 
 # for administrators to update Metadata.toml:
