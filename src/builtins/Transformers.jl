@@ -330,38 +330,30 @@ MLJBase.inverse_transform(transformer::UnivariateStandardizer, fitresult, w) =
 ## CONTINUOUS TRANSFORM OF TIME TYPE FEATURES
 
 """
-    UnivariateTimeTypeToContinuous{T<:TimeType}(zero_time=nothing, step=Day(1))
+    UnivariateTimeTypeToContinuous(zero_time=nothing, step=Hour(24))
 
 Convert `Date`, `DateTime`, and `Time` vectors to `Float64` by assuming `0.0` corresponds
 to the `zero_time` parameter and the time increment to reach `1.0` is given by the `step`
 parameter. The type of `zero_time` should match the type of the column if provided. If not
 provided, then `zero_time` is inferred as the minimum time found in the data when `fit` is
-called, and the type is coerced to match `T`.
+called.
 
 """
-mutable struct UnivariateTimeTypeToContinuous{T<:TimeType} <: Unsupervised
-    zero_time::Union{Nothing, T}
+mutable struct UnivariateTimeTypeToContinuous <: Unsupervised
+    zero_time::Union{Nothing, TimeType}
     step::Period
-    function UnivariateTimeTypeToContinuous{T}(;
-        zero_time=nothing, step=Dates.Day(1)) where {T<:TimeType}
+    function UnivariateTimeTypeToContinuous(;
+        zero_time=nothing, step=Dates.Hour(24))
         return new(zero_time, step)
     end
-    function UnivariateTimeTypeToContinuous{Dates.Time}(;
-        zero_time=nothing, step=Dates.Hour(1))
-        return new(zero_time, step)
-    end
-end
-function UnivariateTimeTypeToContinuous(;
-    zero_time=nothing, step=Dates.Day(1)) where {T<:TimeType}
-    return UnivariateTimeTypeToContinuous{DateTime}(zero_time, step)
 end
 
-function MLJBase.fit(model::UnivariateTimeTypeToContinuous{T}, verbosity::Int, X) where T
+function MLJBase.fit(model::UnivariateTimeTypeToContinuous, verbosity::Int, X)
     if model.zero_time !== nothing
         fitresult = model.zero_time
     else
         min_dt = minimum(X)
-        fitresult = convert(T, min_dt)
+        fitresult = min_dt
     end
     cache = nothing
     report = nothing
@@ -370,7 +362,16 @@ end
 
 function MLJBase.transform(model::UnivariateTimeTypeToContinuous, fitresult, X)
     # Set the size of a single step.
-    delta = Float64(Dates.value(fitresult + model.step) -  Dates.value(fitresult))
+    next_time = fitresult + model.step
+    if next_time == fitresult
+        # Time type loops if model.step is a multiple of Hour(24), so calculate the
+        # number of multiples, then re-scale to Hour(12) and adjust delta to match original.
+        m = model.step / Dates.Hour(12)
+        delta = m * (
+            Float64(Dates.value(fitresult + Dates.Hour(12)) -  Dates.value(fitresult)))
+    else
+        delta = Float64(Dates.value(fitresult + model.step) -  Dates.value(fitresult))
+    end
     return @. Float64(Dates.value(X - fitresult)) / delta
 end
 
