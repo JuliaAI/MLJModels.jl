@@ -326,6 +326,56 @@ end
 MLJBase.inverse_transform(transformer::UnivariateStandardizer, fitresult, w) =
     [inverse_transform(transformer, fitresult, y) for y in w]
 
+##########################################################################################
+## CONTINUOUS TRANSFORM OF TIME TYPE FEATURES
+
+"""
+    UnivariateTimeTypeToContinuous(zero_time=nothing, step=Hour(24))
+
+Convert `Date`, `DateTime`, and `Time` vectors to `Float64` by assuming `0.0` corresponds
+to the `zero_time` parameter and the time increment to reach `1.0` is given by the `step`
+parameter. The type of `zero_time` should match the type of the column if provided. If not
+provided, then `zero_time` is inferred as the minimum time found in the data when `fit` is
+called.
+
+"""
+mutable struct UnivariateTimeTypeToContinuous <: Unsupervised
+    zero_time::Union{Nothing, TimeType}
+    step::Period
+    function UnivariateTimeTypeToContinuous(;
+        zero_time=nothing, step=Dates.Hour(24))
+        return new(zero_time, step)
+    end
+end
+
+function MLJBase.fit(model::UnivariateTimeTypeToContinuous, verbosity::Int, X)
+    if model.zero_time !== nothing
+        fitresult = model.zero_time
+    else
+        min_dt = minimum(X)
+        fitresult = min_dt
+    end
+    cache = nothing
+    report = nothing
+    return fitresult, cache, report
+end
+
+function MLJBase.transform(model::UnivariateTimeTypeToContinuous, fitresult, X)
+    # Set the size of a single step.
+    next_time = fitresult + model.step
+    if next_time == fitresult
+        # Time type loops if model.step is a multiple of Hour(24), so calculate the
+        # number of multiples, then re-scale to Hour(12) and adjust delta to match original.
+        m = model.step / Dates.Hour(12)
+        delta = m * (
+            Float64(Dates.value(fitresult + Dates.Hour(12)) -  Dates.value(fitresult)))
+    else
+        delta = Float64(Dates.value(fitresult + model.step) -  Dates.value(fitresult))
+    end
+    return @. Float64(Dates.value(X - fitresult)) / delta
+end
+
+
 ## STANDARDIZATION OF ORDINAL FEATURES OF TABULAR DATA
 
 """
@@ -862,7 +912,7 @@ the last class indicator column.
 `Multiclass` or `OrderedFactor` column is the same in new data being
 transformed as it is in the data used to fit the transformer.
 
-### Example 
+### Example
 
 ```julia
 X = (name=categorical(["Danesh", "Lee", "Mary", "John"]),
@@ -1036,4 +1086,3 @@ metadata_model(ContinuousEncoder,
     weights = false,
     descr   = CONTINUOUS_ENCODER_DESCR,
     path    = "MLJModels.ContinuousEncoder")
-
