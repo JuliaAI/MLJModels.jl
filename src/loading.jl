@@ -50,7 +50,10 @@ function load(proxy::ModelProxy; modl=Main, verbosity=0, allow_ambiguous=false)
     # if needed, put MLJModels in the calling module's namespace:
     if path_components[1] == "MLJModels"
         toprint && print("import MLJModels ")
-        modl.eval(:(import MLJ.MLJModels))
+        # the latter pass exists as a fallback, and shouldn't happen for end users,
+        # but we need that for testing, etc
+        load_ex = isdefined(modl, :MLJ) ? :(import MLJ.MLJModels) : :(import MLJModels)
+        modl.eval(load_ex)
         toprint && println('\u2714')
     end
 
@@ -63,7 +66,10 @@ function load(proxy::ModelProxy; modl=Main, verbosity=0, allow_ambiguous=false)
     toprint && println('\u2714')
 
     # load the model:
-    load_str = path_components[1] == "MLJModels" ? "import MLJ.$path" : "import $path"
+    # the latter pass exists as a fallback, and shouldn't happen for end users,
+    # but we need that for testing, etc
+    load_str = (path_components[1] == "MLJModels" && isdefined(modl, :MLJ)) ?
+        "import MLJ.$path" : "import $path"
     load_ex = Meta.parse(load_str)
     toprint && print(string(load_ex, " "))
     modl.eval(load_ex)
