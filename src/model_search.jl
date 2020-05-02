@@ -137,7 +137,17 @@ function MLJBase.models(conditions...)
     return sort!(unsorted)
 end
 
-MLJBase.models() = models(x->true)
+"""
+    models(regex::Regex)
+
+List all models whole `name` or `docstring` matches a given `regex`.
+"""
+function MLJBase.models(regex::Regex)
+    unsorted = filter(info.(keys(INFO_GIVEN_HANDLE))) do model
+        occursin(regex, model.name) || occursin(regex, model.docstring)
+    end
+    return sort!(unsorted)
+end
 
 # function models(task::MLJBase.SupervisedTask)
 #     ret = Dict{String, Any}()

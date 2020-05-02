@@ -36,5 +36,13 @@ end
     @test !(cnst in models(u, t))
 end
 
+@testset "models(regex::Regex) and localmodels(regex::Regex)" begin
+    @test pca in models(r"PCA")
+    @test pca in models(r"pca"i)
+    @test pca ∉ models(r"PCA′")
+
+    info("DecisionTreeRegressor") in localmodels(r"decision"; modl = TestModelSearch)
+end
+
 end
 true
