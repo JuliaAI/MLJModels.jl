@@ -138,13 +138,13 @@ function MLJBase.models(conditions...)
 end
 
 """
-    models(regex::Regex)
+    models(needle::Union{AbstractString,Regex})
 
-List all models whole `name` or `docstring` matches a given `regex`.
+List all models whole `name` or `docstring` matches a given `needle`.
 """
-function MLJBase.models(regex::Regex)
+function MLJBase.models(needle::Union{AbstractString,Regex})
     unsorted = filter(info.(keys(INFO_GIVEN_HANDLE))) do model
-        occursin(regex, model.name) || occursin(regex, model.docstring)
+        occursin(needle, model.name) || occursin(needle, model.docstring)
     end
     return sort!(unsorted)
 end
@@ -172,6 +172,7 @@ end
 """
     localmodels(; modl=Main)
     localmodels(conditions...; modl=Main)
+    localmodels(needle::Union{AbstractString,Regex}; modl=Main)
 
 
 List all models whose names are in the namespace of the specified

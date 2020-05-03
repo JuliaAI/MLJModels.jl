@@ -36,12 +36,16 @@ end
     @test !(cnst in models(u, t))
 end
 
-@testset "models(regex::Regex) and localmodels(regex::Regex)" begin
+@testset "models(needle::Union{AbstractString,Regex}) and localmodels(needle::Union{AbstractString,Regex})" begin
+    @test pca in models("PCA")
+    @test pca ∉ models("PCA′")
+
     @test pca in models(r"PCA")
     @test pca in models(r"pca"i)
     @test pca ∉ models(r"PCA′")
 
-    info("DecisionTreeRegressor") in localmodels(r"decision"; modl = TestModelSearch)
+    info("DecisionTreeRegressor") in localmodels("Decision"; modl = TestModelSearch)
+    info("DecisionTreeRegressor") in localmodels(r"Decision"; modl = TestModelSearch)
 end
 
 end
