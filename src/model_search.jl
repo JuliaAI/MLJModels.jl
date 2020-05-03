@@ -143,10 +143,8 @@ end
 List all models whole `name` or `docstring` matches a given `needle`.
 """
 function MLJBase.models(needle::Union{AbstractString,Regex})
-    unsorted = filter(info.(keys(INFO_GIVEN_HANDLE))) do model
-        occursin(needle, model.name) || occursin(needle, model.docstring)
-    end
-    return sort!(unsorted)
+    f = model -> occursin(needle, model.name) || occursin(needle, model.docstring)
+    return MLJBase.models(f)
 end
 
 # function models(task::MLJBase.SupervisedTask)
