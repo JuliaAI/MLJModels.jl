@@ -332,7 +332,7 @@ MLJBase.inverse_transform(transformer::UnivariateStandardizer, fitresult, w) =
 """
     UnivariateTimeTypeToContinuous(zero_time=nothing, step=Hour(24))
 
-Convert `Date`, `DateTime`, and `Time` vectors to `Float64` by assuming `0.0` corresponds
+Convert a `Date`, `DateTime`, and `Time` vector to `Float64` by assuming `0.0` corresponds
 to the `zero_time` parameter and the time increment to reach `1.0` is given by the `step`
 parameter. The type of `zero_time` should match the type of the column if provided. If not
 provided, then `zero_time` is inferred as the minimum time found in the data when `fit` is
@@ -342,15 +342,61 @@ called.
 mutable struct UnivariateTimeTypeToContinuous <: Unsupervised
     zero_time::Union{Nothing, TimeType}
     step::Period
-    function UnivariateTimeTypeToContinuous(;
-        zero_time=nothing, step=Dates.Hour(24))
-        return new(zero_time, step)
+end
+
+function UnivariateTimeTypeToContinuous(;
+    zero_time=nothing, step=Dates.Hour(24))
+    model = UnivariateTimeTypeToContinuous(zero_time, step)
+    MLJBase.clean!(model)
+    return return model
+end
+
+function MLJBase.clean!(model::UnivariateTimeTypeToContinuous)
+    # Step must be able to be added to zero_time if provided.
+    if model.zero_time !== nothing
+        try
+            tmp = model.zero_time + model.step
+        catch err
+            if err isa MethodError
+                # Cannot add time parts to dates nor date parts to times.
+                # If a mismatch is encountered. Conversion from date parts to time parts
+                # is possible, but not from time parts to date parts because we cannot
+                # represent fractional date parts.
+                if model.zero_time isa Dates.Date && model.step isa Dates.TimePeriod
+                    # Convert zero_time to a DateTime to resolve conflict.
+                    @warn "Cannot add TimePeriod step to Date zero_time. Converting zero_time to DateTime."
+                    model.zero_time = convert(DateTime, model.zero_time)
+                elseif model.zero_time isa Dates.Time && model.step isa Dates.DatePeriod
+                    # Convert step to Hour if possible. This will fail for
+                    # isa(step, Month)
+                    @warn "Cannot add DatePeriod step to Time zero_time. Converting step to Hour."
+                    model.step = convert(Hour, model.step)
+                else
+                    # Unable to resolve, rethrow original error.
+                    throw(err)
+                end
+            else
+                throw(err)
+            end
+        end
     end
 end
 
 function MLJBase.fit(model::UnivariateTimeTypeToContinuous, verbosity::Int, X)
     if model.zero_time !== nothing
         fitresult = model.zero_time
+        # Check zero_time is compatible with X
+        example = first(X)
+        try
+            X - fitresult
+        catch err
+            if err isa MethodError
+                @warn "$(typeof(fitresult)) zero_time is not compatible with $(eltype(X)) vector X. Attempting to convert zero_time."
+                fitresult = convert(eltype(X), fitresult)
+            else
+                throw(err)
+            end
+        end
     else
         min_dt = minimum(X)
         fitresult = min_dt
@@ -361,6 +407,10 @@ function MLJBase.fit(model::UnivariateTimeTypeToContinuous, verbosity::Int, X)
 end
 
 function MLJBase.transform(model::UnivariateTimeTypeToContinuous, fitresult, X)
+    if typeof(fitresult) ≠ eltype(X)
+        # Cannot run if eltype in transform differs from zero_time from fit.
+        Throw(ArgumentError("Different TimeType encountered during transform than expected from fit. Found $(eltype(X)), expected $(typeof(fitresult))"))
+    end
     # Set the size of a single step.
     next_time = fitresult + model.step
     if next_time == fitresult
