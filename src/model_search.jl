@@ -137,7 +137,15 @@ function MLJBase.models(conditions...)
     return sort!(unsorted)
 end
 
-MLJBase.models() = models(x->true)
+"""
+    models(needle::Union{AbstractString,Regex})
+
+List all models whole `name` or `docstring` matches a given `needle`.
+"""
+function MLJBase.models(needle::Union{AbstractString,Regex})
+    f = model -> occursin(needle, model.name) || occursin(needle, model.docstring)
+    return MLJBase.models(f)
+end
 
 # function models(task::MLJBase.SupervisedTask)
 #     ret = Dict{String, Any}()
@@ -162,6 +170,7 @@ MLJBase.models() = models(x->true)
 """
     localmodels(; modl=Main)
     localmodels(conditions...; modl=Main)
+    localmodels(needle::Union{AbstractString,Regex}; modl=Main)
 
 
 List all models whose names are in the namespace of the specified
