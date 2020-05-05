@@ -409,7 +409,7 @@ end
 function MLJBase.transform(model::UnivariateTimeTypeToContinuous, fitresult, X)
     if typeof(fitresult) ≠ eltype(X)
         # Cannot run if eltype in transform differs from zero_time from fit.
-        Throw(ArgumentError("Different TimeType encountered during transform than expected from fit. Found $(eltype(X)), expected $(typeof(fitresult))"))
+        throw(ArgumentError("Different TimeType encountered during transform than expected from fit. Found $(eltype(X)), expected $(typeof(fitresult))"))
     end
     # Set the size of a single step.
     next_time = fitresult + model.step
