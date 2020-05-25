@@ -12,6 +12,7 @@ import MLJModelInterface: Table, Continuous, Count, Finite, OrderedFactor,
 const MMI = MLJModelInterface
 
 import ..LIBSVM
+using ..Statistics
 
 """
     LinearSVC(; kwargs...)
