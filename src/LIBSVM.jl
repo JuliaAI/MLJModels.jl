@@ -477,3 +477,5 @@ MMI.target_scitype(::Type{<:Union{NuSVR, EpsilonSVR}}) = AbstractVector{Continuo
 MMI.output_scitype(::Type{<:OneClassSVM}) = AbstractVector{<:Finite{2}} # Bool (true means inlier)
 
 end # module
+
+
