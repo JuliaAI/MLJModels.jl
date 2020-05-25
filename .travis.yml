@@ -16,7 +16,8 @@ git:
   depth: 99999999
 env:
   global:
-  - PYTHON=conda
+  #- PYTHON=conda
+  - PYTHON=python3
 ## uncomment the following lines to allow failures on nightly julia
 ## (tests will run but not make your overall status red)
 matrix:
