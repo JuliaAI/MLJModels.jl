@@ -99,3 +99,4 @@ GreatNewPackage with MLJ:
 - Push your changes to an appropriate branch of MLJModels to make
   the updated metadata available to users of the next MLJModels tagged
   release.
+  
