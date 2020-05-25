@@ -942,7 +942,7 @@ metadata_pkg.(
     (FeatureSelector, UnivariateStandardizer,
      UnivariateDiscretizer, Standardizer,
      UnivariateBoxCoxTransformer,
-     OneHotEncoder, FillImputer),
+     OneHotEncoder, FillImputer, ContinuousEncoder),
     name       = "MLJModels",
     uuid       = "d491faf4-2d78-11e9-2867-c94bc002c0b7",
     url        = "https://github.com/alan-turing-institute/MLJModels.jl",
