@@ -15,7 +15,7 @@ notifications:
 git:
   depth: 99999999
 env:
-  - CONDA_JL_VERSION = "2"
+  #- CONDA_JL_VERSION = "2"
   global:
   - PYTHON=Conda
 ## uncomment the following lines to allow failures on nightly julia
