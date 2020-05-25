@@ -42,7 +42,6 @@ function LinearSVC(
         ,weights
         ,tolerance
         ,cost
-        ,cache_size
         ,p
         ,bias
     )
@@ -69,7 +68,7 @@ mutable struct SVC <: MMI.Deterministic
     gamma::Float64
     weights::Union{Dict, Nothing}
     cost::Float64
-    cache_size::Float64
+    cachesize::Float64
     degree::Int32
     coef0::Float64
     tolerance::Float64
@@ -82,7 +81,7 @@ function SVC(
     ,gamma::Float64 = 0.0
     ,weights::Union{Dict, Nothing} = nothing
     ,cost::Float64 = 1.0
-    ,cache_size::Float64=200.0
+    ,cachesize::Float64=200.0
     ,degree::Int32 = Int32(3)
     ,coef0::Float64 = 0.0
     ,tolerance::Float64 = .001
@@ -94,7 +93,7 @@ function SVC(
         ,gamma
         ,weights
         ,cost
-        ,cache_size
+        ,cachesize
         ,degree
         ,coef0
         ,tolerance
@@ -126,7 +125,7 @@ mutable struct NuSVC <: MMI.Deterministic
     weights::Union{Dict, Nothing}
     nu::Float64
     cost::Float64
-    cache_size::Float64
+    cachesize::Float64
     degree::Int32
     coef0::Float64
     tolerance::Float64
@@ -139,7 +138,7 @@ function NuSVC(
     ,weights::Union{Dict, Nothing} = nothing
     ,nu::Float64 = 0.5
     ,cost::Float64 = 1.0
-    ,cache_size::Float64 = 200.0
+    ,cachesize::Float64 = 200.0
     ,degree::Int32 = Int32(3)
     ,coef0::Float64 = 0.
     ,tolerance::Float64 = .001
@@ -151,7 +150,7 @@ function NuSVC(
         ,weights
         ,nu
         ,cost
-        ,cache_size
+        ,cachesize
         ,degree
         ,coef0
         ,tolerance
@@ -169,7 +168,7 @@ mutable struct OneClassSVM <: MMI.Unsupervised
     gamma::Float64
     nu::Float64
     cost::Float64
-    cache_size::Float64
+    cachesize::Float64
     degree::Int32
     coef0::Float64
     tolerance::Float64
@@ -181,7 +180,7 @@ function OneClassSVM(
     ,gamma::Float64 = 0.0
     ,nu::Float64 = 0.1
     ,cost::Float64 = 1.0
-    ,cache_size::Float64 = 200.0
+    ,cachesize::Float64 = 200.0
     ,degree::Int32 = Int32(3)
     ,coef0::Float64 = 0.0
     ,tolerance::Float64 = .001
@@ -192,7 +191,7 @@ function OneClassSVM(
         ,gamma
         ,nu
         ,cost
-        ,cache_size
+        ,cachesize
         ,degree
         ,coef0
         ,tolerance
@@ -222,7 +221,7 @@ mutable struct NuSVR <: MMI.Deterministic
     gamma::Float64
     nu::Float64
     cost::Float64
-    cache_size::Float64
+    cachesize::Float64
     degree::Int32
     coef0::Float64
     tolerance::Float64
@@ -234,7 +233,7 @@ function NuSVR(
     ,gamma::Float64 = 0.0
     ,nu::Float64 = 0.5
     ,cost::Float64 = 1.0
-    ,cache_size::Float64 = 200.0
+    ,cachesize::Float64 = 200.0
     ,degree::Int32 = Int32(3)
     ,coef0::Float64 = 0.
     ,tolerance::Float64 = .001
@@ -245,7 +244,7 @@ function NuSVR(
         ,gamma
         ,nu
         ,cost
-        ,cache_size
+        ,cachesize
         ,degree
         ,coef0
         ,tolerance
@@ -275,7 +274,7 @@ mutable struct EpsilonSVR <: MMI.Deterministic
     gamma::Float64
     epsilon::Float64
     cost::Float64
-    cache_size::Float64
+    cachesize::Float64
     degree::Int32
     coef0::Float64
     tolerance::Float64
@@ -287,7 +286,7 @@ function EpsilonSVR(
     ,gamma::Float64 = 0.0
     ,epsilon::Float64 = 0.1
     ,cost::Float64 = 1.0
-    ,cache_size::Float64 = 200.0
+    ,cachesize::Float64 = 200.0
     ,degree::Int32 = Int32(3)
     ,coef0::Float64 = 0.
     ,tolerance::Float64 = .001
@@ -298,7 +297,7 @@ function EpsilonSVR(
         ,gamma
         ,epsilon
         ,cost
-        ,cache_size
+        ,cachesize
         ,degree
         ,coef0
         ,tolerance
