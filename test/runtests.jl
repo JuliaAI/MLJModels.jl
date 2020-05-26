@@ -1,10 +1,11 @@
 using Test, MLJModels, Conda
 
 #Conda.add("numpy")
-Conda.add("nomkl")
+#Conda.add("nomkl")
+Conda.add("mkl")
 Conda.add("scikit-learn")
 #Conda.add("numexpr")
-Conda.rm("mkl")
+#Conda.rm("mkl")
 
 
 @testset "metadata" begin
