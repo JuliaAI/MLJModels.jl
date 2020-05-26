@@ -5,7 +5,7 @@ Conda.add("nomkl")
 Conda.add("scikit-learn")
 Conda.add("numexpr")
 Conda.rm("mkl")
-Conda.rm("mkl-service")
+#Conda.rm("mkl-service")
 
 @testset "metadata" begin
     @testset "reading and extracting model metadata" begin
