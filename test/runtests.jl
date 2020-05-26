@@ -1,6 +1,6 @@
 using Test, MLJModels, Conda
 
-Conda.add("numpy")
+#Conda.add("numpy")
 #Conda.add("nomkl")
 Conda.add("scikit-learn")
 #Conda.add("numexpr")
