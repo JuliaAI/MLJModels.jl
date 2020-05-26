@@ -1,11 +1,11 @@
 using Test, MLJModels, Conda
 
 Conda.add("numpy")
-Conda.add("nomkl")
+#Conda.add("nomkl")
 Conda.add("scikit-learn")
-Conda.add("numexpr")
-Conda.rm("mkl")
-#Conda.rm("mkl-service")
+#Conda.add("numexpr")
+#Conda.rm("mkl")
+
 
 @testset "metadata" begin
     @testset "reading and extracting model metadata" begin
