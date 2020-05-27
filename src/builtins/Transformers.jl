@@ -193,7 +193,7 @@ function MLJBase.fit(transformer::UnivariateDiscretizer, verbosity::Int, X)
     even_quantiles = clipped_quantiles[1:2:(2*n_classes-1)]
 
     # determine optimal reference type for encoding as categorical:
-    R = reftype(categorical(1:n_classes, compress=true))
+    R = reftype(categorical(1:n_classes, compress=true)
     output_prototype = categorical(R(1):R(n_classes), compress=true, ordered=true)
     element = output_prototype[1]
 

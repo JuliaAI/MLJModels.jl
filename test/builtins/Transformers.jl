@@ -350,7 +350,7 @@ end
          age    = [23, 23, 14, 23])
 
     t  = ContinuousEncoder()
-    f, _, _ = @test_logs((:info, r"Some.*dropped\: Symbol\[\:rubbish\]"),
+    f, _, _ = @test_logs((:info, r"Some.*dropped\:.*\:rubbish\]"),
                               MLJBase.fit(t, 1, X))
 
     Xt = MLJBase.transform(t, f, X)
