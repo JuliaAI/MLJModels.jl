@@ -194,7 +194,9 @@ function MLJBase.fit(transformer::UnivariateDiscretizer, verbosity::Int, X)
 
     # determine optimal reference type for encoding as categorical:
     R = reftype(categorical(1:n_classes, compress=true))
-    output_prototype = categorical(R(1):R(n_classes), true, ordered=true)
+    output_prototype = categorical(R(1):R(n_classes),
+                                   compress=true,
+                                   ordered=true)
     element = output_prototype[1]
 
     cache  = nothing
