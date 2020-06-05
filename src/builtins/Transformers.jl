@@ -194,7 +194,7 @@ function MLJBase.fit(transformer::UnivariateDiscretizer, verbosity::Int, X)
 
     # determine optimal reference type for encoding as categorical:
     R = reftype(categorical(1:n_classes, compress=true))
-    output_prototype = categorical(R(1):R(n_classes), true, ordered=true)
+    output_prototype = categorical(R(1):R(n_classes), compress=true, ordered=true)
     element = output_prototype[1]
 
     cache  = nothing
@@ -301,8 +301,8 @@ MLJBase.inverse_transform(transformer::UnivariateStandardizer, fitresult, w) =
     Standardizer(; features=Symbol[], ignore=false, ordered_factor=false, count=false)
 
 Unsupervised model for standardizing (whitening) the columns of
-tabular data.  If `features` is unspecified then all columns `v`
-having Continuous element scitype are standardized. Otherwise, the
+tabular data.  If `features` is unspecified then all columns
+having `Continuous` element scitype are standardized. Otherwise, the
 features standardized are the `Continuous` features named in
 `features` (`ignore=false`) or `Continuous` features not named in
 `features` (`ignore=true`). To allow standarization of `Count` or
@@ -942,7 +942,7 @@ metadata_pkg.(
     (FeatureSelector, UnivariateStandardizer,
      UnivariateDiscretizer, Standardizer,
      UnivariateBoxCoxTransformer,
-     OneHotEncoder, FillImputer),
+     OneHotEncoder, FillImputer, ContinuousEncoder),
     name       = "MLJModels",
     uuid       = "d491faf4-2d78-11e9-2867-c94bc002c0b7",
     url        = "https://github.com/alan-turing-institute/MLJModels.jl",
