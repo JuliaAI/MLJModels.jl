@@ -4,6 +4,7 @@ using Test, MLJModels
 using Tables, CategoricalArrays, Random
 using ScientificTypes
 using StatsBase
+using Dates: Date, Day
 
 import MLJBase
 
@@ -97,6 +98,17 @@ end
     @test round.(Int, MLJBase.inverse_transform(stand, f, [-1, 1, 3])) == [0, 4, 8]
 
     infos = MLJBase.info_dict(stand)
+end
+
+### TIMETYPE TO CONTINUOUS
+
+@testset "TimeTypeToContinuous" begin
+    dt = [Date(2018, 6, 15) + Day(i) for i=0:10]
+    transformer = UnivariateTimeTypeToContinuous(; step=Day(1))
+    fr, _, _ = MLJBase.fit(transformer, 1, dt)
+    @test fr == Date(2018, 6, 15)
+    dt_continuous = MLJBase.transform(transformer, fr, dt)
+    @test all(dt_continuous .== Float64.(0:10))
 end
 
 #### STANDARDIZER ####
