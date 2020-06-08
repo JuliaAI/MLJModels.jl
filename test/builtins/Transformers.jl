@@ -54,16 +54,6 @@ end
 #### UNIVARIATE DISCRETIZATION ####
 
 @testset "U-Discr" begin
-    # TODO: move this test to MLJBase:
-    # test helper function:
-    v = collect("qwertyuiopasdfghjklzxcvbnm1")
-    X = reshape(v, (3, 9))
-    Xcat = categorical(X)
-    Acat = Xcat[:, 1:4] # cat vector with unseen levels
-    element = Acat[1]
-    @test MLJBase.transform(element, X) == Xcat
-    @test MLJBase.transform(element, X[5]) == Xcat[5]
-
     v = randn(10000)
     t = UnivariateDiscretizer(n_classes=100);
     result, = MLJBase.fit(t, 1, v)
@@ -372,7 +362,7 @@ end
          age    = [23, 23, 14, 23])
 
     t  = ContinuousEncoder()
-    f, _, _ = @test_logs((:info, r"Some.*dropped\: Symbol\[\:rubbish\]"),
+    f, _, _ = @test_logs((:info, r"Some.*dropped\:.*\:rubbish\]"),
                               MLJBase.fit(t, 1, X))
 
     Xt = MLJBase.transform(t, f, X)

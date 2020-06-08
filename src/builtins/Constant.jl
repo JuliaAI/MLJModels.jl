@@ -21,9 +21,11 @@ function MLJBase.fit(::ConstantRegressor{D}, verbosity::Int, X, y) where D
     return fitresult, cache, report
 end
 
-MLJBase.fitted_params(::ConstantRegressor, fitresult) = (target_distribution=fitresult,)
+MLJBase.fitted_params(::ConstantRegressor, fitresult) =
+    (target_distribution=fitresult,)
 
-MLJBase.predict(::ConstantRegressor, fitresult, Xnew) = fill(fitresult, nrows(Xnew))
+MLJBase.predict(::ConstantRegressor, fitresult, Xnew) =
+    fill(fitresult, nrows(Xnew))
 
 ##
 ## THE CONSTANT DETERMINISTIC REGRESSOR (FOR TESTING)
@@ -38,7 +40,8 @@ function MLJBase.fit(::DeterministicConstantRegressor, verbosity::Int, X, y)
     return fitresult, cache, report
 end
 
-MLJBase.predict(::DeterministicConstantRegressor, fitresult, Xnew) = fill(fitresult, nrows(Xnew))
+MLJBase.predict(::DeterministicConstantRegressor, fitresult, Xnew) =
+    fill(fitresult, nrows(Xnew))
 
 ##
 ## THE CONSTANT CLASSIFIER
@@ -63,9 +66,11 @@ function MLJBase.fit(::ConstantClassifier, verbosity::Int, X, y, w=nothing)
     return fitresult, cache, report
 end
 
-MLJBase.fitted_params(::ConstantClassifier, fitresult) = (target_distribution=fitresult,)
+MLJBase.fitted_params(::ConstantClassifier, fitresult) =
+    (target_distribution=fitresult,)
 
-MLJBase.predict(::ConstantClassifier, fitresult, Xnew) = fill(fitresult, nrows(Xnew))
+MLJBase.predict(::ConstantClassifier, fitresult, Xnew) =
+    fill(fitresult, nrows(Xnew))
 
 ##
 ## DETERMINISTIC CONSTANT CLASSIFIER (FOR TESTING)
@@ -75,13 +80,14 @@ struct DeterministicConstantClassifier <: Deterministic end
 
 function MLJBase.fit(::DeterministicConstantClassifier, verbosity::Int, X, y)
     # dump missing target values and make into a regular array:
-    fitresult = mode(skipmissing(y) |> collect) # a CategoricalValue or CategoricalString
+    fitresult = mode(skipmissing(y) |> collect) # a CategoricalValue 
     cache     = nothing
     report    = NamedTuple()
     return fitresult, cache, report
 end
 
-MLJBase.predict(::DeterministicConstantClassifier, fitresult, Xnew) = fill(fitresult, nrows(Xnew))
+MLJBase.predict(::DeterministicConstantClassifier, fitresult, Xnew) =
+    fill(fitresult, nrows(Xnew))
 
 ##
 ## METADATA

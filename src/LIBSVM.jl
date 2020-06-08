@@ -12,6 +12,7 @@ import MLJModelInterface: Table, Continuous, Count, Finite, OrderedFactor,
 const MMI = MLJModelInterface
 
 import ..LIBSVM
+using Statistics
 
 """
     LinearSVC(; kwargs...)
@@ -56,9 +57,10 @@ end
     SVC(; kwargs...)
 
 Kernel support vector machine classifier using LIBSVM: https://www.csie.ntu.edu.tw/~cjlin/libsvm/
-
-If `gamma==-1.0` then an automatically computed value is used in
-fitting. Use the `report` method to inspect value used.
+If `gamma==-1.0` then  `gamma = 1/nfeatures is used in
+fitting.
+If `gamma==0.0` then a `gamma = 1/(var(X) * nfeatures)` is
+used in fitting
 
 See also LinearSVC, NuSVC
 """
@@ -67,6 +69,7 @@ mutable struct SVC <: MMI.Deterministic
     gamma::Float64
     weights::Union{Dict, Nothing}
     cost::Float64
+    cachesize::Float64
     degree::Int32
     coef0::Float64
     tolerance::Float64
@@ -76,9 +79,10 @@ end
 
 function SVC(
     ;kernel::LIBSVM.Kernel.KERNEL = LIBSVM.Kernel.RadialBasis
-    ,gamma::Float64 = -1.0
+    ,gamma::Float64 = 0.0
     ,weights::Union{Dict, Nothing} = nothing
     ,cost::Float64 = 1.0
+    ,cachesize::Float64=200.0
     ,degree::Int32 = Int32(3)
     ,coef0::Float64 = 0.0
     ,tolerance::Float64 = .001
@@ -90,6 +94,7 @@ function SVC(
         ,gamma
         ,weights
         ,cost
+        ,cachesize
         ,degree
         ,coef0
         ,tolerance
@@ -108,8 +113,10 @@ end
 
 Kernel support vector machine classifier using LIBSVM: https://www.csie.ntu.edu.tw/~cjlin/libsvm/
 
-If `gamma==-1.0` then an automatically computed value is used in
-fitting. Use the `report` method to inspect value used.
+If `gamma==-1.0` then  `gamma = 1/nfeatures is used in
+fitting.
+If `gamma==0.0` then a `gamma = 1/(var(X) * nfeatures)` is
+used in fitting
 
 See also LinearSVC, SVC
 """
@@ -119,6 +126,7 @@ mutable struct NuSVC <: MMI.Deterministic
     weights::Union{Dict, Nothing}
     nu::Float64
     cost::Float64
+    cachesize::Float64
     degree::Int32
     coef0::Float64
     tolerance::Float64
@@ -127,10 +135,11 @@ end
 
 function NuSVC(
     ;kernel::LIBSVM.Kernel.KERNEL = LIBSVM.Kernel.RadialBasis
-    ,gamma::Float64 = -1.0
+    ,gamma::Float64 = 0.0
     ,weights::Union{Dict, Nothing} = nothing
     ,nu::Float64 = 0.5
     ,cost::Float64 = 1.0
+    ,cachesize::Float64 = 200.0
     ,degree::Int32 = Int32(3)
     ,coef0::Float64 = 0.
     ,tolerance::Float64 = .001
@@ -142,6 +151,7 @@ function NuSVC(
         ,weights
         ,nu
         ,cost
+        ,cachesize
         ,degree
         ,coef0
         ,tolerance
@@ -159,6 +169,7 @@ mutable struct OneClassSVM <: MMI.Unsupervised
     gamma::Float64
     nu::Float64
     cost::Float64
+    cachesize::Float64
     degree::Int32
     coef0::Float64
     tolerance::Float64
@@ -167,9 +178,10 @@ end
 
 function OneClassSVM(
     ;kernel::LIBSVM.Kernel.KERNEL = LIBSVM.Kernel.RadialBasis
-    ,gamma::Float64 = -1.0
+    ,gamma::Float64 = 0.0
     ,nu::Float64 = 0.1
     ,cost::Float64 = 1.0
+    ,cachesize::Float64 = 200.0
     ,degree::Int32 = Int32(3)
     ,coef0::Float64 = 0.0
     ,tolerance::Float64 = .001
@@ -180,6 +192,7 @@ function OneClassSVM(
         ,gamma
         ,nu
         ,cost
+        ,cachesize
         ,degree
         ,coef0
         ,tolerance
@@ -197,6 +210,11 @@ end
 
 Kernel support vector machine regressor using LIBSVM: https://www.csie.ntu.edu.tw/~cjlin/libsvm/
 
+If `gamma==-1.0` then  `gamma = 1/nfeatures is used in
+fitting.
+If `gamma==0.0` then a `gamma = 1/(var(X) * nfeatures)` is
+used in fitting
+
 See also EpsilonSVR
 """
 mutable struct NuSVR <: MMI.Deterministic
@@ -204,6 +222,7 @@ mutable struct NuSVR <: MMI.Deterministic
     gamma::Float64
     nu::Float64
     cost::Float64
+    cachesize::Float64
     degree::Int32
     coef0::Float64
     tolerance::Float64
@@ -212,9 +231,10 @@ end
 
 function NuSVR(
     ;kernel::LIBSVM.Kernel.KERNEL = LIBSVM.Kernel.RadialBasis
-    ,gamma::Float64 = -1.0
+    ,gamma::Float64 = 0.0
     ,nu::Float64 = 0.5
     ,cost::Float64 = 1.0
+    ,cachesize::Float64 = 200.0
     ,degree::Int32 = Int32(3)
     ,coef0::Float64 = 0.
     ,tolerance::Float64 = .001
@@ -225,6 +245,7 @@ function NuSVR(
         ,gamma
         ,nu
         ,cost
+        ,cachesize
         ,degree
         ,coef0
         ,tolerance
@@ -242,6 +263,11 @@ end
 
 Kernel support vector machine regressor using LIBSVM: https://www.csie.ntu.edu.tw/~cjlin/libsvm/
 
+If `gamma==-1.0` then  `gamma = 1/nfeatures is used in
+fitting.
+If `gamma==0.0` then a `gamma = 1/(var(X) * nfeatures)` is
+used in fitting
+
 See also NuSVR
 """
 mutable struct EpsilonSVR <: MMI.Deterministic
@@ -249,6 +275,7 @@ mutable struct EpsilonSVR <: MMI.Deterministic
     gamma::Float64
     epsilon::Float64
     cost::Float64
+    cachesize::Float64
     degree::Int32
     coef0::Float64
     tolerance::Float64
@@ -257,9 +284,10 @@ end
 
 function EpsilonSVR(
     ;kernel::LIBSVM.Kernel.KERNEL = LIBSVM.Kernel.RadialBasis
-    ,gamma::Float64 = -1.0
+    ,gamma::Float64 = 0.0
     ,epsilon::Float64 = 0.1
     ,cost::Float64 = 1.0
+    ,cachesize::Float64 = 200.0
     ,degree::Int32 = Int32(3)
     ,coef0::Float64 = 0.
     ,tolerance::Float64 = .001
@@ -270,6 +298,7 @@ function EpsilonSVR(
         ,gamma
         ,epsilon
         ,cost
+        ,cachesize
         ,degree
         ,coef0
         ,tolerance
@@ -356,6 +385,7 @@ function MMI.fit(model::Union{SVC, NuSVC}, verbosity::Int, X, y)
 
     model = deepcopy(model)
     model.gamma == -1.0 && (model.gamma = 1.0/size(Xmatrix, 1))
+    model.gamma == 0.0 && (model.gamma = 1.0/(var(Xmatrix) * size(Xmatrix, 1)) )
     result = LIBSVM.svmtrain(Xmatrix, y_plain;
         get_svm_parameters(model)...,
         verbose = ifelse(verbosity > 1, true, false)
@@ -375,6 +405,7 @@ function MMI.fit(model::Union{NuSVR, EpsilonSVR}, verbosity::Int, X, y)
 
     model = deepcopy(model)
     model.gamma == -1.0 && (model.gamma = 1.0/size(Xmatrix, 1))
+    model.gamma == 0.0 && (model.gamma = 1.0/(var(Xmatrix) * size(Xmatrix, 1)) )
     fitresult = LIBSVM.svmtrain(Xmatrix, y;
         get_svm_parameters(model)...,
         verbose = ifelse(verbosity > 1, true, false)
@@ -393,6 +424,7 @@ function MMI.fit(model::OneClassSVM, verbosity::Int, X)
 
     model = deepcopy(model)
     model.gamma == -1.0 && (model.gamma = 1.0/size(Xmatrix, 1))
+    model.gamma == 0.0 && (model.gamma = 1.0/(var(Xmatrix) * size(Xmatrix, 1)) )
     fitresult = LIBSVM.svmtrain(Xmatrix;
         get_svm_parameters(model)...,
         verbose = ifelse(verbosity > 1, true, false)
@@ -445,3 +477,5 @@ MMI.target_scitype(::Type{<:Union{NuSVR, EpsilonSVR}}) = AbstractVector{Continuo
 MMI.output_scitype(::Type{<:OneClassSVM}) = AbstractVector{<:Finite{2}} # Bool (true means inlier)
 
 end # module
+
+
