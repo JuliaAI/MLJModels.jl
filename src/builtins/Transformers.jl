@@ -316,31 +316,22 @@ end
 function UnivariateTimeTypeToContinuous(;
     zero_time=nothing, step=Dates.Hour(24))
     model = UnivariateTimeTypeToContinuous(zero_time, step)
-    MLJBase.clean!(model)
-    return return model
+    message = MLJBase.clean!(model)
+    isempty(message) || @warn message
+    return model
 end
 
 function MLJBase.clean!(model::UnivariateTimeTypeToContinuous)
     # Step must be able to be added to zero_time if provided.
+    msg = ""
     if model.zero_time !== nothing
         try
             tmp = model.zero_time + model.step
         catch err
             if err isa MethodError
-                # Cannot add time parts to dates nor date parts to times.
-                # If a mismatch is encountered. Conversion from date parts to time parts
-                # is possible, but not from time parts to date parts because we cannot
-                # represent fractional date parts.
-                if model.zero_time isa Dates.Date && model.step isa Dates.TimePeriod
-                    # Convert zero_time to a DateTime to resolve conflict.
-                    @warn "Cannot add TimePeriod step to Date zero_time. Converting zero_time to DateTime."
-                    model.zero_time = convert(DateTime, model.zero_time)
-                elseif model.zero_time isa Dates.Time && model.step isa Dates.DatePeriod
-                    # Convert step to Hour if possible. This will fail for
-                    # isa(step, Month)
-                    @warn "Cannot add DatePeriod step to Time zero_time. Converting step to Hour."
-                    model.step = convert(Hour, model.step)
-                else
+                model.zero_time, model.step, status, msg = _fix_zero_time_step(
+                    model.zero_time, model.step)
+                if status === :error
                     # Unable to resolve, rethrow original error.
                     throw(err)
                 end
@@ -349,49 +340,97 @@ function MLJBase.clean!(model::UnivariateTimeTypeToContinuous)
             end
         end
     end
+    return msg
+end
+
+function _fix_zero_time_step(zero_time, step)
+    # Cannot add time parts to dates nor date parts to times.
+    # If a mismatch is encountered. Conversion from date parts to time parts
+    # is possible, but not from time parts to date parts because we cannot
+    # represent fractional date parts.
+    msg = ""
+    if zero_time isa Dates.Date && step isa Dates.TimePeriod
+        # Convert zero_time to a DateTime to resolve conflict.
+        if step % Hour(24) === Hour(0)
+            # We can convert step to Day safely
+            msg = "Cannot add TimePeriod step to Date zero_time. Converting step to Day."
+            step = convert(Day, step)
+        else
+            # We need datetime to be compatible with the step.
+            msg = "Cannot add TimePeriod step to Date zero_time. Converting zero_time to DateTime."
+            zero_time = convert(DateTime, zero_time)
+        end
+        return zero_time, step, :success, msg
+    elseif zero_time isa Dates.Time && step isa Dates.DatePeriod
+        # Convert step to Hour if possible. This will fail for
+        # isa(step, Month)
+        msg = "Cannot add DatePeriod step to Time zero_time. Converting step to Hour."
+        step = convert(Hour, step)
+        return zero_time, step, :success, msg
+    else
+        return zero_time, step, :error, msg
+    end
 end
 
 function MLJBase.fit(model::UnivariateTimeTypeToContinuous, verbosity::Int, X)
     if model.zero_time !== nothing
-        fitresult = model.zero_time
+        min_dt = model.zero_time
+        step = model.step
         # Check zero_time is compatible with X
         example = first(X)
         try
-            X - fitresult
+            X - min_dt
         catch err
             if err isa MethodError
-                @warn "$(typeof(fitresult)) zero_time is not compatible with $(eltype(X)) vector X. Attempting to convert zero_time."
-                fitresult = convert(eltype(X), fitresult)
+                @warn "$(typeof(min_dt)) zero_time is not compatible with $(eltype(X)) vector. Attempting to convert zero_time."
+                min_dt = convert(eltype(X), min_dt)
             else
                 throw(err)
             end
         end
     else
         min_dt = minimum(X)
-        fitresult = min_dt
+        step = model.step
+        message = ""
+        try
+            min_dt + step
+        catch err
+            if err isa MethodError
+                min_dt, step, status, message = _fix_zero_time_step(min_dt, step)
+                if status === :error
+                    # Unable to resolve, rethrow original error.
+                    throw(err)
+                end
+            else
+                throw(err)
+            end
+        end
+        isempty(message) || @warn message
     end
     cache = nothing
     report = nothing
+    fitresult = (min_dt, step)
     return fitresult, cache, report
 end
 
 function MLJBase.transform(model::UnivariateTimeTypeToContinuous, fitresult, X)
-    if typeof(fitresult) ≠ eltype(X)
+    min_dt, step = fitresult
+    if typeof(min_dt) ≠ eltype(X)
         # Cannot run if eltype in transform differs from zero_time from fit.
-        throw(ArgumentError("Different TimeType encountered during transform than expected from fit. Found $(eltype(X)), expected $(typeof(fitresult))"))
+        throw(ArgumentError("Different TimeType encountered during transform than expected from fit. Found $(eltype(X)), expected $(typeof(min_dt))"))
     end
     # Set the size of a single step.
-    next_time = fitresult + model.step
-    if next_time == fitresult
-        # Time type loops if model.step is a multiple of Hour(24), so calculate the
+    next_time = min_dt + step
+    if next_time == min_dt
+        # Time type loops if step is a multiple of Hour(24), so calculate the
         # number of multiples, then re-scale to Hour(12) and adjust delta to match original.
-        m = model.step / Dates.Hour(12)
+        m = step / Dates.Hour(12)
         delta = m * (
-            Float64(Dates.value(fitresult + Dates.Hour(12)) -  Dates.value(fitresult)))
+            Float64(Dates.value(min_dt + Dates.Hour(12)) - Dates.value(min_dt)))
     else
-        delta = Float64(Dates.value(fitresult + model.step) -  Dates.value(fitresult))
+        delta = Float64(Dates.value(min_dt + step) - Dates.value(min_dt))
     end
-    return @. Float64(Dates.value(X - fitresult)) / delta
+    return @. Float64(Dates.value(X - min_dt)) / delta
 end
 
 
