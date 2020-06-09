@@ -104,7 +104,7 @@ end
     let dt = [Date(2018, 6, 15) + Day(i) for i=0:10],
         transformer = UnivariateTimeTypeToContinuous()
         @test_logs(
-            (:warn, "Cannot add TimePeriod step to Date zero_time. Converting step to Day."),
+            (:warn, "Cannot add `TimePeriod` `step` to `Date` `zero_time`. Converting `step` to `Day`."),
             MLJBase.fit(transformer, 1, dt)
         )
         fr, _, _ = MLJBase.fit(transformer, 1, dt)
@@ -143,7 +143,7 @@ end
             zero_time=zero_time,
         )
         @test_logs(
-            (:warn, "Cannot add TimePeriod step to Date zero_time. Converting zero_time to DateTime."),
+            (:warn, "Cannot add `TimePeriod` `step` to `Date` `zero_time`. Converting `zero_time` to `DateTime`."),
             UnivariateTimeTypeToContinuous(;
                 step=step,
                 zero_time=zero_time,
@@ -164,7 +164,7 @@ end
             zero_time=zero_time,
         )
         @test_logs(
-            (:warn, "Cannot add DatePeriod step to Time zero_time. Converting step to Hour."),
+            (:warn, "Cannot add `DatePeriod` `step` to `Time` `zero_time`. Converting `step` to `Hour`."),
             UnivariateTimeTypeToContinuous(;
                 step=step,
                 zero_time=zero_time,
@@ -186,7 +186,7 @@ end
             zero_time=zero_time,
         )
         @test_logs(
-            (:warn, "Dates.Date zero_time is not compatible with Dates.DateTime vector. Attempting to convert zero_time."),
+            (:warn, "`Dates.Date` `zero_time` is not compatible with `Dates.DateTime` vector. Attempting to convert `zero_time`."),
             MLJBase.fit(transformer, 1, dt)
         )
         fr, _, _ = MLJBase.fit(transformer, 1, dt)
