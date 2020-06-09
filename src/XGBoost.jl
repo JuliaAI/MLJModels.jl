@@ -655,9 +655,8 @@ function MMI.predict(model::XGBoostClassifier
 
     prediction_probabilities = reshape(XGBpredictions, nlevels, npatterns)
 
-    predictions = [MMI.UnivariateFinite(classes,
-                                             prediction_probabilities[:,i])
-                   for i in 1:npatterns]
+    # note we use adjoint of above:
+    predictions = MMI.UnivariateFinite(classes, prediction_probabilities')
 
     return predictions
 end

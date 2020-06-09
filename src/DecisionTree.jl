@@ -35,9 +35,9 @@ $DTC_DESCR
 
 Inputs are tables with ordinal columns. That is, the element scitype
 of each column can be `Continuous`, `Count` or `OrderedFactor`.
-Predictions are Probabilistic.
+Predictions are probabilistic, but uncalibrated.
 
-Instead of predicting the mode class at each leaf, a UnivariateFinite
+Instead of predicting the mode class at each leaf, a `UnivariateFinite`
 distribution is fit to the leaf training classes, with smoothing
 controlled by an additional hyperparameter `pdf_smoothing`: If `n` is
 the number of observed classes, then each class probability is
@@ -131,8 +131,7 @@ function MMI.predict(m::DecisionTreeClassifier, fitresult, Xnew)
     # smooth if required
     sm_scores = smooth(scores, m.pdf_smoothing)
     # return vector of UF
-    return [MMI.UnivariateFinite(classes_seen, sm_scores[i, :])
-                    for i in 1:size(sm_scores, 1)]
+    return MMI.UnivariateFinite(classes_seen, sm_scores)
 end
 
 """
@@ -189,8 +188,7 @@ function MMI.predict(m::RandomForestClassifier, fitresult, Xnew)
     forest, classes_seen, integers_seen = fitresult
     scores = DT.apply_forest_proba(forest, Xmatrix, integers_seen)
     sm_scores = smooth(scores, m.pdf_smoothing)
-    return [MMI.UnivariateFinite(classes_seen, sm_scores[i, :])
-                    for i in 1:size(sm_scores, 1)]
+    return MMI.UnivariateFinite(classes_seen, sm_scores)
 end
 
 """
@@ -231,8 +229,7 @@ function MMI.predict(m::AdaBoostStumpClassifier, fitresult, Xnew)
     scores = DT.apply_adaboost_stumps_proba(stumps, coefs,
                                             Xmatrix, integers_seen)
     sm_scores = smooth(scores, m.pdf_smoothing)
-    return [MMI.UnivariateFinite(classes_seen, sm_scores[i, :])
-                    for i in 1:size(sm_scores, 1)]
+    return MMI.UnivariateFinite(classes_seen, sm_scores)
 end
 
 ## REGRESSION
@@ -258,12 +255,12 @@ are Deterministic.
                            combined purity
 """
 @mlj_model mutable struct DecisionTreeRegressor <: MMI.Deterministic
-    max_depth::Int				 = (-)(1)::(_ ≥ -1)
-    min_samples_leaf::Int		 = 5::(_ ≥ 0)
-    min_samples_split::Int		 = 2::(_ ≥ 2)
+    max_depth::Int                               = (-)(1)::(_ ≥ -1)
+    min_samples_leaf::Int                = 5::(_ ≥ 0)
+    min_samples_split::Int               = 2::(_ ≥ 2)
     min_purity_increase::Float64 = 0.0::(_ ≥ 0)
-    n_subfeatures::Int			 = 0::(_ ≥ 0)
-    post_prune::Bool			 = false
+    n_subfeatures::Int                   = 0::(_ ≥ 0)
+    post_prune::Bool                     = false
     merge_purity_threshold::Float64 = 1.0::(0 ≤ _ ≤ 1)
 end
 
