@@ -353,18 +353,18 @@ function _fix_zero_time_step(zero_time, step)
         # Convert zero_time to a DateTime to resolve conflict.
         if step % Hour(24) === Hour(0)
             # We can convert step to Day safely
-            msg = "Cannot add TimePeriod step to Date zero_time. Converting step to Day."
+            msg = "Cannot add `TimePeriod` `step` to `Date` `zero_time`. Converting `step` to `Day`."
             step = convert(Day, step)
         else
             # We need datetime to be compatible with the step.
-            msg = "Cannot add TimePeriod step to Date zero_time. Converting zero_time to DateTime."
+            msg = "Cannot add `TimePeriod` `step` to `Date` `zero_time`. Converting `zero_time` to `DateTime`."
             zero_time = convert(DateTime, zero_time)
         end
         return zero_time, step, :success, msg
     elseif zero_time isa Dates.Time && step isa Dates.DatePeriod
         # Convert step to Hour if possible. This will fail for
         # isa(step, Month)
-        msg = "Cannot add DatePeriod step to Time zero_time. Converting step to Hour."
+        msg = "Cannot add `DatePeriod` `step` to `Time` `zero_time`. Converting `step` to `Hour`."
         step = convert(Hour, step)
         return zero_time, step, :success, msg
     else
@@ -382,7 +382,7 @@ function MLJBase.fit(model::UnivariateTimeTypeToContinuous, verbosity::Int, X)
             X - min_dt
         catch err
             if err isa MethodError
-                @warn "$(typeof(min_dt)) zero_time is not compatible with $(eltype(X)) vector. Attempting to convert zero_time."
+                @warn "`$(typeof(min_dt))` `zero_time` is not compatible with `$(eltype(X))` vector. Attempting to convert `zero_time`."
                 min_dt = convert(eltype(X), min_dt)
             else
                 throw(err)
@@ -417,7 +417,7 @@ function MLJBase.transform(model::UnivariateTimeTypeToContinuous, fitresult, X)
     min_dt, step = fitresult
     if typeof(min_dt) ≠ eltype(X)
         # Cannot run if eltype in transform differs from zero_time from fit.
-        throw(ArgumentError("Different TimeType encountered during transform than expected from fit. Found $(eltype(X)), expected $(typeof(min_dt))"))
+        throw(ArgumentError("Different `TimeType` encountered during `transform` than expected from `fit`. Found `$(eltype(X))`, expected `$(typeof(min_dt))`"))
     end
     # Set the size of a single step.
     next_time = min_dt + step
