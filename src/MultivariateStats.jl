@@ -4,9 +4,9 @@ export RidgeRegressor, PCA, KernelPCA, ICA, LDA, BayesianLDA
 
 import MLJModelInterface
 import MLJModelInterface: @mlj_model, metadata_pkg, metadata_model,
-                          Table, Continuous, Finite
+    Table, Continuous, Finite
 
-import MLJBase # needed for UnivariateFinite (the Type)
+using MLJBase # need the UnivariateFinite *type* not just the method
 
 const MMI = MLJModelInterface
 
@@ -375,7 +375,7 @@ function MMI.predict(m::LDA, (core_res, class_list), Xnew)
     P  .= exp.(-P)
     P ./= sum(P, dims=2)
 
-    return [MMI.UnivariateFinite(class_list, P[j, :]) for j in 1:size(P, 1)]
+    return MMI.UnivariateFinite(class_list, P)
 end
 
 ####
@@ -618,7 +618,7 @@ function MMI.predict(m::BayesianSubspaceLDA, (core_res, class_list, priors), Xne
     P  .= exp.(P)
     P ./= sum(P, dims=2)
 
-    return [MMI.UnivariateFinite(class_list, P[j, :]) for j in 1:size(P, 1)]
+    return MMI.UnivariateFinite(class_list, P)
 end
 
 ####
@@ -723,7 +723,7 @@ function MMI.predict(m::SubspaceLDA, (core_res, class_list), Xnew)
     P  .= exp.(-P)
     P ./= sum(P, dims=2)
 
-    return [MMI.UnivariateFinite(class_list, P[j, :]) for j in 1:size(P, 1)]
+    return MMI.UnivariateFinite(class_list, P)
 end
 
 function MMI.transform(m::T, (core_res,), X) where T<:Union{LDA, SubspaceLDA, BayesianLDA, BayesianSubspaceLDA}

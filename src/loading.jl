@@ -47,19 +47,26 @@ function load(proxy::ModelProxy; modl=Main, verbosity=0, allow_ambiguous=false)
 
     verbosity > 1 && @info "Loading into module \"$modl\": "
 
+    # the package providing the implementation of the MLJ model
+    # interface could be different from `pkg`, which is the package
+    # name exposed to the user (and where the core alogrithms live,
+    # but that this not actually relevant here).
+    api_pkg = path_components[1]
+    
     # if needed, put MLJModels in the calling module's namespace:
-    if path_components[1] == "MLJModels"
+    if api_pkg == "MLJModels"
         toprint && print("import MLJModels ")
-        # the latter pass exists as a fallback, and shouldn't happen for end users,
-        # but we need that for testing, etc
-        load_ex = isdefined(modl, :MLJ) ? :(import MLJ.MLJModels) : :(import MLJModels)
+        # the latter pass exists as a fallback, and shouldn't happen
+        # for end users, but we need that for testing, etc
+        load_ex =
+            isdefined(modl, :MLJ) ? :(import MLJ.MLJModels) : :(import MLJModels)
         modl.eval(load_ex)
         toprint && println('\u2714')
     end
 
-    # load the package (triggering lazy-load of implementation code if
-    # this is in MLJModels):
-    pkg_ex = Symbol(pkg)
+    # load `api_pkg`, unless this is MLJModels, in which case load
+    # `pkg` to trigger lazy-loading of implementation code:
+    pkg_ex = api_pkg == "MLJModels" ? Symbol(pkg) : Symbol(api_pkg)
     toprint && print("import $pkg_ex ")
     modl.eval(:(import $pkg_ex))
 
@@ -68,7 +75,7 @@ function load(proxy::ModelProxy; modl=Main, verbosity=0, allow_ambiguous=false)
     # load the model:
     # the latter pass exists as a fallback, and shouldn't happen for end users,
     # but we need that for testing, etc
-    load_str = (path_components[1] == "MLJModels" && isdefined(modl, :MLJ)) ?
+    load_str = (api_pkg == "MLJModels" && isdefined(modl, :MLJ)) ?
         "import MLJ.$path" : "import $path"
     load_ex = Meta.parse(load_str)
     toprint && print(string(load_ex, " "))
