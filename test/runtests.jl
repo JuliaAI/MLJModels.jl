@@ -29,20 +29,12 @@ end
     @test include("DecisionTree.jl")
 end
 
-# @testset "GaussianProcesses  " begin
-#     @test include("GaussianProcesses.jl")
-# end
-
 @testset "Clustering         " begin
     @test include("Clustering.jl")
 end
 
 @testset "GLM                " begin
     @test include("GLM.jl")
-end
-
-@testset "ScikitLearn        " begin
-    @test include("ScikitLearn/ScikitLearn.jl")
 end
 
 @testset "LIBSVM             " begin

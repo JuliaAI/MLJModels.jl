@@ -173,7 +173,7 @@ end
 
 function MMI.predict(model::LinearBinaryClassifier, (fitresult, decode), Xnew)
     π = MMI.predict_mean(model, (fitresult, decode), Xnew)
-    return [MMI.UnivariateFinite(MMI.classes(decode), [1-πᵢ, πᵢ]) for πᵢ in π]
+    return MMI.UnivariateFinite(MMI.classes(decode), π, augment=true)
 end
 
 # NOTE: predict_mode uses MLJBase's fallback
