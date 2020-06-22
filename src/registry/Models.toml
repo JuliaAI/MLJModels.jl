@@ -13,3 +13,4 @@ EvoTrees = ["EvoTreeClassifier", "EvoTreeGaussian", "EvoTreeRegressor", "EvoTree
 MLJModels = ["ConstantClassifier", "Standardizer", "DeterministicConstantClassifier", "OneHotEncoder", "ContinuousEncoder", "UnivariateBoxCoxTransformer", "ConstantRegressor", "FeatureSelector", "UnivariateDiscretizer", "FillImputer", "DeterministicConstantRegressor", "UnivariateStandardizer"]
 LIBSVM = ["EpsilonSVR", "LinearSVC", "NuSVR", "NuSVC", "SVC", "OneClassSVM"]
 GLM = ["LinearBinaryClassifier", "LinearCountRegressor", "LinearRegressor"]
+MLJFlux = ["MultitargetNeuralNetworkRegressor", "NeuralNetworkClassifier", "ImageClassifier", "NeuralNetworkRegressor"]

@@ -7,6 +7,7 @@ InteractiveUtils = "b77e0a4c-d291-57a0-90e8-8db25a27a240"
 LIBSVM = "b1bec4e5-fd48-53fe-b0cb-9723c09d164b"
 LightGBM = "7acf609c-83a4-11e9-1ffb-b912bcd3b04a"
 MLJBase = "a7f614a8-145f-11e9-1d2a-a57a1082229d"
+MLJFlux = "094fc8d1-fd35-5302-93ea-dabda2abf845"
 MLJLinearModels = "6ee0df7b-362f-4a72-a706-9e79364fb692"
 MLJModelInterface = "e80e1ace-859a-464e-9ed9-23947d8ae3ea"
 MLJModels = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
@@ -19,7 +20,7 @@ Pkg = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
 XGBoost = "009559a3-9522-5dbb-924b-0b6ed2b22bb9"
 
 [compat]
-MLJModelInterface = "^0.2"
+MLJModelInterface = "^0.3"
 
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
