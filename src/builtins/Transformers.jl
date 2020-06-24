@@ -1,7 +1,6 @@
 ## CONSTANTS
 
 const N_VALUES_THRESH = 16 # for BoxCoxTransformation
-const CategoricalElement = MLJBase.CategoricalElement
 
 
 ## DESCRIPTIONS (see also metadata at the bottom)
@@ -143,37 +142,7 @@ end
 ## UNIVARIATE Discretizer
 ##
 
-# helper functions
-# TODO: move these to MLJBase/src/data.jl
-
-const message1 = "Attempting to transform a level not in pool of specified "*
-   "categorical element. "
-
-# Transform a raw level `x` in the pool of some categorical element,
-# `element`, into a categorical element (with the same pool):
-function MLJBase.transform(element::C, x) where C <: CategoricalElement
-    pool = element.pool
-    x in levels(pool) || error(message1)
-    ref = pool.invindex[x]
-    return C(ref, pool)
-end
-
-# Transform ordinary array `X` into a categorical array with the same
-# pool as the categorical element `element`:
-function MLJBase.transform(element::CategoricalElement,
-                           X::AbstractArray{T,N}) where {T,N}
-    pool = element.pool
-
-    levels_presented = unique(X)
-    issubset(levels_presented, levels(pool)) || error(message1)
-    Missing <: T &&
-        error("Missing values not supported. ")
-
-    refs = broadcast(x -> pool.invindex[x], X)
-
-    return CategoricalArray{T,N}(refs, pool)
-end
-
+# helper function:
 reftype(::CategoricalArray{<:Any,<:Any,R}) where R = R
 
 """
@@ -224,8 +193,8 @@ function MLJBase.fit(transformer::UnivariateDiscretizer, verbosity::Int, X)
     even_quantiles = clipped_quantiles[1:2:(2*n_classes-1)]
 
     # determine optimal reference type for encoding as categorical:
-    R = reftype(categorical(1:n_classes, true))
-    output_prototype = categorical(R(1):R(n_classes), true, ordered=true)
+    R = reftype(categorical(1:n_classes, compress=true))
+    output_prototype = categorical(R(1):R(n_classes), compress=true, ordered=true)
     element = output_prototype[1]
 
     cache  = nothing
@@ -269,7 +238,7 @@ end
 
 # inverse transforming a categorical value:
 function MLJBase.inverse_transform(
-    transformer::UnivariateDiscretizer, result, e::CategoricalElement)
+    transformer::UnivariateDiscretizer, result, e::CategoricalValue)
     k = get(e)
     return inverse_transform(transformer, result, k)
 end
@@ -281,7 +250,7 @@ MLJBase.inverse_transform(transformer::UnivariateDiscretizer, result,
 
 # inverse transforming vectors of categorical elements:
 function MLJBase.inverse_transform(transformer::UnivariateDiscretizer, result,
-                          wcat::AbstractVector{<:CategoricalElement})
+                          wcat::AbstractVector{<:CategoricalValue})
     w = MLJBase.int(wcat)
     return [inverse_transform(transformer, result, k) for k in w]
 end
@@ -332,8 +301,8 @@ MLJBase.inverse_transform(transformer::UnivariateStandardizer, fitresult, w) =
     Standardizer(; features=Symbol[], ignore=false, ordered_factor=false, count=false)
 
 Unsupervised model for standardizing (whitening) the columns of
-tabular data.  If `features` is unspecified then all columns `v`
-having Continuous element scitype are standardized. Otherwise, the
+tabular data.  If `features` is unspecified then all columns
+having `Continuous` element scitype are standardized. Otherwise, the
 features standardized are the `Continuous` features named in
 `features` (`ignore=false`) or `Continuous` features not named in
 `features` (`ignore=true`). To allow standarization of `Count` or
@@ -365,7 +334,7 @@ julia> transform(fit!(machine(stand1, X)), X)
  ordinal2 = CategoricalValue{Symbol,UInt32}[:x, :y, :x],
  ordinal3 = [-1.0, 0.0, 1.0],
  ordinal4 = [1.0, 0.0, -1.0],
- nominal = CategoricalString{UInt32}["Your father", "he", "is"],)
+ nominal = CategoricalVale{String,UInt32}["Your father", "he", "is"],)
 
 julia> stand2 = Standardizer(features=[:ordinal3, ], ignore=true, count=true);
 
@@ -375,7 +344,7 @@ julia> transform(fit!(machine(stand2, X)), X)
  ordinal2 = CategoricalValue{Symbol,UInt32}[:x, :y, :x],
  ordinal3 = [10.0, 20.0, 30.0],
  ordinal4 = [1.0, 0.0, -1.0],
- nominal = CategoricalString{UInt32}["Your father", "he", "is"],)
+ nominal = CategoricalValue{String,UInt32}["Your father", "he", "is"],)
 ```
 
 """
@@ -673,7 +642,7 @@ schema(X)
 ┌───────────┬─────────────────────────────────┬──────────────────┐
 │ _.names   │ _.types                         │ _.scitypes       │
 ├───────────┼─────────────────────────────────┼──────────────────┤
-│ name      │ CategoricalString{UInt32}       │ Multiclass{4}    │
+│ name      │ CategoricalValue{String,UInt32} │ Multiclass{4}    │
 │ grade     │ CategoricalValue{Symbol,UInt32} │ OrderedFactor{3} │
 │ height    │ Float64                         │ Continuous       │
 │ n_devices │ Int64                           │ Count            │
@@ -736,7 +705,7 @@ function MLJBase.fit(transformer::OneHotEncoder, verbosity::Int, X)
         specified_features = collect(all_features)
     else
         if transformer.ignore
-            specified_features = filter(all_features) do ftr
+            specified_features = filter(all_features |> collect) do ftr
                 !(ftr in transformer.features)
             end
         else
@@ -795,7 +764,7 @@ end
 
 # If v=categorical('a', 'a', 'b', 'a', 'c') and MLJBase.int(v[1]) = ref
 # then `_hot(v, ref) = [true, true, false, true, false]`
-_hot(v::AbstractVector{<:CategoricalElement}, ref) = map(v) do c
+_hot(v::AbstractVector{<:CategoricalValue}, ref) = map(v) do c
     MLJBase.int(c) == ref
 end
 
@@ -875,7 +844,7 @@ schema(X)
 ┌───────────┬─────────────────────────────────┬──────────────────┐
 │ _.names   │ _.types                         │ _.scitypes       │
 ├───────────┼─────────────────────────────────┼──────────────────┤
-│ name      │ CategoricalString{UInt32}       │ Multiclass{4}    │
+│ name      │ CategoricalValue{String,UInt32} │ Multiclass{4}    │
 │ grade     │ CategoricalValue{Symbol,UInt32} │ OrderedFactor{3} │
 │ height    │ Float64                         │ Continuous       │
 │ n_devices │ Int64                           │ Count            │
@@ -973,7 +942,7 @@ metadata_pkg.(
     (FeatureSelector, UnivariateStandardizer,
      UnivariateDiscretizer, Standardizer,
      UnivariateBoxCoxTransformer,
-     OneHotEncoder, FillImputer),
+     OneHotEncoder, FillImputer, ContinuousEncoder),
     name       = "MLJModels",
     uuid       = "d491faf4-2d78-11e9-2867-c94bc002c0b7",
     url        = "https://github.com/alan-turing-institute/MLJModels.jl",

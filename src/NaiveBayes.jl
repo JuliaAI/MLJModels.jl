@@ -55,9 +55,8 @@ function MMI.predict(model::GaussianNBClassifier, fitresult, Xnew)
     probs = probs ./ col_sums
 
     # UnivariateFinite constructor automatically adds unobserved
-    # classes with zero probability:
-    return [MMI.UnivariateFinite([classes_observed...], probs[:,i])
-            for i in 1:n]
+    # classes with zero probability. Note we need to use adjoint here:
+    return MMI.UnivariateFinite([classes_observed...], probs')
 
 end
 
@@ -105,29 +104,35 @@ function MMI.predict(model::MultinomialNBClassifier, fitresult, Xnew)
     # Note that NaiveBayes.predict_logprobs returns probabilities that
     # are not normalized.
 
-    classes_observed, logprobs = NaiveBayes.predict_logprobs(fitresult, Int.(Xmatrix))
+    classes_observed, logprobs =
+        NaiveBayes.predict_logprobs(fitresult, Int.(Xmatrix))
 
     probs = exp.(logprobs)
     col_sums = sum(probs, dims=1)
     probs = probs ./ col_sums
 
-    return [MMI.UnivariateFinite([classes_observed...],
-                                     probs[:,i]) for i in 1:n]
+    return MMI.UnivariateFinite([classes_observed...], probs')
 end
 
 # metadata:
-MMI.load_path(::Type{<:GaussianNBClassifier}) = "MLJModels.NaiveBayes_.GaussianNBClassifier"
+MMI.load_path(::Type{<:GaussianNBClassifier}) =
+    "MLJModels.NaiveBayes_.GaussianNBClassifier"
 MMI.package_name(::Type{<:GaussianNBClassifier}) = "NaiveBayes"
-MMI.package_uuid(::Type{<:GaussianNBClassifier}) = "9bbee03b-0db5-5f46-924f-b5c9c21b8c60"
-MMI.package_url(::Type{<:GaussianNBClassifier}) = "https://github.com/dfdx/NaiveBayes.jl"
+MMI.package_uuid(::Type{<:GaussianNBClassifier}) =
+    "9bbee03b-0db5-5f46-924f-b5c9c21b8c60"
+MMI.package_url(::Type{<:GaussianNBClassifier}) =
+    "https://github.com/dfdx/NaiveBayes.jl"
 MMI.is_pure_julia(::Type{<:GaussianNBClassifier}) = true
 MMI.input_scitype(::Type{<:GaussianNBClassifier}) = Table(Continuous)
 MMI.target_scitype(::Type{<:GaussianNBClassifier}) = AbstractVector{<:Finite}
 
-MMI.load_path(::Type{<:MultinomialNBClassifier}) = "MLJModels.NaiveBayes_.MultinomialNBClassifier"
+MMI.load_path(::Type{<:MultinomialNBClassifier}) =
+    "MLJModels.NaiveBayes_.MultinomialNBClassifier"
 MMI.package_name(::Type{<:MultinomialNBClassifier}) = "NaiveBayes"
-MMI.package_uuid(::Type{<:MultinomialNBClassifier}) = "9bbee03b-0db5-5f46-924f-b5c9c21b8c60"
-MMI.package_url(::Type{<:MultinomialNBClassifier}) = "https://github.com/dfdx/NaiveBayes.jl"
+MMI.package_uuid(::Type{<:MultinomialNBClassifier}) =
+    "9bbee03b-0db5-5f46-924f-b5c9c21b8c60"
+MMI.package_url(::Type{<:MultinomialNBClassifier}) =
+    "https://github.com/dfdx/NaiveBayes.jl"
 MMI.is_pure_julia(::Type{<:MultinomialNBClassifier}) = true
 MMI.input_scitype(::Type{<:MultinomialNBClassifier}) = Table(Count)
 MMI.target_scitype(::Type{<:MultinomialNBClassifier}) = AbstractVector{<:Finite}

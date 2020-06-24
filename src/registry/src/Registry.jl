@@ -84,24 +84,27 @@ function _update(mod, test_env_only)
         end
 
         # generate and write to file the model metadata:
-        packages = string.(MLJModels.Registry.packages)
+        api_packages = string.(MLJModels.Registry.packages)
         meta_given_package = Dict()
-        for pkg in packages
-            meta_given_package[pkg] = Dict()
-        end
+
         for M in modeltypes
             _info = MLJBase.info_dict(M)
             pkg = _info[:package_name]
-            if !(pkg in ["unknown",])
-                modelname = _info[:name]
-                haskey(meta_given_package, pkg) ||
-                    error("Bad `package_name` trait for $M: "*
-                          "$pkg not a registered package. ")
-                meta_given_package[pkg][modelname] = _info
+            path = _info[:load_path]
+            api_pkg = split(path, '.') |> first
+            pkg in ["unknown",] &&
+                @warn "$M `package_name` or `load_path` is \"unknown\")"
+            modelname = _info[:name]
+            api_pkg in api_packages ||
+                error("Bad `load_path` trait for $M: "*
+                      "$api_pkg not a registered package. ")
+            haskey(meta_given_package, pkg) ||
+                (meta_given_package[pkg] = Dict())
+            haskey(meta_given_package, modelname) &&
+                error("Encountered multiple model names for "*
+                      "`package_name=$pkg`")
+            meta_given_package[pkg][modelname] = _info
                 println(M, "\u2714 ")
-            else
-                println(M, "\u2717 (package_name is :unknown)")
-            end
         end
         print("\r")
 
@@ -111,7 +114,7 @@ function _update(mod, test_env_only)
 
         # generate and write to file list of models for each package:
         models_given_pkg = Dict()
-        for pkg in packages
+        for pkg in keys(meta_given_package)
             models_given_pkg[pkg] = collect(keys(meta_given_package[pkg]))
         end
         open(joinpath(MLJModels.Registry.srcdir, "../Models.toml"), "w") do file
@@ -125,8 +128,9 @@ function _update(mod, test_env_only)
     mod.eval(program1)
     test_env_only || mod.eval(program2)
 
-    println("You can now check the registry by running "*
-            "`MLJModels.check_registry().\n\n"*
+    println("\n You can check the registry by running "*
+            "`MLJModels.check_registry() but may need to force "*
+            "recompilation of MLJModels.\n\n"*
             "You can safely ignore \"conflicting import\" warnings. ")
 
     true

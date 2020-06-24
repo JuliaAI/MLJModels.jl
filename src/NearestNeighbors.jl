@@ -5,8 +5,6 @@ import MLJModelInterface: @mlj_model, metadata_model, metadata_pkg,
                           Table, Continuous, Count, Finite, OrderedFactor,
                           Multiclass
 
-import MLJBase # Needed for UnivariateFinite Type
-
 const MMI = MLJModelInterface
 
 using Distances
@@ -97,9 +95,8 @@ function MMI.predict(m::KNNClassifier, (tree, y, w), X)
     # for each entry, get the K closest training point + their distance
     idxs, dists = NN.knn(tree, Xmatrix, m.K)
 
-    preds       = Vector{MLJBase.UnivariateFinite}(undef, length(idxs))
     classes     = MMI.classes(y[1])
-    probas      = zeros(length(classes))
+    probas      = zeros(length(idxs), length(classes))
 
     w_ = ones(m.K)
 
@@ -111,21 +108,21 @@ function MMI.predict(m::KNNClassifier, (tree, y, w), X)
         if w !== nothing
             w_ = w[idxs_]
         end
-        probas .*= 0.0
+#        probas .*= 0.0 # (adb) seems to be redundant
         if m.weights == :uniform
             for (k, label) in enumerate(labels)
-                probas[classes .== label] .+= 1.0 / m.K * w_[k]
+                probas[i, classes .== label] .+= 1.0 / m.K * w_[k]
             end
         else
             for (k, label) in enumerate(labels)
-                probas[classes .== label] .+= 1.0 / dists_[k] * w_[k]
+                probas[i, classes .== label] .+= 1.0 / dists_[k] * w_[k]
             end
         end
-        # normalize so that sum to 1
-        probas ./= sum(probas)
-        preds[i] = MMI.UnivariateFinite(classes, probas)
     end
-    return preds
+    # normalize probas along rows:
+    probas ./= sum(probas, dims=2)
+    return  MMI.UnivariateFinite(classes, probas)
+
 end
 
 function MMI.predict(m::KNNRegressor, (tree, y, w), X)
