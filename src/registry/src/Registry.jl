@@ -76,11 +76,7 @@ function _update(mod, test_env_only)
 
         modeltypes = MLJModels.Registry.finaltypes(MLJBase.Model)
         filter!(modeltypes) do T
-            !(T in [MLJBase.ProbabilisticNetwork,
-                    MLJBase.DeterministicNetwork,
-                    MLJBase.UnsupervisedNetwork,
-                    MLJBase.Interval,
-                    MLJBase.Static])
+            !isabstracttype(T)
         end
 
         # generate and write to file the model metadata:
