@@ -57,22 +57,32 @@ from the DecisionTree.jl algorithm).
 ## Hyperparameters
 
 - `max_depth=-1`:          max depth of the decision tree (-1=any)
+
 - `min_samples_leaf=1`:    max number of samples each leaf needs to have
+
 - `min_samples_split=2`:   min number of samples needed for a split
+
 - `min_purity_increase=0`: min purity needed for a split
-- `n_subfeatures=0`:       number of features to select at random (0=all)
+
+- `n_subfeatures=0`: number of features to select at random (0 for all,
+  -1 for square root of number of features)
+
 - `post_prune=false`:      set to `true` for post-fit pruning
+
 - `merge_purity_threshold=1.0`:  (post-pruning) merge leaves having `>=thresh`
                            combined purity
+
 - `pdf_smoothing=0.0`:     threshold for smoothing the predicted scores
+
 - `display_depth=5`:       max depth to show when displaying the tree
+
 """
 @mlj_model mutable struct DecisionTreeClassifier <: MMI.Probabilistic
     max_depth::Int               = (-)(1)::(_ ≥ -1)
     min_samples_leaf::Int        = 1::(_ ≥ 0)
     min_samples_split::Int       = 2::(_ ≥ 2)
     min_purity_increase::Float64 = 0.0::(_ ≥ 0)
-    n_subfeatures::Int           = 0::(_ ≥ 0)
+    n_subfeatures::Int           = 0::(_ ≥ -1)
     post_prune::Bool             = false
     merge_purity_threshold::Float64 = 1.0::(_ ≤ 1)
     pdf_smoothing::Float64       = 0.0::(0 ≤ _ ≤ 1)
@@ -142,20 +152,29 @@ $RFC_DESCR
 ## Hyperparameters
 
 - `max_depth=-1`:          max depth of the decision tree (-1=any)
+
 - `min_samples_leaf=1`:    max number of samples each leaf needs to have
+
 - `min_samples_split=2`:   min number of samples needed for a split
+
 - `min_purity_increase=0`: min purity needed for a split
-- `n_subfeatures=0`:       number of features to select at random (0=all)
+
+- `n_subfeatures=-1`: number of features to select at random (0 for all,
+  -1 for square root of number of features)
+
 - `n_trees=10`:            number of trees to train
+
 - `sampling_fraction=0.7`  fraction of samples to train each tree on
+
 - `pdf_smoothing=0.0`:     threshold for smoothing the predicted scores
+
 """
 @mlj_model mutable struct RandomForestClassifier <: MMI.Probabilistic
     max_depth::Int               = (-)(1)::(_ ≥ -1)
     min_samples_leaf::Int        = 1::(_ ≥ 0)
     min_samples_split::Int       = 2::(_ ≥ 2)
     min_purity_increase::Float64 = 0.0::(_ ≥ 0)
-    n_subfeatures::Int           = 0::(_ ≥ 0)
+    n_subfeatures::Int           = (-)(1)::(_ ≥ -1)
     n_trees::Int                 = 10::(_ ≥ 2)
     sampling_fraction::Float64   = 0.7::(0 < _ ≤ 1)
     pdf_smoothing::Float64       = 0.0::(0 ≤ _ ≤ 1)
@@ -246,11 +265,18 @@ are Deterministic.
 ## Hyperparameters
 
 - `max_depth=-1`:          max depth of the decision tree (-1=any)
+
 - `min_samples_leaf=1`:    max number of samples each leaf needs to have
+
 - `min_samples_split=2`:   min number of samples needed for a split
+
 - `min_purity_increase=0`: min purity needed for a split
-- `n_subfeatures=0`:       number of features to select at random (0=all)
+
+- `n_subfeatures=0`: number of features to select at random (0 for all,
+  -1 for square root of number of features)
+
 - `post_prune=false`:      set to `true` for post-fit pruning
+
 - `merge_purity_threshold=1.0`: (post-pruning) merge leaves having `>=thresh`
                            combined purity
 """
@@ -259,7 +285,7 @@ are Deterministic.
     min_samples_leaf::Int                = 5::(_ ≥ 0)
     min_samples_split::Int               = 2::(_ ≥ 2)
     min_purity_increase::Float64 = 0.0::(_ ≥ 0)
-    n_subfeatures::Int                   = 0::(_ ≥ 0)
+    n_subfeatures::Int                   = 0::(_ ≥ -1)
     post_prune::Bool                     = false
     merge_purity_threshold::Float64 = 1.0::(0 ≤ _ ≤ 1)
 end
@@ -296,20 +322,29 @@ $RFC_DESCR
 ## Hyperparameters
 
 - `max_depth=-1`:          max depth of the decision tree (-1=any)
+
 - `min_samples_leaf=1`:    max number of samples each leaf needs to have
+
 - `min_samples_split=2`:   min number of samples needed for a split
+
 - `min_purity_increase=0`: min purity needed for a split
-- `n_subfeatures=0`:       number of features to select at random (0=all)
+
+- `n_subfeatures=-1`: number of features to select at random (0 for all,
+  -1 for square root of number of features)
+
 - `n_trees=10`:            number of trees to train
+
 - `sampling_fraction=0.7`  fraction of samples to train each tree on
+
 - `pdf_smoothing=0.0`:     threshold for smoothing the predicted scores
+
 """
 @mlj_model mutable struct RandomForestRegressor <: MMI.Deterministic
     max_depth::Int               = (-)(1)::(_ ≥ -1)
     min_samples_leaf::Int        = 1::(_ ≥ 0)
     min_samples_split::Int       = 2::(_ ≥ 2)
     min_purity_increase::Float64 = 0.0::(_ ≥ 0)
-    n_subfeatures::Int           = 0::(_ ≥ 0)
+    n_subfeatures::Int           = (-)(1)::(_ ≥ -1)
     n_trees::Int                 = 10::(_ ≥ 2)
     sampling_fraction::Float64   = 0.7::(0 < _ ≤ 1)
     pdf_smoothing::Float64       = 0.0::(0 ≤ _ ≤ 1)
