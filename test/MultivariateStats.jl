@@ -213,7 +213,7 @@ end
         [0.3333333, 0.3333333, 0.3333333]
     @test round.(mcr, sigdigits=1) == 0.02
 
-    @test round.(report.vproportions, digits=4) == [0.9915, 0.0085]
+    @test round.(report.explained_variance_ratio, digits=4) == [0.9915, 0.0085]
     @test 0.04 ≤ mce ≤ 0.045
 
     d = info_dict(BayesianSubspaceLDA)
