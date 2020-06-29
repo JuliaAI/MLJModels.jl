@@ -110,13 +110,24 @@ List all models in the MLJ registry. Here and below *model* means the
 registry metadata entry for a genuine model type (a proxy for types
 whose defining code may not be loaded).
 
-    models(conditions...)
+    models(filters..)
 
-List all models satisifying the specified `conditions`. A *condition*
-is any `Bool`-valued function on models.
+List all models `m` for which `filter(m)` is true, for each `filter`
+in `filters`.
 
-Excluded in the listings are the built-in model-wraps `EnsembleModel`,
+    models(matching(X, y))
+
+List all supervised models compatible with training data `X`, `y`.
+
+    models(matching(X))
+
+List all unsupervised models compatible with training data `X`.
+
+
+Excluded in the listings are the built-in model-wraps, like `EnsembleModel`,
 `TunedModel`, and `IteratedModel`.
+
+
 
 ### Example
 
