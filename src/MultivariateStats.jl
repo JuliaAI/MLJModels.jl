@@ -427,9 +427,10 @@ $BayesianLDA_DESCR
                     within-class covariance estimator, is added to the diagonal
                     of Sw to improve numerical stability. This can be useful if
                     using the standard covariance estimator.
-* `priors=nothing`: For use in prediction with Bayes rule. if `priors = nothing` estimates the prior probabilities
-                    from the data else it uses a user specified Dictionary(`::AbstractDict{<:Union{Symbol, String}, <:Real}}`)
-                    of `class => probability` pairs for each unique class found in training data.
+* `priors=nothing`: For use in prediction with Baye's rule. If `priors = nothing` then `priors` are estimated
+                    from the class proportions in the training data. Otherwise it requires a vector containing 
+                    class probabilities specified by order of class levels ommitting class levels which are not
+                    present in training data.
 
 See also the [package documentation](https://multivariatestatsjl.readthedocs.io/en/latest/lda.html).
 For more information about the algorithm, see the paper by Li, Zhu and Ogihara, [Using Discriminant Analysis for Multi-class Classification: An Experimental Investigation](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.89.7068&rep=rep1&type=pdf).
@@ -440,15 +441,24 @@ For more information about the algorithm, see the paper by Li, Zhu and Ogihara, 
     cov_b::CovarianceEstimator = MS.SimpleCovariance()
     out_dim::Int     = 0::(_ ≥ 0)
     regcoef::Float64    = 1e-6::(_ ≥ 0)
-    priors::Union{Nothing, AbstractDict{<:SymORStr, <:Real} } = nothing
+    priors::Union{Nothing, Vector{Float64}} = nothing
 end
 
 function MMI.fit(model::BayesianLDA, ::Int, X, y)
     class_list = MMI.classes(y[1]) #class list containing entries in pool of y
+    nclasses = length(class_list)
     classes_seen  = filter(in(unique(y)), class_list) #class list containing unique entries in y
     nc   = length(classes_seen) #number of classes in pool of y
-    nclasses = length(class_list)
     nc == nclasses || (integers_seen = MMI.int(classes_seen))
+    
+    ## If piors are specified check if they makes sense.
+    ## put this here to through errors earlier
+    if isa(model.priors, Vector)
+        length(model.priors) == nc || throw(ArgumentError("Invalid size of `priors`.")) 
+        isapprox(sum(model.priors), 1) || throw(ArgumentError("probabilities specified in `priors` must sum to 1"))
+        all(priors .>= 0) || throw(ArgumentError("probabilities specified in `priors` must non-negative"))
+        priors = model.priors          
+    end
     
     # NOTE: copy/transpose
     Xm_t   = MMI.matrix(X, transpose=true) # now p x n matrix
@@ -481,21 +491,14 @@ function MMI.fit(model::BayesianLDA, ::Int, X, y)
                       covestimator_within=model.cov_w,
                       covestimator_between=model.cov_b)
 
-    ## Estimates prior probabilities if unspecified by user
-    ## Or check if user specified prior makes sense.
+    ## Estimates prior probabilities if specified by user.
+    ## Put it here to avoid recomputing as the fitting process does this already
     if isa(model.priors, Nothing)
         weights = MS.classweights(core_res)
         total = core_res.stats.tweight
         priors = weights ./ total
-    else
-        prior_classes = sort!(collect(keys(model.priors)))
-        length(prior_classes) == nc || throw(ArgumentError("Invalid size of `priors`"))
-        all(prior_classes .== classes_seen) || throw(ArgumentError("classes used as `keys` in"*
-                                            "constructing `priors` must match unique classes of target vector `y` "))        
-        priors = getindex((model.priors,), prior_classes)
-        isapprox(sum(priors), 1) || throw(ArgumentError("probabilities in `priors` must sum to 1"))
-        all(priors .>= 0) || throw(ArgumentError("probabilities in `priors` must non-negative"))      
     end
+    
 
     cache     = nothing
     report    = (classes       = classes_seen,
@@ -559,9 +562,10 @@ $BayesianSubspaceLDA_DESCR
                     observations in each class, one of `true` or `false`.
 * `out_dim`:        the dimension of the transformed space
                     to be used by `predict` and `transform` methods, automatically set if 0 is given (default).
-* `priors=nothing`: For use in prediction with Bayes rule. if `priors = nothing` estimates the prior probabilities
-                    from the data else it uses a user specified Dictionary(`::AbstractDict{<:Union{Symbol, String}, <:Real}}`)
-                    of `class => probability` pairs for each unique class found in training data.
+* `priors=nothing`: For use in prediction with Baye's rule. If `priors = nothing` then `priors` are estimated
+                    from the class proportions in the training data. Otherwise it requires a vector containing 
+                    class probabilities specified by order of class levels ommitting class levels which are not
+                    present in training data.
 
 For more information about the algorithm, see the paper by Howland & Park (2006), 
 "Generalizing discriminant analysis using the generalized singular value decomposition",IEEE Trans. Patt.
@@ -580,6 +584,14 @@ function MMI.fit(model::BayesianSubspaceLDA, ::Int, X, y)
     nclasses = length(class_list)
     nc == nclasses || (integers_seen = MMI.int(classes_seen))
     
+    ## If piors are specified check if they makes sense.
+    ## put this here to through errors earlier
+    if isa(model.priors, Vector)
+        length(model.priors) == nc || throw(ArgumentError("Invalid size of `priors`.")) 
+        isapprox(sum(model.priors), 1) || throw(ArgumentError("probabilities specified in `priors` must sum to 1"))
+        all(priors .>= 0) || throw(ArgumentError("probabilities specified in `priors` must non-negative"))
+        priors = model.priors          
+    end
     # NOTE: copy/transpose
     Xm_t   = MMI.matrix(X, transpose=true) # now p x n matrix
     yplain = MMI.int(y) # vector of n ints in {1,..., nclasses}
@@ -615,18 +627,10 @@ function MMI.fit(model::BayesianSubspaceLDA, ::Int, X, y)
     mult = model.normalize ? n : 1 #used in prediction
 
     ## Estimates prior probabilities if specified by user.
-    ## Or check if user specified prior makes sense.
+    ## Put it here to avoid recomputing as the fitting process does this already
     if isa(model.priors, Nothing)
         weights = MS.classweights(core_res)
         priors = weights ./ n
-    else 
-       prior_classes = sort!(collect(keys(model.priors)))
-        length(prior_classes) == nc || throw(ArgumentError("Invalid size of `priors`"))
-        all(prior_classes .== classes_seen) || throw(ArgumentError("classes used as `keys` in"*
-                                            "constructing `priors` must match unique classes of target vector `y` "))        
-        priors = getindex((model.priors,), prior_classes)
-        isapprox(sum(priors), 1) || throw(ArgumentError("probabilities in `priors` must sum to 1"))
-        all(priors .>= 0) || throw(ArgumentError("probabilities in `priors` must non-negative"))  
     end
 
     cache     = nothing
