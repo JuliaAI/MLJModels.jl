@@ -317,7 +317,7 @@ For more information about the algorithm, see the paper by Li, Zhu and Ogihara, 
     cov_w::CovarianceEstimator = MS.SimpleCovariance()
     cov_b::CovarianceEstimator = MS.SimpleCovariance()
     out_dim::Int     = 0::(_ ≥ 0)
-    regcoef::Float64    = 1e-6::(_ ≥ 0)
+    regcoef::Real    = 1e-6::(_ ≥ 0)
     dist::SemiMetric = SqEuclidean()
 end
 
@@ -402,7 +402,6 @@ end
 #### BayesianLDA
 ####
 
-SymORStr = Union{Symbol,String}
 """
     BayesianLDA(; kwargs...)
 
@@ -440,8 +439,8 @@ For more information about the algorithm, see the paper by Li, Zhu and Ogihara, 
     cov_w::CovarianceEstimator = MS.SimpleCovariance()
     cov_b::CovarianceEstimator = MS.SimpleCovariance()
     out_dim::Int     = 0::(_ ≥ 0)
-    regcoef::Float64    = 1e-6::(_ ≥ 0)
-    priors::Union{Nothing, Vector{Float64}} = nothing
+    regcoef::Real    = 1e-6::(_ ≥ 0)
+    priors::Union{Nothing, Vector{<:Real}} = nothing
 end
 
 function MMI.fit(model::BayesianLDA, ::Int, X, y)
@@ -574,7 +573,7 @@ For more information about the algorithm, see the paper by Howland & Park (2006)
 @mlj_model mutable struct BayesianSubspaceLDA <: MMI.Probabilistic
     normalize::Bool=false
     out_dim::Int   = 0::(_ ≥ 0)
-    priors::Union{Nothing, AbstractDict{SymORStr, <:Real} } = nothing
+    priors::Union{Nothing, Vector{<:Real}} = nothing
 end
 
 function MMI.fit(model::BayesianSubspaceLDA, ::Int, X, y)
