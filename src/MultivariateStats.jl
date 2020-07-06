@@ -486,7 +486,7 @@ function MMI.fit(model::BayesianLDA, ::Int, X, y)
     if isa(model.priors, Vector)
         length(model.priors) == nclasses || throw(ArgumentError("Invalid size of `priors`.")) 
         isapprox(sum(model.priors), 1) || throw(ArgumentError("probabilities specified in `priors` must sum to 1"))
-        all(priors .>= 0) || throw(ArgumentError("probabilities specified in `priors` must non-negative"))
+        all(model.priors .>= 0) || throw(ArgumentError("probabilities specified in `priors` must non-negative"))
         #Select priors for unique classes in `y` (For resampling purporses)
         priors = nc == nclasses ? model.priors : @view model.priors[integers_seen]         
     end
@@ -620,7 +620,7 @@ function MMI.fit(model::BayesianSubspaceLDA, ::Int, X, y)
     if isa(model.priors, Vector)
         length(model.priors) == nclasses || throw(ArgumentError("Invalid size of `priors`.")) 
         isapprox(sum(model.priors), 1) || throw(ArgumentError("probabilities specified in `priors` must sum to 1"))
-        all(priors .>= 0) || throw(ArgumentError("probabilities specified in `priors` must non-negative"))
+        all(model.priors .>= 0) || throw(ArgumentError("probabilities specified in `priors` must non-negative"))
         #Select priors for unique classes in `y`(For resampling purporses)
         priors = nc == nclasses ? model.priors : @view model.priors[integers_seen]         
     end
