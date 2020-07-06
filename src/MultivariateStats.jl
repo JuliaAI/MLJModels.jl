@@ -22,13 +22,44 @@ struct LinearFitresult{F} <: MMI.MLJType
 end
 
 const RIDGE_DESCR = "Ridge regressor with regularization parameter lambda. Learns a linear regression with a penalty on the l2 norm of the coefficients."
-const PCA_DESCR = "Principal component analysis. Learns a linear transformation to project the data  on a lower dimensional space while preserving most of the initial variance."
+
+const PCA_DESCR = "Principal component analysis. Learns a linear transformation to project the data  on a lower dimensional space while preserving most of the "*
+                 "initial variance."
+
 const KPCA_DESCR = "Kernel principal component analysis."
+
 const ICA_DESCR = "Independent component analysis."
-const LDA_DESCR = "Multiclass linear discriminant analysis. The algorithm learns a projection matrix `P` that projects a feature matrix `Xtrain` onto a lower dimensional space of dimension `out_dim` such that the trace of the transformed between-class scatter matrix(`Pᵀ*Sb*P`) is maximized relative to the trace of the transformed within-class scatter matrix (`Pᵀ*Sw*P`).The projection matrix is scaled such that `Pᵀ*Sw*P=I` or `Pᵀ*Σw*P=I`(where `Σw` is the within-class covariance matrix) . \nPredicted class posterior probability for feature matrix `Xtest` are derived by applying a softmax transformation to a matrix `Pr`, such that  rowᵢ of `Pr` contains computed distances(based on a distance metric) in the transformed space of rowᵢ in `Xtest` to the centroid of each class. "
-const BayesianLDA_DESCR = "Bayesian Multiclass linear discriminant analysis. The algorithm learns a projection matrix `P` that projects a feature matrix `Xtrain` onto a lower dimensional space of dimension `out_dim` such that the trace of the transformed between-class scatter matrix(`Pᵀ*Sb*P`) is maximized relative to the trace of the transformed within-class scatter matrix (`Pᵀ*Sw*P`). The projection matrix is scaled such that `Pᵀ*Sw*P = n` or `Pᵀ*Σw*P=I` (Where `n` is the number of training samples and `Σw` is the within-class covariance matrix).\nPredicted class posterior probability distibution are derived by applying Bayes rule with a multivariate Gaussian class-conditional distribution."
-const BayesianSubspaceLDA_DESCR = "Bayesian Multiclass linear discriminant analysis. Suitable for high dimensional data(Avoids computing scatter matrices `Sw` ,`Sb`). The algorithm learns a projection matrix `P = W*L` (`Sw`), that projects a feature matrix `Xtrain` onto a lower dimensional space of dimension `nc-1` such that the trace of the transformed between-class scatter matrix(`Pᵀ*Sb*P`) is maximized relative to the trace of the transformed within-class scatter matrix (`Pᵀ*Sw*P`). The projection matrix is scaled such that `Pᵀ*Sw*P = mult*I` or `Pᵀ*Σw*P=mult/(n-nc)*I` (where `n` is the number of training samples, `mult` is  one of `n` or `1` depending on whether `Sb` is normalized, `Σw` is the within-class covariance matrix, and `nc` is the number of unique classes in `y`) and also obeys `Wᵀ*Sb*p = λ*Wᵀ*Sw*p`, for every column `p` in `P`. \nPosterior class probability distibution are derived by applying Bayes rule with a multivariate Gaussian class-conditional distribution"
-const SubspaceLDA_DESCR = "Multiclass linear discriminant analysis. Suitable for high dimensional data (Avoids computing scatter matrices `Sw` ,`Sb`). The algorithm learns a projection matrix `P = W*L` that projects a feature matrix `Xtrain` onto a lower dimensional space of dimension `nc - 1 ` such that the trace of the transformed between-class scatter matrix(`Pᵀ*Sb*P`) is maximized relative to the trace of the transformed within-class scatter matrix (`Pᵀ*Sw*P`). The projection matrix is scaled such that `Pᵀ*Sw*P = mult*I` or `Pᵀ*Σw*P=mult/(n-nc)*I` (where `n` is the number of training samples, mult` is  one of `n` or `1` depending on whether `Sb` is normalized, `Σw` is the within-class covariance matrix, and `nc` is the number of unique classes in `y`) and also obeys `Wᵀ*Sb*p = λ*Wᵀ*Sw*p`, for every column `p` in `P`.\nPredicted class posterior probability for feature matrix `Xtest` are derived by applying a softmax transformation to a matrix `Pr`, such that  rowᵢ of `Pr` contains computed distances(based on a distance metric) in the transformed space of rowᵢ in `Xtest` to the centroid of each class. "
+
+const LDA_DESCR = "Multiclass linear discriminant analysis. The algorithm learns a projection matrix `P` that projects a feature matrix `Xtrain` onto a"*
+                " lower dimensional space of dimension `out_dim` such that the trace of the transformed between-class scatter matrix(`Pᵀ*Sb*P`) is maximized"*
+                " relative to the trace of the transformed within-class scatter matrix (`Pᵀ*Sw*P`).The projection matrix is scaled such that `Pᵀ*Sw*P=I` or "*
+                "`Pᵀ*Σw*P=I`(where `Σw` is the within-class covariance matrix) . \nPredicted class posterior probability for feature matrix `Xtest` are derived "*
+                "by applying a softmax transformation to a matrix `Pr`, such that  rowᵢ of `Pr` contains computed distances(based on a distance metric) in the "*
+                "transformed space of rowᵢ in `Xtest` to the centroid of each class. "
+
+const BayesianLDA_DESCR = "Bayesian Multiclass linear discriminant analysis. The algorithm learns a projection matrix `P` that projects a feature matrix `Xtrain` "*
+                        "onto a lower dimensional space of dimension `out_dim` such that the trace of the transformed between-class scatter matrix(`Pᵀ*Sb*P`) is "*
+                        "maximized relative to the trace of the transformed within-class scatter matrix (`Pᵀ*Sw*P`). The projection matrix is scaled such that "*
+                        "`Pᵀ*Sw*P = n` or `Pᵀ*Σw*P=I` (Where `n` is the number of training samples and `Σw` is the within-class covariance matrix).\nPredicted "*
+                        "class posterior probability distibution are derived by applying Bayes rule with a multivariate Gaussian class-conditional distribution."
+
+const BayesianSubspaceLDA_DESCR = "Bayesian Multiclass linear discriminant analysis. Suitable for high dimensional data(Avoids computing scatter matrices"*
+                                " `Sw` ,`Sb`). The algorithm learns a projection matrix `P = W*L` (`Sw`), that projects a feature matrix `Xtrain` onto a lower "*
+                                "dimensional space of dimension `nc-1` such that the trace of the transformed between-class scatter matrix(`Pᵀ*Sb*P`) is maximized"*
+                                " relative to the trace of the transformed within-class scatter matrix (`Pᵀ*Sw*P`). The projection matrix is scaled such that"*
+                                " `Pᵀ*Sw*P = mult*I` or `Pᵀ*Σw*P=mult/(n-nc)*I` (where `n` is the number of training samples, `mult` is  one of `n` or `1` "*
+                                "depending on whether `Sb` is normalized, `Σw` is the within-class covariance matrix, and `nc` is the number of unique classes "*
+                                "in `y`) and also obeys `Wᵀ*Sb*p = λ*Wᵀ*Sw*p`, for every column `p` in `P`. \nPosterior class probability distibution are derived "*
+                                "by applying Bayes rule with a multivariate Gaussian class-conditional distribution"
+const SubspaceLDA_DESCR = "Multiclass linear discriminant analysis. Suitable for high dimensional data (Avoids computing scatter matrices `Sw` ,`Sb`). The "*
+                          "algorithm learns a projection matrix `P = W*L` that projects a feature matrix `Xtrain` onto a lower dimensional space of dimension "*
+                          "`nc - 1 ` such that the trace of the transformed between-class scatter matrix(`Pᵀ*Sb*P`) is maximized relative to the trace of the "*
+                          "transformed within-class scatter matrix (`Pᵀ*Sw*P`). The projection matrix is scaled such that `Pᵀ*Sw*P = mult*I` or "*
+                          "`Pᵀ*Σw*P=mult/(n-nc)*I` (where `n` is the number of training samples, mult` is  one of `n` or `1` depending on whether `Sb` is "*
+                          "normalized, `Σw` is the within-class covariance matrix, and `nc` is the number of unique classes in `y`) and also obeys"*
+                          " `Wᵀ*Sb*p = λ*Wᵀ*Sw*p`, for every column `p` in `P`.\nPredicted class posterior probability for feature matrix `Xtest` are derived by"*
+                          " applying a softmax transformation to a matrix `Pr`, such that  rowᵢ of `Pr` contains computed distances(based on a distance metric)"*
+                          " in the transformed space of rowᵢ in `Xtest` to the centroid of each class. "
 
 ####
 #### RIDGE
@@ -317,7 +348,7 @@ For more information about the algorithm, see the paper by Li, Zhu and Ogihara, 
     cov_w::CovarianceEstimator = MS.SimpleCovariance()
     cov_b::CovarianceEstimator = MS.SimpleCovariance()
     out_dim::Int     = 0::(_ ≥ 0)
-    regcoef::Real    = 1e-6::(_ ≥ 0)
+    regcoef::Float64    = 1e-6::(_ ≥ 0)
     dist::SemiMetric = SqEuclidean()
 end
 
@@ -428,8 +459,8 @@ $BayesianLDA_DESCR
                     using the standard covariance estimator.
 * `priors=nothing`: For use in prediction with Baye's rule. If `priors = nothing` then `priors` are estimated
                     from the class proportions in the training data. Otherwise it requires a vector containing 
-                    class probabilities specified by order of class levels ommitting class levels which are not
-                    present in training data.
+                    class probabilities specified in order following the ordering of levels found in the common pool
+                    of the target vector.
 
 See also the [package documentation](https://multivariatestatsjl.readthedocs.io/en/latest/lda.html).
 For more information about the algorithm, see the paper by Li, Zhu and Ogihara, [Using Discriminant Analysis for Multi-class Classification: An Experimental Investigation](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.89.7068&rep=rep1&type=pdf).
@@ -439,8 +470,8 @@ For more information about the algorithm, see the paper by Li, Zhu and Ogihara, 
     cov_w::CovarianceEstimator = MS.SimpleCovariance()
     cov_b::CovarianceEstimator = MS.SimpleCovariance()
     out_dim::Int     = 0::(_ ≥ 0)
-    regcoef::Real    = 1e-6::(_ ≥ 0)
-    priors::Union{Nothing, Vector{<:Real}} = nothing
+    regcoef::Float64    = 1e-6::(_ ≥ 0)
+    priors::Union{Nothing, Vector{Float64}} = nothing
 end
 
 function MMI.fit(model::BayesianLDA, ::Int, X, y)
@@ -453,10 +484,11 @@ function MMI.fit(model::BayesianLDA, ::Int, X, y)
     ## If piors are specified check if they makes sense.
     ## put this here to through errors earlier
     if isa(model.priors, Vector)
-        length(model.priors) == nc || throw(ArgumentError("Invalid size of `priors`.")) 
+        length(model.priors) == nclasses || throw(ArgumentError("Invalid size of `priors`.")) 
         isapprox(sum(model.priors), 1) || throw(ArgumentError("probabilities specified in `priors` must sum to 1"))
         all(priors .>= 0) || throw(ArgumentError("probabilities specified in `priors` must non-negative"))
-        priors = model.priors          
+        #Select priors for unique classes in `y` (For resampling purporses)
+        priors = nc == nclasses ? model.priors : @view model.priors[integers_seen]         
     end
     
     # NOTE: copy/transpose
@@ -563,8 +595,8 @@ $BayesianSubspaceLDA_DESCR
                     to be used by `predict` and `transform` methods, automatically set if 0 is given (default).
 * `priors=nothing`: For use in prediction with Baye's rule. If `priors = nothing` then `priors` are estimated
                     from the class proportions in the training data. Otherwise it requires a vector containing 
-                    class probabilities specified by order of class levels ommitting class levels which are not
-                    present in training data.
+                    class probabilities specified in order following the ordering of levels found in the common pool
+                    of the target vector.
 
 For more information about the algorithm, see the paper by Howland & Park (2006), 
 "Generalizing discriminant analysis using the generalized singular value decomposition",IEEE Trans. Patt.
@@ -573,7 +605,7 @@ For more information about the algorithm, see the paper by Howland & Park (2006)
 @mlj_model mutable struct BayesianSubspaceLDA <: MMI.Probabilistic
     normalize::Bool=false
     out_dim::Int   = 0::(_ ≥ 0)
-    priors::Union{Nothing, Vector{<:Real}} = nothing
+    priors::Union{Nothing, Vector{Float64}} = nothing
 end
 
 function MMI.fit(model::BayesianSubspaceLDA, ::Int, X, y)
@@ -586,10 +618,11 @@ function MMI.fit(model::BayesianSubspaceLDA, ::Int, X, y)
     ## If piors are specified check if they makes sense.
     ## put this here to through errors earlier
     if isa(model.priors, Vector)
-        length(model.priors) == nc || throw(ArgumentError("Invalid size of `priors`.")) 
+        length(model.priors) == nclasses || throw(ArgumentError("Invalid size of `priors`.")) 
         isapprox(sum(model.priors), 1) || throw(ArgumentError("probabilities specified in `priors` must sum to 1"))
         all(priors .>= 0) || throw(ArgumentError("probabilities specified in `priors` must non-negative"))
-        priors = model.priors          
+        #Select priors for unique classes in `y`(For resampling purporses)
+        priors = nc == nclasses ? model.priors : @view model.priors[integers_seen]         
     end
     # NOTE: copy/transpose
     Xm_t   = MMI.matrix(X, transpose=true) # now p x n matrix
