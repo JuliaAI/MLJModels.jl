@@ -458,9 +458,9 @@ $BayesianLDA_DESCR
                     of Sw to improve numerical stability. This can be useful if
                     using the standard covariance estimator.
 * `priors=nothing`: For use in prediction with Baye's rule. If `priors = nothing` then `priors` are estimated
-                    from the class proportions in the training data. Otherwise it requires a vector containing 
-                    class probabilities specified in order following the ordering of `levels(y)`.
-
+                    from the class proportions in the training data. Otherwise it requires a `Vector` containing 
+                    class probabilities with probabilities specified using the order given by `levels(y)` where y is the
+                    target vector.
 See also the [package documentation](https://multivariatestatsjl.readthedocs.io/en/latest/lda.html).
 For more information about the algorithm, see the paper by Li, Zhu and Ogihara, [Using Discriminant Analysis for Multi-class Classification: An Experimental Investigation](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.89.7068&rep=rep1&type=pdf).
 """
@@ -593,8 +593,9 @@ $BayesianSubspaceLDA_DESCR
 * `out_dim`:        the dimension of the transformed space
                     to be used by `predict` and `transform` methods, automatically set if 0 is given (default).
 * `priors=nothing`: For use in prediction with Baye's rule. If `priors = nothing` then `priors` are estimated
-                    from the class proportions in the training data. Otherwise it requires a vector containing 
-                    class probabilities specified in order following the ordering of `levels(y)`.
+                    from the class proportions in the training data. Otherwise it requires a `Vector` containing 
+                    class probabilities with probabilities specified using the order given by `levels(y)` where y is the
+                    target vector.
 
 For more information about the algorithm, see the paper by Howland & Park (2006), 
 "Generalizing discriminant analysis using the generalized singular value decomposition",IEEE Trans. Patt.
