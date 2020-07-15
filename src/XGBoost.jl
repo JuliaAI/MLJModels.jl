@@ -155,7 +155,7 @@ function XGBoostRegressor(
     ,feature_selector="cyclic"
     ,top_k=0
     ,tweedie_variance_power=1.5
-    ,objective="reg:linear"
+    ,objective="reg:squarederror"
     ,base_score=0.5
     ,eval_metric="rmse"
     ,seed=0)
