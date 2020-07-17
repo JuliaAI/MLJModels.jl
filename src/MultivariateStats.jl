@@ -79,14 +79,13 @@ end
 const PCAFitResultType = MS.PCA
 
 """
-    PCA(; maxoutdim=nothing, method=:auto, pratio=0.99, mean=nothing)
+    PCA(; maxoutdim=0, method=:auto, pratio=0.99, mean=nothing)
 
 $PCA_DESCR
 
 ## Parameters
 
-* `maxoutdim=nothing`: maximum number of output dimensions, unconstrained if
-                       nothing.
+* `maxoutdim=0`:       maximum number of output dimensions, unconstrained if 0
 * `method=:auto`:      method to use to solve the problem, one of `:auto`,
                        `:cov` or `:svd`
 * `pratio=0.99`:       ratio of variance preserved
@@ -96,7 +95,7 @@ $PCA_DESCR
                        with that vector.
 """
 @mlj_model mutable struct PCA <: MMI.Unsupervised
-    maxoutdim::Union{Nothing,Int} = nothing::(_ === nothing || _ ≥ 1)
+    maxoutdim::Int = 0::(_ ≥ 0)
     method::Symbol  = :auto::(_ in (:auto, :cov, :svd))
     pratio::Float64 = 0.99::(0.0 < _ ≤ 1.0)
     mean::Union{Nothing, Real, Vector{Float64}} = nothing::(_ === nothing || (_ isa Real && iszero(_)) || true)
@@ -106,7 +105,7 @@ function MMI.fit(model::PCA, verbosity::Int, X)
     Xarray = MMI.matrix(X)
     mindim = minimum(size(Xarray))
 
-    maxoutdim = model.maxoutdim === nothing ? mindim : model.maxoutdim
+    maxoutdim = model.maxoutdim == 0 ? mindim : model.maxoutdim
 
     # NOTE: copy/transpose
     fitresult = MS.fit(MS.PCA, permutedims(Xarray);
@@ -152,8 +151,7 @@ $KPCA_DESCR
 
 ## Parameters
 
-* `maxoutdim=nothing`: maximum number of output dimensions, unconstrained if
-                       nothing.
+* `maxoutdim=0`:       maximum number of output dimensions, unconstrained if 0
 * `kernel=nothing`:    kernel function of 2 vector arguments x and y, returns a
                        scalar value, (x,y)->x'y if nothing
 * `solver=:auto`:      solver to use for the eigenvalues, one of `:eig`
@@ -165,7 +163,7 @@ $KPCA_DESCR
 * `maxiter=300`:       maximum number of iterations for eigs solver
 """
 @mlj_model mutable struct KernelPCA <: MMI.Unsupervised
-    maxoutdim::Union{Nothing,Int} = nothing::(_ === nothing || _ ≥ 1)
+    maxoutdim::Int = 0::(_ ≥ 0)
     kernel::Function = default_kernel
     solver::Symbol   = :eig::(_ in (:eig, :eigs))
     inverse::Bool    = false
@@ -178,7 +176,7 @@ function MMI.fit(model::KernelPCA, verbosity::Int, X)
     Xarray = MMI.matrix(X)
     mindim = minimum(size(Xarray))
     # default max out dim if not given
-    maxoutdim = model.maxoutdim === nothing ? mindim : model.maxoutdim
+    maxoutdim = model.maxoutdim == 0 ? mindim : model.maxoutdim
 
     fitresult = MS.fit(MS.KernelPCA, permutedims(Xarray);
                        kernel=model.kernel,
