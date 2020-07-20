@@ -34,8 +34,8 @@ import MLJBase
             MLJBase.select(X, 1:2, [:Zn, :Crim])
 
     infos = MLJBase.info_dict(selector)
-    @test infos[:input_scitype]  == MLJBase.Table(MLJBase.Scientific)
-    @test infos[:output_scitype] == MLJBase.Table(MLJBase.Scientific)
+    @test infos[:input_scitype]  == MLJBase.Table
+    @test infos[:output_scitype] == MLJBase.Table
 end
 
 
@@ -78,20 +78,20 @@ end
     w2 = MLJBase.transform(t, result, v2)
     @test levels(w2) == levels(w)
 
-    #### UNIVARIATE STANDARDIZER ####
-
-    stand = UnivariateStandardizer()
-    f,    = MLJBase.fit(stand, 1, [0, 2, 4])
-
-    @test round.(Int, MLJBase.transform(stand, f, [0,4,8])) == [-1.0,1.0,3.0]
-    @test round.(Int, MLJBase.inverse_transform(stand, f, [-1, 1, 3])) == [0, 4, 8]
-
-    infos = MLJBase.info_dict(stand)
 end
 
 #### STANDARDIZER ####
 
-@testset "Standardizer" begin
+@testset begin "standardization"
+
+    # UnivariateStandardizer:
+    stand = UnivariateStandardizer()
+    f,    = MLJBase.fit(stand, 1, [0, 2, 4])
+    @test round.(Int, MLJBase.transform(stand, f, [0,4,8])) == [-1.0,1.0,3.0]
+    @test round.(Int, MLJBase.inverse_transform(stand, f, [-1, 1, 3])) ==
+        [0, 4, 8]
+    infos = MLJBase.info_dict(stand)
+
     N = 5
     rand_char = rand("abcefgh", N)
     while length(unique(rand_char)) < 2
@@ -122,7 +122,7 @@ end
     f,   = MLJBase.fit(stand, 1, X)
     Xnew = MLJBase.transform(stand, f, X)
 
-    @test issubset(Set(keys(f)), Set(Tables.schema(X).names[[5,]]))
+    @test issubset(Set(keys(f[2])), Set(Tables.schema(X).names[[5,]]))
 
     Xt = MLJBase.transform(stand, f, X)
 
@@ -137,7 +137,7 @@ end
     f,   = MLJBase.fit(stand, 1, X)
     Xnew = MLJBase.transform(stand, f, X)
 
-    @test issubset(Set(keys(f)), Set(Tables.schema(X).names[[2,]]))
+    @test issubset(Set(keys(f[2])), Set(Tables.schema(X).names[[2,]]))
 
     Xt = MLJBase.transform(stand, f, X)
 
@@ -162,7 +162,7 @@ end
     stand = Standardizer(features=[:x3, :x4], count=true, ordered_factor=true)
     f,   = MLJBase.fit(stand, 1, X)
     Xnew = MLJBase.transform(stand, f, X)
-    @test issubset(Set(keys(f)), Set(Tables.schema(X).names[3:4,]))
+    @test issubset(Set(keys(f[2])), Set(Tables.schema(X).names[3:4,]))
 
     Xt = MLJBase.transform(stand, f, X)
 
@@ -189,8 +189,18 @@ end
     infos = MLJBase.info_dict(stand)
 
     @test infos[:name] == "Standardizer"
-    @test infos[:input_scitype] == MLJBase.Table(MLJBase.Scientific)
-    @test infos[:output_scitype] == MLJBase.Table(MLJBase.Scientific)
+    @test infos[:input_scitype] ==
+        Union{MLJBase.Table, AbstractVector{<:Continuous}}
+    @test infos[:output_scitype] ==
+        Union{MLJBase.Table, AbstractVector{<:Continuous}}
+
+    # univariate case
+    stand = Standardizer()
+    f, _, _   = MLJBase.fit(stand, 1, [0, 2, 4])
+    @test round.(Int, MLJBase.transform(stand, f, [0,4,8])) == [-1.0,1.0,3.0]
+    @test [(MLJBase.fitted_params(stand, f).mean_and_std)...] ≈
+        [2, MLJBase.std([0, 2, 4])]
+
 end
 
 #### UNIVARIATE BOX COX TRANSFORMER ####
@@ -280,8 +290,8 @@ end
     infos = MLJBase.info_dict(t)
 
     @test infos[:name] == "OneHotEncoder"
-    @test infos[:input_scitype] == MLJBase.Table(MLJBase.Scientific)
-    @test infos[:output_scitype] == MLJBase.Table(MLJBase.Scientific)
+    @test infos[:input_scitype] == MLJBase.Table
+    @test infos[:output_scitype] == MLJBase.Table
 end
 
 #### FILL IMPUTER ####
