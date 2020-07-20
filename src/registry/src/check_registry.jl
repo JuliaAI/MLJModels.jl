@@ -1,5 +1,4 @@
-function check_registry()
-    println("It is safe to ignore \"conflicting import\" warnings. ")
+function check_registry() 
     basedir = joinpath(dirname(pathof(MLJModels)), "registry")
     Pkg.activate(basedir)
 
@@ -12,7 +11,7 @@ function check_registry()
             # check if new entry or changed entry, otherwise don't test
             key = "$package.$model"
             try
-                load(model; pkg=package, allow_ambiguous=true)
+                load(model; pkg=package, verbosity=-1)
                 # add/refresh entry
                 print(rpad("Entry for $key was loaded properly ✓", 79)*"\r")
             catch

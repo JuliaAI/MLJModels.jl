@@ -1,4 +1,4 @@
-## CONSTANTS
+## CONSTANTS 
 
 const N_VALUES_THRESH = 16 # for BoxCoxTransformation
 
@@ -275,6 +275,11 @@ function MLJBase.fit(transformer::UnivariateStandardizer, verbosity::Int,
     return fitresult, cache, report
 end
 
+
+MLJBase.fitted_params(::UnivariateStandardizer, fitresult) =
+    (mean_and_std = fitresult, )
+
+
 # for transforming single value:
 function MLJBase.transform(transformer::UnivariateStandardizer, fitresult, x::Real)
     mu, sigma = fitresult
@@ -294,6 +299,7 @@ end
 # for vectors:
 MLJBase.inverse_transform(transformer::UnivariateStandardizer, fitresult, w) =
     [inverse_transform(transformer, fitresult, y) for y in w]
+
 
 ## STANDARDIZATION OF ORDINAL FEATURES OF TABULAR DATA
 
@@ -383,6 +389,22 @@ function Standardizer(
 end
 
 function MLJBase.fit(transformer::Standardizer, verbosity::Int, X)
+
+    # if not a table, it must be an abstract vector, eltpye AbstractFloat:
+    is_univariate = !Tables.istable(X)
+
+    # initialize fitresult:
+    fitresult_given_feature = Dict{Symbol,Tuple{Float64,Float64}}()
+
+    # special univariate case:
+    if is_univariate
+        fitresult_given_feature[:unnamed] =
+            MLJBase.fit(UnivariateStandardizer(), verbosity - 1, X)[1]
+        return (is_univariate=true,
+                fitresult_given_feature=fitresult_given_feature),
+        nothing, nothing
+    end
+
     all_features = Tables.schema(X).names
     mach_types   = collect(elscitype(selectcols(X, c)) for c in all_features)
     # Use any for workaround as OrderedFactor can't be converted into DataType
@@ -447,23 +469,36 @@ function MLJBase.fit(transformer::Standardizer, verbosity::Int, X)
             @info "  :$(all_features[j])    mu=$(col_fitresult[1])  sigma=$(col_fitresult[2])"
     end
 
-    fitresult = fitresult_given_feature
+    fitresult = (is_univariate=false,
+                 fitresult_given_feature=fitresult_given_feature)
     cache = nothing
     report = (features_fit=keys(fitresult_given_feature),)
 
     return fitresult, cache, report
 end
 
-MLJBase.fitted_params(::Standardizer, fitresult) = (mean_and_std_given_feature=fitresult,)
+function MLJBase.fitted_params(::Standardizer, fitresult)
+    is_univariate, dic = fitresult
+    is_univariate &&
+        return fitted_params(UnivariateStandardizer(), dic[:unnamed])
+    return (mean_and_std_given_feature=dic,)
+end
 
 function MLJBase.transform(transformer::Standardizer, fitresult, X)
+
+    # `fitresult` is dict of column fitresults, keyed on feature names
+    is_univariate, fitresult_given_feature = fitresult
+
+    if is_univariate
+        univariate_fitresult = fitresult_given_feature[:unnamed]
+        return transform(UnivariateStandardizer(), univariate_fitresult, X)
+    end
+
     scitypes = Vector{Any}([Continuous])
     transformer.ordered_factor && push!(scitypes, OrderedFactor)
     transformer.count && push!(scitypes, Count)
     AllowedScitype = Union{scitypes...}
-
-    # `fitresult` is dict of column fitresults, keyed on feature names
-    features_to_be_transformed = keys(fitresult)
+    features_to_be_transformed = keys(fitresult_given_feature)
 
     all_features = Tables.schema(X).names
 
@@ -480,7 +515,9 @@ function MLJBase.transform(transformer::Standardizer, fitresult, X)
             else
                 ftr_data
             end
-            transform(col_transformer, fitresult[ftr], col_to_transform)
+            transform(col_transformer,
+                      fitresult_given_feature[ftr],
+                      col_to_transform)
         else
             ftr_data
         end
@@ -831,7 +868,7 @@ the last class indicator column.
 `Multiclass` or `OrderedFactor` column is the same in new data being
 transformed as it is in the data used to fit the transformer.
 
-### Example 
+### Example
 
 ```julia
 X = (name=categorical(["Danesh", "Lee", "Mary", "John"]),
@@ -951,15 +988,15 @@ metadata_pkg.(
     is_wrapper = false)
 
 metadata_model(FillImputer,
-    input   = Table(Scientific),
-    output  = Table(Scientific),
+    input   = Table,
+    output  = Table,
     weights = false,
     descr   = FILL_IMPUTER_DESCR,
     path    = "MLJModels.FillImputer")
 
 metadata_model(FeatureSelector,
-    input   = Table(Scientific),
-    output  = Table(Scientific),
+    input   = Table,
+    output  = Table,
     weights = false,
     descr   = FEATURE_SELECTOR_DESCR,
     path    = "MLJModels.FeatureSelector")
@@ -979,8 +1016,8 @@ metadata_model(UnivariateStandardizer,
     path    = "MLJModels.UnivariateStandardizer")
 
 metadata_model(Standardizer,
-    input   = Table(Scientific),
-    output  = Table(Scientific),
+    input   = Union{Table, AbstractVector{<:Continuous}},
+    output  = Union{Table, AbstractVector{<:Continuous}},
     weights = false,
     descr   = STANDARDIZER_DESCR,
     path    = "MLJModels.Standardizer")
@@ -993,16 +1030,15 @@ metadata_model(UnivariateBoxCoxTransformer,
     path    = "MLJModels.UnivariateBoxCoxTransformer")
 
 metadata_model(OneHotEncoder,
-    input   = Table(Scientific),
-    output  = Table(Scientific),
+    input   = Table,
+    output  = Table,
     weights = false,
     descr   = ONE_HOT_DESCR,
     path    = "MLJModels.OneHotEncoder")
 
 metadata_model(ContinuousEncoder,
-    input   = Table(Scientific),
+    input   = Table,
     output  = Table(Continuous),
     weights = false,
     descr   = CONTINUOUS_ENCODER_DESCR,
     path    = "MLJModels.ContinuousEncoder")
-
