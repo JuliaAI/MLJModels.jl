@@ -45,8 +45,10 @@ end
     @test include("NaiveBayes.jl")
 end
 
+if VERSION >= v"1.3"
 @testset "XGBoost" begin
     @test include("XGBoost.jl")
+end
 end
 
 @testset "NearestNeighbors" begin
