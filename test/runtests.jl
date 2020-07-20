@@ -49,8 +49,9 @@ if VERSION >= v"1.3"
 @testset "XGBoost" begin
     @test include("XGBoost.jl")
 end
-end
 
 @testset "NearestNeighbors" begin
     @test include("NearestNeighbors.jl")
+end
+
 end
