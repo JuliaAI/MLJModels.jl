@@ -198,7 +198,8 @@ end
     stand = Standardizer()
     f, _, _   = MLJBase.fit(stand, 1, [0, 2, 4])
     @test round.(Int, MLJBase.transform(stand, f, [0,4,8])) == [-1.0,1.0,3.0]
-    @test MLJBase.fitted_params(stand, f) ≈ (2, MLJBase.std([0, 2, 4]))
+    @test [(MLJBase.fitted_params(stand, f).mean_and_std)...] ≈
+        [2, MLJBase.std([0, 2, 4])]
 
 end
 
