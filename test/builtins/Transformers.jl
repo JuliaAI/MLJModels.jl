@@ -112,20 +112,28 @@ end
     f,    = MLJBase.fit(stand, 1, X)
     Xnew  = MLJBase.transform(stand, f, X)
 
+    # test inverse:
+    XX = MLJBase.inverse_transform(stand, f, Xnew)
+    @test MLJBase.schema(X) == MLJBase.schema(XX)
+    @test XX.x1 == X.x1
+    @test XX.x2 ≈ X.x2
+    @test XX.x3 == X.x3
+    @test XX.x4 == X.x4
+    @test XX.x5 ≈ X.x5
+
+    # test transformation:
     @test Xnew[1] == X[1]
     @test MLJBase.std(Xnew[2]) ≈ 1.0
     @test Xnew[3] == X[3]
     @test Xnew[4] == X[4]
     @test MLJBase.std(Xnew[5]) ≈ 1.0
 
+    # test feature specification (ignore=false):
     stand.features = [:x1, :x5]
     f,   = MLJBase.fit(stand, 1, X)
     Xnew = MLJBase.transform(stand, f, X)
-
-    @test issubset(Set(keys(f[2])), Set(Tables.schema(X).names[[5,]]))
-
+    @test issubset(Set(keys(f[3])), Set(Tables.schema(X).names[[5,]]))
     Xt = MLJBase.transform(stand, f, X)
-
     @test Xnew[1] == X[1]
     @test Xnew[2] == X[2]
     @test Xnew[3] == X[3]
@@ -136,35 +144,35 @@ end
     stand.ignore = true
     f,   = MLJBase.fit(stand, 1, X)
     Xnew = MLJBase.transform(stand, f, X)
-
-    @test issubset(Set(keys(f[2])), Set(Tables.schema(X).names[[2,]]))
-
+    @test issubset(Set(keys(f[3])), Set(Tables.schema(X).names[[2,]]))
     Xt = MLJBase.transform(stand, f, X)
-
     @test Xnew[1] == X[1]
     @test MLJBase.std(Xnew[2]) ≈ 1.0
     @test Xnew[3] == X[3]
     @test Xnew[4] == X[4]
     @test Xnew[5] == X[5]
 
+    # test warnings about features not encountered in fit or no
+    # features need transforming:
     stand = Standardizer(features=[:x1, :mickey_mouse])
     @test_logs(
         (:warn, r"Some specified"),
-        (:warn, r"No features left"),
+        (:warn, r"No features"),
         MLJBase.fit(stand, 1, X)
     )
-
     stand.ignore = true
     @test_logs (:warn, r"Some specified") MLJBase.fit(stand, 1, X)
 
+    # features must be specified if ignore=true
     @test_throws ArgumentError Standardizer(ignore=true)
 
+    # test count, ordered_factor options:
     stand = Standardizer(features=[:x3, :x4], count=true, ordered_factor=true)
     f,   = MLJBase.fit(stand, 1, X)
     Xnew = MLJBase.transform(stand, f, X)
-    @test issubset(Set(keys(f[2])), Set(Tables.schema(X).names[3:4,]))
-
+    @test issubset(Set(keys(f[3])), Set(Tables.schema(X).names[3:4,]))
     Xt = MLJBase.transform(stand, f, X)
+    @test_throws Exception MLJBase.inverse_transform(stand, f, Xt)
 
     @test Xnew[1] == X[1]
     @test Xnew[2] == X[2]
