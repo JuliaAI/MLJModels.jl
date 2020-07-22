@@ -959,6 +959,8 @@ function MLJBase.fit(transformer::ContinuousEncoder, verbosity::Int, X)
 
 end
 
+MLJBase.fitted_params(::ContinuousEncoder, fitresult) = fitresult
+
 function MLJBase.transform(transformer::ContinuousEncoder, fitresult, X)
 
     features_to_keep, hot_encoder, hot_fitresult = values(fitresult)
