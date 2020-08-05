@@ -1095,7 +1095,7 @@ end
 metadata_pkg.(
     (FeatureSelector, UnivariateStandardizer,
      UnivariateDiscretizer, Standardizer,
-     UnivariateBoxCoxTransformer,
+     UnivariateBoxCoxTransformer, UnivariateFillImputer,
      OneHotEncoder, FillImputer, ContinuousEncoder),
     name       = "MLJModels",
     uuid       = "d491faf4-2d78-11e9-2867-c94bc002c0b7",
