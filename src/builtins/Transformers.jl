@@ -8,6 +8,8 @@ const N_VALUES_THRESH = 16 # for BoxCoxTransformation
 const FILL_IMPUTER_DESCR = "Imputes missing data with a fixed value "*
 "computed on the non-missing values. A different imputing function "*
 "can be specified for `Continuous`, `Count` and `Finite` data. "
+const UNIVARIATE_FILL_IMPUTER_DESCR = "Univariate form of FillImpututer. "*
+FILL_IMPUTER_DESCR
 const FEATURE_SELECTOR_DESCR = "Filter features (columns) of a table by name."
 const UNIVARIATE_STD_DESCR = "Standardize (whiten) univariate data."
 const UNIVARIATE_DISCR_DESCR = "Discretize a continuous variable via "*
@@ -28,9 +30,60 @@ const CONTINUOUS_ENCODER_DESCR = "Convert all `Finite` (categorical) and "*
 
 round_median(v::AbstractVector) = v -> round(eltype(v), median(v))
 
-_median       = e -> skipmissing(e) |> median
-_round_median = e -> skipmissing(e) |> (f -> round(eltype(f), median(f)))
-_mode         = e -> skipmissing(e) |> mode
+_median(e)       = skipmissing(e) |> median
+_round_median(e) = skipmissing(e) |> (f -> round(eltype(f), median(f)))
+_mode(e)         = skipmissing(e) |> mode
+
+@with_kw_noshow mutable struct UnivariateFillImputer <: Unsupervised
+    continuous_fill::Function = _median
+    count_fill::Function      = _round_median
+    finite_fill::Function     = _mode
+end
+
+function MLJBase.fit(transformer::UnivariateFillImputer,
+                      verbosity::Integer,
+                      v)
+
+    filler(v, ::Type) = throw(ArgumentError(
+        "Imputation is not supported for vectors "*
+        "of elscitype $(elscitype(v))."))
+    filler(v, ::Type{<:Union{Continuous,Missing}}) =
+        transformer.continuous_fill(v)
+    filler(v, ::Type{<:Union{Count,Missing}}) =
+        transformer.count_fill(v)
+    filler(v, ::Type{<:Union{Finite,Missing}}) =
+        transformer.finite_fill(v)
+
+    fitresult = (filler=filler(v, elscitype(v)),)
+    cache = nothing
+    report = nothing
+
+    return fitresult, cache, report
+
+end
+
+function MLJBase.transform(transformer::UnivariateFillImputer,
+                           fitresult,
+                           vnew)
+
+    filler = fitresult.filler
+    scitype(filler) <: elscitype(vnew) || error(
+    "Attempting to impute a value of scitype $(scitype(filler)) "*
+    "into a vector of incompatible elscitype, namely $(elscitype(vnew)). ")
+
+    if Missing <: elscitype(vnew)
+        w = copy(vnew) # transform must be non-mutating
+        w[ismissing.(w)] .= filler
+        w_tight = convert.(nonmissing(eltype(w)), w)
+    else
+        w_tight = vnew
+    end
+
+    return w_tight
+end
+
+MLJBase.fitted_params(::UnivariateFillImputer, fitresult) = fitresult
+
 
 """
     FillImputer(
@@ -61,43 +114,100 @@ $FILL_IMPUTER_DESCR
 end
 
 function MLJBase.fit(transformer::FillImputer, verbosity::Int, X)
-    if isempty(transformer.features)
-        features = Tables.schema(X).names |> collect
-    else
-        features = transformer.features
+
+    s = MLJBase.schema(X)
+    features_seen = s.names |> collect # "seen" = "seen in fit"
+    scitypes_seen = s.scitypes |> collect
+
+    features = isempty(transformer.features) ? features_seen :
+        transformer.features
+
+    issubset(features, features_seen) || throw(ArgumentError(
+    "Some features specified do not exist in the supplied table. "))
+
+    # get corresponding scitypes:
+    mask = map(features_seen) do ftr
+        ftr in features
     end
-    fitresult = features
+    features = features_seen[mask] # `features` re-ordered
+    scitypes = scitypes_seen[mask]
+    features_and_scitypes = zip(features, scitypes) |> collect
+
+    # now keep those features that are imputable:
+    function isimputable(ftr, T::Type)
+        if verbosity > 0 && !isempty(transformer.features)
+            @info "Feature $ftr will not be imputed "*
+            "(imputation for $T not supported). "
+        end
+        return false
+    end
+    isimputable(ftr, ::Type{<:Union{Continuous,Missing}}) = true
+    isimputable(ftr, ::Type{<:Union{Count,Missing}}) = true
+    isimputable(ftr, ::Type{<:Union{Finite,Missing}}) = true
+    mask = map(features_and_scitypes) do tup
+        isimputable(tup...)
+    end
+    features_to_be_imputed = features[mask]
+
+    univariate_transformer =
+        UnivariateFillImputer(continuous_fill=transformer.continuous_fill,
+                              count_fill=transformer.count_fill,
+                              finite_fill=transformer.finite_fill)
+    univariate_fitresult(ftr) = MLJBase.fit(univariate_transformer,
+                                            verbosity - 1,
+                                            selectcols(X, ftr))[1]
+
+    fitresult_given_feature =
+        Dict(ftr=> univariate_fitresult(ftr) for ftr in features_to_be_imputed)
+
+    fitresult = (features_seen=features_seen,
+                 univariate_transformer=univariate_transformer,
+                 fitresult_given_feature=fitresult_given_feature)
     report    = nothing
     cache     = nothing
+
     return fitresult, cache, report
 end
 
 function MLJBase.transform(transformer::FillImputer, fitresult, X)
-    features = Tables.schema(X).names
-    # check that the features match that of the transformer
-    all(e -> e in fitresult, features) ||
-        error("Attempting to transform table with feature labels not seen in fit. ")
 
-    cols = map(features) do ftr
+    features_seen = fitresult.features_seen # seen in fit
+    univariate_transformer = fitresult.univariate_transformer
+    fitresult_given_feature = fitresult.fitresult_given_feature
+
+    all_features = Tables.schema(X).names
+
+    # check that no new features have appeared:
+    all(e -> e in features_seen, all_features) || throw(ArgumentError(
+        "Attempting to transform table with "*
+        "feature labels not seen in fit.\n"*
+        "Features seen in fit = $features_seen.\n"*
+        "Current features = $([all_features...]). "))
+
+    features = tuple(keys(fitresult_given_feature)...)
+
+    cols = map(all_features) do ftr
         col = MLJBase.selectcols(X, ftr)
-        if eltype(col) >: Missing
-            T    = scitype_union(col)
-            if T <: Union{Continuous,Missing}
-                filler = transformer.continuous_fill(col)
-            elseif T <: Union{Count,Missing}
-                filler = transformer.count_fill(col)
-            elseif T <: Union{Finite,Missing}
-                filler = transformer.finite_fill(col)
-            end
-            col = copy(col) # carries the same name but not attached to the same memory
-            col[ismissing.(col)] .= filler
-            col = convert.(nonmissing(eltype(col)), col)
+        if ftr in features
+            fr = fitresult_given_feature[ftr]
+            return transform(univariate_transformer, fr, col)
         end
-        col
+        return col
     end
-    named_cols = NamedTuple{features}(tuple(cols...))
+
+    named_cols = NamedTuple{all_features}(tuple(cols...))
     return MLJBase.table(named_cols, prototype=X)
+
 end
+
+function MLJBase.fitted_params(::FillImputer, fr)
+    dict = fr.fitresult_given_feature
+    filler_given_feature = Dict(ftr=>dict[ftr].filler for ftr in keys(dict))
+    return (features_seen_in_fit=fr.features_seen,
+            univariate_transformer=fr.univariate_transformer,
+            filler_given_feature=filler_given_feature)
+end
+
 
 ##
 ## FOR FEATURE (COLUMN) SELECTION
@@ -994,6 +1104,16 @@ metadata_pkg.(
     license    = "MIT",
     is_wrapper = false)
 
+metadata_model(UnivariateFillImputer,
+    input = Union{AbstractVector{<:Union{Continuous,Missing}},
+                  AbstractVector{<:Union{Count,Missing}},
+                  AbstractVector{<:Union{Finite,Missing}}},
+    output = Union{AbstractVector{<:Continuous},
+                  AbstractVector{<:Count},
+                  AbstractVector{<:Finite}},
+    descr = UNIVARIATE_FILL_IMPUTER_DESCR,
+    path  = "MLJModels.UnivariateFillImputer")
+
 metadata_model(FillImputer,
     input   = Table,
     output  = Table,
@@ -1049,3 +1169,5 @@ metadata_model(ContinuousEncoder,
     weights = false,
     descr   = CONTINUOUS_ENCODER_DESCR,
     path    = "MLJModels.ContinuousEncoder")
+
+
