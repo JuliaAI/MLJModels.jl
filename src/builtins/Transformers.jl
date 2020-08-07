@@ -72,9 +72,10 @@ function MLJBase.transform(transformer::UnivariateFillImputer,
     "into a vector of incompatible elscitype, namely $(elscitype(vnew)). ")
 
     if Missing <: elscitype(vnew)
-        w = copy(vnew) # transform must be non-mutating
-        w[ismissing.(w)] .= filler
-        w_tight = convert.(nonmissing(eltype(w)), w)
+        w_tight = similar(vnew, nonmissing(eltype(vnew)))
+ 	@inbounds for i in eachindex(vnew)
+           ismissing(vnew[i]) ? (w_tight[i] = filler ) : (w_tight[i] = vnew[i])
+    	end
     else
         w_tight = vnew
     end
