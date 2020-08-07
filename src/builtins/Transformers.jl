@@ -67,11 +67,19 @@ function MLJBase.transform(transformer::UnivariateFillImputer,
                            vnew)
 
     filler = fitresult.filler
-    scitype(filler) <: elscitype(vnew) || error(
-    "Attempting to impute a value of scitype $(scitype(filler)) "*
+    
+    scitype_filler = scitype(filler)
+    elscitype_vnew = elscitype(vnew)
+    
+    scitype_filler <: elscitype_vnew || 
+    #The following line is a hack for the case 
+    # `elscitype(vnew) = Union{Missing, Multiclass{N} where N}` that allows 
+    # imputing a categorical value "S" in place of missing as `finite_fill = e -> categorical(["S"])[1]`
+    (scitype_filler <: Multiclass && nonmissing(elscitype_vnew) <: Multiclass ) ||
+    error("Attempting to impute a value of scitype $(scitype(filler)) "*
     "into a vector of incompatible elscitype, namely $(elscitype(vnew)). ")
 
-    if Missing <: elscitype(vnew)
+    if Missing <: elscitype_vnew
         w_tight = similar(vnew, nonmissing(eltype(vnew)))
  	@inbounds for i in eachindex(vnew)
            ismissing(vnew[i]) ? (w_tight[i] = filler ) : (w_tight[i] = vnew[i])
@@ -130,9 +138,9 @@ function MLJBase.fit(transformer::FillImputer, verbosity::Int, X)
     mask = map(features_seen) do ftr
         ftr in features
     end
-    features = features_seen[mask] # `features` re-ordered
-    scitypes = scitypes_seen[mask]
-    features_and_scitypes = zip(features, scitypes) |> collect
+    features = @view features_seen[mask] # `features` re-ordered
+    scitypes = @view scitypes_seen[mask]
+    features_and_scitypes = zip(features, scitypes) #|> collect
 
     # now keep those features that are imputable:
     function isimputable(ftr, T::Type)
@@ -148,7 +156,7 @@ function MLJBase.fit(transformer::FillImputer, verbosity::Int, X)
     mask = map(features_and_scitypes) do tup
         isimputable(tup...)
     end
-    features_to_be_imputed = features[mask]
+    features_to_be_imputed = @view features[mask]
 
     univariate_transformer =
         UnivariateFillImputer(continuous_fill=transformer.continuous_fill,
