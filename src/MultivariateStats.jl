@@ -413,7 +413,8 @@ function MMI.fitted_params(::LDA, (core_res, classes_seen))
 end
 
 function MMI.predict(m::LDA, (core_res, classes_seen), Xnew)
-    # projection of Xnew XWt is n x o  where o = number of out dims
+    # projection of Xnew, XWt is nt x o  where o = number of out dims
+    # nt = number ot test samples
     XWt = MMI.matrix(Xnew) * core_res.proj
     # centroids in the transformed space, nc x o
     centroids = permutedims(core_res.pmeans)
@@ -552,7 +553,8 @@ function MMI.fitted_params(::BayesianLDA, (core_res, classes_seen, priors, n))
 end
 
 function MMI.predict(m::BayesianLDA, (core_res, classes_seen, priors, n), Xnew)
-    # projection of Xnew XWt is nt x o  where o = number of out dims
+     # projection of Xnew, XWt is nt x o  where o = number of out dims
+    # nt = number ot test samples
     XWt = MMI.matrix(Xnew) * core_res.proj
     # centroids in the transformed space, nc x o
     centroids = permutedims(core_res.pmeans)
@@ -683,7 +685,8 @@ function MMI.fitted_params(::BayesianSubspaceLDA, (core_res, _, _, priors,_))
 end
 
 function MMI.predict(m::BayesianSubspaceLDA, (core_res, out_dim, classes_seen, priors, n, mult), Xnew)
-    # projection of Xnew XWt is nt x o  where o = number of out dims
+    # projection of Xnew, XWt is nt x o  where o = number of out dims
+    # nt = number ot test samples
     proj = core_res.projw * view(core_res.projLDA, :, 1:out_dim) #proj is the projection_matrix
     XWt = MMI.matrix(Xnew) * proj
     
@@ -797,7 +800,8 @@ function MMI.fitted_params(::SubspaceLDA, (core_res, _))
 end
 
 function MMI.predict(m::SubspaceLDA, (core_res, out_dim, classes_seen), Xnew)
-    # projection of Xnew, XWt is nt x o  where o = number of out dims
+     # projection of Xnew, XWt is nt x o  where o = number of out dims
+    # nt = number ot test samples
     proj = core_res.projw * view(core_res.projLDA, :, 1:out_dim) #proj is the projection_matrix
     XWt = MMI.matrix(Xnew) * proj
     # centroids in the transformed space, nc x o
