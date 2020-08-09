@@ -62,8 +62,6 @@ function MLJBase.fit(transformer::UnivariateFillImputer,
 
 end
 
-get_catval(x::CategoricalValue) = levels(pool(x))[get(pool(x), x)]
-
 function replace_missing(::Type{<:Finite}, vnew, filler)
    all(in(levels(filler)), levels(vnew)) || 
    	error(ArgumentError("The `column::AbstractVector{<:Finite}`"* 
