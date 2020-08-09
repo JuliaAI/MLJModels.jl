@@ -170,17 +170,19 @@ macro load(name_ex, kw_exs...)
             pkg = string(value_ex)
         elseif variable_ex == :verbosity
             verbosity = value_ex
-        else
+        elseif variable_ex == :name
+	    model_name = value_ex
+	else
             throw(ArgumentError(warning))
         end
     end
     (@isdefined pkg) || (pkg = nothing)
     (@isdefined verbosity) || (verbosity = 0)
-
+    (@isdefined model_name) || (model_name = nothing)
     # get rid brackets in name_, as in
     # "(MLJModels.Clustering).KMedoids":
     name = filter(name_) do c !(c in ['(',')']) end
-
-    load(name, modl=__module__, pkg=pkg, verbosity=verbosity)
+    
+    load(name, modl=__module__, pkg=pkg, verbosity=verbosity, name=model_name)
 
 end
