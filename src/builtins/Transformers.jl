@@ -62,19 +62,40 @@ function MLJBase.fit(transformer::UnivariateFillImputer,
 
 end
 
+function replace_missing(::Type{<:Finite}, vnew, filler)
+   all(in(levels(filler)), levels(vnew)) || 
+   	error(ArgumentError("The `column::AbstractVector{<:Finite}`"* 
+   			    " to be transformed must contain the same levels"*
+   			    " as the categorical value to be imputed"))
+   replace(vnew, missing => filler)
+   
+end
+
+function replace_missing(::Type, vnew, filler)
+   T = promote_type(nonmissing(eltype(vnew)), typeof(filler))
+   w_tight = similar(vnew, T)
+   @inbounds for i in eachindex(vnew)
+   	if ismissing(vnew[i])
+   	   w_tight[i] = filler
+   	else
+   	   w_tight[i] = vnew[i]
+   	end
+   end	
+   return w_tight
+end
+
 function MLJBase.transform(transformer::UnivariateFillImputer,
                            fitresult,
                            vnew)
 
     filler = fitresult.filler
-    scitype(filler) <: elscitype(vnew) || error(
-    "Attempting to impute a value of scitype $(scitype(filler)) "*
+    
+    scitype(filler) <: elscitype(vnew) || 
+    error("Attempting to impute a value of scitype $(scitype(filler)) "*
     "into a vector of incompatible elscitype, namely $(elscitype(vnew)). ")
 
-    if Missing <: elscitype(vnew)
-        w = copy(vnew) # transform must be non-mutating
-        w[ismissing.(w)] .= filler
-        w_tight = convert.(nonmissing(eltype(w)), w)
+    if elscitype(vnew) >: Missing
+    	w_tight = replace_missing(nonmissing(elscitype(vnew)), vnew, filler)
     else
         w_tight = vnew
     end
@@ -129,9 +150,9 @@ function MLJBase.fit(transformer::FillImputer, verbosity::Int, X)
     mask = map(features_seen) do ftr
         ftr in features
     end
-    features = features_seen[mask] # `features` re-ordered
-    scitypes = scitypes_seen[mask]
-    features_and_scitypes = zip(features, scitypes) |> collect
+    features = @view features_seen[mask] # `features` re-ordered
+    scitypes = @view scitypes_seen[mask]
+    features_and_scitypes = zip(features, scitypes) #|> collect
 
     # now keep those features that are imputable:
     function isimputable(ftr, T::Type)
@@ -144,10 +165,11 @@ function MLJBase.fit(transformer::FillImputer, verbosity::Int, X)
     isimputable(ftr, ::Type{<:Union{Continuous,Missing}}) = true
     isimputable(ftr, ::Type{<:Union{Count,Missing}}) = true
     isimputable(ftr, ::Type{<:Union{Finite,Missing}}) = true
+    
     mask = map(features_and_scitypes) do tup
         isimputable(tup...)
     end
-    features_to_be_imputed = features[mask]
+    features_to_be_imputed = @view features[mask]
 
     univariate_transformer =
         UnivariateFillImputer(continuous_fill=transformer.continuous_fill,
@@ -184,7 +206,7 @@ function MLJBase.transform(transformer::FillImputer, fitresult, X)
         "Features seen in fit = $features_seen.\n"*
         "Current features = $([all_features...]). "))
 
-    features = tuple(keys(fitresult_given_feature)...)
+    features = keys(fitresult_given_feature)
 
     cols = map(all_features) do ftr
         col = MLJBase.selectcols(X, ftr)
