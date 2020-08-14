@@ -23,6 +23,10 @@ const CONTINUOUS_ENCODER_DESCR = "Convert all `Finite` (categorical) and "*
 "`Count` features (columns) of a table to `Continuous` and drop all "*
 " remaining non-`Continuous` features. "
 "features. "
+const UNIVARIATE_TIME_TYPE_TO_CONTINUOUS = "Transform univariate "*
+"data with element scitype `ScientificDateTime` so that it has "*
+"`Continuous` element scitype, according to a learned scale. "
+
 
 ##
 ## IMPUTER
@@ -1311,3 +1315,10 @@ metadata_model(ContinuousEncoder,
     weights = false,
     descr   = CONTINUOUS_ENCODER_DESCR,
     path    = "MLJModels.ContinuousEncoder")
+
+metadata_model(UnivariateTimeTypeToContinuous,
+    input   = AbstractVector{<:ScientificTypes.ScientificTimeType},
+    output  = AbstractVector{Continuous},
+    weights = false,
+    descr   = UNIVARIATE_TIME_TYPE_TO_CONTINUOUS,
+    path    = "MLJModels.UnivariateTimeTypeToContinuous")
