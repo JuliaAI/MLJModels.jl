@@ -248,7 +248,10 @@ end
         @test fr == (Time(7, 0, 0), Hour(1))
         dt_continuous = MLJBase.transform(transformer, fr, dt)
         ex = collect(0:3:30) .% 24 .- 7.0
-        @test all(dt_continuous .== ex)
+        diff = map(dt_continuous .- ex) do d
+            mod(d, 24.0)
+        end
+        @test all(diff .≈ 0.0)
     end
 
     let dt = [Time(0, 0, 0) + Hour(i) for i=0:3:30],
@@ -257,7 +260,10 @@ end
         @test fr == (Time(0, 0, 0), Hour(24))
         dt_continuous = MLJBase.transform(transformer, fr, dt)
         ex = collect(0:3:30) .% 24 ./ 24
-        @test all(dt_continuous .== ex)
+        diff = map(dt_continuous .- ex) do d
+            mod(d, 1.0)
+        end
+        @test all(diff .≈ 0.0)
     end
 
     # test log messages
@@ -301,7 +307,10 @@ end
         @test fr == (zero_time, convert(Hour, step))
         dt_continuous = MLJBase.transform(transformer, fr, dt)
         ex = Float64.((0:3:30) .% 24)./24
-        @test all(dt_continuous .== ex)
+        diff = map(dt_continuous .- ex) do d
+            mod(d, 1.0)
+        end
+        @test all(diff .≈ 0.0)
     end
 
     let dt = [DateTime(2018, 6, 15) + Day(i) for i=0:10],
@@ -344,6 +353,7 @@ end
     @test infos[:input_scitype] == AbstractVector{MLJBase.Continuous}
     @test infos[:output_scitype] == AbstractVector{MLJBase.Continuous}
 end
+
 
 #### ONE HOT ENCODER ####
 
