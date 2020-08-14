@@ -1,4 +1,4 @@
-## CONSTANTS
+## CONSTANTS 
 
 const N_VALUES_THRESH = 16 # for BoxCoxTransformation
 
