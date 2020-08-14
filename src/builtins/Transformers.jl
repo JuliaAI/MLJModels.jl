@@ -411,10 +411,152 @@ MLJBase.inverse_transform(transformer::UnivariateStandardizer, fitresult, w) =
     [inverse_transform(transformer, fitresult, y) for y in w]
 
 
+## CONTINUOUS TRANSFORM OF TIME TYPE FEATURES
+
+"""
+    UnivariateTimeTypeToContinuous(zero_time=nothing, step=Hour(24))
+
+Convert a `Date`, `DateTime`, and `Time` vector to `Float64` by
+assuming `0.0` corresponds to the `zero_time` parameter and the time
+increment to reach `1.0` is given by the `step` parameter. The type of
+`zero_time` should match the type of the column if provided. If not
+provided, then `zero_time` is inferred as the minimum time found in
+the data when `fit` is called.
+
+"""
+mutable struct UnivariateTimeTypeToContinuous <: Unsupervised
+    zero_time::Union{Nothing, TimeType}
+    step::Period
+end
+
+function UnivariateTimeTypeToContinuous(;
+    zero_time=nothing, step=Dates.Hour(24))
+    model = UnivariateTimeTypeToContinuous(zero_time, step)
+    message = MLJBase.clean!(model)
+    isempty(message) || @warn message
+    return model
+end
+
+function MLJBase.clean!(model::UnivariateTimeTypeToContinuous)
+    # Step must be able to be added to zero_time if provided.
+    msg = ""
+    if model.zero_time !== nothing
+        try
+            tmp = model.zero_time + model.step
+        catch err
+            if err isa MethodError
+                model.zero_time, model.step, status, msg = _fix_zero_time_step(
+                    model.zero_time, model.step)
+                if status === :error
+                    # Unable to resolve, rethrow original error.
+                    throw(err)
+                end
+            else
+                throw(err)
+            end
+        end
+    end
+    return msg
+end
+
+function _fix_zero_time_step(zero_time, step)
+    # Cannot add time parts to dates nor date parts to times.
+    # If a mismatch is encountered. Conversion from date parts to time parts
+    # is possible, but not from time parts to date parts because we cannot
+    # represent fractional date parts.
+    msg = ""
+    if zero_time isa Dates.Date && step isa Dates.TimePeriod
+        # Convert zero_time to a DateTime to resolve conflict.
+        if step % Hour(24) === Hour(0)
+            # We can convert step to Day safely
+            msg = "Cannot add `TimePeriod` `step` to `Date` `zero_time`. Converting `step` to `Day`."
+            step = convert(Day, step)
+        else
+            # We need datetime to be compatible with the step.
+            msg = "Cannot add `TimePeriod` `step` to `Date` `zero_time`. Converting `zero_time` to `DateTime`."
+            zero_time = convert(DateTime, zero_time)
+        end
+        return zero_time, step, :success, msg
+    elseif zero_time isa Dates.Time && step isa Dates.DatePeriod
+        # Convert step to Hour if possible. This will fail for
+        # isa(step, Month)
+        msg = "Cannot add `DatePeriod` `step` to `Time` `zero_time`. Converting `step` to `Hour`."
+        step = convert(Hour, step)
+        return zero_time, step, :success, msg
+    else
+        return zero_time, step, :error, msg
+    end
+end
+
+function MLJBase.fit(model::UnivariateTimeTypeToContinuous, verbosity::Int, X)
+    if model.zero_time !== nothing
+        min_dt = model.zero_time
+        step = model.step
+        # Check zero_time is compatible with X
+        example = first(X)
+        try
+            X - min_dt
+        catch err
+            if err isa MethodError
+                @warn "`$(typeof(min_dt))` `zero_time` is not compatible with `$(eltype(X))` vector. Attempting to convert `zero_time`."
+                min_dt = convert(eltype(X), min_dt)
+            else
+                throw(err)
+            end
+        end
+    else
+        min_dt = minimum(X)
+        step = model.step
+        message = ""
+        try
+            min_dt + step
+        catch err
+            if err isa MethodError
+                min_dt, step, status, message = _fix_zero_time_step(min_dt, step)
+                if status === :error
+                    # Unable to resolve, rethrow original error.
+                    throw(err)
+                end
+            else
+                throw(err)
+            end
+        end
+        isempty(message) || @warn message
+    end
+    cache = nothing
+    report = nothing
+    fitresult = (min_dt, step)
+    return fitresult, cache, report
+end
+
+function MLJBase.transform(model::UnivariateTimeTypeToContinuous, fitresult, X)
+    min_dt, step = fitresult
+    if typeof(min_dt) ≠ eltype(X)
+        # Cannot run if eltype in transform differs from zero_time from fit.
+        throw(ArgumentError("Different `TimeType` encountered during `transform` than expected from `fit`. Found `$(eltype(X))`, expected `$(typeof(min_dt))`"))
+    end
+    # Set the size of a single step.
+    next_time = min_dt + step
+    if next_time == min_dt
+        # Time type loops if step is a multiple of Hour(24), so calculate the
+        # number of multiples, then re-scale to Hour(12) and adjust delta to match original.
+        m = step / Dates.Hour(12)
+        delta = m * (
+            Float64(Dates.value(min_dt + Dates.Hour(12)) - Dates.value(min_dt)))
+    else
+        delta = Float64(Dates.value(min_dt + step) - Dates.value(min_dt))
+    end
+    return @. Float64(Dates.value(X - min_dt)) / delta
+end
+
+
 ## STANDARDIZATION OF ORDINAL FEATURES OF TABULAR DATA
 
 """
-    Standardizer(; features=Symbol[], ignore=false, ordered_factor=false, count=false)
+    Standardizer(; features=Symbol[],
+                   ignore=false,
+                   ordered_factor=false,
+                   count=false)
 
 Unsupervised model for standardizing (whitening) the columns of
 tabular data.  If `features` is unspecified then all columns
@@ -1169,5 +1311,3 @@ metadata_model(ContinuousEncoder,
     weights = false,
     descr   = CONTINUOUS_ENCODER_DESCR,
     path    = "MLJModels.ContinuousEncoder")
-
-

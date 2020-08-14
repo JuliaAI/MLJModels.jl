@@ -9,7 +9,7 @@ import MLJBase: @load
 import MLJBase: Table, Continuous, Count, Finite, OrderedFactor, Multiclass
 
 using Requires, Pkg, Pkg.TOML, OrderedCollections, Parameters
-using Tables, CategoricalArrays, StatsBase, Statistics
+using Tables, CategoricalArrays, StatsBase, Statistics, Dates
 import Distributions
 
 # for administrators to update Metadata.toml:
@@ -28,7 +28,8 @@ export ConstantRegressor, ConstantClassifier,
 # from model/Transformers
 export FeatureSelector, StaticTransformer, UnivariateDiscretizer,
     UnivariateStandardizer, Standardizer, UnivariateBoxCoxTransformer,
-    OneHotEncoder, ContinuousEncoder, FillImputer, UnivariateFillImputer
+    OneHotEncoder, ContinuousEncoder, FillImputer, UnivariateFillImputer,
+    UnivariateTimeTypeToContinuous
 
 const srcdir = dirname(@__FILE__) # the directory containing this file
 
