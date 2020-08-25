@@ -33,11 +33,8 @@ export FeatureSelector, StaticTransformer, UnivariateDiscretizer,
 
 const srcdir = dirname(@__FILE__) # the directory containing this file
 
-# TODO remove when the functionality has been merged in ScientificTypes.jl
-# and use ScientificTypes.nonmissing then.
 if VERSION < v"1.3"
-    nonmissingtype(::Type{T}) where T =
-        T isa Union ? ifelse(T.a == Missing, T.b, T.a) : T
+    nonmissingtype = ScientificTypes.nonmissing
 end
 nonmissing = nonmissingtype
 
