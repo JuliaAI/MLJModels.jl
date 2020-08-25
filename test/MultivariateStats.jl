@@ -204,16 +204,17 @@ end
                           5.936 2.770 4.260 1.326;
                           6.588 2.974 5.552 2.026])) < 0.01
 
-    @test mean(abs.(projection_matrix ≈  [0.8293776  0.02410215;
-                                1.5344731  2.16452123;
-                                -2.2012117 -0.93192121;
-                                          -2.8104603  2.83918785])) < 0.05
+    @test mean(abs.(projection_matrix ≈ [0.0675721   0.00271023;
+  					   0.127666    0.177718;
+ 					  -0.180211   -0.0767255;
+ 				      -0.235382    0.231435])) < 0.05
+
 
     @test round.(prior_probabilities, sigdigits=7) ==
         [0.3333333, 0.3333333, 0.3333333]
     @test round.(mcr, sigdigits=1) == 0.02
 
-    @test round.(report.vproportions, digits=4) == [0.9915, 0.0085]
+    @test round.(report.explained_variance_ratio, digits=4) == [0.9915, 0.0085]
     @test 0.04 ≤ mce ≤ 0.045
 
     d = info_dict(BayesianSubspaceLDA)
