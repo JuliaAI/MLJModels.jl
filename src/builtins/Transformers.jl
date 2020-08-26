@@ -1,4 +1,4 @@
-## CONSTANTS
+## CONSTANTS 
 
 const N_VALUES_THRESH = 16 # for BoxCoxTransformation
 
@@ -23,6 +23,10 @@ const CONTINUOUS_ENCODER_DESCR = "Convert all `Finite` (categorical) and "*
 "`Count` features (columns) of a table to `Continuous` and drop all "*
 " remaining non-`Continuous` features. "
 "features. "
+const UNIVARIATE_TIME_TYPE_TO_CONTINUOUS = "Transform univariate "*
+"data with element scitype `ScientificDateTime` so that it has "*
+"`Continuous` element scitype, according to a learned scale. "
+
 
 ##
 ## IMPUTER
@@ -62,19 +66,40 @@ function MLJBase.fit(transformer::UnivariateFillImputer,
 
 end
 
+function replace_missing(::Type{<:Finite}, vnew, filler)
+   all(in(levels(filler)), levels(vnew)) || 
+   	error(ArgumentError("The `column::AbstractVector{<:Finite}`"* 
+   			    " to be transformed must contain the same levels"*
+   			    " as the categorical value to be imputed"))
+   replace(vnew, missing => filler)
+   
+end
+
+function replace_missing(::Type, vnew, filler)
+   T = promote_type(nonmissing(eltype(vnew)), typeof(filler))
+   w_tight = similar(vnew, T)
+   @inbounds for i in eachindex(vnew)
+   	if ismissing(vnew[i])
+   	   w_tight[i] = filler
+   	else
+   	   w_tight[i] = vnew[i]
+   	end
+   end	
+   return w_tight
+end
+
 function MLJBase.transform(transformer::UnivariateFillImputer,
                            fitresult,
                            vnew)
 
     filler = fitresult.filler
-    scitype(filler) <: elscitype(vnew) || error(
-    "Attempting to impute a value of scitype $(scitype(filler)) "*
+    
+    scitype(filler) <: elscitype(vnew) || 
+    error("Attempting to impute a value of scitype $(scitype(filler)) "*
     "into a vector of incompatible elscitype, namely $(elscitype(vnew)). ")
 
-    if Missing <: elscitype(vnew)
-        w = copy(vnew) # transform must be non-mutating
-        w[ismissing.(w)] .= filler
-        w_tight = convert.(nonmissing(eltype(w)), w)
+    if elscitype(vnew) >: Missing
+    	w_tight = replace_missing(nonmissing(elscitype(vnew)), vnew, filler)
     else
         w_tight = vnew
     end
@@ -129,9 +154,9 @@ function MLJBase.fit(transformer::FillImputer, verbosity::Int, X)
     mask = map(features_seen) do ftr
         ftr in features
     end
-    features = features_seen[mask] # `features` re-ordered
-    scitypes = scitypes_seen[mask]
-    features_and_scitypes = zip(features, scitypes) |> collect
+    features = @view features_seen[mask] # `features` re-ordered
+    scitypes = @view scitypes_seen[mask]
+    features_and_scitypes = zip(features, scitypes) #|> collect
 
     # now keep those features that are imputable:
     function isimputable(ftr, T::Type)
@@ -144,10 +169,11 @@ function MLJBase.fit(transformer::FillImputer, verbosity::Int, X)
     isimputable(ftr, ::Type{<:Union{Continuous,Missing}}) = true
     isimputable(ftr, ::Type{<:Union{Count,Missing}}) = true
     isimputable(ftr, ::Type{<:Union{Finite,Missing}}) = true
+    
     mask = map(features_and_scitypes) do tup
         isimputable(tup...)
     end
-    features_to_be_imputed = features[mask]
+    features_to_be_imputed = @view features[mask]
 
     univariate_transformer =
         UnivariateFillImputer(continuous_fill=transformer.continuous_fill,
@@ -184,7 +210,7 @@ function MLJBase.transform(transformer::FillImputer, fitresult, X)
         "Features seen in fit = $features_seen.\n"*
         "Current features = $([all_features...]). "))
 
-    features = tuple(keys(fitresult_given_feature)...)
+    features = keys(fitresult_given_feature)
 
     cols = map(all_features) do ftr
         col = MLJBase.selectcols(X, ftr)
@@ -411,10 +437,152 @@ MLJBase.inverse_transform(transformer::UnivariateStandardizer, fitresult, w) =
     [inverse_transform(transformer, fitresult, y) for y in w]
 
 
+## CONTINUOUS TRANSFORM OF TIME TYPE FEATURES
+
+"""
+    UnivariateTimeTypeToContinuous(zero_time=nothing, step=Hour(24))
+
+Convert a `Date`, `DateTime`, and `Time` vector to `Float64` by
+assuming `0.0` corresponds to the `zero_time` parameter and the time
+increment to reach `1.0` is given by the `step` parameter. The type of
+`zero_time` should match the type of the column if provided. If not
+provided, then `zero_time` is inferred as the minimum time found in
+the data when `fit` is called.
+
+"""
+mutable struct UnivariateTimeTypeToContinuous <: Unsupervised
+    zero_time::Union{Nothing, TimeType}
+    step::Period
+end
+
+function UnivariateTimeTypeToContinuous(;
+    zero_time=nothing, step=Dates.Hour(24))
+    model = UnivariateTimeTypeToContinuous(zero_time, step)
+    message = MLJBase.clean!(model)
+    isempty(message) || @warn message
+    return model
+end
+
+function MLJBase.clean!(model::UnivariateTimeTypeToContinuous)
+    # Step must be able to be added to zero_time if provided.
+    msg = ""
+    if model.zero_time !== nothing
+        try
+            tmp = model.zero_time + model.step
+        catch err
+            if err isa MethodError
+                model.zero_time, model.step, status, msg = _fix_zero_time_step(
+                    model.zero_time, model.step)
+                if status === :error
+                    # Unable to resolve, rethrow original error.
+                    throw(err)
+                end
+            else
+                throw(err)
+            end
+        end
+    end
+    return msg
+end
+
+function _fix_zero_time_step(zero_time, step)
+    # Cannot add time parts to dates nor date parts to times.
+    # If a mismatch is encountered. Conversion from date parts to time parts
+    # is possible, but not from time parts to date parts because we cannot
+    # represent fractional date parts.
+    msg = ""
+    if zero_time isa Dates.Date && step isa Dates.TimePeriod
+        # Convert zero_time to a DateTime to resolve conflict.
+        if step % Hour(24) === Hour(0)
+            # We can convert step to Day safely
+            msg = "Cannot add `TimePeriod` `step` to `Date` `zero_time`. Converting `step` to `Day`."
+            step = convert(Day, step)
+        else
+            # We need datetime to be compatible with the step.
+            msg = "Cannot add `TimePeriod` `step` to `Date` `zero_time`. Converting `zero_time` to `DateTime`."
+            zero_time = convert(DateTime, zero_time)
+        end
+        return zero_time, step, :success, msg
+    elseif zero_time isa Dates.Time && step isa Dates.DatePeriod
+        # Convert step to Hour if possible. This will fail for
+        # isa(step, Month)
+        msg = "Cannot add `DatePeriod` `step` to `Time` `zero_time`. Converting `step` to `Hour`."
+        step = convert(Hour, step)
+        return zero_time, step, :success, msg
+    else
+        return zero_time, step, :error, msg
+    end
+end
+
+function MLJBase.fit(model::UnivariateTimeTypeToContinuous, verbosity::Int, X)
+    if model.zero_time !== nothing
+        min_dt = model.zero_time
+        step = model.step
+        # Check zero_time is compatible with X
+        example = first(X)
+        try
+            X - min_dt
+        catch err
+            if err isa MethodError
+                @warn "`$(typeof(min_dt))` `zero_time` is not compatible with `$(eltype(X))` vector. Attempting to convert `zero_time`."
+                min_dt = convert(eltype(X), min_dt)
+            else
+                throw(err)
+            end
+        end
+    else
+        min_dt = minimum(X)
+        step = model.step
+        message = ""
+        try
+            min_dt + step
+        catch err
+            if err isa MethodError
+                min_dt, step, status, message = _fix_zero_time_step(min_dt, step)
+                if status === :error
+                    # Unable to resolve, rethrow original error.
+                    throw(err)
+                end
+            else
+                throw(err)
+            end
+        end
+        isempty(message) || @warn message
+    end
+    cache = nothing
+    report = nothing
+    fitresult = (min_dt, step)
+    return fitresult, cache, report
+end
+
+function MLJBase.transform(model::UnivariateTimeTypeToContinuous, fitresult, X)
+    min_dt, step = fitresult
+    if typeof(min_dt) ≠ eltype(X)
+        # Cannot run if eltype in transform differs from zero_time from fit.
+        throw(ArgumentError("Different `TimeType` encountered during `transform` than expected from `fit`. Found `$(eltype(X))`, expected `$(typeof(min_dt))`"))
+    end
+    # Set the size of a single step.
+    next_time = min_dt + step
+    if next_time == min_dt
+        # Time type loops if step is a multiple of Hour(24), so calculate the
+        # number of multiples, then re-scale to Hour(12) and adjust delta to match original.
+        m = step / Dates.Hour(12)
+        delta = m * (
+            Float64(Dates.value(min_dt + Dates.Hour(12)) - Dates.value(min_dt)))
+    else
+        delta = Float64(Dates.value(min_dt + step) - Dates.value(min_dt))
+    end
+    return @. Float64(Dates.value(X - min_dt)) / delta
+end
+
+
 ## STANDARDIZATION OF ORDINAL FEATURES OF TABULAR DATA
 
 """
-    Standardizer(; features=Symbol[], ignore=false, ordered_factor=false, count=false)
+    Standardizer(; features=Symbol[],
+                   ignore=false,
+                   ordered_factor=false,
+                   count=false)
 
 Unsupervised model for standardizing (whitening) the columns of
 tabular data.  If `features` is unspecified then all columns
@@ -1096,7 +1264,8 @@ metadata_pkg.(
     (FeatureSelector, UnivariateStandardizer,
      UnivariateDiscretizer, Standardizer,
      UnivariateBoxCoxTransformer, UnivariateFillImputer,
-     OneHotEncoder, FillImputer, ContinuousEncoder),
+     OneHotEncoder, FillImputer, ContinuousEncoder,
+     UnivariateTimeTypeToContinuous),
     name       = "MLJModels",
     uuid       = "d491faf4-2d78-11e9-2867-c94bc002c0b7",
     url        = "https://github.com/alan-turing-institute/MLJModels.jl",
@@ -1170,4 +1339,9 @@ metadata_model(ContinuousEncoder,
     descr   = CONTINUOUS_ENCODER_DESCR,
     path    = "MLJModels.ContinuousEncoder")
 
-
+metadata_model(UnivariateTimeTypeToContinuous,
+    input   = AbstractVector{<:ScientificTypes.ScientificTimeType},
+    output  = AbstractVector{Continuous},
+    weights = false,
+    descr   = UNIVARIATE_TIME_TYPE_TO_CONTINUOUS,
+    path    = "MLJModels.UnivariateTimeTypeToContinuous")

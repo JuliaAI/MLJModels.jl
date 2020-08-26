@@ -22,7 +22,7 @@ function Base.isless(p1::ModelProxy, p2::ModelProxy)
     end
 end
 
-import MLJBase.==
+import MLJModelInterface.==
 function ==(m1::ModelProxy, m2::ModelProxy)
     m1.name == m2.name && m1.package_name == m2.package_name
     # tests = map(keys(m1)) do k

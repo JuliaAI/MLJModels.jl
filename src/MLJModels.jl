@@ -1,4 +1,4 @@
-module MLJModels
+module MLJModels 
 
 import MLJModelInterface
 import MLJModelInterface: MODEL_TRAITS
@@ -9,7 +9,7 @@ import MLJBase: @load
 import MLJBase: Table, Continuous, Count, Finite, OrderedFactor, Multiclass
 
 using Requires, Pkg, Pkg.TOML, OrderedCollections, Parameters
-using Tables, CategoricalArrays, StatsBase, Statistics
+using Tables, CategoricalArrays, StatsBase, Statistics, Dates
 import Distributions
 
 # for administrators to update Metadata.toml:
@@ -28,15 +28,13 @@ export ConstantRegressor, ConstantClassifier,
 # from model/Transformers
 export FeatureSelector, StaticTransformer, UnivariateDiscretizer,
     UnivariateStandardizer, Standardizer, UnivariateBoxCoxTransformer,
-    OneHotEncoder, ContinuousEncoder, FillImputer, UnivariateFillImputer
+    OneHotEncoder, ContinuousEncoder, FillImputer, UnivariateFillImputer,
+    UnivariateTimeTypeToContinuous
 
 const srcdir = dirname(@__FILE__) # the directory containing this file
 
-# TODO remove when the functionality has been merged in ScientificTypes.jl
-# and use ScientificTypes.nonmissing then.
 if VERSION < v"1.3"
-    nonmissingtype(::Type{T}) where T =
-        T isa Union ? ifelse(T.a == Missing, T.b, T.a) : T
+    nonmissingtype = ScientificTypes.nonmissing
 end
 nonmissing = nonmissingtype
 
