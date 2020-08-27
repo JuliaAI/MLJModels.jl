@@ -76,7 +76,7 @@ function MLJModelInterface.fit(::ConstantClassifier,
     C = classes(d)
     fitresult = (C, pdf([d, ], C))
     cache     = nothing
-    report    = NamedTuple
+    report    = NamedTuple()
     return fitresult, cache, report
 end
 
