@@ -108,7 +108,7 @@ X, y = MLJBase.make_regression(rng=5124)
 rfr = RandomForestRegressor()
 m = machine(rfr, X, y)
 fit!(m)
-@test rms(predict(m, X), y) < 0.3
+@test rms(predict(m, X), y) < 0.31
 
 end
 true
