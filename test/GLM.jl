@@ -13,6 +13,9 @@ using MLJModels.GLM_
 using Random: seed!
 using Tables
 
+import DataFrames
+import RDatasets
+
 ###
 ### OLSREGRESSOR
 ###
@@ -100,6 +103,73 @@ fitresult, _, _ = fit(lcr, 1, XTable, y)
 
 @test norm(θ̂ .- θ)/norm(θ) ≤ 5e-3
 
+###
+### GenericGLMModel - write the formula out by hand
+###
+
+seed!(123)
+
+formula = GLM.@formula(MedV ~ Crim + Zn + Indus + Crim*Zn + Crim*Indus)
+distribution = GLM.Normal()
+link = GLM.IdentityLink()
+
+feature_names = [:Crim, :Zn, :Indus]
+label_name = :MedV
+
+model = GenericGLMModel(formula, label_name, distribution, link)
+
+boston_data = RDatasets.dataset("MASS", "Boston") |> DataFrames.DataFrame
+X = boston_data[!, feature_names]
+y = boston_data[!, label_name]
+
+fitresult, cache, report = MLJBase.fit(model, 1, X, y)
+
+@test GLM.coeftable(fitresult).rownms == ["(Intercept)", "Crim", "Zn", "Indus", "Crim & Zn", "Crim & Indus"]
+
+@test Statistics.mean(abs2, MLJBase.predict(model, fitresult, X) .- boston_data[!, label_name]) < 60
+@test Statistics.mean(abs2, MLJBase.predict(model, fitresult, X) .- boston_data[!, label_name]) > 50
+
+###
+### GenericGLMModel - auto-generate the formula
+###
+
+# generate the RHS of a formula with all pairwise interactions
+function generate_formula_rhs(feature_names::AbstractVector{<:Symbol})
+    terms = []
+    for i = 1:length(feature_names)
+        term = GLM.Term(feature_names[i])
+        push!(terms, term)
+    end
+    for i = 1:length(feature_names)
+        for j = (i+1):length(feature_names)
+            term = GLM.Term(feature_names[i]) & GLM.Term(feature_names[j])
+            push!(terms, term)
+        end
+    end
+    return sum(terms)
+end
+
+seed!(123)
+
+boston_data = RDatasets.dataset("MASS", "Boston")
+all_names = Symbol.(DataFrames.names(boston_data))
+label_name = :MedV
+feature_names = setdiff(all_names, [label_name])
+formula = GLM.Term(Symbol(label_name)) ~ generate_formula_rhs(feature_names)
+
+distribution = GLM.Normal()
+link = GLM.IdentityLink()
+
+model = GenericGLMModel(formula, label_name, distribution, link)
+
+X = boston_data[!, feature_names]
+y = boston_data[!, label_name]
+
+fitresult, cache, report = MLJBase.fit(model, 1, X, y)
+@test GLM.coeftable(fitresult).rownms == ["(Intercept)", "Crim", "Zn", "Indus", "Chas", "NOx", "Rm", "Age", "Dis", "Rad", "Tax", "PTRatio", "Black", "LStat", "Crim & Zn", "Crim & Indus", "Crim & Chas", "Crim & NOx", "Crim & Rm", "Crim & Age", "Crim & Dis", "Crim & Rad", "Crim & Tax", "Crim & PTRatio", "Crim & Black", "Crim & LStat", "Zn & Indus", "Zn & Chas", "Zn & NOx", "Zn & Rm", "Zn & Age", "Zn & Dis", "Zn & Rad", "Zn & Tax", "Zn & PTRatio", "Zn & Black", "Zn & LStat", "Indus & Chas", "Indus & NOx", "Indus & Rm", "Indus & Age", "Indus & Dis", "Indus & Rad", "Indus & Tax", "Indus & PTRatio", "Indus & Black", "Indus & LStat", "Chas & NOx", "Chas & Rm", "Chas & Age", "Chas & Dis", "Chas & Rad", "Chas & Tax", "Chas & PTRatio", "Chas & Black", "Chas & LStat", "NOx & Rm", "NOx & Age", "NOx & Dis", "NOx & Rad", "NOx & Tax", "NOx & PTRatio", "NOx & Black", "NOx & LStat", "Rm & Age", "Rm & Dis", "Rm & Rad", "Rm & Tax", "Rm & PTRatio", "Rm & Black", "Rm & LStat", "Age & Dis", "Age & Rad", "Age & Tax", "Age & PTRatio", "Age & Black", "Age & LStat", "Dis & Rad", "Dis & Tax", "Dis & PTRatio", "Dis & Black", "Dis & LStat", "Rad & Tax", "Rad & PTRatio", "Rad & Black", "Rad & LStat", "Tax & PTRatio", "Tax & Black", "Tax & LStat", "PTRatio & Black", "PTRatio & LStat", "Black & LStat"]
+
+@test Statistics.mean(abs2, MLJBase.predict(model, fitresult, X) .- boston_data[!, label_name]) < 7
+@test Statistics.mean(abs2, MLJBase.predict(model, fitresult, X) .- boston_data[!, label_name]) > 6
+
 end # module
 true
-

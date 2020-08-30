@@ -25,7 +25,7 @@ using Tables
 
 import ..GLM
 
-export LinearRegressor, LinearBinaryClassifier, LinearCountRegressor
+export LinearRegressor, LinearBinaryClassifier, LinearCountRegressor, GenericGLMModel
 
 ##
 ## DESCRIPTIONS
@@ -34,6 +34,7 @@ export LinearRegressor, LinearBinaryClassifier, LinearCountRegressor
 const LR_DESCR = "Linear regressor (OLS) with a Normal model."
 const LBC_DESCR = "Linear binary classifier with specified link (e.g. logistic)."
 const LCR_DESCR = "Linear count regressor with specified link and distribution (e.g. log link and poisson)."
+const GENERIC_GLM_MODEL_DESCR = "A generic GLM model with specified formula, link, and distribution"
 
 
 ###
@@ -70,6 +71,7 @@ glm_report(fitresult) = ( deviance     = GLM.deviance(fitresult),
 # LinearCountRegressor   --> Probabilistic w Count Target
 # LinearBinaryClassifier --> Probabilistic w Binary target // logit,cauchit,..
 # MulticlassClassifier   --> Probabilistic w Multiclass target
+# GenericGLMModel        --> Probabilistic
 
 
 @with_kw_noshow mutable struct LinearRegressor <: MMI.Probabilistic
@@ -86,6 +88,13 @@ end
     fit_intercept::Bool = true
     distribution::D     = Distributions.Poisson()
     link::L 			= GLM.LogLink()
+end
+
+@with_kw_noshow mutable struct GenericGLMModel{F, LA, D, LI} <: MMI.Probabilistic
+    formula::F
+    label::LA
+    distribution::D
+    link::LI
 end
 
 # Short names for convenience here
@@ -134,9 +143,30 @@ function MMI.fit(model::LinearBinaryClassifier, verbosity::Int, X, y)
     return (fitresult, decode), cache, report
 end
 
+function _merge_X_and_y(X, # `X` must be a table
+                        y::AbstractVector,
+                        label)
+    return merge(Tables.columntable(X), NamedTuple{(label,)}((y,)))
+end
+
+function MMI.fit(model::GenericGLMModel,
+                 verbosity::Int,
+                 X, # `X` must be a table
+                 y::AbstractVector)
+    # apply the model
+    data = _merge_X_and_y(X, y, model.label)
+    fitresult = GLM.glm(model.formula, data, model.distribution, model.link)
+    # form the report
+    report    = glm_report(fitresult)
+    cache     = nothing
+    # return
+    return fitresult, cache, report
+end
+
 glm_fitresult(::LinearRegressor, fitresult)  = fitresult
 glm_fitresult(::LinearCountRegressor, fitresult)  = fitresult
 glm_fitresult(::LinearBinaryClassifier, fitresult)  = fitresult[1]
+glm_fitresult(::GenericGLMModel, fitresult)  = fitresult
 
 function MMI.fitted_params(model::GLM_MODELS, fitresult)
     coefs = GLM.coef(glm_fitresult(model,fitresult))
@@ -144,6 +174,9 @@ function MMI.fitted_params(model::GLM_MODELS, fitresult)
             intercept = ifelse(model.fit_intercept, coefs[end], nothing))
 end
 
+function MMI.fitted_params(model::GenericGLMModel, fitresult)
+    return GLM.coef(fitresult)
+end
 
 ####
 #### PREDICT FUNCTIONS
@@ -176,6 +209,13 @@ function MMI.predict(model::LinearBinaryClassifier, (fitresult, decode), Xnew)
     return MMI.UnivariateFinite(MMI.classes(decode), π, augment=true)
 end
 
+function MMI.predict(model::GenericGLMModel,
+                     fitresult,
+                     Xnew, # `Xnew` must be a table
+                     )
+    return GLM.predict(fitresult, Xnew)
+end
+
 # NOTE: predict_mode uses MLJBase's fallback
 
 ####
@@ -183,9 +223,9 @@ end
 ####
 
 # shared metadata
-const GLM_REGS = Union{Type{<:LinearRegressor}, Type{<:LinearBinaryClassifier}, Type{<:LinearCountRegressor}}
+const GLM_REGS = Union{Type{<:LinearRegressor}, Type{<:LinearBinaryClassifier}, Type{<:LinearCountRegressor}, Type{<:GenericGLMModel}}
 
-metadata_pkg.((LinearRegressor, LinearBinaryClassifier, LinearCountRegressor),
+metadata_pkg.((LinearRegressor, LinearBinaryClassifier, LinearCountRegressor, GenericGLMModel),
     name       = "GLM",
     uuid       = "38e38edf-8417-5370-95a0-9cbb8c7f171a",
     url        = "https://github.com/JuliaStats/GLM.jl",
