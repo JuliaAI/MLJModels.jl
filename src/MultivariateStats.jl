@@ -154,7 +154,7 @@ function MMI.fit(model::PCA, verbosity::Int, X)
     return fitresult, cache, report
 end
 
-MMI.fitted_params(::PCA, fr) = (projection=fr,)
+MMI.fitted_params(::PCA, fr) = (projection=MS.projection(fr),)
 
 
 function MMI.transform(::PCA, fr::PCAFitResultType, X)
