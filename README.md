@@ -51,8 +51,7 @@ MLJModels contains:
 
 - interfaces, under [/src/](/src/), for "essential" Julia machine
   learning packages which do not yet provide, or are unlikely to
-  provide, native MLJ model interfaces. The bulk of these are
-  [ScikitLearn.jl](https://github.com/cstjean/ScikitLearn.jl) models.
+  provide, native MLJ model interfaces.
   
 - a few models that are pre-loaded into MLJ, located at
   [/src/builtins](/src/builtins), such as `OneHotEncoder`
