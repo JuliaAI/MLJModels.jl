@@ -294,18 +294,18 @@ mutable struct FeatureSelector <: Unsupervised
     # features to be selected; empty means all
     features::Union{Vector{Symbol}, Function}
     ignore::Bool # features to be ignored
-    
-    # keyword constructor
-    function FeatureSelector(
-        ;
-        features::Union{AbstractVector{Symbol}, Function}=Symbol[],
-        ignore::Bool=false
-    )
-        transformer = new(features, ignore)
-        message = MLJBase.clean!(transformer)
-        isempty(message) || throw(ArgumentError(message))
-        return transformer
-    end
+end
+
+# keyword constructor
+function FeatureSelector(
+    ;
+    features::Union{AbstractVector{Symbol}, Function}=Symbol[],
+    ignore::Bool=false
+)
+    transformer = new(features, ignore)
+    message = MLJBase.clean!(transformer)
+    isempty(message) || throw(ArgumentError(message))
+    return transformer
 end
 
 function MLJBase.clean!(transformer::FeatureSelector)
@@ -736,20 +736,20 @@ mutable struct Standardizer <: Unsupervised
     ignore::Bool # features to be ignored
     ordered_factor::Bool
     count::Bool
-    
-    # keyword constructor
-    function Standardizer(
-        ;
-        features::Union{AbstractVector{Symbol}, Function}=Symbol[],
-        ignore::Bool=false,
-        ordered_factor::Bool=false,
-        count::Bool=false
-    )
-        transformer = new(features, ignore, ordered_factor, count)
-        message = MLJBase.clean!(transformer)
-        isempty(message) || throw(ArgumentError(message))
-        return transformer
-    end
+end
+
+# keyword constructor
+function Standardizer(
+    ;
+    features::Union{AbstractVector{Symbol}, Function}=Symbol[],
+    ignore::Bool=false,
+    ordered_factor::Bool=false,
+    count::Bool=false
+)
+    transformer = new(features, ignore, ordered_factor, count)
+    message = MLJBase.clean!(transformer)
+    isempty(message) || throw(ArgumentError(message))
+    return transformer
 end
 
 function MLJBase.clean!(transformer::Standardizer)
