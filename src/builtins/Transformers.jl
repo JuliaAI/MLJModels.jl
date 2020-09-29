@@ -248,11 +248,12 @@ transformed tables if `features` is empty (the default).
 Alternatively, if a non-empty `features` is specified, then only the
 specified features encountered during fitting are used (`ignore=false`) or all features
 encountered during fitting which are not named in `features` are used (`ignore=true`).
+
 Throws an error if a recorded or specified feature is not present in the transformation 
 input.
 
-Instead of supplying a features vector, a Bool-valued callable can be
-also be specified. For example, specifying `FeatureSelector(features =
+Instead of supplying a features vector, a Bool-valued callable with one argument 
+can be also be specified. For example, specifying `FeatureSelector(features =
 name -> name in [:x1, :x3], ignore = true)` has the same effect as 
 `FeatureSelector(features = [:x1, :x3], ignore = true)`, namely to select
  all features, with the exception of `:x1` and `:x3`.
@@ -288,12 +289,35 @@ julia> transform(fit!(machine(select2, X)), X)
  nominal = CategoricalValue{String,UInt32}["Your father", "he", "is"],)
 
 ```
-
 """
-@with_kw_noshow mutable struct FeatureSelector <: Unsupervised
+mutable struct FeatureSelector <: Unsupervised
     # features to be selected; empty means all
-    features::Union{Vector{Symbol}, Function}=Symbol[]
-    ignore::Bool = false # features to be ignored
+    features::Union{Vector{Symbol}, Function}
+    ignore::Bool # features to be ignored
+    
+    # keyword constructor
+    function FeatureSelector(
+        ;
+        features::Union{AbstractVector{Symbol}, Function}=Symbol[],
+        ignore::Bool=false
+    )
+        transformer = new(features, ignore)
+        message = MLJBase.clean!(transformer)
+        isempty(message) || throw(ArgumentError(message))
+        return transformer
+    end
+end
+
+function MLJBase.clean!(transformer::FeatureSelector)
+    err = ""
+    if (
+        typeof(transformer.features) <: AbstractVector{Symbol} &&
+        isempty(transformer.features) &&
+        transformer.ignore
+    )
+        err *= "Features to be ignored must be specified in features field."
+    end
+    return err
 end
 
 function MLJBase.fit(transformer::FeatureSelector, verbosity::Int, X)
@@ -303,13 +327,15 @@ function MLJBase.fit(transformer::FeatureSelector, verbosity::Int, X)
         if isempty(transformer.features)
            features = collect(all_features) 
         else
-            issubset(transformer.features, all_features) ||
-                throw(error("Attempting to select non-existent feature(s)."))
             features = if transformer.ignore
+                !issubset(transformer.features, all_features) && verbosity > -1 &&
+                @warn("Excluding non-existent feature(s).")
                 filter!(all_features |> collect) do ftr
                    !(ftr in transformer.features) 
                 end
             else
+                issubset(transformer.features, all_features) ||
+                throw(ArgumentError("Attempting to select non-existent feature(s)."))
                 transformer.features |> collect
             end
         end
@@ -322,7 +348,12 @@ function MLJBase.fit(transformer::FeatureSelector, verbosity::Int, X)
             filter!(all_features |> collect) do ftr
                 transformer.features(ftr)
             end
-        end      
+        end
+        isempty(features) && throw(
+            ArgumentError("No feature(s) selected.\n The specified Bool-valued"*
+              " callable with the `ignore` option set to `$(transformer.ignore)` "*
+              "resulted in an empty feature set for selection")
+         )      
     end
     
     fitresult = features
@@ -334,7 +365,7 @@ MLJBase.fitted_params(::FeatureSelector, fitresult) = (features_to_keep=fitresul
 
 function MLJBase.transform(::FeatureSelector, features, X)
     all(e -> e in Tables.schema(X).names, features) ||
-        throw(error("Supplied frame does not admit previously selected features."))
+        throw(ArgumentError("Supplied frame does not admit previously selected features."))
     return MLJBase.selectcols(X, features)
 end
 
@@ -656,12 +687,12 @@ features standardized are the `Continuous` features named in
 `features` (`ignore=true`). To allow standarization of `Count` or
 `OrderedFactor` features as well, set the appropriate flag to true.
 
-Instead of supplying a features vector, a Bool-valued callable can be
-also be specified. For example, specifying `Standardizer(features =
-name -> name in [:x1, :x3], ignore = true, count=true)` has the same
-effect as `Standardizer(features = [:x1, :x3], ignore = true,
-count=true)`, namely to standardise all `Continuous` and `Count`
-features, with the exception of `:x1` and `:x3`.
+Instead of supplying a features vector, a Bool-valued callable with one 
+argument can be also be specified. For example, specifying 
+`Standardizer(features = name -> name in [:x1, :x3], ignore = true, count=true)`  
+has the same effect as `Standardizer(features = [:x1, :x3], ignore = true,
+count=true)`, namely to standardise all `Continuous` and `Count` features, 
+with the exception of `:x1` and `:x3`.
 
 The `inverse_tranform` method is supported provided `count=false` and
 `ordered_factor=false` at time of fit.
@@ -705,6 +736,20 @@ mutable struct Standardizer <: Unsupervised
     ignore::Bool # features to be ignored
     ordered_factor::Bool
     count::Bool
+    
+    # keyword constructor
+    function Standardizer(
+        ;
+        features::Union{AbstractVector{Symbol}, Function}=Symbol[],
+        ignore::Bool=false,
+        ordered_factor::Bool=false,
+        count::Bool=false
+    )
+        transformer = new(features, ignore, ordered_factor, count)
+        message = MLJBase.clean!(transformer)
+        isempty(message) || throw(ArgumentError(message))
+        return transformer
+    end
 end
 
 function MLJBase.clean!(transformer::Standardizer)
@@ -717,20 +762,6 @@ function MLJBase.clean!(transformer::Standardizer)
         err *= "Features to be ignored must be specified in features field."
     end
     return err
-end
-
-# keyword constructor
-function Standardizer(
-    ;
-    features::Union{AbstractVector{Symbol}, Function}=Symbol[],
-    ignore::Bool=false,
-    ordered_factor::Bool=false,
-    count::Bool=false
-)
-    transformer = Standardizer(features, ignore, ordered_factor, count)
-    message = MLJBase.clean!(transformer)
-    isempty(message) || throw(ArgumentError(message))
-    return transformer
 end
 
 function MLJBase.fit(transformer::Standardizer, verbosity::Int, X)
@@ -769,7 +800,7 @@ function MLJBase.fit(transformer::Standardizer, verbosity::Int, X)
                 feature_scitypes[j] <: AllowedScitype
             end
         else
-            issubset(transformer.features, all_features) ||
+            !issubset(transformer.features, all_features) && verbosity > -1 &&
                 @warn "Some specified features not present in table to be fit. "
             cols_to_fit = filter!(eachindex(all_features) |> collect) do j
                 ifelse(
