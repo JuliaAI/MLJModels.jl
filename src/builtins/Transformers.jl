@@ -302,7 +302,7 @@ function FeatureSelector(
     features::Union{AbstractVector{Symbol}, Function}=Symbol[],
     ignore::Bool=false
 )
-    transformer = new(features, ignore)
+    transformer = FeatureSelectorfeatures, ignore)
     message = MLJBase.clean!(transformer)
     isempty(message) || throw(ArgumentError(message))
     return transformer
@@ -746,7 +746,7 @@ function Standardizer(
     ordered_factor::Bool=false,
     count::Bool=false
 )
-    transformer = new(features, ignore, ordered_factor, count)
+    transformer = Standardizer(features, ignore, ordered_factor, count)
     message = MLJBase.clean!(transformer)
     isempty(message) || throw(ArgumentError(message))
     return transformer
