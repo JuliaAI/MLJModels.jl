@@ -34,8 +34,7 @@ using MLJModels
 
     @test Foo() == RidgeRegressor()
 
-    # TODO: re-instate when Optim.jl updates its [compat] for FillArrays:
-    # https://github.com/JuliaNLSolvers/Optim.jl/pull/840
+    # TODO: re-instate when only julia ^1.2 is supported. 
 
     # # load a model with same name from different package: @test_logs
     # (:warn, r"New model type") begin load("RidgeRegressor",
