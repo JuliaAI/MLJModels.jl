@@ -41,9 +41,9 @@ end
     @test include("LIBSVM.jl")
 end
 
-@testset "NaiveBayes         " begin
-    @test include("NaiveBayes.jl")
-end
+# @testset "NaiveBayes         " begin
+#     @test include("NaiveBayes.jl")
+# end
 
 if VERSION >= v"1.3"
 @testset "XGBoost" begin
