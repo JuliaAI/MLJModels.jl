@@ -302,7 +302,7 @@ function FeatureSelector(
     features::Union{AbstractVector{Symbol}, Function}=Symbol[],
     ignore::Bool=false
 )
-    transformer = FeatureSelectorfeatures, ignore)
+    transformer = FeatureSelector(features, ignore)
     message = MLJBase.clean!(transformer)
     isempty(message) || throw(ArgumentError(message))
     return transformer
