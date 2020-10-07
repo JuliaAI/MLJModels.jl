@@ -25,6 +25,9 @@ export models, localmodels
 export ConstantRegressor, ConstantClassifier,
         DeterministicConstantRegressor, DeterministicConstantClassifier
 
+# from model/ThresholdPredictors
+export BinaryThresholdPredictor
+
 # from model/Transformers
 export FeatureSelector, StaticTransformer, UnivariateDiscretizer,
     UnivariateStandardizer, Standardizer, UnivariateBoxCoxTransformer,
@@ -48,6 +51,7 @@ import .Registry.@update
 # load built-in models:
 include("builtins/Constant.jl")
 include("builtins/Transformers.jl")
+include("builtins/ThresholdPredictors.jl")
 
 const INFO_GIVEN_HANDLE = Dict{Handle,Any}()
 const PKGS_GIVEN_NAME   = Dict{String,Vector{String}}()
