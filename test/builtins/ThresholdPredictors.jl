@@ -12,7 +12,7 @@ import MLJBase
 
     model = BinaryThresholdPredictor()
     # Check when predictions contain a single class
-    f, _, _ = MLJBase.fit(model, X, y1, X)
+    f, _, _ = MLJBase.fit(model, 1, X, y1)
     @test_logs((:warn, r"Predicted `AbstractVector{<:UnivariateFinite}`"),
         MLJBase.predict(model, f, X))
     @test MLJBase.predict(model, f, X) == MLJBase.predict_mode(model.wrapped_model, f[1], X)
