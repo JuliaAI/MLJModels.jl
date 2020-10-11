@@ -8,11 +8,10 @@
 training the underlying `wrapped_model`. 
 `BinaryThresholdPredictor` model predictions are deterministic and depend on the specified 
 probability `threshold`(which lies in [0, 1) ). The positive class is predicted if the 
-probability value exceeds the threshold.
+probability value exceeds the threshold, where the postive class is the second class 
+returned by levels(y), if y is the target.
 
 Note:
-- The positive class is taken to be the last class in `levels(y)` where y
- is the target vector.
 - The default `threshold`(0.5) predicts the modal class.
 """
 mutable struct BinaryThresholdPredictor{M <: Probabilistic} <: Deterministic
@@ -43,6 +42,12 @@ function BinaryThresholdPredictor(;wrapped_model=ConstantClassifier(), threshold
 end
 
 function MLJBase.fit(model::BinaryThresholdPredictor, verbosity::Int, args...)
+    scitype(args[2]) <: AbstractVector{Multiclass{2}} && begin
+        first_class, second_class = levels(args[2])
+        @warn "Taking positive class as `$(second_class)` and negative class as
+        `$(first_class)`.
+        Coerce target to `OrderedFactor{2}` to suppress this warning."
+    end
     model_fitresult, model_cache, model_report = MLJBase.fit(
         model.wrapped_model, verbosity-1, args...
     )
@@ -76,6 +81,8 @@ end
 function MLJBase.predict(model::BinaryThresholdPredictor, fitresult, X)
    yhat = MLJBase.predict(model.wrapped_model, fitresult[1], X)
    length(yhat.prob_given_ref) == 2 || begin
+   # Due to resampling it's possible for Predicted `AbstractVector{<:UnivariateFinite}`
+   # to contain one class. Hence the need for the following warning
    @warn "Predicted `AbstractVector{<:UnivariateFinite}`"*
        " contains only 1 class. Hence predictions will only contain this class "*
        "irrrespective of the set `threshold` "
@@ -85,6 +92,8 @@ function MLJBase.predict(model::BinaryThresholdPredictor, fitresult, X)
    return _predict_threshold(yhat, threshold)
 end
 
+# `_div` and `_predict_threshold` methods are defined to help generalize to 
+# `MulticlassThresholdPredictor` (TODO)
 _div(x,y) = ifelse( iszero(x) && x==y, Inf, x/y)
 
 function _predict_threshold(yhat::UnivariateFinite, threshold)
@@ -140,11 +149,11 @@ end
 
 MLJBase.supports_weights(::Type{<:BinaryThresholdPredictor{M}}) where M =
     MLJBase.supports_weights(M)
-
 MLJBase.load_path(::Type{<:BinaryThresholdPredictor}) =
     "MLJModels.BinaryThresholdPredictor"
 MLJBase.package_name(::Type{<:BinaryThresholdPredictor}) = "MLJModels"
 MLJBase.package_uuid(::Type{<:BinaryThresholdPredictor}) = ""
+MLJBase.is_wrapper(::Type{<:BinaryThresholdPredictor}) = true
 MLJBase.package_url(::Type{<:BinaryThresholdPredictor}) =
     "https://github.com/alan-turing-institute/MLJModels.jl"
 MLJBase.is_pure_julia(::Type{<:BinaryThresholdPredictor{M}}) where M =

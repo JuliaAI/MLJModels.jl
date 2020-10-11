@@ -4,22 +4,35 @@ using Test, MLJModels, CategoricalArrays
 import MLJBase
 
 @testset "BinaryThresholdPredictor" begin
-    X = NamedTuple{(:x1,:x2,:x3)}((rand(10), rand(10), rand(10)))
+    X = NamedTuple{(:x1,:x2,:x3)}((rand(4), rand(4), rand(4)))
     yraw = ["MLJ", "ScikitLearn", "ScikitLearn", "ScikitLearn"]
-    yraw1 = ["ScikitLearn", "ScikitLearn", "ScikitLearn", "ScikitLearn"]
-    y = categorical(yraw)
-    y1 = categorical(yraw1)
-
+    y = categorical(yraw, ordered = true) # scitype `AbstractArray{OrderedFactor{2}, 1}`
+    y1 = categorical(yraw) # scitype `AbstractArray{Multiclass{2}, 1}
+    y2 = categorical(yraw[2:end], ordered=true)
+    
     model = BinaryThresholdPredictor()
-    # Check when predictions contain a single class
-    f, _, _ = MLJBase.fit(model, 1, X, y1)
+    
+    # Check if warning shows up when target (y) is of  
+    # scitype `AbstractArray{Multiclass{2},1}`
+    @test_logs((:warn, r"Taking positive class as"),
+        MLJBase.fit(model, 1, X, y1))
+        
+    # Test for case where `AbstractVector{<:UnivariateFinite}` predictions 
+    # contains a single class
+    # Note that ideally fitting a `BinaryThresholdPredictor` model requires using a
+    # `Binary` target `y` but for testing this case a target vector of scitype 
+    # `AbstractArray{OrderedFactor{1}, 1} is used to simulate single class predctions.
+    f, _, _ = MLJBase.fit(model, 1, MLJBase.selectrows(X, 2:4), y2)
     @test_logs((:warn, r"Predicted `AbstractVector{<:UnivariateFinite}`"),
         MLJBase.predict(model, f, X))
-    @test MLJBase.predict(model, f, X) == MLJBase.predict_mode(model.wrapped_model, f[1], X)
+    @test MLJBase.predict(model, f, X) == 
+        MLJBase.predict_mode(model.wrapped_model, f[1], X)
+        
     # Check predictions containing two classes
     @test_throws ArgumentError BinaryThresholdPredictor(wrapped_model=ConstantRegressor())
     @test_logs((:warn, r"`threshold` should be"), BinaryThresholdPredictor(threshold=-1))
     @test_logs((:warn, r"`threshold` should be"), BinaryThresholdPredictor(threshold=1))
+    
     # Compare fitresult and fitted_params with that of wrapped_model 
     model_fr, model_cache, model_report = MLJBase.fit(model, 1, X, y)
     wrapped_model_fr, wrapped_model_cache, wrapped_model_report = 
@@ -46,7 +59,7 @@ import MLJBase
     model.threshold = 0.8
     model_fr, cache, report = MLJBase.fit(model, 1, X, y)
     @test MLJBase.predict(model, model_fr, X) == 
-        [y[1] for i in 1:10]
+        [y[1] for i in 1:MLJBase.nrows(X)]
 
     d = MLJBase.info_dict(model)
     @test d[:supports_weights] == MLJBase.supports_weights(model.wrapped_model)
@@ -87,6 +100,7 @@ end
     @test MLJModels._predict_threshold(d2_arr, [0.3, 0.2, 0.5]) == [v2[2] for i in 1:3]
     @test MLJModels._predict_threshold(d2_arr, (0.4, 0.4, 0.2)) == [v2[4] for i in 1:3]
     @test MLJModels._predict_threshold(d2_arr, [0.2, 0.5, 0.3]) == [v2[1] for i in 1:3]
+    
     # Test with UnivariateFiniteArray oject
     probs1 = [0.2 0.8; 0.7 0.3; 0.1 0.9]    
     unf_arr1 = MLJBase.UnivariateFinite(MLJBase.classes(v1), probs1)
