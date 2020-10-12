@@ -19,6 +19,9 @@ end
     @testset "Transformers" begin
         @test include("builtins/Transformers.jl")
     end
+    @testset "ThresholdPredictors" begin
+        @test include("builtins/ThresholdPredictors.jl")
+    end
 end
 
 @testset "MultivariateStats  " begin
