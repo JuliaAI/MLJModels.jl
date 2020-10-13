@@ -76,7 +76,11 @@ GreatNewPackage with MLJ:
 - In the dev branch of a clone of the dev branch of MLJModels, change
   to the `/src/registry/` directory and, in Julia, activate the
   environment specified by the Project.toml there, after checking the
-  [compat] conditions there are up to date. **Do not use** `Revise`.
+  [compat] conditions there are up to date. **Do not use**
+  `Revise`. If supporting Julia versions earlier than 1.3, you will
+  need to run a version of Julia earlier or equal to 1.3 to avoid
+  `@var_str` problems in the metadata (Julia 1.0 can't read things
+  like `var"_s24"`).
   
 - Add `GreatNewPackage` to the environment.
 

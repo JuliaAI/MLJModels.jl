@@ -44,7 +44,7 @@ _mode(e)         = skipmissing(e) |> mode
     finite_fill::Function     = _mode
 end
 
-function MLJBase.fit(transformer::UnivariateFillImputer,
+function MMI.fit(transformer::UnivariateFillImputer,
                       verbosity::Integer,
                       v)
 
@@ -88,7 +88,7 @@ function replace_missing(::Type, vnew, filler)
    return w_tight
 end
 
-function MLJBase.transform(transformer::UnivariateFillImputer,
+function MMI.transform(transformer::UnivariateFillImputer,
                            fitresult,
                            vnew)
 
@@ -107,7 +107,7 @@ function MLJBase.transform(transformer::UnivariateFillImputer,
     return w_tight
 end
 
-MLJBase.fitted_params(::UnivariateFillImputer, fitresult) = fitresult
+MMI.fitted_params(::UnivariateFillImputer, fitresult) = fitresult
 
 
 """
@@ -138,9 +138,9 @@ $FILL_IMPUTER_DESCR
     finite_fill::Function     = _mode
 end
 
-function MLJBase.fit(transformer::FillImputer, verbosity::Int, X)
+function MMI.fit(transformer::FillImputer, verbosity::Int, X)
 
-    s = MLJBase.schema(X)
+    s = schema(X)
     features_seen = s.names |> collect # "seen" = "seen in fit"
     scitypes_seen = s.scitypes |> collect
 
@@ -179,7 +179,7 @@ function MLJBase.fit(transformer::FillImputer, verbosity::Int, X)
         UnivariateFillImputer(continuous_fill=transformer.continuous_fill,
                               count_fill=transformer.count_fill,
                               finite_fill=transformer.finite_fill)
-    univariate_fitresult(ftr) = MLJBase.fit(univariate_transformer,
+    univariate_fitresult(ftr) = MMI.fit(univariate_transformer,
                                             verbosity - 1,
                                             selectcols(X, ftr))[1]
 
@@ -195,7 +195,7 @@ function MLJBase.fit(transformer::FillImputer, verbosity::Int, X)
     return fitresult, cache, report
 end
 
-function MLJBase.transform(transformer::FillImputer, fitresult, X)
+function MMI.transform(transformer::FillImputer, fitresult, X)
 
     features_seen = fitresult.features_seen # seen in fit
     univariate_transformer = fitresult.univariate_transformer
@@ -213,7 +213,7 @@ function MLJBase.transform(transformer::FillImputer, fitresult, X)
     features = keys(fitresult_given_feature)
 
     cols = map(all_features) do ftr
-        col = MLJBase.selectcols(X, ftr)
+        col = MMI.selectcols(X, ftr)
         if ftr in features
             fr = fitresult_given_feature[ftr]
             return transform(univariate_transformer, fr, col)
@@ -222,11 +222,11 @@ function MLJBase.transform(transformer::FillImputer, fitresult, X)
     end
 
     named_cols = NamedTuple{all_features}(tuple(cols...))
-    return MLJBase.table(named_cols, prototype=X)
+    return MMI.table(named_cols, prototype=X)
 
 end
 
-function MLJBase.fitted_params(::FillImputer, fr)
+function MMI.fitted_params(::FillImputer, fr)
     dict = fr.fitresult_given_feature
     filler_given_feature = Dict(ftr=>dict[ftr].filler for ftr in keys(dict))
     return (features_seen_in_fit=fr.features_seen,
@@ -261,13 +261,11 @@ name -> name in [:x1, :x3], ignore = true)` has the same effect as
 # Example
 
 ```
-julia> using MLJModels, CategoricalArrays, MLJBase
-
 julia> X = (ordinal1 = [1, 2, 3],
-            ordinal2 = categorical([:x, :y, :x], ordered=true),
+            ordinal2 = coerce([:x, :y, :x], OrderedFactor),
             ordinal3 = [10.0, 20.0, 30.0],
             ordinal4 = [-20.0, -30.0, -40.0],
-            nominal = categorical(["Your father", "he", "is"]));
+            nominal = coerce(["Your father", "he", "is"], Multiclass));
 
 julia> select1 = FeatureSelector();
 
@@ -303,12 +301,12 @@ function FeatureSelector(
     ignore::Bool=false
 )
     transformer = FeatureSelector(features, ignore)
-    message = MLJBase.clean!(transformer)
+    message = MMI.clean!(transformer)
     isempty(message) || throw(ArgumentError(message))
     return transformer
 end
 
-function MLJBase.clean!(transformer::FeatureSelector)
+function MMI.clean!(transformer::FeatureSelector)
     err = ""
     if (
         typeof(transformer.features) <: AbstractVector{Symbol} &&
@@ -320,7 +318,7 @@ function MLJBase.clean!(transformer::FeatureSelector)
     return err
 end
 
-function MLJBase.fit(transformer::FeatureSelector, verbosity::Int, X)
+function MMI.fit(transformer::FeatureSelector, verbosity::Int, X)
     all_features = Tables.schema(X).names
     
     if transformer.features isa AbstractVector{Symbol}
@@ -361,12 +359,12 @@ function MLJBase.fit(transformer::FeatureSelector, verbosity::Int, X)
     return fitresult, nothing, report
 end
 
-MLJBase.fitted_params(::FeatureSelector, fitresult) = (features_to_keep=fitresult,)
+MMI.fitted_params(::FeatureSelector, fitresult) = (features_to_keep=fitresult,)
 
-function MLJBase.transform(::FeatureSelector, features, X)
+function MMI.transform(::FeatureSelector, features, X)
     all(e -> e in Tables.schema(X).names, features) ||
         throw(ArgumentError("Supplied frame does not admit previously selected features."))
-    return MLJBase.selectcols(X, features)
+    return MMI.selectcols(X, features)
 end
 
 ##
@@ -413,7 +411,7 @@ struct UnivariateDiscretizerResult{C}
     element::C
 end
 
-function MLJBase.fit(transformer::UnivariateDiscretizer, verbosity::Int, X)
+function MMI.fit(transformer::UnivariateDiscretizer, verbosity::Int, X)
     n_classes = transformer.n_classes
     quantiles = quantile(X, Array(range(0, stop=1, length=2*n_classes+1)))
     clipped_quantiles = quantiles[2:2*n_classes] # drop 0% and 100% quantiles
@@ -449,17 +447,17 @@ function transform_to_int(
 end
 
 # transforming scalars:
-MLJBase.transform(::UnivariateDiscretizer, result, r::Real) =
+MMI.transform(::UnivariateDiscretizer, result, r::Real) =
     transform(result.element, transform_to_int(result, r))
 
 # transforming vectors:
-function MLJBase.transform(::UnivariateDiscretizer, result, v)
+function MMI.transform(::UnivariateDiscretizer, result, v)
    w = [transform_to_int(result, r) for r in v]
    return transform(result.element, w)
 end
 
 # inverse_transforming raw scalars:
-function MLJBase.inverse_transform(
+function MMI.inverse_transform(
     transformer::UnivariateDiscretizer, result , k::Integer)
     k <= transformer.n_classes && k > 0 ||
         error("Cannot transform an integer outside the range "*
@@ -468,21 +466,21 @@ function MLJBase.inverse_transform(
 end
 
 # inverse transforming a categorical value:
-function MLJBase.inverse_transform(
+function MMI.inverse_transform(
     transformer::UnivariateDiscretizer, result, e::CategoricalValue)
     k = get(e)
     return inverse_transform(transformer, result, k)
 end
 
 # inverse transforming raw vectors:
-MLJBase.inverse_transform(transformer::UnivariateDiscretizer, result,
+MMI.inverse_transform(transformer::UnivariateDiscretizer, result,
                           w::AbstractVector{<:Integer}) =
       [inverse_transform(transformer, result, k) for k in w]
 
 # inverse transforming vectors of categorical elements:
-function MLJBase.inverse_transform(transformer::UnivariateDiscretizer, result,
+function MMI.inverse_transform(transformer::UnivariateDiscretizer, result,
                           wcat::AbstractVector{<:CategoricalValue})
-    w = MLJBase.int(wcat)
+    w = MMI.int(wcat)
     return [inverse_transform(transformer, result, k) for k in w]
 end
 
@@ -496,7 +494,7 @@ Unsupervised model for standardizing (whitening) univariate data.
 """
 mutable struct UnivariateStandardizer <: Unsupervised end
 
-function MLJBase.fit(transformer::UnivariateStandardizer, verbosity::Int,
+function MMI.fit(transformer::UnivariateStandardizer, verbosity::Int,
              v::AbstractVector{T}) where T<:Real
     std(v) > eps(Float64) ||
         @warn "Extremely small standard deviation encountered in standardization."
@@ -507,28 +505,28 @@ function MLJBase.fit(transformer::UnivariateStandardizer, verbosity::Int,
 end
 
 
-MLJBase.fitted_params(::UnivariateStandardizer, fitresult) =
+MMI.fitted_params(::UnivariateStandardizer, fitresult) =
     (mean_and_std = fitresult, )
 
 
 # for transforming single value:
-function MLJBase.transform(transformer::UnivariateStandardizer, fitresult, x::Real)
+function MMI.transform(transformer::UnivariateStandardizer, fitresult, x::Real)
     mu, sigma = fitresult
     return (x - mu)/sigma
 end
 
 # for transforming vector:
-MLJBase.transform(transformer::UnivariateStandardizer, fitresult, v) =
+MMI.transform(transformer::UnivariateStandardizer, fitresult, v) =
               [transform(transformer, fitresult, x) for x in v]
 
 # for single values:
-function MLJBase.inverse_transform(transformer::UnivariateStandardizer, fitresult, y::Real)
+function MMI.inverse_transform(transformer::UnivariateStandardizer, fitresult, y::Real)
     mu, sigma = fitresult
     return mu + y*sigma
 end
 
 # for vectors:
-MLJBase.inverse_transform(transformer::UnivariateStandardizer, fitresult, w) =
+MMI.inverse_transform(transformer::UnivariateStandardizer, fitresult, w) =
     [inverse_transform(transformer, fitresult, y) for y in w]
 
 
@@ -553,12 +551,12 @@ end
 function UnivariateTimeTypeToContinuous(;
     zero_time=nothing, step=Dates.Hour(24))
     model = UnivariateTimeTypeToContinuous(zero_time, step)
-    message = MLJBase.clean!(model)
+    message = MMI.clean!(model)
     isempty(message) || @warn message
     return model
 end
 
-function MLJBase.clean!(model::UnivariateTimeTypeToContinuous)
+function MMI.clean!(model::UnivariateTimeTypeToContinuous)
     # Step must be able to be added to zero_time if provided.
     msg = ""
     if model.zero_time !== nothing
@@ -609,7 +607,7 @@ function _fix_zero_time_step(zero_time, step)
     end
 end
 
-function MLJBase.fit(model::UnivariateTimeTypeToContinuous, verbosity::Int, X)
+function MMI.fit(model::UnivariateTimeTypeToContinuous, verbosity::Int, X)
     if model.zero_time !== nothing
         min_dt = model.zero_time
         step = model.step
@@ -650,7 +648,7 @@ function MLJBase.fit(model::UnivariateTimeTypeToContinuous, verbosity::Int, X)
     return fitresult, cache, report
 end
 
-function MLJBase.transform(model::UnivariateTimeTypeToContinuous, fitresult, X)
+function MMI.transform(model::UnivariateTimeTypeToContinuous, fitresult, X)
     min_dt, step = fitresult
     if typeof(min_dt) ≠ eltype(X)
         # Cannot run if eltype in transform differs from zero_time from fit.
@@ -700,16 +698,12 @@ The `inverse_tranform` method is supported provided `count=false` and
 # Example
 
 ```
-julia> using MLJModels, CategoricalArrays, MLJBase
-
-julia> X = (ordinal1 = [1, 2, 3],
-            ordinal2 = categorical([:x, :y, :x], ordered=true),
-            ordinal3 = [10.0, 20.0, 30.0],
-            ordinal4 = [-20.0, -30.0, -40.0],
-            nominal = categorical(["Your father", "he", "is"]));
-
-julia> stand1 = Standardizer();
-
+X = (ordinal1 = [1, 2, 3],
+     ordinal2 = coerce([:x, :y, :x], OrderedFactor),
+     ordinal3 = [10.0, 20.0, 30.0],
+     ordinal4 = [-20.0, -30.0, -40.0],
+     nominal = coerce(["Your father", "he", "is"], Multiclass));
+stand1 = Standardizer();
 julia> transform(fit!(machine(stand1, X)), X)
 [ Info: Training Machine{Standardizer} @ 7…97.
 (ordinal1 = [1, 2, 3],
@@ -718,8 +712,7 @@ julia> transform(fit!(machine(stand1, X)), X)
  ordinal4 = [1.0, 0.0, -1.0],
  nominal = CategoricalVale{String,UInt32}["Your father", "he", "is"],)
 
-julia> stand2 = Standardizer(features=[:ordinal3, ], ignore=true, count=true);
-
+stand2 = Standardizer(features=[:ordinal3, ], ignore=true, count=true);
 julia> transform(fit!(machine(stand2, X)), X)
 [ Info: Training Machine{Standardizer} @ 1…87.
 (ordinal1 = [-1.0, 0.0, 1.0],
@@ -747,12 +740,12 @@ function Standardizer(
     count::Bool=false
 )
     transformer = Standardizer(features, ignore, ordered_factor, count)
-    message = MLJBase.clean!(transformer)
+    message = MMI.clean!(transformer)
     isempty(message) || throw(ArgumentError(message))
     return transformer
 end
 
-function MLJBase.clean!(transformer::Standardizer)
+function MMI.clean!(transformer::Standardizer)
     err = ""
     if (
         typeof(transformer.features) <: AbstractVector{Symbol} &&
@@ -764,7 +757,7 @@ function MLJBase.clean!(transformer::Standardizer)
     return err
 end
 
-function MLJBase.fit(transformer::Standardizer, verbosity::Int, X)
+function MMI.fit(transformer::Standardizer, verbosity::Int, X)
 
     # if not a table, it must be an abstract vector, eltpye AbstractFloat:
     is_univariate = !Tables.istable(X)
@@ -778,7 +771,7 @@ function MLJBase.fit(transformer::Standardizer, verbosity::Int, X)
     # special univariate case:
     if is_univariate
         fitresult_given_feature[:unnamed] =
-            MLJBase.fit(UnivariateStandardizer(), verbosity - 1, X)[1]
+            MMI.fit(UnivariateStandardizer(), verbosity - 1, X)[1]
         return (is_univariate=true,
                 is_invertible=true,
                 fitresult_given_feature=fitresult_given_feature),
@@ -837,7 +830,7 @@ function MLJBase.fit(transformer::Standardizer, verbosity::Int, X)
             selectcols(X, j)
         end
         col_fitresult, cache, report =
-            MLJBase.fit(UnivariateStandardizer(), verbosity - 1, col_data)
+            MMI.fit(UnivariateStandardizer(), verbosity - 1, col_data)
         fitresult_given_feature[all_features[j]] = col_fitresult
         verbosity < 2 ||
             @info "  :$(all_features[j])    mu=$(col_fitresult[1])  sigma=$(col_fitresult[2])"
@@ -851,17 +844,17 @@ function MLJBase.fit(transformer::Standardizer, verbosity::Int, X)
     return fitresult, cache, report
 end
 
-function MLJBase.fitted_params(::Standardizer, fitresult)
+function MMI.fitted_params(::Standardizer, fitresult)
     is_univariate, _, dic = fitresult
     is_univariate &&
         return fitted_params(UnivariateStandardizer(), dic[:unnamed])
     return (mean_and_std_given_feature=dic)
 end
 
-MLJBase.transform(::Standardizer, fitresult, X) =
+MMI.transform(::Standardizer, fitresult, X) =
     _standardize(transform, fitresult, X)
 
-function MLJBase.inverse_transform(::Standardizer, fitresult, X)
+function MMI.inverse_transform(::Standardizer, fitresult, X)
     fitresult.is_invertible ||
         error("Inverse standardization is not supported when `count=true` "*
               "or `ordered_factor=true` during fit. ")
@@ -901,7 +894,7 @@ function _standardize(operation, fitresult, X)
 
     named_cols = NamedTuple{all_features}(tuple(cols...))
 
-    return MLJBase.table(named_cols, prototype=X)
+    return MMI.table(named_cols, prototype=X)
 end
 
 
@@ -970,7 +963,7 @@ values, then no shift is applied.
     shift::Bool = false # whether to shift data away from zero
 end
 
-function MLJBase.fit(transformer::UnivariateBoxCoxTransformer, verbosity::Int,
+function MMI.fit(transformer::UnivariateBoxCoxTransformer, verbosity::Int,
              v::AbstractVector{T}) where T <: Real
 
     m = minimum(v)
@@ -993,15 +986,15 @@ function MLJBase.fit(transformer::UnivariateBoxCoxTransformer, verbosity::Int,
     return  (lambda, c), nothing, NamedTuple()
 end
 
-MLJBase.fitted_params(::UnivariateBoxCoxTransformer, fitresult) =
+MMI.fitted_params(::UnivariateBoxCoxTransformer, fitresult) =
     (λ=fitresult[1], c=fitresult[2])
 
 # for X scalar or vector:
-MLJBase.transform(transformer::UnivariateBoxCoxTransformer, fitresult, X) =
+MMI.transform(transformer::UnivariateBoxCoxTransformer, fitresult, X) =
     boxcox(fitresult..., X)
 
 # scalar case:
-function MLJBase.inverse_transform(transformer::UnivariateBoxCoxTransformer,
+function MMI.inverse_transform(transformer::UnivariateBoxCoxTransformer,
                            fitresult, x::Real)
     lambda, c = fitresult
     if lambda == 0
@@ -1012,7 +1005,7 @@ function MLJBase.inverse_transform(transformer::UnivariateBoxCoxTransformer,
 end
 
 # vector case:
-function MLJBase.inverse_transform(transformer::UnivariateBoxCoxTransformer,
+function MMI.inverse_transform(transformer::UnivariateBoxCoxTransformer,
                            fitresult, w::AbstractVector{T}) where T <: Real
     return [inverse_transform(transformer, fitresult, y) for y in w]
 end
@@ -1096,7 +1089,7 @@ end
 # corresponing feature labels generated (called
 # "names"). `all_features` is stored to ensure no new features appear
 # in new input data, causing potential name clashes.
-struct OneHotEncoderResult <: MLJBase.MLJType
+struct OneHotEncoderResult <: MMI.MLJType
     all_features::Vector{Symbol} # all feature labels
     ref_name_pairs_given_feature::Dict{Symbol,Vector{Pair{<:Unsigned,Symbol}}}
 end
@@ -1112,7 +1105,7 @@ function compound_label(all_features, feature, level)
     return label
 end
 
-function MLJBase.fit(transformer::OneHotEncoder, verbosity::Int, X)
+function MMI.fit(transformer::OneHotEncoder, verbosity::Int, X)
 
     all_features = Tables.schema(X).names # a tuple not vector
 
@@ -1136,18 +1129,18 @@ function MLJBase.fit(transformer::OneHotEncoder, verbosity::Int, X)
     # apply on each feature
     for j in eachindex(all_features)
         ftr = all_features[j]
-        col = MLJBase.selectcols(X,j)
+        col = MMI.selectcols(X,j)
         T = col_scitypes[j]
         if T <: allowed_scitypes && ftr in specified_features
             ref_name_pairs_given_feature[ftr] = Pair{<:Unsigned,Symbol}[]
             shift = transformer.drop_last ? 1 : 0
-            levels = MLJBase.classes(first(col))
+            levels = MMI.classes(first(col))
             if verbosity > 0
                 @info "Spawning $(length(levels)-shift) sub-features "*
                 "to one-hot encode feature :$ftr."
             end
             for level in levels[1:end-shift]
-                ref = MLJBase.int(level)
+                ref = MMI.int(level)
                 name = compound_label(all_features, ftr, level)
                 push!(ref_name_pairs_given_feature[ftr], ref => name)
             end
@@ -1177,13 +1170,13 @@ function MLJBase.fit(transformer::OneHotEncoder, verbosity::Int, X)
     return fitresult, cache, report
 end
 
-# If v=categorical('a', 'a', 'b', 'a', 'c') and MLJBase.int(v[1]) = ref
+# If v=categorical('a', 'a', 'b', 'a', 'c') and MMI.int(v[1]) = ref
 # then `_hot(v, ref) = [true, true, false, true, false]`
 _hot(v::AbstractVector{<:CategoricalValue}, ref) = map(v) do c
-    MLJBase.int(c) == ref
+    MMI.int(c) == ref
 end
 
-function MLJBase.transform(transformer::OneHotEncoder, fitresult, X)
+function MMI.transform(transformer::OneHotEncoder, fitresult, X)
     features = Tables.schema(X).names     # tuple not vector
 
     d = fitresult.ref_name_pairs_given_feature
@@ -1196,7 +1189,7 @@ function MLJBase.transform(transformer::OneHotEncoder, fitresult, X)
     new_cols = [] # not Vector[] !!
     features_to_be_transformed = keys(d)
     for ftr in features
-        col = MLJBase.selectcols(X, ftr)
+        col = MMI.selectcols(X, ftr)
         if ftr in features_to_be_transformed
             append!(new_features, last.(d[ftr]))
             pairs = d[ftr]
@@ -1212,7 +1205,7 @@ function MLJBase.transform(transformer::OneHotEncoder, fitresult, X)
         end
     end
     named_cols = NamedTuple{tuple(new_features...)}(tuple(new_cols)...)
-    return MLJBase.table(named_cols, prototype=X)
+    return MMI.table(named_cols, prototype=X)
 end
 
 
@@ -1290,7 +1283,7 @@ _.nrows = 4
     one_hot_ordered_factors::Bool  = false
 end
 
-function MLJBase.fit(transformer::ContinuousEncoder, verbosity::Int, X)
+function MMI.fit(transformer::ContinuousEncoder, verbosity::Int, X)
 
     # what features can be converted and therefore kept?
     s = schema(X)
@@ -1314,7 +1307,7 @@ function MLJBase.fit(transformer::ContinuousEncoder, verbosity::Int, X)
     hot_encoder =
         OneHotEncoder(ordered_factor=transformer.one_hot_ordered_factors,
                       drop_last=transformer.drop_last)
-    hot_fitresult, _, hot_report = MLJBase.fit(hot_encoder, verbosity - 1, X)
+    hot_fitresult, _, hot_report = MMI.fit(hot_encoder, verbosity - 1, X)
 
     new_features = setdiff(hot_report.new_features, features_to_be_dropped)
 
@@ -1332,15 +1325,15 @@ function MLJBase.fit(transformer::ContinuousEncoder, verbosity::Int, X)
 
 end
 
-MLJBase.fitted_params(::ContinuousEncoder, fitresult) = fitresult
+MMI.fitted_params(::ContinuousEncoder, fitresult) = fitresult
 
-function MLJBase.transform(transformer::ContinuousEncoder, fitresult, X)
+function MMI.transform(transformer::ContinuousEncoder, fitresult, X)
 
     features_to_keep, hot_encoder, hot_fitresult = values(fitresult)
 
     # dump unseen or untransformable features:
     selector = FeatureSelector(features=features_to_keep)
-    selector_fitresult, _, _ = MLJBase.fit(selector, 0, X)
+    selector_fitresult, _, _ = MMI.fit(selector, 0, X)
     X0 = transform(selector, selector_fitresult, X)
 
     # one-hot encode:
@@ -1435,7 +1428,7 @@ metadata_model(ContinuousEncoder,
     path    = "MLJModels.ContinuousEncoder")
 
 metadata_model(UnivariateTimeTypeToContinuous,
-    input   = AbstractVector{<:ScientificTypes.ScientificTimeType},
+    input   = AbstractVector{<:ScientificTimeType},
     output  = AbstractVector{Continuous},
     weights = false,
     descr   = UNIVARIATE_TIME_TYPE_TO_CONTINUOUS,
