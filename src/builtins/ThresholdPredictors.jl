@@ -3,13 +3,17 @@
 ##
 """
     BinaryThresholdPredictor(wrapped_model=ConstantClassifier(), threshold=0.5)
-    Wraps a `Probabilistic` model(`wrapped_model`) supporting binary classification in a 
-`BinaryThresholdPredictor` model. Training the `BinaryThresholdPredictor` model results in 
-training the underlying `wrapped_model`. 
-`BinaryThresholdPredictor` model predictions are deterministic and depend on the specified 
-probability `threshold`(which lies in [0, 1) ). The positive class is predicted if the 
-probability value exceeds the threshold, where the postive class is the second class 
-returned by levels(y), if y is the target.
+
+Wraps a `Probabilistic` model(`wrapped_model`) supporting binary
+classification in a `BinaryThresholdPredictor` model. Training the
+`BinaryThresholdPredictor` model results in training the underlying
+`wrapped_model`.
+
+`BinaryThresholdPredictor` model predictions are deterministic and
+depend on the specified probability `threshold`(which lies in [0, 1)
+). The positive class is predicted if the probability value exceeds
+the threshold, where by convention the positive class is the second
+class returned by `levels(y)`, where `y` is the target.
 
 Note:
 - The default `threshold`(0.5) predicts the modal class.
@@ -20,7 +24,7 @@ mutable struct BinaryThresholdPredictor{M <: Probabilistic} <: Deterministic
 end
 
 function clean!(model::BinaryThresholdPredictor)
-    if !(AbstractVector{Multiclass{2}} <: target_scitype(model.wrapped_model) || 
+    if !(AbstractVector{Multiclass{2}} <: target_scitype(model.wrapped_model) ||
         AbstractVector{OrderedFactor{2}} <: target_scitype(model.wrapped_model))
         throw(ArgumentError("`model` has unsupported target_scitype "*
               "`$(target_scitype(model.wrapped_model))`. "))
@@ -41,14 +45,14 @@ function BinaryThresholdPredictor(;wrapped_model=ConstantClassifier(), threshold
     return model
 end
 
-function MLJBase.fit(model::BinaryThresholdPredictor, verbosity::Int, args...)
+function MMI.fit(model::BinaryThresholdPredictor, verbosity::Int, args...)
     scitype(args[2]) <: AbstractVector{Multiclass{2}} && begin
         first_class, second_class = levels(args[2])
         @warn "Taking positive class as `$(second_class)` and negative class as
         `$(first_class)`.
         Coerce target to `OrderedFactor{2}` to suppress this warning."
     end
-    model_fitresult, model_cache, model_report = MLJBase.fit(
+    model_fitresult, model_cache, model_report = MMI.fit(
         model.wrapped_model, verbosity-1, args...
     )
     cache = (wrapped_model_cache = model_cache,)
@@ -57,10 +61,10 @@ function MLJBase.fit(model::BinaryThresholdPredictor, verbosity::Int, args...)
     return fitresult, cache, report
 end
 
-function MLJBase.update(
+function MMI.update(
     model::BinaryThresholdPredictor, verbosity::Int, old_fitresult, old_cache, args...
 )
-    model_fitresult, model_cache, model_report = MLJBase.update(
+    model_fitresult, model_cache, model_report = MMI.update(
         model.wrapped_model, verbosity-1, old_fitresult[1], old_cache[1], args...
     )
     cache = (wrapped_model_cache = model_cache,)
@@ -69,17 +73,17 @@ function MLJBase.update(
     return fitresult, cache, report
 end
 
-function MLJBase.fitted_params(model::BinaryThresholdPredictor, fitresult)
+function MMI.fitted_params(model::BinaryThresholdPredictor, fitresult)
     return (
         threshold= fitresult[2],
-        wrapped_model_fitted_params = MLJBase.fitted_params(
+        wrapped_model_fitted_params = MMI.fitted_params(
             model.wrapped_model, fitresult[1]
         )
     )
 end
 
-function MLJBase.predict(model::BinaryThresholdPredictor, fitresult, X)
-   yhat = MLJBase.predict(model.wrapped_model, fitresult[1], X)
+function MMI.predict(model::BinaryThresholdPredictor, fitresult, X)
+   yhat = MMI.predict(model.wrapped_model, fitresult[1], X)
    length(yhat.prob_given_ref) == 2 || begin
    # Due to resampling it's possible for Predicted `AbstractVector{<:UnivariateFinite}`
    # to contain one class. Hence the need for the following warning
@@ -92,7 +96,7 @@ function MLJBase.predict(model::BinaryThresholdPredictor, fitresult, X)
    return _predict_threshold(yhat, threshold)
 end
 
-# `_div` and `_predict_threshold` methods are defined to help generalize to 
+# `_div` and `_predict_threshold` methods are defined to help generalize to
 # `MulticlassThresholdPredictor` (TODO)
 _div(x,y) = ifelse( iszero(x) && x==y, Inf, x/y)
 
@@ -105,7 +109,7 @@ function _predict_threshold(yhat::UnivariateFinite, threshold)
         )
     )
     max_prob, max_class = findmax([_div(dict[ref], threshold[ref]) for ref in keys(dict)])
-    return yhat.decoder(max_class)    
+    return yhat.decoder(max_class)
 end
 
 function _predict_threshold(yhat::AbstractArray{<:UnivariateFinite}, threshold)
@@ -125,11 +129,11 @@ function _predict_threshold(yhat::UnivariateFiniteArray{S,V,R,P,N}, threshold) w
     ord = isordered(d)
     # Array to house the predicted classes
     ret = CategoricalArray{V, N, R}(undef, size(yhat), levels=levs, ordered=ord)
-    #ret = Array{CategoricalValue{V, R}, N}(undef, size(yhat)) 
+    #ret = Array{CategoricalValue{V, R}, N}(undef, size(yhat))
     # `temp` vector allocted once to be used for calculations in each loop
     temp = Vector{Float64}(undef, length(dict))
     # allocate vectors of keys to enable use of @simd in innermost loop
-    #kv = keys(dict) |> collect 
+    #kv = keys(dict) |> collect
     for i in eachindex(ret)
         #@simd for ind in eachindex(kv)
          @simd for ref in eachindex(temp)
@@ -147,19 +151,18 @@ end
 
 # Note: input traits are inherited from the wrapped model
 
-MLJBase.supports_weights(::Type{<:BinaryThresholdPredictor{M}}) where M =
-    MLJBase.supports_weights(M)
-MLJBase.load_path(::Type{<:BinaryThresholdPredictor}) =
+MMI.supports_weights(::Type{<:BinaryThresholdPredictor{M}}) where M =
+    MMI.supports_weights(M)
+MMI.load_path(::Type{<:BinaryThresholdPredictor}) =
     "MLJModels.BinaryThresholdPredictor"
-MLJBase.package_name(::Type{<:BinaryThresholdPredictor}) = "MLJModels"
-MLJBase.package_uuid(::Type{<:BinaryThresholdPredictor}) = ""
-MLJBase.is_wrapper(::Type{<:BinaryThresholdPredictor}) = true
-MLJBase.package_url(::Type{<:BinaryThresholdPredictor}) =
+MMI.package_name(::Type{<:BinaryThresholdPredictor}) = "MLJModels"
+MMI.package_uuid(::Type{<:BinaryThresholdPredictor}) = ""
+MMI.is_wrapper(::Type{<:BinaryThresholdPredictor}) = true
+MMI.package_url(::Type{<:BinaryThresholdPredictor}) =
     "https://github.com/alan-turing-institute/MLJModels.jl"
-MLJBase.is_pure_julia(::Type{<:BinaryThresholdPredictor{M}}) where M =
-    MLJBase.is_pure_julia(M)
-MLJBase.input_scitype(::Type{<:BinaryThresholdPredictor{M}}) where M =
-    MLJBase.input_scitype(M)
-MLJBase.target_scitype(::Type{<:BinaryThresholdPredictor}) =
+MMI.is_pure_julia(::Type{<:BinaryThresholdPredictor{M}}) where M =
+    MMI.is_pure_julia(M)
+MMI.input_scitype(::Type{<:BinaryThresholdPredictor{M}}) where M =
+    MMI.input_scitype(M)
+MMI.target_scitype(::Type{<:BinaryThresholdPredictor}) =
     AbstractVector{<:Binary}
-

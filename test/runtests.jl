@@ -24,10 +24,6 @@ end
     end
 end
 
-@testset "MultivariateStats  " begin
-    @test include("MultivariateStats.jl")
-end
-
 @testset "DecisionTree       " begin
     @test include("DecisionTree.jl")
 end
@@ -43,10 +39,6 @@ end
 @testset "LIBSVM             " begin
     @test include("LIBSVM.jl")
 end
-
-#@testset "NaiveBayes         " begin
-#    @test include("NaiveBayes.jl")
-#end
 
 if VERSION >= v"1.3"
 @testset "XGBoost" begin
