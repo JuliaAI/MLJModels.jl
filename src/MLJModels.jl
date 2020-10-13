@@ -1,12 +1,13 @@
-module MLJModels 
+module MLJModels
 
 import MLJModelInterface
 import MLJModelInterface: MODEL_TRAITS
 
-using ScientificTypes
+using MLJScientificTypes
+const ScientificTypes = MLJScientificTypes.ScientificTypes
+
 using MLJBase
-import MLJBase: @load
-import MLJBase: Table, Continuous, Count, Finite, OrderedFactor, Multiclass
+import MLJBase.@load
 
 using Requires, Pkg, Pkg.TOML, OrderedCollections, Parameters
 using Tables, CategoricalArrays, StatsBase, Statistics, Dates
@@ -35,9 +36,10 @@ export FeatureSelector, StaticTransformer, UnivariateDiscretizer,
     UnivariateTimeTypeToContinuous
 
 const srcdir = dirname(@__FILE__) # the directory containing this file
+const MMI = MLJModelInterface
 
 if VERSION < v"1.3"
-    nonmissingtype = ScientificTypes.nonmissing
+    nonmissingtype = MLJScientificTypes.ScientificTypes.nonmissing
 end
 nonmissing = nonmissingtype
 

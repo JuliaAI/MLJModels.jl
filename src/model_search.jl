@@ -54,7 +54,7 @@ function info_as_named_tuple(i)
     return NamedTuple{PROPERTY_NAMES}(property_values)
 end
 
-MLJBase.info(handle::Handle) =
+MLJScientificTypes.info(handle::Handle) =
     info_as_named_tuple(INFO_GIVEN_HANDLE[handle])
 
 """
@@ -65,7 +65,7 @@ Returns the metadata for the registered model type with specified
 duplicate names.
 
 """
-function MLJBase.info(name::String; pkg=nothing)
+function MLJScientificTypes.info(name::String; pkg=nothing)
     name in NAMES ||
         throw(ArgumentError("There is no model named \"$name\" in "*
                             "the registry. \n Run `models()` to view all "*
@@ -99,9 +99,9 @@ Return the traits associated with the specified `model`. Equivalent to
 `pkg::String` the name of the package containing it.
 
 """
-MLJBase.info(M::Type{<:MLJBase.Model}) =
+MLJScientificTypes.info(M::Type{<:MMI.Model}) =
     info_as_named_tuple(MLJBase.info_dict(M))
-MLJBase.info(model::MLJBase.Model) = info(typeof(model))
+MLJScientificTypes.info(model::MMI.Model) = info(typeof(model))
 
 """
     models()
@@ -158,26 +158,6 @@ function MLJBase.models(needle::Union{AbstractString,Regex})
     return MLJBase.models(f)
 end
 
-# function models(task::MLJBase.SupervisedTask)
-#     ret = Dict{String, Any}()
-#     function condition(t)
-#         return t.is_supervised &&
-#             task.target_scitype <: t.target_scitype &&
-#             task.input_scitype <: t.input_scitype &&
-#             task.is_probabilistic == t.is_probabilistic
-#     end
-#     return models(condition)
-# end
-
-# function models(task::UnsupervisedTask)
-#     ret = Dict{String, Any}()
-#     function condition(handle)
-#         t = info(handle)
-#         return task.input_scitype <: t.input_scitype
-#     end
-#     return models(condition)
-# end
-
 """
     localmodels(; modl=Main)
     localmodels(conditions...; modl=Main)
@@ -194,7 +174,7 @@ See also [`models`](@ref)
 function localmodels(args...; modl=Main)
     modeltypes = localmodeltypes(modl)
     names = map(modeltypes) do M
-        MLJBase.name(M)
+        MMI.name(M)
     end
     return filter(models(args...)) do handle
         handle.name in names
