@@ -1,8 +1,8 @@
 
 [NearestNeighbors.KNNClassifier]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{var\"_s99\",1} where var\"_s99\"<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s100,1} where _s100<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "NearestNeighbors"
 ":package_license" = "MIT"
@@ -16,13 +16,13 @@
 ":name" = "KNNClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:K, :algorithm, :metric, :leafsize, :reorder, :weights)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Symbol\", \"Distances.Metric\", \"Int64\", \"Bool\", \"Symbol\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [NearestNeighbors.KNNRegressor]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":is_pure_julia" = "`true`"
@@ -38,13 +38,13 @@
 ":name" = "KNNRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:K, :algorithm, :metric, :leafsize, :reorder, :weights)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Symbol\", \"Distances.Metric\", \"Int64\", \"Bool\", \"Symbol\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [MLJLinearModels.QuantileRegressor]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":is_pure_julia" = "`true`"
@@ -60,15 +60,15 @@
 ":name" = "QuantileRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:delta, :lambda, :gamma, :penalty, :fit_intercept, :penalize_intercept, :solver)`"
 ":hyperparameter_types" = "`(\"Real\", \"Real\", \"Real\", \"Union{String, Symbol}\", \"Bool\", \"Bool\", \"Union{Nothing, MLJLinearModels.Solver}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [MLJLinearModels.LogisticClassifier]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{var\"_s87\",1} where var\"_s87\"<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s58,1} where _s58<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "MLJLinearModels"
 ":package_license" = "MIT"
@@ -82,15 +82,15 @@
 ":name" = "LogisticClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:lambda, :gamma, :penalty, :fit_intercept, :penalize_intercept, :solver)`"
 ":hyperparameter_types" = "`(\"Real\", \"Real\", \"Union{String, Symbol}\", \"Bool\", \"Bool\", \"Union{Nothing, MLJLinearModels.Solver}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [MLJLinearModels.MultinomialClassifier]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{var\"_s87\",1} where var\"_s87\"<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s58,1} where _s58<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "MLJLinearModels"
 ":package_license" = "MIT"
@@ -104,13 +104,13 @@
 ":name" = "MultinomialClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:lambda, :gamma, :penalty, :fit_intercept, :penalize_intercept, :solver)`"
 ":hyperparameter_types" = "`(\"Real\", \"Real\", \"Union{String, Symbol}\", \"Bool\", \"Bool\", \"Union{Nothing, MLJLinearModels.Solver}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [MLJLinearModels.LADRegressor]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":is_pure_julia" = "`true`"
@@ -126,13 +126,13 @@
 ":name" = "LADRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:lambda, :gamma, :penalty, :fit_intercept, :penalize_intercept, :solver)`"
 ":hyperparameter_types" = "`(\"Real\", \"Real\", \"Union{String, Symbol}\", \"Bool\", \"Bool\", \"Union{Nothing, MLJLinearModels.Solver}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [MLJLinearModels.RidgeRegressor]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":is_pure_julia" = "`true`"
@@ -148,13 +148,13 @@
 ":name" = "RidgeRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:lambda, :fit_intercept, :penalize_intercept, :solver)`"
 ":hyperparameter_types" = "`(\"Real\", \"Bool\", \"Bool\", \"Union{Nothing, MLJLinearModels.Solver}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing)`"
 
 [MLJLinearModels.RobustRegressor]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":is_pure_julia" = "`true`"
@@ -170,13 +170,13 @@
 ":name" = "RobustRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:rho, :lambda, :gamma, :penalty, :fit_intercept, :penalize_intercept, :solver)`"
 ":hyperparameter_types" = "`(\"MLJLinearModels.RobustRho\", \"Real\", \"Real\", \"Union{String, Symbol}\", \"Bool\", \"Bool\", \"Union{Nothing, MLJLinearModels.Solver}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [MLJLinearModels.ElasticNetRegressor]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":is_pure_julia" = "`true`"
@@ -192,13 +192,13 @@
 ":name" = "ElasticNetRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:lambda, :gamma, :fit_intercept, :penalize_intercept, :solver)`"
 ":hyperparameter_types" = "`(\"Real\", \"Real\", \"Bool\", \"Bool\", \"Union{Nothing, MLJLinearModels.Solver}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing)`"
 
 [MLJLinearModels.LinearRegressor]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":is_pure_julia" = "`true`"
@@ -214,13 +214,13 @@
 ":name" = "LinearRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:fit_intercept, :solver)`"
 ":hyperparameter_types" = "`(\"Bool\", \"Union{Nothing, MLJLinearModels.Solver}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
 
 [MLJLinearModels.LassoRegressor]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":is_pure_julia" = "`true`"
@@ -236,13 +236,13 @@
 ":name" = "LassoRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:lambda, :fit_intercept, :penalize_intercept, :solver)`"
 ":hyperparameter_types" = "`(\"Real\", \"Bool\", \"Bool\", \"Union{Nothing, MLJLinearModels.Solver}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing)`"
 
 [MLJLinearModels.HuberRegressor]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":is_pure_julia" = "`true`"
@@ -258,15 +258,15 @@
 ":name" = "HuberRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:delta, :lambda, :gamma, :penalty, :fit_intercept, :penalize_intercept, :solver)`"
 ":hyperparameter_types" = "`(\"Real\", \"Real\", \"Real\", \"Union{String, Symbol}\", \"Bool\", \"Bool\", \"Union{Nothing, MLJLinearModels.Solver}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.ProbabilisticSGDClassifier]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{var\"_s435\",1} where var\"_s435\"<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s403,1} where _s403<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -280,15 +280,15 @@
 ":name" = "ProbabilisticSGDClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:loss, :penalty, :alpha, :l1_ratio, :fit_intercept, :max_iter, :tol, :shuffle, :verbose, :epsilon, :n_jobs, :random_state, :learning_rate, :eta0, :power_t, :early_stopping, :validation_fraction, :n_iter_no_change, :class_weight, :warm_start, :average)`"
 ":hyperparameter_types" = "`(\"String\", \"String\", \"Float64\", \"Float64\", \"Bool\", \"Int64\", \"Union{Nothing, Float64}\", \"Bool\", \"Int64\", \"Float64\", \"Union{Nothing, Int64}\", \"Any\", \"String\", \"Float64\", \"Float64\", \"Bool\", \"Float64\", \"Int64\", \"Any\", \"Bool\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.RidgeCVClassifier]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{var\"_s287\",1} where var\"_s287\"<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s267,1} where _s267<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -302,15 +302,15 @@
 ":name" = "RidgeCVClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:alphas, :fit_intercept, :normalize, :scoring, :cv, :class_weight, :store_cv_values)`"
 ":hyperparameter_types" = "`(\"AbstractArray{Float64,N} where N\", \"Bool\", \"Bool\", \"Any\", \"Int64\", \"Any\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.LogisticClassifier]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{var\"_s287\",1} where var\"_s287\"<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s267,1} where _s267<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -324,13 +324,13 @@
 ":name" = "LogisticClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:penalty, :dual, :tol, :C, :fit_intercept, :intercept_scaling, :class_weight, :random_state, :solver, :max_iter, :multi_class, :verbose, :warm_start, :n_jobs, :l1_ratio)`"
 ":hyperparameter_types" = "`(\"String\", \"Bool\", \"Float64\", \"Float64\", \"Bool\", \"Float64\", \"Any\", \"Any\", \"String\", \"Int64\", \"String\", \"Int64\", \"Bool\", \"Union{Nothing, Int64}\", \"Union{Nothing, Float64}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.RandomForestRegressor]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:Union{AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Count, AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous}`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:Union{AbstractArray{_s23,1} where _s23<:ScientificTypes.Count, AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous}`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":is_pure_julia" = "`false`"
@@ -346,13 +346,13 @@
 ":name" = "RandomForestRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:n_estimators, :criterion, :max_depth, :min_samples_split, :min_samples_leaf, :min_weight_fraction_leaf, :max_features, :max_leaf_nodes, :min_impurity_decrease, :bootstrap, :oob_score, :n_jobs, :random_state, :verbose, :warm_start)`"
 ":hyperparameter_types" = "`(\"Int64\", \"String\", \"Union{Nothing, Int64}\", \"Union{Float64, Int64}\", \"Union{Float64, Int64}\", \"Float64\", \"Union{Nothing, Float64, Int64, String}\", \"Union{Nothing, Int64}\", \"Float64\", \"Bool\", \"Bool\", \"Union{Nothing, Int64}\", \"Any\", \"Int64\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.ElasticNetCVRegressor]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":is_pure_julia" = "`false`"
@@ -368,15 +368,15 @@
 ":name" = "ElasticNetCVRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:l1_ratio, :eps, :n_alphas, :alphas, :fit_intercept, :normalize, :precompute, :max_iter, :tol, :cv, :copy_X, :verbose, :n_jobs, :positive, :random_state, :selection)`"
 ":hyperparameter_types" = "`(\"Union{Float64, Array{Float64,1}}\", \"Float64\", \"Int64\", \"Any\", \"Bool\", \"Bool\", \"Union{Bool, String, AbstractArray{T,2} where T}\", \"Int64\", \"Float64\", \"Any\", \"Bool\", \"Union{Bool, Int64}\", \"Union{Nothing, Int64}\", \"Bool\", \"Any\", \"String\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.PerceptronClassifier]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{var\"_s287\",1} where var\"_s287\"<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s267,1} where _s267<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -390,15 +390,15 @@
 ":name" = "PerceptronClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:penalty, :alpha, :fit_intercept, :max_iter, :tol, :shuffle, :verbose, :eta0, :n_jobs, :random_state, :early_stopping, :validation_fraction, :n_iter_no_change, :class_weight, :warm_start)`"
 ":hyperparameter_types" = "`(\"Union{Nothing, String}\", \"Float64\", \"Bool\", \"Int64\", \"Union{Nothing, Float64}\", \"Bool\", \"Int64\", \"Float64\", \"Union{Nothing, Int64}\", \"Any\", \"Bool\", \"Float64\", \"Int64\", \"Any\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.MultiTaskLassoRegressor]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":target_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -412,13 +412,13 @@
 ":name" = "MultiTaskLassoRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:alpha, :fit_intercept, :normalize, :max_iter, :tol, :copy_X, :random_state, :selection)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Bool\", \"Bool\", \"Int64\", \"Float64\", \"Bool\", \"Any\", \"String\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.LinearRegressor]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":is_pure_julia" = "`false`"
@@ -434,13 +434,13 @@
 ":name" = "LinearRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:fit_intercept, :normalize, :copy_X, :n_jobs)`"
 ":hyperparameter_types" = "`(\"Bool\", \"Bool\", \"Bool\", \"Union{Nothing, Int64}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.DBSCAN]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`ScientificTypes.Unknown`"
 ":is_pure_julia" = "`false`"
@@ -462,7 +462,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.RidgeRegressor]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":is_pure_julia" = "`false`"
@@ -478,13 +478,13 @@
 ":name" = "RidgeRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:alpha, :fit_intercept, :normalize, :copy_X, :max_iter, :tol, :solver, :random_state)`"
 ":hyperparameter_types" = "`(\"Union{Float64, Array{Float64,1}}\", \"Bool\", \"Bool\", \"Bool\", \"Int64\", \"Float64\", \"String\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.LassoLarsICRegressor]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":is_pure_julia" = "`false`"
@@ -500,13 +500,13 @@
 ":name" = "LassoLarsICRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:criterion, :fit_intercept, :verbose, :normalize, :precompute, :max_iter, :eps, :copy_X, :positive)`"
 ":hyperparameter_types" = "`(\"String\", \"Bool\", \"Union{Bool, Int64}\", \"Bool\", \"Union{Bool, String, AbstractArray{T,2} where T}\", \"Int64\", \"Float64\", \"Bool\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.ARDRegressor]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":is_pure_julia" = "`false`"
@@ -522,13 +522,13 @@
 ":name" = "ARDRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:n_iter, :tol, :alpha_1, :alpha_2, :lambda_1, :lambda_2, :compute_score, :threshold_lambda, :fit_intercept, :normalize, :copy_X, :verbose)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Bool\", \"Float64\", \"Bool\", \"Bool\", \"Bool\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.SVMNuRegressor]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":is_pure_julia" = "`false`"
@@ -544,15 +544,15 @@
 ":name" = "SVMNuRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:nu, :C, :kernel, :degree, :gamma, :coef0, :shrinking, :tol, :cache_size, :max_iter)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Float64\", \"Union{Function, String}\", \"Int64\", \"Union{Float64, String}\", \"Float64\", \"Any\", \"Float64\", \"Int64\", \"Int64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.RidgeClassifier]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{var\"_s287\",1} where var\"_s287\"<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s267,1} where _s267<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -566,13 +566,13 @@
 ":name" = "RidgeClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:alpha, :fit_intercept, :normalize, :copy_X, :max_iter, :tol, :class_weight, :solver, :random_state)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Bool\", \"Bool\", \"Bool\", \"Union{Nothing, Int64}\", \"Float64\", \"Any\", \"String\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.SGDRegressor]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":is_pure_julia" = "`false`"
@@ -588,15 +588,15 @@
 ":name" = "SGDRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:loss, :penalty, :alpha, :l1_ratio, :fit_intercept, :max_iter, :tol, :shuffle, :verbose, :epsilon, :random_state, :learning_rate, :eta0, :power_t, :early_stopping, :validation_fraction, :n_iter_no_change, :warm_start, :average)`"
 ":hyperparameter_types" = "`(\"String\", \"String\", \"Float64\", \"Float64\", \"Bool\", \"Int64\", \"Float64\", \"Bool\", \"Union{Bool, Int64}\", \"Float64\", \"Any\", \"String\", \"Float64\", \"Float64\", \"Bool\", \"Float64\", \"Int64\", \"Bool\", \"Union{Bool, Int64}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.ComplementNBClassifier]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Count)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Count)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{var\"_s435\",1} where var\"_s435\"<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s403,1} where _s403<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -610,13 +610,13 @@
 ":name" = "ComplementNBClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:alpha, :fit_prior, :class_prior, :norm)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Bool\", \"Union{Nothing, AbstractArray{T,1} where T}\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.HuberRegressor]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":is_pure_julia" = "`false`"
@@ -632,15 +632,15 @@
 ":name" = "HuberRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:epsilon, :max_iter, :alpha, :warm_start, :fit_intercept, :tol)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Int64\", \"Float64\", \"Bool\", \"Bool\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.SVMNuClassifier]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{var\"_s435\",1} where var\"_s435\"<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s403,1} where _s403<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -654,15 +654,15 @@
 ":name" = "SVMNuClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:nu, :kernel, :degree, :gamma, :coef0, :shrinking, :tol, :cache_size, :max_iter, :decision_function_shape, :random_state)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Union{Function, String}\", \"Int64\", \"Union{Float64, String}\", \"Float64\", \"Bool\", \"Float64\", \"Int64\", \"Int64\", \"String\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.GradientBoostingClassifier]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{var\"_s435\",1} where var\"_s435\"<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s403,1} where _s403<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -676,13 +676,13 @@
 ":name" = "GradientBoostingClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:loss, :learning_rate, :n_estimators, :subsample, :criterion, :min_samples_split, :min_samples_leaf, :min_weight_fraction_leaf, :max_depth, :min_impurity_decrease, :init, :random_state, :max_features, :verbose, :max_leaf_nodes, :warm_start, :validation_fraction, :n_iter_no_change, :tol)`"
 ":hyperparameter_types" = "`(\"String\", \"Float64\", \"Int64\", \"Float64\", \"String\", \"Union{Float64, Int64}\", \"Union{Float64, Int64}\", \"Float64\", \"Int64\", \"Float64\", \"Any\", \"Any\", \"Union{Nothing, Float64, Int64, String}\", \"Int64\", \"Union{Nothing, Int64}\", \"Bool\", \"Float64\", \"Union{Nothing, Int64}\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.GaussianProcessRegressor]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":is_pure_julia" = "`false`"
@@ -698,13 +698,13 @@
 ":name" = "GaussianProcessRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:kernel, :alpha, :optimizer, :n_restarts_optimizer, :normalize_y, :copy_X_train, :random_state)`"
 ":hyperparameter_types" = "`(\"Any\", \"Union{Float64, AbstractArray}\", \"Any\", \"Int64\", \"Bool\", \"Bool\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.SVMLinearRegressor]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":is_pure_julia" = "`false`"
@@ -720,13 +720,13 @@
 ":name" = "SVMLinearRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:epsilon, :tol, :C, :loss, :fit_intercept, :intercept_scaling, :dual, :random_state, :max_iter)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Float64\", \"Float64\", \"String\", \"Bool\", \"Float64\", \"Bool\", \"Any\", \"Int64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.LarsRegressor]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":is_pure_julia" = "`false`"
@@ -742,13 +742,13 @@
 ":name" = "LarsRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:fit_intercept, :verbose, :normalize, :precompute, :n_nonzero_coefs, :eps, :copy_X, :fit_path)`"
 ":hyperparameter_types" = "`(\"Bool\", \"Union{Bool, Int64}\", \"Bool\", \"Union{Bool, String, AbstractArray{T,2} where T}\", \"Int64\", \"Float64\", \"Bool\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.MeanShift]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Multiclass,1}`"
 ":is_pure_julia" = "`false`"
@@ -764,13 +764,13 @@
 ":name" = "MeanShift"
 ":is_supervised" = "`false`"
 ":prediction_type" = ":unknown"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:bandwidth, :seeds, :bin_seeding, :min_bin_freq, :cluster_all, :n_jobs)`"
 ":hyperparameter_types" = "`(\"Union{Nothing, Float64}\", \"Union{Nothing, AbstractArray}\", \"Bool\", \"Int64\", \"Bool\", \"Union{Nothing, Int64}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.AdaBoostRegressor]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":is_pure_julia" = "`false`"
@@ -786,13 +786,13 @@
 ":name" = "AdaBoostRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:base_estimator, :n_estimators, :learning_rate, :loss, :random_state)`"
 ":hyperparameter_types" = "`(\"Any\", \"Int64\", \"Float64\", \"String\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.AffinityPropagation]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Multiclass,1}`"
 ":is_pure_julia" = "`false`"
@@ -808,15 +808,15 @@
 ":name" = "AffinityPropagation"
 ":is_supervised" = "`false`"
 ":prediction_type" = ":unknown"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:damping, :max_iter, :convergence_iter, :copy, :preference, :affinity, :verbose)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Int64\", \"Int64\", \"Bool\", \"Any\", \"String\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.MultiTaskLassoCVRegressor]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":target_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -830,13 +830,13 @@
 ":name" = "MultiTaskLassoCVRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:eps, :n_alphas, :alphas, :fit_intercept, :normalize, :max_iter, :tol, :copy_X, :cv, :verbose, :n_jobs, :random_state, :selection)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Int64\", \"Any\", \"Bool\", \"Bool\", \"Int64\", \"Float64\", \"Bool\", \"Any\", \"Union{Bool, Int64}\", \"Union{Nothing, Int64}\", \"Any\", \"String\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.OrthogonalMatchingPursuitRegressor]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":is_pure_julia" = "`false`"
@@ -852,13 +852,13 @@
 ":name" = "OrthogonalMatchingPursuitRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:n_nonzero_coefs, :tol, :fit_intercept, :normalize, :precompute)`"
 ":hyperparameter_types" = "`(\"Union{Nothing, Int64}\", \"Union{Nothing, Float64}\", \"Bool\", \"Bool\", \"Union{Bool, String, AbstractArray{T,2} where T}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.RidgeCVRegressor]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":is_pure_julia" = "`false`"
@@ -874,15 +874,15 @@
 ":name" = "RidgeCVRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:alphas, :fit_intercept, :normalize, :scoring, :cv, :gcv_mode, :store_cv_values)`"
 ":hyperparameter_types" = "`(\"Any\", \"Bool\", \"Bool\", \"Any\", \"Any\", \"Union{Nothing, String}\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.PassiveAggressiveClassifier]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{var\"_s287\",1} where var\"_s287\"<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s267,1} where _s267<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -896,13 +896,13 @@
 ":name" = "PassiveAggressiveClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:C, :fit_intercept, :max_iter, :tol, :early_stopping, :validation_fraction, :n_iter_no_change, :shuffle, :verbose, :loss, :n_jobs, :random_state, :warm_start, :class_weight, :average)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Bool\", \"Int64\", \"Float64\", \"Bool\", \"Float64\", \"Int64\", \"Bool\", \"Int64\", \"String\", \"Union{Nothing, Int64}\", \"Any\", \"Bool\", \"Any\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.SVMRegressor]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":is_pure_julia" = "`false`"
@@ -918,15 +918,15 @@
 ":name" = "SVMRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:kernel, :degree, :gamma, :coef0, :tol, :C, :epsilon, :shrinking, :cache_size, :max_iter)`"
 ":hyperparameter_types" = "`(\"Union{Function, String}\", \"Int64\", \"Union{Float64, String}\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Any\", \"Int64\", \"Int64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.BernoulliNBClassifier]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Count)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Count)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{var\"_s435\",1} where var\"_s435\"<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s403,1} where _s403<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -940,15 +940,15 @@
 ":name" = "BernoulliNBClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:alpha, :binarize, :fit_prior, :class_prior)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Union{Nothing, Float64}\", \"Bool\", \"Union{Nothing, AbstractArray{T,1} where T}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.GaussianNBClassifier]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{var\"_s435\",1} where var\"_s435\"<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s403,1} where _s403<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -962,15 +962,15 @@
 ":name" = "GaussianNBClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:priors, :var_smoothing)`"
 ":hyperparameter_types" = "`(\"Union{Nothing, AbstractArray{Float64,1}}\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
 
 [ScikitLearn.ExtraTreesClassifier]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{var\"_s435\",1} where var\"_s435\"<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s403,1} where _s403<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -984,14 +984,14 @@
 ":name" = "ExtraTreesClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:n_estimators, :criterion, :max_depth, :min_samples_split, :min_samples_leaf, :min_weight_fraction_leaf, :max_features, :max_leaf_nodes, :min_impurity_decrease, :bootstrap, :oob_score, :n_jobs, :random_state, :verbose, :warm_start, :class_weight)`"
 ":hyperparameter_types" = "`(\"Int64\", \"String\", \"Union{Nothing, Int64}\", \"Union{Float64, Int64}\", \"Union{Float64, Int64}\", \"Float64\", \"Union{Nothing, Float64, Int64, String}\", \"Union{Nothing, Int64}\", \"Float64\", \"Bool\", \"Bool\", \"Union{Nothing, Int64}\", \"Any\", \"Int64\", \"Bool\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.KMeans]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
-":output_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
+":output_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Multiclass,1}`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
@@ -1006,15 +1006,15 @@
 ":name" = "KMeans"
 ":is_supervised" = "`false`"
 ":prediction_type" = ":unknown"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict", ":transform"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params", ":transform"]
 ":hyperparameters" = "`(:n_clusters, :n_init, :max_iter, :tol, :verbose, :random_state, :copy_x, :n_jobs, :algorithm, :precompute_distances, :init)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Int64\", \"Int64\", \"Float64\", \"Int64\", \"Any\", \"Bool\", \"Union{Nothing, Int64}\", \"String\", \"Union{Bool, String}\", \"Union{String, AbstractArray}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.MultiTaskElasticNetCVRegressor]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":target_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -1028,13 +1028,13 @@
 ":name" = "MultiTaskElasticNetCVRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:l1_ratio, :eps, :n_alphas, :alphas, :fit_intercept, :normalize, :max_iter, :tol, :cv, :copy_X, :verbose, :n_jobs, :random_state, :selection)`"
 ":hyperparameter_types" = "`(\"Union{Float64, Array{Float64,1}}\", \"Float64\", \"Int64\", \"Any\", \"Bool\", \"Bool\", \"Int64\", \"Float64\", \"Any\", \"Bool\", \"Union{Bool, Int64}\", \"Union{Nothing, Int64}\", \"Any\", \"String\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.LassoLarsCVRegressor]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":is_pure_julia" = "`false`"
@@ -1050,13 +1050,13 @@
 ":name" = "LassoLarsCVRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:fit_intercept, :verbose, :max_iter, :normalize, :precompute, :cv, :max_n_alphas, :n_jobs, :eps, :copy_X, :positive)`"
 ":hyperparameter_types" = "`(\"Bool\", \"Union{Bool, Int64}\", \"Int64\", \"Bool\", \"Union{Bool, String, AbstractArray{T,2} where T}\", \"Any\", \"Int64\", \"Union{Nothing, Int64}\", \"Float64\", \"Bool\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.OrthogonalMatchingPursuitCVRegressor]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":is_pure_julia" = "`false`"
@@ -1072,15 +1072,15 @@
 ":name" = "OrthogonalMatchingPursuitCVRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:copy, :fit_intercept, :normalize, :max_iter, :cv, :n_jobs, :verbose)`"
 ":hyperparameter_types" = "`(\"Bool\", \"Bool\", \"Bool\", \"Union{Nothing, Int64}\", \"Any\", \"Union{Nothing, Int64}\", \"Union{Bool, Int64}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.AdaBoostClassifier]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{var\"_s435\",1} where var\"_s435\"<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s403,1} where _s403<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -1094,13 +1094,13 @@
 ":name" = "AdaBoostClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:base_estimator, :n_estimators, :learning_rate, :algorithm, :random_state)`"
 ":hyperparameter_types" = "`(\"Any\", \"Int64\", \"Float64\", \"String\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.PassiveAggressiveRegressor]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":is_pure_julia" = "`false`"
@@ -1116,13 +1116,13 @@
 ":name" = "PassiveAggressiveRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:C, :fit_intercept, :max_iter, :tol, :early_stopping, :validation_fraction, :n_iter_no_change, :shuffle, :verbose, :loss, :epsilon, :random_state, :warm_start, :average)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Bool\", \"Int64\", \"Float64\", \"Bool\", \"Float64\", \"Int64\", \"Bool\", \"Union{Bool, Int64}\", \"String\", \"Float64\", \"Any\", \"Bool\", \"Union{Bool, Int64}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.BayesianRidgeRegressor]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":is_pure_julia" = "`false`"
@@ -1138,13 +1138,13 @@
 ":name" = "BayesianRidgeRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:n_iter, :tol, :alpha_1, :alpha_2, :lambda_1, :lambda_2, :compute_score, :fit_intercept, :normalize, :copy_X, :verbose)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Bool\", \"Bool\", \"Bool\", \"Bool\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.RANSACRegressor]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":is_pure_julia" = "`false`"
@@ -1160,15 +1160,15 @@
 ":name" = "RANSACRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:base_estimator, :min_samples, :residual_threshold, :is_data_valid, :is_model_valid, :max_trials, :max_skips, :stop_n_inliers, :stop_score, :stop_probability, :loss, :random_state)`"
 ":hyperparameter_types" = "`(\"Any\", \"Union{Float64, Int64}\", \"Union{Nothing, Float64}\", \"Any\", \"Any\", \"Int64\", \"Int64\", \"Int64\", \"Float64\", \"Float64\", \"Union{Function, String}\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.BaggingClassifier]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{var\"_s435\",1} where var\"_s435\"<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s403,1} where _s403<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -1182,15 +1182,15 @@
 ":name" = "BaggingClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:base_estimator, :n_estimators, :max_samples, :max_features, :bootstrap, :bootstrap_features, :oob_score, :warm_start, :n_jobs, :random_state, :verbose)`"
 ":hyperparameter_types" = "`(\"Any\", \"Int64\", \"Union{Float64, Int64}\", \"Union{Float64, Int64}\", \"Bool\", \"Bool\", \"Bool\", \"Bool\", \"Union{Nothing, Int64}\", \"Any\", \"Int64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.GaussianProcessClassifier]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{var\"_s435\",1} where var\"_s435\"<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s403,1} where _s403<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -1204,13 +1204,13 @@
 ":name" = "GaussianProcessClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:kernel, :optimizer, :n_restarts_optimizer, :copy_X_train, :random_state, :max_iter_predict, :warm_start, :multi_class)`"
 ":hyperparameter_types" = "`(\"Any\", \"Any\", \"Int64\", \"Bool\", \"Any\", \"Int64\", \"Bool\", \"String\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.OPTICS]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`ScientificTypes.Unknown`"
 ":is_pure_julia" = "`false`"
@@ -1232,7 +1232,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.KNeighborsRegressor]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":is_pure_julia" = "`false`"
@@ -1248,14 +1248,14 @@
 ":name" = "KNeighborsRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:n_neighbors, :weights, :algorithm, :leaf_size, :p, :metric, :metric_params, :n_jobs)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Union{Function, String}\", \"String\", \"Int64\", \"Int64\", \"Any\", \"Any\", \"Union{Nothing, Int64}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.MiniBatchKMeans]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
-":output_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
+":output_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Multiclass,1}`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
@@ -1270,13 +1270,13 @@
 ":name" = "MiniBatchKMeans"
 ":is_supervised" = "`false`"
 ":prediction_type" = ":unknown"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict", ":transform"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params", ":transform"]
 ":hyperparameters" = "`(:n_clusters, :max_iter, :batch_size, :verbose, :compute_labels, :random_state, :tol, :max_no_improvement, :init_size, :n_init, :init, :reassignment_ratio)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Int64\", \"Int64\", \"Int64\", \"Bool\", \"Any\", \"Float64\", \"Int64\", \"Union{Nothing, Int64}\", \"Int64\", \"Union{String, AbstractArray}\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.LassoCVRegressor]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":is_pure_julia" = "`false`"
@@ -1292,13 +1292,13 @@
 ":name" = "LassoCVRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:eps, :n_alphas, :alphas, :fit_intercept, :normalize, :precompute, :max_iter, :tol, :copy_X, :cv, :verbose, :n_jobs, :positive, :random_state, :selection)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Int64\", \"Any\", \"Bool\", \"Bool\", \"Union{Bool, String, AbstractArray{T,2} where T}\", \"Int64\", \"Float64\", \"Bool\", \"Any\", \"Union{Bool, Int64}\", \"Union{Nothing, Int64}\", \"Bool\", \"Any\", \"String\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.DummyRegressor]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":is_pure_julia" = "`false`"
@@ -1314,13 +1314,13 @@
 ":name" = "DummyRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:strategy, :constant, :quantile)`"
 ":hyperparameter_types" = "`(\"String\", \"Any\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing)`"
 
 [ScikitLearn.LassoLarsRegressor]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":is_pure_julia" = "`false`"
@@ -1336,13 +1336,13 @@
 ":name" = "LassoLarsRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:alpha, :fit_intercept, :verbose, :normalize, :precompute, :max_iter, :eps, :copy_X, :fit_path, :positive)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Bool\", \"Union{Bool, Int64}\", \"Bool\", \"Union{Bool, String, AbstractArray{T,2} where T}\", \"Int64\", \"Float64\", \"Bool\", \"Bool\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.LarsCVRegressor]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":is_pure_julia" = "`false`"
@@ -1358,15 +1358,15 @@
 ":name" = "LarsCVRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:fit_intercept, :verbose, :max_iter, :normalize, :precompute, :cv, :max_n_alphas, :n_jobs, :eps, :copy_X)`"
 ":hyperparameter_types" = "`(\"Bool\", \"Union{Bool, Int64}\", \"Int64\", \"Bool\", \"Union{Bool, String, AbstractArray{T,2} where T}\", \"Any\", \"Int64\", \"Union{Nothing, Int64}\", \"Float64\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.KNeighborsClassifier]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{var\"_s435\",1} where var\"_s435\"<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s403,1} where _s403<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -1380,15 +1380,15 @@
 ":name" = "KNeighborsClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:n_neighbors, :weights, :algorithm, :leaf_size, :p, :metric, :metric_params, :n_jobs)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Union{Function, String}\", \"String\", \"Int64\", \"Int64\", \"Any\", \"Any\", \"Union{Nothing, Int64}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.SVMLinearClassifier]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{var\"_s435\",1} where var\"_s435\"<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s403,1} where _s403<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -1402,14 +1402,14 @@
 ":name" = "SVMLinearClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:penalty, :loss, :dual, :tol, :C, :multi_class, :fit_intercept, :intercept_scaling, :random_state, :max_iter)`"
 ":hyperparameter_types" = "`(\"String\", \"String\", \"Bool\", \"Float64\", \"Float64\", \"String\", \"Bool\", \"Float64\", \"Any\", \"Int64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.FeatureAgglomeration]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
-":output_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
+":output_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":target_scitype" = "`ScientificTypes.Unknown`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
@@ -1430,9 +1430,9 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.DummyClassifier]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{var\"_s435\",1} where var\"_s435\"<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s403,1} where _s403<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -1446,13 +1446,13 @@
 ":name" = "DummyClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:strategy, :constant, :random_state)`"
 ":hyperparameter_types" = "`(\"String\", \"Any\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing)`"
 
 [ScikitLearn.BaggingRegressor]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":is_pure_julia" = "`false`"
@@ -1468,15 +1468,15 @@
 ":name" = "BaggingRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:base_estimator, :n_estimators, :max_samples, :max_features, :bootstrap, :bootstrap_features, :oob_score, :warm_start, :n_jobs, :random_state, :verbose)`"
 ":hyperparameter_types" = "`(\"Any\", \"Int64\", \"Union{Float64, Int64}\", \"Union{Float64, Int64}\", \"Bool\", \"Bool\", \"Bool\", \"Bool\", \"Union{Nothing, Int64}\", \"Any\", \"Int64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.BayesianQDA]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{var\"_s435\",1} where var\"_s435\"<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s403,1} where _s403<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -1490,15 +1490,15 @@
 ":name" = "BayesianQDA"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:priors, :reg_param, :store_covariance, :tol)`"
 ":hyperparameter_types" = "`(\"Union{Nothing, AbstractArray{T,1} where T}\", \"Float64\", \"Bool\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.BayesianLDA]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{var\"_s435\",1} where var\"_s435\"<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s403,1} where _s403<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -1512,15 +1512,15 @@
 ":name" = "BayesianLDA"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:solver, :shrinkage, :priors, :n_components, :store_covariance, :tol)`"
 ":hyperparameter_types" = "`(\"String\", \"Union{Nothing, Float64, String}\", \"Union{Nothing, AbstractArray{T,1} where T}\", \"Union{Nothing, Int64}\", \"Bool\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.SGDClassifier]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{var\"_s435\",1} where var\"_s435\"<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s403,1} where _s403<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -1534,13 +1534,13 @@
 ":name" = "SGDClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:loss, :penalty, :alpha, :l1_ratio, :fit_intercept, :max_iter, :tol, :shuffle, :verbose, :epsilon, :n_jobs, :random_state, :learning_rate, :eta0, :power_t, :early_stopping, :validation_fraction, :n_iter_no_change, :class_weight, :warm_start, :average)`"
 ":hyperparameter_types" = "`(\"String\", \"String\", \"Float64\", \"Float64\", \"Bool\", \"Int64\", \"Union{Nothing, Float64}\", \"Bool\", \"Int64\", \"Float64\", \"Union{Nothing, Int64}\", \"Any\", \"String\", \"Float64\", \"Float64\", \"Bool\", \"Float64\", \"Int64\", \"Any\", \"Bool\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.TheilSenRegressor]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":is_pure_julia" = "`false`"
@@ -1556,13 +1556,13 @@
 ":name" = "TheilSenRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:fit_intercept, :copy_X, :max_subpopulation, :n_subsamples, :max_iter, :tol, :random_state, :n_jobs, :verbose)`"
 ":hyperparameter_types" = "`(\"Bool\", \"Bool\", \"Int64\", \"Union{Nothing, Int64}\", \"Int64\", \"Float64\", \"Any\", \"Union{Nothing, Int64}\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.SpectralClustering]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`ScientificTypes.Unknown`"
 ":is_pure_julia" = "`false`"
@@ -1584,8 +1584,8 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.Birch]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
-":output_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
+":output_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Multiclass,1}`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
@@ -1600,13 +1600,13 @@
 ":name" = "Birch"
 ":is_supervised" = "`false`"
 ":prediction_type" = ":unknown"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict", ":transform"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params", ":transform"]
 ":hyperparameters" = "`(:threshold, :branching_factor, :n_clusters, :compute_labels, :copy)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Int64\", \"Int64\", \"Bool\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.AgglomerativeClustering]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`ScientificTypes.Unknown`"
 ":is_pure_julia" = "`false`"
@@ -1628,7 +1628,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.ElasticNetRegressor]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":is_pure_julia" = "`false`"
@@ -1644,15 +1644,15 @@
 ":name" = "ElasticNetRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:alpha, :l1_ratio, :fit_intercept, :normalize, :precompute, :max_iter, :copy_X, :tol, :warm_start, :positive, :random_state, :selection)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Float64\", \"Bool\", \"Bool\", \"Union{Bool, AbstractArray{T,2} where T}\", \"Int64\", \"Bool\", \"Float64\", \"Bool\", \"Bool\", \"Any\", \"String\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.RandomForestClassifier]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:Union{AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Count, AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous}`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:Union{AbstractArray{_s23,1} where _s23<:ScientificTypes.Count, AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous}`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{var\"_s435\",1} where var\"_s435\"<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s403,1} where _s403<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -1666,15 +1666,15 @@
 ":name" = "RandomForestClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:n_estimators, :criterion, :max_depth, :min_samples_split, :min_samples_leaf, :min_weight_fraction_leaf, :max_features, :max_leaf_nodes, :min_impurity_decrease, :bootstrap, :oob_score, :n_jobs, :random_state, :verbose, :warm_start, :class_weight)`"
 ":hyperparameter_types" = "`(\"Int64\", \"String\", \"Union{Nothing, Int64}\", \"Union{Float64, Int64}\", \"Union{Float64, Int64}\", \"Float64\", \"Union{Nothing, Float64, Int64, String}\", \"Union{Nothing, Int64}\", \"Float64\", \"Bool\", \"Bool\", \"Union{Nothing, Int64}\", \"Any\", \"Int64\", \"Bool\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.LogisticCVClassifier]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{var\"_s287\",1} where var\"_s287\"<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s267,1} where _s267<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -1688,15 +1688,15 @@
 ":name" = "LogisticCVClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:Cs, :fit_intercept, :cv, :dual, :penalty, :scoring, :solver, :tol, :max_iter, :class_weight, :n_jobs, :verbose, :refit, :intercept_scaling, :multi_class, :random_state, :l1_ratios)`"
 ":hyperparameter_types" = "`(\"Union{Int64, AbstractArray{Float64,1}}\", \"Bool\", \"Any\", \"Bool\", \"String\", \"Any\", \"String\", \"Float64\", \"Int64\", \"Any\", \"Union{Nothing, Int64}\", \"Int64\", \"Bool\", \"Float64\", \"String\", \"Any\", \"Union{Nothing, AbstractArray{Float64,1}}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.MultiTaskElasticNetRegressor]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":target_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -1710,13 +1710,13 @@
 ":name" = "MultiTaskElasticNetRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:alpha, :l1_ratio, :fit_intercept, :normalize, :copy_X, :max_iter, :tol, :warm_start, :random_state, :selection)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Union{Float64, Array{Float64,1}}\", \"Bool\", \"Bool\", \"Bool\", \"Int64\", \"Float64\", \"Bool\", \"Any\", \"String\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.ExtraTreesRegressor]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":is_pure_julia" = "`false`"
@@ -1732,13 +1732,13 @@
 ":name" = "ExtraTreesRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:n_estimators, :criterion, :max_depth, :min_samples_split, :min_samples_leaf, :min_weight_fraction_leaf, :max_features, :max_leaf_nodes, :min_impurity_decrease, :bootstrap, :oob_score, :n_jobs, :random_state, :verbose, :warm_start)`"
 ":hyperparameter_types" = "`(\"Int64\", \"String\", \"Union{Nothing, Int64}\", \"Union{Float64, Int64}\", \"Union{Float64, Int64}\", \"Float64\", \"Union{Nothing, Float64, Int64, String}\", \"Union{Nothing, Int64}\", \"Float64\", \"Bool\", \"Bool\", \"Union{Nothing, Int64}\", \"Any\", \"Int64\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.LassoRegressor]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":is_pure_julia" = "`false`"
@@ -1754,15 +1754,15 @@
 ":name" = "LassoRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:alpha, :fit_intercept, :normalize, :precompute, :copy_X, :max_iter, :tol, :warm_start, :positive, :random_state, :selection)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Bool\", \"Bool\", \"Union{Bool, AbstractArray{T,2} where T}\", \"Bool\", \"Int64\", \"Float64\", \"Bool\", \"Bool\", \"Any\", \"String\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.MultinomialNBClassifier]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Count)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Count)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{var\"_s435\",1} where var\"_s435\"<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s403,1} where _s403<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -1776,13 +1776,13 @@
 ":name" = "MultinomialNBClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:alpha, :fit_prior, :class_prior)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Bool\", \"Union{Nothing, AbstractArray{T,1} where T}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing)`"
 
 [ScikitLearn.GradientBoostingRegressor]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":is_pure_julia" = "`false`"
@@ -1798,15 +1798,15 @@
 ":name" = "GradientBoostingRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:loss, :learning_rate, :n_estimators, :subsample, :criterion, :min_samples_split, :min_samples_leaf, :min_weight_fraction_leaf, :max_depth, :min_impurity_decrease, :init, :random_state, :max_features, :alpha, :verbose, :max_leaf_nodes, :warm_start, :validation_fraction, :n_iter_no_change, :tol)`"
 ":hyperparameter_types" = "`(\"String\", \"Float64\", \"Int64\", \"Float64\", \"String\", \"Union{Float64, Int64}\", \"Union{Float64, Int64}\", \"Float64\", \"Int64\", \"Float64\", \"Any\", \"Any\", \"Union{Nothing, Float64, Int64, String}\", \"Float64\", \"Int64\", \"Union{Nothing, Int64}\", \"Bool\", \"Float64\", \"Union{Nothing, Int64}\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ScikitLearn.SVMClassifier]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{var\"_s435\",1} where var\"_s435\"<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s403,1} where _s403<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "ScikitLearn"
 ":package_license" = "BSD"
@@ -1820,15 +1820,15 @@
 ":name" = "SVMClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:C, :kernel, :degree, :gamma, :coef0, :shrinking, :tol, :cache_size, :max_iter, :decision_function_shape, :random_state)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Union{Function, String}\", \"Int64\", \"Union{Float64, String}\", \"Float64\", \"Bool\", \"Float64\", \"Int64\", \"Int64\", \"String\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [ParallelKMeans.KMeans]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
-":output_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{var\"_s102\",N} where N where var\"_s102\"<:ScientificTypes.Multiclass`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
+":output_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
+":target_scitype" = "`AbstractArray{_s89,N} where N where _s89<:ScientificTypes.Multiclass`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "ParallelKMeans"
 ":package_license" = "MIT"
@@ -1842,15 +1842,15 @@
 ":name" = "KMeans"
 ":is_supervised" = "`false`"
 ":prediction_type" = ":unknown"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict", ":transform"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params", ":transform"]
 ":hyperparameters" = "`(:algo, :k_init, :k, :tol, :max_iters, :copy, :threads, :rng, :weights, :init)`"
 ":hyperparameter_types" = "`(\"Union{Symbol, ParallelKMeans.AbstractKMeansAlg}\", \"String\", \"Int64\", \"Float64\", \"Int64\", \"Bool\", \"Int64\", \"Union{Int64, Random.AbstractRNG}\", \"Any\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [NaiveBayes.GaussianNBClassifier]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s12,1} where _s12<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "NaiveBayes"
 ":package_license" = "unknown"
@@ -1864,15 +1864,15 @@
 ":name" = "GaussianNBClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":fit", ":fitted_params"]
 ":hyperparameters" = "``"
 ":hyperparameter_types" = "``"
 ":hyperparameter_ranges" = "``"
 
 [NaiveBayes.MultinomialNBClassifier]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Count)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Count)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s12,1} where _s12<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "NaiveBayes"
 ":package_license" = "unknown"
@@ -1886,7 +1886,7 @@
 ":name" = "MultinomialNBClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:alpha,)`"
 ":hyperparameter_types" = "`(\"Int64\",)`"
 ":hyperparameter_ranges" = "`(nothing,)`"
@@ -1908,7 +1908,7 @@
 ":name" = "DeterministicSurrogate"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":fitted_params", ":inverse_transform", ":predict", ":predict_joint", ":transform", ":machine"]
+":implemented_methods" = [":predict", ":fitted_params", ":inverse_transform", ":machine", ":predict_joint", ":transform"]
 ":hyperparameters" = "``"
 ":hyperparameter_types" = "``"
 ":hyperparameter_ranges" = "``"
@@ -1952,7 +1952,7 @@
 ":name" = "IntervalSurrogate"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":interval"
-":implemented_methods" = [":fitted_params", ":inverse_transform", ":predict", ":predict_joint", ":transform", ":machine"]
+":implemented_methods" = [":predict", ":fitted_params", ":inverse_transform", ":machine", ":predict_joint", ":transform"]
 ":hyperparameters" = "``"
 ":hyperparameter_types" = "``"
 ":hyperparameter_ranges" = "``"
@@ -1974,7 +1974,7 @@
 ":name" = "UnsupervisedSurrogate"
 ":is_supervised" = "`false`"
 ":prediction_type" = ":unknown"
-":implemented_methods" = [":fitted_params", ":inverse_transform", ":predict", ":predict_joint", ":transform", ":machine"]
+":implemented_methods" = [":predict", ":fitted_params", ":inverse_transform", ":machine", ":predict_joint", ":transform"]
 ":hyperparameters" = "``"
 ":hyperparameter_types" = "``"
 ":hyperparameter_ranges" = "``"
@@ -1996,7 +1996,7 @@
 ":name" = "JointProbabilisticSurrogate"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":fitted_params", ":inverse_transform", ":predict", ":predict_joint", ":transform", ":machine"]
+":implemented_methods" = [":predict", ":fitted_params", ":inverse_transform", ":machine", ":predict_joint", ":transform"]
 ":hyperparameters" = "``"
 ":hyperparameter_types" = "``"
 ":hyperparameter_ranges" = "``"
@@ -2020,7 +2020,7 @@
 ":prediction_type" = ":unknown"
 ":implemented_methods" = [":clean!", ":evaluate", ":fit"]
 ":hyperparameters" = "`(:model, :resampling, :measure, :weights, :operation, :acceleration, :check_measure, :repeats)`"
-":hyperparameter_types" = "`(\"Union{Nothing, MLJModelInterface.Supervised}\", \"Any\", \"Any\", \"Union{Nothing, AbstractArray{var\\\"_s381\\\",1} where var\\\"_s381\\\"<:Real}\", \"Any\", \"ComputationalResources.AbstractResource\", \"Bool\", \"Int64\")`"
+":hyperparameter_types" = "`(\"Union{Nothing, MLJModelInterface.Supervised}\", \"Any\", \"Any\", \"Union{Nothing, AbstractArray{_s359,1} where _s359<:Real}\", \"Any\", \"ComputationalResources.AbstractResource\", \"Bool\", \"Int64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [MLJBase.StaticSurrogate]
@@ -2040,7 +2040,7 @@
 ":name" = "StaticSurrogate"
 ":is_supervised" = "`false`"
 ":prediction_type" = ":unknown"
-":implemented_methods" = [":fitted_params", ":inverse_transform", ":predict", ":predict_joint", ":transform", ":machine"]
+":implemented_methods" = [":predict", ":fitted_params", ":inverse_transform", ":machine", ":predict_joint", ":transform"]
 ":hyperparameters" = "``"
 ":hyperparameter_types" = "``"
 ":hyperparameter_ranges" = "``"
@@ -2062,15 +2062,15 @@
 ":name" = "ProbabilisticSurrogate"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":fitted_params", ":inverse_transform", ":predict", ":predict_joint", ":predict_mean", ":predict_median", ":predict_mode", ":transform", ":machine"]
+":implemented_methods" = [":predict", ":fitted_params", ":inverse_transform", ":machine", ":predict_joint", ":predict_mean", ":predict_median", ":predict_mode", ":transform"]
 ":hyperparameters" = "``"
 ":hyperparameter_types" = "``"
 ":hyperparameter_ranges" = "``"
 
 [MultivariateStats.LDA]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
-":output_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{var\"_s57\",1} where var\"_s57\"<:ScientificTypes.Finite`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
+":output_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
+":target_scitype" = "`AbstractArray{_s54,1} where _s54<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "MultivariateStats"
 ":package_license" = "MIT"
@@ -2084,15 +2084,15 @@
 ":name" = "LDA"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict", ":transform"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params", ":transform"]
 ":hyperparameters" = "`(:method, :cov_w, :cov_b, :out_dim, :regcoef, :dist)`"
 ":hyperparameter_types" = "`(\"Symbol\", \"StatsBase.CovarianceEstimator\", \"StatsBase.CovarianceEstimator\", \"Int64\", \"Float64\", \"Distances.SemiMetric\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [MultivariateStats.BayesianSubspaceLDA]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
-":output_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{var\"_s57\",1} where var\"_s57\"<:ScientificTypes.Finite`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
+":output_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
+":target_scitype" = "`AbstractArray{_s54,1} where _s54<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "MultivariateStats"
 ":package_license" = "MIT"
@@ -2106,14 +2106,14 @@
 ":name" = "BayesianSubspaceLDA"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict", ":transform"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params", ":transform"]
 ":hyperparameters" = "`(:normalize, :out_dim, :priors)`"
 ":hyperparameter_types" = "`(\"Bool\", \"Int64\", \"Union{Nothing, Array{Float64,1}}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing)`"
 
 [MultivariateStats.FactorAnalysis]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
-":output_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
+":output_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":target_scitype" = "`ScientificTypes.Unknown`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "MultivariateStats"
@@ -2134,9 +2134,9 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [MultivariateStats.LinearRegressor]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`Union{AbstractArray{ScientificTypes.Continuous,1}, ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)}`"
+":target_scitype" = "`Union{AbstractArray{ScientificTypes.Continuous,1}, ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)}`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "MultivariateStats"
 ":package_license" = "MIT"
@@ -2150,14 +2150,14 @@
 ":name" = "LinearRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:bias,)`"
 ":hyperparameter_types" = "`(\"Bool\",)`"
 ":hyperparameter_ranges" = "`(nothing,)`"
 
 [MultivariateStats.ICA]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
-":output_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
+":output_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":target_scitype" = "`ScientificTypes.Unknown`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "MultivariateStats"
@@ -2174,12 +2174,12 @@
 ":prediction_type" = ":unknown"
 ":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":transform"]
 ":hyperparameters" = "`(:k, :alg, :fun, :do_whiten, :maxiter, :tol, :winit, :mean)`"
-":hyperparameter_types" = "`(\"Int64\", \"Symbol\", \"Symbol\", \"Bool\", \"Int64\", \"Real\", \"Union{Nothing, Array{var\\\"_s43\\\",2} where var\\\"_s43\\\"<:Real}\", \"Union{Nothing, Array{Float64,1}, Real}\")`"
+":hyperparameter_types" = "`(\"Int64\", \"Symbol\", \"Symbol\", \"Bool\", \"Int64\", \"Real\", \"Union{Nothing, Array{_s41,2} where _s41<:Real}\", \"Union{Nothing, Array{Float64,1}, Real}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [MultivariateStats.PPCA]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
-":output_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
+":output_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":target_scitype" = "`ScientificTypes.Unknown`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "MultivariateStats"
@@ -2200,9 +2200,9 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing)`"
 
 [MultivariateStats.RidgeRegressor]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`Union{AbstractArray{ScientificTypes.Continuous,1}, ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)}`"
+":target_scitype" = "`Union{AbstractArray{ScientificTypes.Continuous,1}, ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)}`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "MultivariateStats"
 ":package_license" = "MIT"
@@ -2216,14 +2216,14 @@
 ":name" = "RidgeRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:lambda, :bias)`"
 ":hyperparameter_types" = "`(\"Union{Real, Union{AbstractArray{T,1}, AbstractArray{T,2}} where T}\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
 
 [MultivariateStats.KernelPCA]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
-":output_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
+":output_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":target_scitype" = "`ScientificTypes.Unknown`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "MultivariateStats"
@@ -2244,9 +2244,9 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [MultivariateStats.SubspaceLDA]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
-":output_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{var\"_s57\",1} where var\"_s57\"<:ScientificTypes.Finite`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
+":output_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
+":target_scitype" = "`AbstractArray{_s54,1} where _s54<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "MultivariateStats"
 ":package_license" = "MIT"
@@ -2260,15 +2260,15 @@
 ":name" = "SubspaceLDA"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict", ":transform"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params", ":transform"]
 ":hyperparameters" = "`(:normalize, :out_dim, :dist)`"
 ":hyperparameter_types" = "`(\"Bool\", \"Int64\", \"Distances.SemiMetric\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing)`"
 
 [MultivariateStats.BayesianLDA]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
-":output_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
-":target_scitype" = "`AbstractArray{var\"_s57\",1} where var\"_s57\"<:ScientificTypes.Finite`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
+":output_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
+":target_scitype" = "`AbstractArray{_s54,1} where _s54<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "MultivariateStats"
 ":package_license" = "MIT"
@@ -2282,14 +2282,14 @@
 ":name" = "BayesianLDA"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict", ":transform"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params", ":transform"]
 ":hyperparameters" = "`(:method, :cov_w, :cov_b, :out_dim, :regcoef, :priors)`"
 ":hyperparameter_types" = "`(\"Symbol\", \"StatsBase.CovarianceEstimator\", \"StatsBase.CovarianceEstimator\", \"Int64\", \"Float64\", \"Union{Nothing, Array{Float64,1}}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [MultivariateStats.PCA]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
-":output_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
+":output_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":target_scitype" = "`ScientificTypes.Unknown`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "MultivariateStats"
@@ -2310,9 +2310,9 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing)`"
 
 [DecisionTree.AdaBoostStumpClassifier]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:Union{AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous, AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Count, AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.OrderedFactor}`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:Union{AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous, AbstractArray{_s23,1} where _s23<:ScientificTypes.Count, AbstractArray{_s23,1} where _s23<:ScientificTypes.OrderedFactor}`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{var\"_s111\",1} where var\"_s111\"<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s136,1} where _s136<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "DecisionTree"
 ":package_license" = "MIT"
@@ -2326,13 +2326,13 @@
 ":name" = "AdaBoostStumpClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:n_iter, :pdf_smoothing)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
 
 [DecisionTree.DecisionTreeRegressor]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:Union{AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous, AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Count, AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.OrderedFactor}`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:Union{AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous, AbstractArray{_s23,1} where _s23<:ScientificTypes.Count, AbstractArray{_s23,1} where _s23<:ScientificTypes.OrderedFactor}`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":is_pure_julia" = "`true`"
@@ -2348,15 +2348,15 @@
 ":name" = "DecisionTreeRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:max_depth, :min_samples_leaf, :min_samples_split, :min_purity_increase, :n_subfeatures, :post_prune, :merge_purity_threshold)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Int64\", \"Int64\", \"Float64\", \"Int64\", \"Bool\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [DecisionTree.DecisionTreeClassifier]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:Union{AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous, AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Count, AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.OrderedFactor}`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:Union{AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous, AbstractArray{_s23,1} where _s23<:ScientificTypes.Count, AbstractArray{_s23,1} where _s23<:ScientificTypes.OrderedFactor}`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{var\"_s111\",1} where var\"_s111\"<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s136,1} where _s136<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "DecisionTree"
 ":package_license" = "MIT"
@@ -2370,13 +2370,13 @@
 ":name" = "DecisionTreeClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:max_depth, :min_samples_leaf, :min_samples_split, :min_purity_increase, :n_subfeatures, :post_prune, :merge_purity_threshold, :pdf_smoothing, :display_depth)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Int64\", \"Int64\", \"Float64\", \"Int64\", \"Bool\", \"Float64\", \"Float64\", \"Int64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [DecisionTree.RandomForestRegressor]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:Union{AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous, AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Count, AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.OrderedFactor}`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:Union{AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous, AbstractArray{_s23,1} where _s23<:ScientificTypes.Count, AbstractArray{_s23,1} where _s23<:ScientificTypes.OrderedFactor}`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":is_pure_julia" = "`true`"
@@ -2392,15 +2392,15 @@
 ":name" = "RandomForestRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:max_depth, :min_samples_leaf, :min_samples_split, :min_purity_increase, :n_subfeatures, :n_trees, :sampling_fraction, :pdf_smoothing)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Int64\", \"Int64\", \"Float64\", \"Int64\", \"Int64\", \"Float64\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [DecisionTree.RandomForestClassifier]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:Union{AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous, AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Count, AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.OrderedFactor}`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:Union{AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous, AbstractArray{_s23,1} where _s23<:ScientificTypes.Count, AbstractArray{_s23,1} where _s23<:ScientificTypes.OrderedFactor}`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{var\"_s111\",1} where var\"_s111\"<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s136,1} where _s136<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "DecisionTree"
 ":package_license" = "MIT"
@@ -2414,14 +2414,14 @@
 ":name" = "RandomForestClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
 ":hyperparameters" = "`(:max_depth, :min_samples_leaf, :min_samples_split, :min_purity_increase, :n_subfeatures, :n_trees, :sampling_fraction, :pdf_smoothing)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Int64\", \"Int64\", \"Float64\", \"Int64\", \"Int64\", \"Float64\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [Clustering.KMeans]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
-":output_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
+":output_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":target_scitype" = "`ScientificTypes.Unknown`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "Clustering"
@@ -2436,14 +2436,14 @@
 ":name" = "KMeans"
 ":is_supervised" = "`false`"
 ":prediction_type" = ":unknown"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict", ":transform"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params", ":transform"]
 ":hyperparameters" = "`(:k, :metric)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Distances.SemiMetric\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
 
 [Clustering.KMedoids]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
-":output_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
+":output_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":target_scitype" = "`ScientificTypes.Unknown`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "Clustering"
@@ -2458,13 +2458,13 @@
 ":name" = "KMedoids"
 ":is_supervised" = "`false`"
 ":prediction_type" = ":unknown"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict", ":transform"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params", ":transform"]
 ":hyperparameters" = "`(:k, :metric)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Distances.SemiMetric\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
 
 [XGBoost.XGBoostCount]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Count,1}`"
 ":is_pure_julia" = "`false`"
@@ -2480,13 +2480,13 @@
 ":name" = "XGBoostCount"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":clean!", ":fit", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit"]
 ":hyperparameters" = "`(:num_round, :booster, :disable_default_eval_metric, :eta, :gamma, :max_depth, :min_child_weight, :max_delta_step, :subsample, :colsample_bytree, :colsample_bylevel, :lambda, :alpha, :tree_method, :sketch_eps, :scale_pos_weight, :updater, :refresh_leaf, :process_type, :grow_policy, :max_leaves, :max_bin, :predictor, :sample_type, :normalize_type, :rate_drop, :one_drop, :skip_drop, :feature_selector, :top_k, :tweedie_variance_power, :objective, :base_score, :eval_metric, :seed)`"
 ":hyperparameter_types" = "`(\"Int64\", \"String\", \"Int64\", \"Float64\", \"Float64\", \"Int64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"String\", \"Float64\", \"Float64\", \"String\", \"Union{Bool, Int64}\", \"String\", \"String\", \"Int64\", \"Int64\", \"String\", \"String\", \"String\", \"Float64\", \"Any\", \"Float64\", \"String\", \"Int64\", \"Float64\", \"Any\", \"Float64\", \"Any\", \"Int64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [XGBoost.XGBoostRegressor]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":is_pure_julia" = "`false`"
@@ -2502,15 +2502,15 @@
 ":name" = "XGBoostRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":clean!", ":fit", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit"]
 ":hyperparameters" = "`(:num_round, :booster, :disable_default_eval_metric, :eta, :gamma, :max_depth, :min_child_weight, :max_delta_step, :subsample, :colsample_bytree, :colsample_bylevel, :lambda, :alpha, :tree_method, :sketch_eps, :scale_pos_weight, :updater, :refresh_leaf, :process_type, :grow_policy, :max_leaves, :max_bin, :predictor, :sample_type, :normalize_type, :rate_drop, :one_drop, :skip_drop, :feature_selector, :top_k, :tweedie_variance_power, :objective, :base_score, :eval_metric, :seed)`"
 ":hyperparameter_types" = "`(\"Int64\", \"String\", \"Int64\", \"Float64\", \"Float64\", \"Int64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"String\", \"Float64\", \"Float64\", \"String\", \"Union{Bool, Int64}\", \"String\", \"String\", \"Int64\", \"Int64\", \"String\", \"String\", \"String\", \"Float64\", \"Any\", \"Float64\", \"String\", \"Int64\", \"Float64\", \"Any\", \"Float64\", \"Any\", \"Int64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [XGBoost.XGBoostClassifier]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{var\"_s226\",1} where var\"_s226\"<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s320,1} where _s320<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "XGBoost"
 ":package_license" = "unknown"
@@ -2524,15 +2524,15 @@
 ":name" = "XGBoostClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":clean!", ":fit", ":predict"]
+":implemented_methods" = [":predict", ":clean!", ":fit"]
 ":hyperparameters" = "`(:num_round, :booster, :disable_default_eval_metric, :eta, :gamma, :max_depth, :min_child_weight, :max_delta_step, :subsample, :colsample_bytree, :colsample_bylevel, :lambda, :alpha, :tree_method, :sketch_eps, :scale_pos_weight, :updater, :refresh_leaf, :process_type, :grow_policy, :max_leaves, :max_bin, :predictor, :sample_type, :normalize_type, :rate_drop, :one_drop, :skip_drop, :feature_selector, :top_k, :tweedie_variance_power, :objective, :base_score, :eval_metric, :seed)`"
 ":hyperparameter_types" = "`(\"Int64\", \"String\", \"Int64\", \"Float64\", \"Float64\", \"Int64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"String\", \"Float64\", \"Float64\", \"String\", \"Union{Bool, Int64}\", \"String\", \"String\", \"Int64\", \"Int64\", \"String\", \"String\", \"String\", \"Float64\", \"Any\", \"Float64\", \"String\", \"Int64\", \"Float64\", \"Any\", \"Float64\", \"Any\", \"Int64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [LightGBM.LGBMClassifier]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{var\"_s266\",1} where var\"_s266\"<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s390,1} where _s390<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "LightGBM"
 ":package_license" = "MIT Expat"
@@ -2546,13 +2546,13 @@
 ":name" = "LGBMClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":clean!", ":fit", ":predict", ":update"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":update"]
 ":hyperparameters" = "`(:num_iterations, :learning_rate, :num_leaves, :max_depth, :tree_learner, :histogram_pool_size, :min_data_in_leaf, :min_sum_hessian_in_leaf, :lambda_l1, :lambda_l2, :min_gain_to_split, :feature_fraction, :feature_fraction_seed, :bagging_fraction, :bagging_freq, :bagging_seed, :early_stopping_round, :max_bin, :init_score, :objective, :categorical_feature, :data_random_seed, :is_sparse, :is_unbalance, :metric, :metric_freq, :is_training_metric, :ndcg_at, :num_machines, :num_threads, :local_listen_port, :time_out, :machine_list_file, :save_binary, :device_type)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Float64\", \"Int64\", \"Int64\", \"String\", \"Float64\", \"Int64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Int64\", \"Float64\", \"Int64\", \"Int64\", \"Int64\", \"Int64\", \"String\", \"String\", \"Array{Int64,1}\", \"Int64\", \"Bool\", \"Bool\", \"Array{String,1}\", \"Int64\", \"Bool\", \"Array{Int64,1}\", \"Int64\", \"Int64\", \"Int64\", \"Int64\", \"String\", \"Bool\", \"String\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [LightGBM.LGBMRegressor]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":is_pure_julia" = "`false`"
@@ -2568,15 +2568,15 @@
 ":name" = "LGBMRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":clean!", ":fit", ":predict", ":update"]
+":implemented_methods" = [":predict", ":clean!", ":fit", ":update"]
 ":hyperparameters" = "`(:num_iterations, :learning_rate, :num_leaves, :max_depth, :tree_learner, :histogram_pool_size, :min_data_in_leaf, :min_sum_hessian_in_leaf, :lambda_l1, :lambda_l2, :min_gain_to_split, :feature_fraction, :feature_fraction_seed, :bagging_fraction, :bagging_freq, :bagging_seed, :early_stopping_round, :max_bin, :init_score, :objective, :categorical_feature, :data_random_seed, :is_sparse, :is_unbalance, :metric, :metric_freq, :is_training_metric, :ndcg_at, :num_machines, :num_threads, :local_listen_port, :time_out, :machine_list_file, :save_binary, :device_type)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Float64\", \"Int64\", \"Int64\", \"String\", \"Float64\", \"Int64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Int64\", \"Float64\", \"Int64\", \"Int64\", \"Int64\", \"Int64\", \"String\", \"String\", \"Array{Int64,1}\", \"Int64\", \"Bool\", \"Bool\", \"Array{String,1}\", \"Int64\", \"Bool\", \"Array{Int64,1}\", \"Int64\", \"Int64\", \"Int64\", \"Int64\", \"String\", \"Bool\", \"String\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [EvoTrees.EvoTreeClassifier]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{var\"_s40\",1} where var\"_s40\"<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s26,1} where _s26<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "EvoTrees"
 ":package_license" = "Apache"
@@ -2596,9 +2596,9 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [EvoTrees.EvoTreeGaussian]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{var\"_s40\",1} where var\"_s40\"<:ScientificTypes.Continuous`"
+":target_scitype" = "`AbstractArray{_s26,1} where _s26<:ScientificTypes.Continuous`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "EvoTrees"
 ":package_license" = "Apache"
@@ -2618,9 +2618,9 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [EvoTrees.EvoTreeRegressor]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{var\"_s40\",1} where var\"_s40\"<:ScientificTypes.Continuous`"
+":target_scitype" = "`AbstractArray{_s26,1} where _s26<:ScientificTypes.Continuous`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "EvoTrees"
 ":package_license" = "Apache"
@@ -2640,9 +2640,9 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [EvoTrees.EvoTreeCount]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{var\"_s40\",1} where var\"_s40\"<:ScientificTypes.Count`"
+":target_scitype" = "`AbstractArray{_s26,1} where _s26<:ScientificTypes.Count`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "EvoTrees"
 ":package_license" = "Apache"
@@ -2664,7 +2664,7 @@
 [MLJModels.ConstantClassifier]
 ":input_scitype" = "`ScientificTypes.Table`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{var\"_s55\",1} where var\"_s55\"<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s55,1} where _s55<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "MLJModels"
 ":package_license" = "MIT"
@@ -2678,14 +2678,14 @@
 ":name" = "ConstantClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":fit", ":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":fit", ":fitted_params"]
 ":hyperparameters" = "``"
 ":hyperparameter_types" = "``"
 ":hyperparameter_ranges" = "``"
 
 [MLJModels.Standardizer]
-":input_scitype" = "`Union{AbstractArray{var\"_s55\",1} where var\"_s55\"<:ScientificTypes.Continuous, ScientificTypes.Table}`"
-":output_scitype" = "`Union{AbstractArray{var\"_s54\",1} where var\"_s54\"<:ScientificTypes.Continuous, ScientificTypes.Table}`"
+":input_scitype" = "`Union{AbstractArray{_s55,1} where _s55<:ScientificTypes.Continuous, ScientificTypes.Table}`"
+":output_scitype" = "`Union{AbstractArray{_s54,1} where _s54<:ScientificTypes.Continuous, ScientificTypes.Table}`"
 ":target_scitype" = "`ScientificTypes.Unknown`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "MLJModels"
@@ -2708,7 +2708,7 @@
 [MLJModels.DeterministicConstantClassifier]
 ":input_scitype" = "`ScientificTypes.Table`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{var\"_s55\",1} where var\"_s55\"<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s55,1} where _s55<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "MLJModels"
 ":package_license" = "MIT"
@@ -2722,13 +2722,13 @@
 ":name" = "DeterministicConstantClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":fit", ":predict"]
+":implemented_methods" = [":predict", ":fit"]
 ":hyperparameters" = "``"
 ":hyperparameter_types" = "``"
 ":hyperparameter_ranges" = "``"
 
 [MLJModels.UnivariateTimeTypeToContinuous]
-":input_scitype" = "`AbstractArray{var\"_s55\",1} where var\"_s55\"<:ScientificTypes.ScientificTimeType`"
+":input_scitype" = "`AbstractArray{_s55,1} where _s55<:ScientificTypes.ScientificTimeType`"
 ":output_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":target_scitype" = "`ScientificTypes.Unknown`"
 ":is_pure_julia" = "`true`"
@@ -2773,7 +2773,7 @@
 
 [MLJModels.ContinuousEncoder]
 ":input_scitype" = "`ScientificTypes.Table`"
-":output_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":output_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":target_scitype" = "`ScientificTypes.Unknown`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "MLJModels"
@@ -2832,7 +2832,7 @@
 ":name" = "ConstantRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":fitted_params", ":predict"]
+":implemented_methods" = [":predict", ":fitted_params"]
 ":hyperparameters" = "`(:distribution_type,)`"
 ":hyperparameter_types" = "`(\"Type{D} where D<:Distributions.Sampleable\",)`"
 ":hyperparameter_ranges" = "`(nothing,)`"
@@ -2860,8 +2860,8 @@
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
 
 [MLJModels.UnivariateDiscretizer]
-":input_scitype" = "`AbstractArray{var\"_s55\",1} where var\"_s55\"<:ScientificTypes.Continuous`"
-":output_scitype" = "`AbstractArray{var\"_s54\",1} where var\"_s54\"<:ScientificTypes.OrderedFactor`"
+":input_scitype" = "`AbstractArray{_s55,1} where _s55<:ScientificTypes.Continuous`"
+":output_scitype" = "`AbstractArray{_s54,1} where _s54<:ScientificTypes.OrderedFactor`"
 ":target_scitype" = "`ScientificTypes.Unknown`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "MLJModels"
@@ -2884,7 +2884,7 @@
 [MLJModels.BinaryThresholdPredictor]
 ":input_scitype" = "`ScientificTypes.Unknown`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{var\"_s54\",1} where var\"_s54\"<:ScientificTypes.Finite{2}`"
+":target_scitype" = "`AbstractArray{_s54,1} where _s54<:ScientificTypes.Finite{2}`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "MLJModels"
 ":package_license" = "unknown"
@@ -2898,7 +2898,7 @@
 ":name" = "BinaryThresholdPredictor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":fit", ":fitted_params", ":predict", ":update"]
+":implemented_methods" = [":predict", ":fit", ":fitted_params", ":update"]
 ":hyperparameters" = "`(:wrapped_model, :threshold)`"
 ":hyperparameter_types" = "`(\"MLJModelInterface.Probabilistic\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
@@ -2942,13 +2942,13 @@
 ":name" = "DeterministicConstantRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":fit", ":predict"]
+":implemented_methods" = [":predict", ":fit"]
 ":hyperparameters" = "``"
 ":hyperparameter_types" = "``"
 ":hyperparameter_ranges" = "``"
 
 [MLJModels.UnivariateStandardizer]
-":input_scitype" = "`AbstractArray{var\"_s55\",1} where var\"_s55\"<:ScientificTypes.Infinite`"
+":input_scitype" = "`AbstractArray{_s55,1} where _s55<:ScientificTypes.Infinite`"
 ":output_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":target_scitype" = "`ScientificTypes.Unknown`"
 ":is_pure_julia" = "`true`"
@@ -2970,8 +2970,8 @@
 ":hyperparameter_ranges" = "``"
 
 [MLJModels.UnivariateFillImputer]
-":input_scitype" = "`Union{AbstractArray{var\"_s55\",1} where var\"_s55\"<:Union{Missing, ScientificTypes.Continuous}, AbstractArray{var\"_s54\",1} where var\"_s54\"<:Union{Missing, ScientificTypes.Count}, AbstractArray{var\"_s53\",1} where var\"_s53\"<:Union{Missing, ScientificTypes.Finite}}`"
-":output_scitype" = "`Union{AbstractArray{var\"_s52\",1} where var\"_s52\"<:ScientificTypes.Continuous, AbstractArray{var\"_s51\",1} where var\"_s51\"<:ScientificTypes.Count, AbstractArray{var\"_s50\",1} where var\"_s50\"<:ScientificTypes.Finite}`"
+":input_scitype" = "`Union{AbstractArray{_s55,1} where _s55<:Union{Missing, ScientificTypes.Continuous}, AbstractArray{_s54,1} where _s54<:Union{Missing, ScientificTypes.Count}, AbstractArray{_s53,1} where _s53<:Union{Missing, ScientificTypes.Finite}}`"
+":output_scitype" = "`Union{AbstractArray{_s52,1} where _s52<:ScientificTypes.Continuous, AbstractArray{_s51,1} where _s51<:ScientificTypes.Count, AbstractArray{_s50,1} where _s50<:ScientificTypes.Finite}`"
 ":target_scitype" = "`ScientificTypes.Unknown`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "MLJModels"
@@ -2992,7 +2992,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing)`"
 
 [LIBSVM.EpsilonSVR]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":is_pure_julia" = "`false`"
@@ -3008,15 +3008,15 @@
 ":name" = "EpsilonSVR"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":fit", ":predict"]
+":implemented_methods" = [":predict", ":fit"]
 ":hyperparameters" = "`(:kernel, :gamma, :epsilon, :cost, :cachesize, :degree, :coef0, :tolerance, :shrinking)`"
 ":hyperparameter_types" = "`(\"LIBSVM.Kernel.KERNEL\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Int32\", \"Float64\", \"Float64\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [LIBSVM.LinearSVC]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{var\"_s265\",1} where var\"_s265\"<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s389,1} where _s389<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "LIBSVM"
 ":package_license" = "unknown"
@@ -3030,13 +3030,13 @@
 ":name" = "LinearSVC"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":fit", ":predict"]
+":implemented_methods" = [":predict", ":fit"]
 ":hyperparameters" = "`(:solver, :weights, :tolerance, :cost, :p, :bias)`"
 ":hyperparameter_types" = "`(\"LIBSVM.Linearsolver.LINEARSOLVER\", \"Union{Nothing, Dict}\", \"Float64\", \"Float64\", \"Float64\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [LIBSVM.NuSVR]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":is_pure_julia" = "`false`"
@@ -3052,15 +3052,15 @@
 ":name" = "NuSVR"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":fit", ":predict"]
+":implemented_methods" = [":predict", ":fit"]
 ":hyperparameters" = "`(:kernel, :gamma, :nu, :cost, :cachesize, :degree, :coef0, :tolerance, :shrinking)`"
 ":hyperparameter_types" = "`(\"LIBSVM.Kernel.KERNEL\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Int32\", \"Float64\", \"Float64\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [LIBSVM.NuSVC]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{var\"_s265\",1} where var\"_s265\"<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s389,1} where _s389<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "LIBSVM"
 ":package_license" = "unknown"
@@ -3074,15 +3074,15 @@
 ":name" = "NuSVC"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":fit", ":predict"]
+":implemented_methods" = [":predict", ":fit"]
 ":hyperparameters" = "`(:kernel, :gamma, :weights, :nu, :cost, :cachesize, :degree, :coef0, :tolerance, :shrinking)`"
 ":hyperparameter_types" = "`(\"LIBSVM.Kernel.KERNEL\", \"Float64\", \"Union{Nothing, Dict}\", \"Float64\", \"Float64\", \"Float64\", \"Int32\", \"Float64\", \"Float64\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [LIBSVM.SVC]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{var\"_s265\",1} where var\"_s265\"<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s389,1} where _s389<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "LIBSVM"
 ":package_license" = "unknown"
@@ -3096,14 +3096,14 @@
 ":name" = "SVC"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":fit", ":predict"]
+":implemented_methods" = [":predict", ":fit"]
 ":hyperparameters" = "`(:kernel, :gamma, :weights, :cost, :cachesize, :degree, :coef0, :tolerance, :shrinking, :probability)`"
 ":hyperparameter_types" = "`(\"LIBSVM.Kernel.KERNEL\", \"Float64\", \"Union{Nothing, Dict}\", \"Float64\", \"Float64\", \"Int32\", \"Float64\", \"Float64\", \"Bool\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [LIBSVM.OneClassSVM]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
-":output_scitype" = "`AbstractArray{var\"_s265\",1} where var\"_s265\"<:ScientificTypes.Finite{2}`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
+":output_scitype" = "`AbstractArray{_s389,1} where _s389<:ScientificTypes.Finite{2}`"
 ":target_scitype" = "`ScientificTypes.Unknown`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "LIBSVM"
@@ -3124,9 +3124,9 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [GLM.LinearBinaryClassifier]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{var\"_s266\",1} where var\"_s266\"<:ScientificTypes.Finite{2}`"
+":target_scitype" = "`AbstractArray{_s390,1} where _s390<:ScientificTypes.Finite{2}`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "GLM"
 ":package_license" = "MIT"
@@ -3140,13 +3140,13 @@
 ":name" = "LinearBinaryClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":fit", ":predict", ":predict_mean"]
+":implemented_methods" = [":predict", ":fit", ":predict_mean"]
 ":hyperparameters" = "`(:fit_intercept, :link)`"
 ":hyperparameter_types" = "`(\"Bool\", \"GLM.Link01\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
 
 [GLM.LinearCountRegressor]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Count,1}`"
 ":is_pure_julia" = "`true`"
@@ -3162,13 +3162,13 @@
 ":name" = "LinearCountRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":fit", ":predict"]
+":implemented_methods" = [":predict", ":fit"]
 ":hyperparameters" = "`(:fit_intercept, :distribution, :link)`"
 ":hyperparameter_types" = "`(\"Bool\", \"Distributions.Distribution\", \"GLM.Link\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing)`"
 
 [GLM.LinearRegressor]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":is_pure_julia" = "`true`"
@@ -3184,15 +3184,15 @@
 ":name" = "LinearRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":fit", ":predict"]
+":implemented_methods" = [":predict", ":fit"]
 ":hyperparameters" = "`(:fit_intercept, :allowrankdeficient)`"
 ":hyperparameter_types" = "`(\"Bool\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
 
 [MLJFlux.MultitargetNeuralNetworkRegressor]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":target_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "MLJFlux"
 ":package_license" = "MIT"
@@ -3212,9 +3212,9 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [MLJFlux.NeuralNetworkClassifier]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{var\"_s44\",1} where var\"_s44\"<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s38,1} where _s38<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "MLJFlux"
 ":package_license" = "MIT"
@@ -3228,15 +3228,15 @@
 ":name" = "NeuralNetworkClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":fit", ":fitted_params", ":predict", ":update"]
+":implemented_methods" = [":predict", ":fit", ":fitted_params", ":update"]
 ":hyperparameters" = "`(:builder, :finaliser, :optimiser, :loss, :epochs, :batch_size, :lambda, :alpha, :optimiser_changes_trigger_retraining)`"
 ":hyperparameter_types" = "`(\"Any\", \"Any\", \"Any\", \"Any\", \"Int64\", \"Int64\", \"Float64\", \"Float64\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [MLJFlux.ImageClassifier]
-":input_scitype" = "`AbstractArray{var\"_s44\",1} where var\"_s44\"<:ScientificTypes.GrayImage`"
+":input_scitype" = "`AbstractArray{_s38,1} where _s38<:ScientificTypes.GrayImage`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{var\"_s35\",1} where var\"_s35\"<:ScientificTypes.Multiclass`"
+":target_scitype" = "`AbstractArray{_s31,1} where _s31<:ScientificTypes.Multiclass`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "MLJFlux"
 ":package_license" = "MIT"
@@ -3250,15 +3250,15 @@
 ":name" = "ImageClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":fit", ":fitted_params", ":predict", ":update"]
+":implemented_methods" = [":predict", ":fit", ":fitted_params", ":update"]
 ":hyperparameters" = "`(:builder, :finaliser, :optimiser, :loss, :epochs, :batch_size, :lambda, :alpha, :optimiser_changes_trigger_retraining)`"
 ":hyperparameter_types" = "`(\"Any\", \"Any\", \"Any\", \"Any\", \"Int64\", \"Int64\", \"Float64\", \"Float64\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [MLJFlux.NeuralNetworkRegressor]
-":input_scitype" = "`ScientificTypes.Table{var\"_s45\"} where var\"_s45\"<:(AbstractArray{var\"_s13\",1} where var\"_s13\"<:ScientificTypes.Continuous)`"
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{var\"_s35\",1} where var\"_s35\"<:ScientificTypes.Continuous`"
+":target_scitype" = "`AbstractArray{_s31,1} where _s31<:ScientificTypes.Continuous`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "MLJFlux"
 ":package_license" = "MIT"
