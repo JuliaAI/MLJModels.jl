@@ -40,11 +40,6 @@ end
     @test include("LIBSVM.jl")
 end
 
-if VERSION >= v"1.3"
-@testset "XGBoost" begin
-    @test include("XGBoost.jl")
-end
-
 @testset "NearestNeighbors" begin
     @test include("NearestNeighbors.jl")
 end
