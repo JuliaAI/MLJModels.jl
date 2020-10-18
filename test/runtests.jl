@@ -7,9 +7,9 @@ using Test, MLJModels
     @testset "model search" begin
         @test include("model_search.jl")
     end
-    @testset "loading model code" begin
-        @test include("loading.jl")
-    end
+    # @testset "loading model code" begin
+    #     @test include("loading.jl")
+    # end
 end
 
 @testset "built-in models" begin
