@@ -48,7 +48,6 @@ MLJMultivariateStatsInterface = "1b6a4a23-ba22-4f51-9698-8599985d3728"
 NearestNeighbors = "b8a86587-4115-5ab1-83bc-aa920d37bbce"
 ScientificTypes = "321657f4-b219-11e9-178b-2701a2544e81"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
-XGBoost = "009559a3-9522-5dbb-924b-0b6ed2b22bb9"
 
 [targets]
-test = ["Clustering", "DecisionTree", "Distances", "GLM", "LIBSVM", "MLJMultivariateStatsInterface", "NearestNeighbors", "ScientificTypes", "Test", "XGBoost"]
+test = ["Clustering", "DecisionTree", "Distances", "GLM", "LIBSVM", "MLJMultivariateStatsInterface", "NearestNeighbors", "ScientificTypes", "Test"]
