@@ -14,11 +14,12 @@ MLJModels = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
 MLJMultivariateStatsInterface = "1b6a4a23-ba22-4f51-9698-8599985d3728"
 MLJNaiveBayesInterface = "33e4bacb-b9e2-458e-9a13-5d9a90b235fa"
 MLJScikitLearnInterface = "5ae90465-5518-4432-b9d2-8a1def2f0cab"
+MLJXGBoostInterface = "54119dfa-1dab-4055-a167-80440f4f7a91"
 MultivariateStats = "6f286f6a-111f-5878-ab1e-185364afe411"
 NearestNeighbors = "b8a86587-4115-5ab1-83bc-aa920d37bbce"
 ParallelKMeans = "42b8e9d4-006b-409a-8472-7f34b3fb58af"
+PartialLeastSquaresRegressor = "f4b1acfe-f311-436c-bb79-8483f53c17d5"
 Pkg = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
-XGBoost = "009559a3-9522-5dbb-924b-0b6ed2b22bb9"
 
 [compat]
 MLJModelInterface = "^0.3"
