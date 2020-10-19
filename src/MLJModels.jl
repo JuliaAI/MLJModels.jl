@@ -76,8 +76,6 @@ function __init__()
              include("GLM.jl"))
     @require(Clustering="aaaa29a8-35af-508c-8bc3-b662a17a0fe5",
              include("Clustering.jl"))
-    @require(XGBoost = "009559a3-9522-5dbb-924b-0b6ed2b22bb9",
-             include("XGBoost.jl"))
     @require(LIBSVM="b1bec4e5-fd48-53fe-b0cb-9723c09d164b",
              include("LIBSVM.jl"))
     @require(NearestNeighbors="b8a86587-4115-5ab1-83bc-aa920d37bbce",
