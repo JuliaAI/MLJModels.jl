@@ -128,7 +128,7 @@ end
 function MMI.predict(m::KNNRegressor, (tree, y, w), X)
     Xmatrix     = MMI.matrix(X, transpose=true) # NOTE: copies the data
     idxs, dists = NN.knn(tree, Xmatrix, m.K)
-    preds       = zeros(length(idxs))
+    preds       = similar(y, length(idxs))
 
     w_ = ones(m.K)
 
