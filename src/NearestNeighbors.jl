@@ -161,7 +161,7 @@ metadata_pkg.((KNNRegressor, KNNClassifier),
 
 metadata_model(KNNRegressor,
     input   = Table(Continuous),
-    target  = Union{AbstractVector{Continuous}, AbstractVector{<:AbstractVector{Continuous}}},
+    target  = Union{AbstractVector{Continuous}, AbstractVector{<:AbstractArray{Continuous}}},
     weights = true,
     descr   = KNNRegressorDescription
     )

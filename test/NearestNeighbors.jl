@@ -142,7 +142,7 @@ infos[:docstring]
 infos = info_dict(knnr)
 
 @test infos[:input_scitype] == Table(Continuous)
-@test infos[:target_scitype] == Union{Table(Continuous), AbstractVector{Continuous}}
+@test infos[:target_scitype] == Union{AbstractVector{Continuous}, AbstractVector{<:AbstractArray{Continuous}}}
 infos[:docstring]
 
 end
