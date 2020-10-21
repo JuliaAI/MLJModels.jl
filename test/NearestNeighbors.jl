@@ -7,6 +7,7 @@ using MLJModels.NearestNeighbors_
 using CategoricalArrays
 using MLJBase
 using Random
+using Tables
 
 Random.seed!(5151)
 
@@ -140,7 +141,7 @@ infos[:docstring]
 infos = info_dict(knnr)
 
 @test infos[:input_scitype] == Table(Continuous)
-@test infos[:target_scitype] == Union{AbstractVector{Continuous}, AbstractVector{<:AbstractArray{Continuous}}}
+@test infos[:target_scitype] == Union{AbstractVector{Continuous}, Table{Continuous}}
 infos[:docstring]
 
 end

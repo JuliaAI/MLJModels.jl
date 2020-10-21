@@ -10,6 +10,7 @@ const MMI = MLJModelInterface
 using Distances
 
 import ..NearestNeighbors
+import ..Tables
 
 const NN = NearestNeighbors
 
@@ -141,20 +142,18 @@ function MMI.predict(m::KNNRegressor, (tree, y, w), X)
 
     for i in eachindex(idxs)
         idxs_  = idxs[i]
-        println(idxs_)
         dists_ = dists[i]
         values = [ymat[j,:] for j in idxs_]
         if w !== nothing
             w_ = w[idxs_]
         end
-        println(preds)
         if m.weights == :uniform
             preds[i,:] .= sum(values .* w_) / sum(w_)
         else
             preds[i,:] .= sum(values .* w_ .* (1.0 .- dists_ ./ sum(dists_))) / (sum(w_) - 1)
         end
     end
-    if typeof(x) <: AbstractArray
+    if typeof(y) <: AbstractArray
         return preds
     else
         return MMI.table(preds, names=Tables.schema(y).names, prototype=y)
