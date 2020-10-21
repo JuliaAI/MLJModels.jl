@@ -109,21 +109,19 @@ p2 = predict(knnr, f2, xtest)
 @test all(p[ntest+1:2*ntest] .≈ 2.0)
 @test all(p[2*ntest+1:end] .≈ -2.0)
 
-y1v = fill( [0.0], n)
-y2v = fill( [2.0], n)
-y3v = fill([-2.0], n)
-
-yv = vcat(y1v, y2v, y3v)
+ymat = vcat(fill( 0.0, n, 2), fill(2.0, n, 2), fill(-2.0, n, 2))
+yv = Tables.table(ymat; header = [:a, :b])
 
 fv,_,_ = fit(knnr, 1, x, yv)
 f2v,_,_ = fit(knnr, 1, x, yv, w)
 
 pv = predict(knnr, fv, xtest)
 
-@test all(pv[1:ntest] .≈ [[0.0]])
-@test all(pv[ntest+1:2*ntest] .≈ [[2.0]])
-@test all(pv[2*ntest+1:end] .≈ [[-2.0]])
-
+for col in [:a, :b]
+    @test all(pv[col][1:ntest] .≈ [0.0])
+    @test all(pv[col][ntest+1:2*ntest] .≈ [2.0])
+    @test all(pv[col][2*ntest+1:end] .≈ [-2.0])
+end
 
 
 
