@@ -129,21 +129,15 @@ end
 function MMI.predict(m::KNNRegressor, (tree, y, w), X)
     Xmatrix     = MMI.matrix(X, transpose=true) # NOTE: copies the data
     idxs, dists = NN.knn(tree, Xmatrix, m.K)
-
-    if typeof(y) <: AbstractVector
-        ymat    = reshape(y, length(y), 1)
-        preds   = similar(ymat, length(idxs), 1)
-    else # for multi-target prediction
-        ymat    = MMI.matrix(y)
-        preds   = similar(ymat, length(idxs), size(ymat, 2))
-    end
-
+    return _predict(m, y, idxs, dists, dists)
+end
+function _predict(m::KNNRegressor, y::AbstractVector, idxs, dists)
+    preds   = similar(y, length(idxs), 1)
     w_ = ones(m.K)
-
     for i in eachindex(idxs)
         idxs_  = idxs[i]
         dists_ = dists[i]
-        values = [ymat[j,:] for j in idxs_]
+        values = [view(y, j, :) for j in idxs_]
         if w !== nothing
             w_ = w[idxs_]
         end
@@ -153,14 +147,29 @@ function MMI.predict(m::KNNRegressor, (tree, y, w), X)
             preds[i,:] .= sum(values .* w_ .* (1.0 .- dists_ ./ sum(dists_))) / (sum(w_) - 1)
         end
     end
-    if typeof(y) <: AbstractVector
-        return preds
-    else
-        return MMI.table(preds, names=Tables.schema(y).names, prototype=y)
-    end
+    return preds
 end
 
-
+function _predict(m::KNNRegressor, y, idxs, dists)
+    ymat    = MMI.matrix(y)
+    preds   = similar(ymat, length(idxs), size(ymat, 2))
+    w_ = ones(m.K)
+    for i in eachindex(idxs)
+        idxs_  = idxs[i]
+        dists_ = dists[i]
+        values = [view(ymat, j, :) for j in idxs_]
+        if w !== nothing
+            w_ = w[idxs_]
+        end
+        if m.weights == :uniform
+            preds[i,:] .= sum(values .* w_) / sum(w_)
+        else
+            preds[i,:] .= sum(values .* w_ .* (1.0 .- dists_ ./ sum(dists_))) / (sum(w_) - 1)
+        end
+    end
+    return MMI.table(preds, names=Tables.schema(y).names, prototype=y)
+end
+    
 # ====
 
 metadata_pkg.((KNNRegressor, KNNClassifier),
