@@ -129,9 +129,9 @@ end
 function MMI.predict(m::KNNRegressor, (tree, y, w), X)
     Xmatrix     = MMI.matrix(X, transpose=true) # NOTE: copies the data
     idxs, dists = NN.knn(tree, Xmatrix, m.K)
-    return _predict(m, y, idxs, dists)
+    return _predict(m, y, idxs, dists, w)
 end
-function _predict(m::KNNRegressor, y::AbstractVector, idxs, dists)
+function _predict(m::KNNRegressor, y::AbstractVector, idxs, dists, w)
     preds   = similar(y, length(idxs), 1)
     w_ = ones(m.K)
     for i in eachindex(idxs)
@@ -150,7 +150,7 @@ function _predict(m::KNNRegressor, y::AbstractVector, idxs, dists)
     return preds
 end
 
-function _predict(m::KNNRegressor, y, idxs, dists)
+function _predict(m::KNNRegressor, y, idxs, dists, w)
     ymat    = MMI.matrix(y)
     preds   = similar(ymat, length(idxs), size(ymat, 2))
     w_ = ones(m.K)
