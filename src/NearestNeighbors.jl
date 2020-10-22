@@ -10,7 +10,6 @@ const MMI = MLJModelInterface
 using Distances
 
 import ..NearestNeighbors
-import ..Tables
 
 const NN = NearestNeighbors
 
@@ -167,7 +166,7 @@ function _predict(m::KNNRegressor, y, idxs, dists, w)
             preds[i,:] .= sum(values .* w_ .* (1.0 .- dists_ ./ sum(dists_))) / (sum(w_) - 1)
         end
     end
-    return MMI.table(preds, names=Tables.schema(y).names, prototype=y)
+    return MMI.table(preds, names=MMI.schema(y).names, prototype=y)
 end
     
 # ====
