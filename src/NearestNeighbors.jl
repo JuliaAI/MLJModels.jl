@@ -153,7 +153,7 @@ function MMI.predict(m::KNNRegressor, (tree, y, w), X)
             preds[i,:] .= sum(values .* w_ .* (1.0 .- dists_ ./ sum(dists_))) / (sum(w_) - 1)
         end
     end
-    if typeof(y) <: AbstractArray
+    if typeof(y) <: AbstractVector
         return preds
     else
         return MMI.table(preds, names=Tables.schema(y).names, prototype=y)
@@ -174,7 +174,7 @@ metadata_pkg.((KNNRegressor, KNNClassifier),
 
 metadata_model(KNNRegressor,
     input   = Table(Continuous),
-    target  = Union{AbstractVector{Continuous}, Table{Continuous}},
+    target  = Union{AbstractVector{Continuous}, Table(Continuous)},
     weights = true,
     descr   = KNNRegressorDescription
     )
