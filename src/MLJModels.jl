@@ -1,4 +1,4 @@
-module MLJModels 
+module MLJModels
 
 import MLJModelInterface
 import MLJModelInterface: MODEL_TRAITS
