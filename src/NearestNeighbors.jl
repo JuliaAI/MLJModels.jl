@@ -136,7 +136,7 @@ function _predict(m::KNNRegressor, y::AbstractVector, idxs, dists, w)
     for i in eachindex(idxs)
         idxs_  = idxs[i]
         dists_ = dists[i]
-        values = [view(y, j, :) for j in idxs_]
+        values = y[idxs_]
         if w !== nothing
             w_ = w[idxs_]
         end
