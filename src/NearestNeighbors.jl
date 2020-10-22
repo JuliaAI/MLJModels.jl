@@ -131,7 +131,7 @@ function MMI.predict(m::KNNRegressor, (tree, y, w), X)
     return _predict(m, y, idxs, dists, w)
 end
 function _predict(m::KNNRegressor, y::AbstractVector, idxs, dists, w)
-    preds   = similar(y, length(idxs), 1)
+    preds       = zeros(length(idxs))
     w_ = ones(m.K)
     for i in eachindex(idxs)
         idxs_  = idxs[i]
@@ -141,9 +141,9 @@ function _predict(m::KNNRegressor, y::AbstractVector, idxs, dists, w)
             w_ = w[idxs_]
         end
         if m.weights == :uniform
-            preds[i,:] .= sum(values .* w_) / sum(w_)
+            preds[i] = sum(values .* w_) / sum(w_)
         else
-            preds[i,:] .= sum(values .* w_ .* (1.0 .- dists_ ./ sum(dists_))) / (sum(w_) - 1)
+            preds[i] = sum(values .* w_ .* (1.0 .- dists_ ./ sum(dists_))) / (sum(w_) - 1)
         end
     end
     return preds
