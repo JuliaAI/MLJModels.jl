@@ -41,6 +41,7 @@ const MMI = MLJModelInterface
 if VERSION < v"1.3"
     nonmissingtype = MLJScientificTypes.ScientificTypes.nonmissing
 end
+
 nonmissing = nonmissingtype
 
 include("metadata.jl")
@@ -74,8 +75,6 @@ function __init__()
              include("DecisionTree.jl"))
     @require(GLM="38e38edf-8417-5370-95a0-9cbb8c7f171a",
              include("GLM.jl"))
-    @require(Clustering="aaaa29a8-35af-508c-8bc3-b662a17a0fe5",
-             include("Clustering.jl"))
     @require(LIBSVM="b1bec4e5-fd48-53fe-b0cb-9723c09d164b",
              include("LIBSVM.jl"))
     @require(NearestNeighbors="b8a86587-4115-5ab1-83bc-aa920d37bbce",
