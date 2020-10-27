@@ -128,10 +128,11 @@ end
 function MMI.predict(m::KNNRegressor, (tree, y, w), X)
     Xmatrix     = MMI.matrix(X, transpose=true) # NOTE: copies the data
     idxs, dists = NN.knn(tree, Xmatrix, m.K)
+    return _predict(m, y, idxs, dists, w)
+end
+function _predict(m::KNNRegressor, y::AbstractVector, idxs, dists, w)
     preds       = zeros(length(idxs))
-
     w_ = ones(m.K)
-
     for i in eachindex(idxs)
         idxs_  = idxs[i]
         dists_ = dists[i]
@@ -148,6 +149,26 @@ function MMI.predict(m::KNNRegressor, (tree, y, w), X)
     return preds
 end
 
+function _predict(m::KNNRegressor, y, idxs, dists, w)
+    ymat    = MMI.matrix(y)
+    preds   = similar(ymat, length(idxs), size(ymat, 2))
+    w_ = ones(m.K)
+    for i in eachindex(idxs)
+        idxs_  = idxs[i]
+        dists_ = dists[i]
+        values = [view(ymat, j, :) for j in idxs_]
+        if w !== nothing
+            w_ = w[idxs_]
+        end
+        if m.weights == :uniform
+            preds[i,:] .= sum(values .* w_) / sum(w_)
+        else
+            preds[i,:] .= sum(values .* w_ .* (1.0 .- dists_ ./ sum(dists_))) / (sum(w_) - 1)
+        end
+    end
+    return MMI.table(preds, names=MMI.schema(y).names, prototype=y)
+end
+    
 # ====
 
 metadata_pkg.((KNNRegressor, KNNClassifier),
@@ -161,7 +182,7 @@ metadata_pkg.((KNNRegressor, KNNClassifier),
 
 metadata_model(KNNRegressor,
     input   = Table(Continuous),
-    target  = AbstractVector{Continuous},
+    target  = Union{AbstractVector{Continuous}, Table(Continuous)},
     weights = true,
     descr   = KNNRegressorDescription
     )
