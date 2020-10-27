@@ -7,6 +7,7 @@ using MLJModels.NearestNeighbors_
 using CategoricalArrays
 using MLJBase
 using Random
+using Tables
 
 Random.seed!(5151)
 
@@ -109,7 +110,19 @@ p2 = predict(knnr, f2, xtest)
 @test all(p[ntest+1:2*ntest] .≈ 2.0)
 @test all(p[2*ntest+1:end] .≈ -2.0)
 
+ymat = vcat(fill( 0.0, n, 2), fill(2.0, n, 2), fill(-2.0, n, 2))
+yv = Tables.table(ymat; header = [:a, :b])
 
+fv,_,_ = fit(knnr, 1, x, yv)
+f2v,_,_ = fit(knnr, 1, x, yv, w)
+
+pv = predict(knnr, fv, xtest)
+
+for col in [:a, :b]
+    @test all(pv[col][1:ntest] .≈ [0.0])
+    @test all(pv[col][ntest+1:2*ntest] .≈ [2.0])
+    @test all(pv[col][2*ntest+1:end] .≈ [-2.0])
+end
 
 
 
@@ -128,8 +141,7 @@ infos[:docstring]
 infos = info_dict(knnr)
 
 @test infos[:input_scitype] == Table(Continuous)
-@test infos[:target_scitype] == AbstractVector{Continuous}
-
+@test infos[:target_scitype] == Union{AbstractVector{Continuous}, Table(Continuous)}
 infos[:docstring]
 
 end
