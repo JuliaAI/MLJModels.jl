@@ -1,7 +1,7 @@
 name = "MLJModels"
 uuid = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
 authors = ["Anthony D. Blaom <anthony.blaom@gmail.com>"]
-version = "0.12.7"
+version = "0.12.8"
 
 [deps]
 CategoricalArrays = "324d7699-5711-5eae-9e2f-1d82baa6b597"
@@ -39,7 +39,6 @@ Tables = "^0.2,^1.0"
 julia = "1"
 
 [extras]
-Clustering = "aaaa29a8-35af-508c-8bc3-b662a17a0fe5"
 DecisionTree = "7806a523-6efd-50cb-b5f6-3fa6f1930dbb"
 Distances = "b4f34e82-e78d-54a5-968a-f98e89d6e8f7"
 GLM = "38e38edf-8417-5370-95a0-9cbb8c7f171a"
@@ -50,4 +49,4 @@ ScientificTypes = "321657f4-b219-11e9-178b-2701a2544e81"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]
-test = ["Clustering", "DecisionTree", "Distances", "GLM", "LIBSVM", "MLJMultivariateStatsInterface", "NearestNeighbors", "ScientificTypes", "Test"]
+test = ["DecisionTree", "Distances", "GLM", "LIBSVM", "MLJMultivariateStatsInterface", "NearestNeighbors", "ScientificTypes", "Test"]

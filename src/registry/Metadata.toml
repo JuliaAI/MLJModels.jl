@@ -16,7 +16,7 @@
 ":name" = "KPLSRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":clean!", ":fit"]
+":implemented_methods" = [":clean!", ":fit", ":predict"]
 ":hyperparameters" = "`(:n_factors, :kernel, :width)`"
 ":hyperparameter_types" = "`(\"Integer\", \"String\", \"Real\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing)`"
@@ -38,7 +38,7 @@
 ":name" = "PLSRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":clean!", ":fit"]
+":implemented_methods" = [":clean!", ":fit", ":predict"]
 ":hyperparameters" = "`(:n_factors,)`"
 ":hyperparameter_types" = "`(\"Int64\",)`"
 ":hyperparameter_ranges" = "`(nothing,)`"
@@ -46,7 +46,7 @@
 [NearestNeighbors.KNNClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{_s33,1} where _s33<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s97,1} where _s97<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "NearestNeighbors"
 ":package_license" = "MIT"
@@ -60,7 +60,7 @@
 ":name" = "KNNClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:K, :algorithm, :metric, :leafsize, :reorder, :weights)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Symbol\", \"Distances.Metric\", \"Int64\", \"Bool\", \"Symbol\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -68,7 +68,7 @@
 [NearestNeighbors.KNNRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`Union{AbstractArray{ScientificTypes.Continuous,1}, ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)}`"
+":target_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "NearestNeighbors"
 ":package_license" = "MIT"
@@ -82,7 +82,7 @@
 ":name" = "KNNRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:K, :algorithm, :metric, :leafsize, :reorder, :weights)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Symbol\", \"Distances.Metric\", \"Int64\", \"Bool\", \"Symbol\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -104,7 +104,7 @@
 ":name" = "QuantileRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":fit", ":fitted_params"]
+":implemented_methods" = [":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:delta, :lambda, :gamma, :penalty, :fit_intercept, :penalize_intercept, :solver)`"
 ":hyperparameter_types" = "`(\"Real\", \"Real\", \"Real\", \"Union{String, Symbol}\", \"Bool\", \"Bool\", \"Union{Nothing, MLJLinearModels.Solver}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -112,7 +112,7 @@
 [MLJLinearModels.LogisticClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{_s58,1} where _s58<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s57,1} where _s57<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "MLJLinearModels"
 ":package_license" = "MIT"
@@ -126,7 +126,7 @@
 ":name" = "LogisticClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":predict", ":fit", ":fitted_params"]
+":implemented_methods" = [":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:lambda, :gamma, :penalty, :fit_intercept, :penalize_intercept, :solver)`"
 ":hyperparameter_types" = "`(\"Real\", \"Real\", \"Union{String, Symbol}\", \"Bool\", \"Bool\", \"Union{Nothing, MLJLinearModels.Solver}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -134,7 +134,7 @@
 [MLJLinearModels.MultinomialClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{_s58,1} where _s58<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s57,1} where _s57<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "MLJLinearModels"
 ":package_license" = "MIT"
@@ -148,7 +148,7 @@
 ":name" = "MultinomialClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":predict", ":fit", ":fitted_params"]
+":implemented_methods" = [":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:lambda, :gamma, :penalty, :fit_intercept, :penalize_intercept, :solver)`"
 ":hyperparameter_types" = "`(\"Real\", \"Real\", \"Union{String, Symbol}\", \"Bool\", \"Bool\", \"Union{Nothing, MLJLinearModels.Solver}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -170,7 +170,7 @@
 ":name" = "LADRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":fit", ":fitted_params"]
+":implemented_methods" = [":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:lambda, :gamma, :penalty, :fit_intercept, :penalize_intercept, :solver)`"
 ":hyperparameter_types" = "`(\"Real\", \"Real\", \"Union{String, Symbol}\", \"Bool\", \"Bool\", \"Union{Nothing, MLJLinearModels.Solver}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -192,7 +192,7 @@
 ":name" = "RidgeRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":fit", ":fitted_params"]
+":implemented_methods" = [":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:lambda, :fit_intercept, :penalize_intercept, :solver)`"
 ":hyperparameter_types" = "`(\"Real\", \"Bool\", \"Bool\", \"Union{Nothing, MLJLinearModels.Solver}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing)`"
@@ -214,7 +214,7 @@
 ":name" = "RobustRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":fit", ":fitted_params"]
+":implemented_methods" = [":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:rho, :lambda, :gamma, :penalty, :fit_intercept, :penalize_intercept, :solver)`"
 ":hyperparameter_types" = "`(\"MLJLinearModels.RobustRho\", \"Real\", \"Real\", \"Union{String, Symbol}\", \"Bool\", \"Bool\", \"Union{Nothing, MLJLinearModels.Solver}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -236,7 +236,7 @@
 ":name" = "ElasticNetRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":fit", ":fitted_params"]
+":implemented_methods" = [":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:lambda, :gamma, :fit_intercept, :penalize_intercept, :solver)`"
 ":hyperparameter_types" = "`(\"Real\", \"Real\", \"Bool\", \"Bool\", \"Union{Nothing, MLJLinearModels.Solver}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing)`"
@@ -258,7 +258,7 @@
 ":name" = "LinearRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":fit", ":fitted_params"]
+":implemented_methods" = [":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:fit_intercept, :solver)`"
 ":hyperparameter_types" = "`(\"Bool\", \"Union{Nothing, MLJLinearModels.Solver}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
@@ -280,7 +280,7 @@
 ":name" = "LassoRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":fit", ":fitted_params"]
+":implemented_methods" = [":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:lambda, :fit_intercept, :penalize_intercept, :solver)`"
 ":hyperparameter_types" = "`(\"Real\", \"Bool\", \"Bool\", \"Union{Nothing, MLJLinearModels.Solver}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing)`"
@@ -302,7 +302,7 @@
 ":name" = "HuberRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":fit", ":fitted_params"]
+":implemented_methods" = [":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:delta, :lambda, :gamma, :penalty, :fit_intercept, :penalize_intercept, :solver)`"
 ":hyperparameter_types" = "`(\"Real\", \"Real\", \"Real\", \"Union{String, Symbol}\", \"Bool\", \"Bool\", \"Union{Nothing, MLJLinearModels.Solver}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -324,7 +324,7 @@
 ":name" = "ProbabilisticSGDClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:loss, :penalty, :alpha, :l1_ratio, :fit_intercept, :max_iter, :tol, :shuffle, :verbose, :epsilon, :n_jobs, :random_state, :learning_rate, :eta0, :power_t, :early_stopping, :validation_fraction, :n_iter_no_change, :class_weight, :warm_start, :average)`"
 ":hyperparameter_types" = "`(\"String\", \"String\", \"Float64\", \"Float64\", \"Bool\", \"Int64\", \"Union{Nothing, Float64}\", \"Bool\", \"Int64\", \"Float64\", \"Union{Nothing, Int64}\", \"Any\", \"String\", \"Float64\", \"Float64\", \"Bool\", \"Float64\", \"Int64\", \"Any\", \"Bool\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -346,7 +346,7 @@
 ":name" = "RidgeCVClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:alphas, :fit_intercept, :normalize, :scoring, :cv, :class_weight, :store_cv_values)`"
 ":hyperparameter_types" = "`(\"AbstractArray{Float64,N} where N\", \"Bool\", \"Bool\", \"Any\", \"Int64\", \"Any\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -368,7 +368,7 @@
 ":name" = "LogisticClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:penalty, :dual, :tol, :C, :fit_intercept, :intercept_scaling, :class_weight, :random_state, :solver, :max_iter, :multi_class, :verbose, :warm_start, :n_jobs, :l1_ratio)`"
 ":hyperparameter_types" = "`(\"String\", \"Bool\", \"Float64\", \"Float64\", \"Bool\", \"Float64\", \"Any\", \"Any\", \"String\", \"Int64\", \"String\", \"Int64\", \"Bool\", \"Union{Nothing, Int64}\", \"Union{Nothing, Float64}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -390,7 +390,7 @@
 ":name" = "RandomForestRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:n_estimators, :criterion, :max_depth, :min_samples_split, :min_samples_leaf, :min_weight_fraction_leaf, :max_features, :max_leaf_nodes, :min_impurity_decrease, :bootstrap, :oob_score, :n_jobs, :random_state, :verbose, :warm_start, :ccp_alpha, :max_samples)`"
 ":hyperparameter_types" = "`(\"Int64\", \"String\", \"Union{Nothing, Int64}\", \"Union{Float64, Int64}\", \"Union{Float64, Int64}\", \"Float64\", \"Union{Nothing, Float64, Int64, String}\", \"Union{Nothing, Int64}\", \"Float64\", \"Bool\", \"Bool\", \"Union{Nothing, Int64}\", \"Any\", \"Int64\", \"Bool\", \"Float64\", \"Union{Nothing, Float64, Int64}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -412,7 +412,7 @@
 ":name" = "ElasticNetCVRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:l1_ratio, :eps, :n_alphas, :alphas, :fit_intercept, :normalize, :precompute, :max_iter, :tol, :cv, :copy_X, :verbose, :n_jobs, :positive, :random_state, :selection)`"
 ":hyperparameter_types" = "`(\"Union{Float64, Array{Float64,1}}\", \"Float64\", \"Int64\", \"Any\", \"Bool\", \"Bool\", \"Union{Bool, String, AbstractArray{T,2} where T}\", \"Int64\", \"Float64\", \"Any\", \"Bool\", \"Union{Bool, Int64}\", \"Union{Nothing, Int64}\", \"Bool\", \"Any\", \"String\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -434,7 +434,7 @@
 ":name" = "PerceptronClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:penalty, :alpha, :fit_intercept, :max_iter, :tol, :shuffle, :verbose, :eta0, :n_jobs, :random_state, :early_stopping, :validation_fraction, :n_iter_no_change, :class_weight, :warm_start)`"
 ":hyperparameter_types" = "`(\"Union{Nothing, String}\", \"Float64\", \"Bool\", \"Int64\", \"Union{Nothing, Float64}\", \"Bool\", \"Int64\", \"Float64\", \"Union{Nothing, Int64}\", \"Any\", \"Bool\", \"Float64\", \"Int64\", \"Any\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -456,7 +456,7 @@
 ":name" = "MultiTaskLassoRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:alpha, :fit_intercept, :normalize, :max_iter, :tol, :copy_X, :random_state, :selection)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Bool\", \"Bool\", \"Int64\", \"Float64\", \"Bool\", \"Any\", \"String\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -478,7 +478,7 @@
 ":name" = "LinearRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:fit_intercept, :normalize, :copy_X, :n_jobs)`"
 ":hyperparameter_types" = "`(\"Bool\", \"Bool\", \"Bool\", \"Union{Nothing, Int64}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing)`"
@@ -522,7 +522,7 @@
 ":name" = "RidgeRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:alpha, :fit_intercept, :normalize, :copy_X, :max_iter, :tol, :solver, :random_state)`"
 ":hyperparameter_types" = "`(\"Union{Float64, Array{Float64,1}}\", \"Bool\", \"Bool\", \"Bool\", \"Int64\", \"Float64\", \"String\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -544,7 +544,7 @@
 ":name" = "LassoLarsICRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:criterion, :fit_intercept, :verbose, :normalize, :precompute, :max_iter, :eps, :copy_X, :positive)`"
 ":hyperparameter_types" = "`(\"String\", \"Bool\", \"Union{Bool, Int64}\", \"Bool\", \"Union{Bool, String, AbstractArray{T,2} where T}\", \"Int64\", \"Float64\", \"Bool\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -566,7 +566,7 @@
 ":name" = "ARDRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:n_iter, :tol, :alpha_1, :alpha_2, :lambda_1, :lambda_2, :compute_score, :threshold_lambda, :fit_intercept, :normalize, :copy_X, :verbose)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Bool\", \"Float64\", \"Bool\", \"Bool\", \"Bool\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -588,7 +588,7 @@
 ":name" = "SVMNuRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:nu, :C, :kernel, :degree, :gamma, :coef0, :shrinking, :tol, :cache_size, :max_iter)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Float64\", \"Union{Function, String}\", \"Int64\", \"Union{Float64, String}\", \"Float64\", \"Any\", \"Float64\", \"Int64\", \"Int64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -610,7 +610,7 @@
 ":name" = "RidgeClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:alpha, :fit_intercept, :normalize, :copy_X, :max_iter, :tol, :class_weight, :solver, :random_state)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Bool\", \"Bool\", \"Bool\", \"Union{Nothing, Int64}\", \"Float64\", \"Any\", \"String\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -632,7 +632,7 @@
 ":name" = "SGDRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:loss, :penalty, :alpha, :l1_ratio, :fit_intercept, :max_iter, :tol, :shuffle, :verbose, :epsilon, :random_state, :learning_rate, :eta0, :power_t, :early_stopping, :validation_fraction, :n_iter_no_change, :warm_start, :average)`"
 ":hyperparameter_types" = "`(\"String\", \"String\", \"Float64\", \"Float64\", \"Bool\", \"Int64\", \"Float64\", \"Bool\", \"Union{Bool, Int64}\", \"Float64\", \"Any\", \"String\", \"Float64\", \"Float64\", \"Bool\", \"Float64\", \"Int64\", \"Bool\", \"Union{Bool, Int64}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -654,7 +654,7 @@
 ":name" = "ComplementNBClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:alpha, :fit_prior, :class_prior, :norm)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Bool\", \"Union{Nothing, AbstractArray{T,1} where T}\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing)`"
@@ -676,7 +676,7 @@
 ":name" = "HuberRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:epsilon, :max_iter, :alpha, :warm_start, :fit_intercept, :tol)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Int64\", \"Float64\", \"Bool\", \"Bool\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -698,7 +698,7 @@
 ":name" = "SVMNuClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:nu, :kernel, :degree, :gamma, :coef0, :shrinking, :tol, :cache_size, :max_iter, :decision_function_shape, :random_state)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Union{Function, String}\", \"Int64\", \"Union{Float64, String}\", \"Float64\", \"Bool\", \"Float64\", \"Int64\", \"Int64\", \"String\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -720,7 +720,7 @@
 ":name" = "GradientBoostingClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:loss, :learning_rate, :n_estimators, :subsample, :criterion, :min_samples_split, :min_samples_leaf, :min_weight_fraction_leaf, :max_depth, :min_impurity_decrease, :init, :random_state, :max_features, :verbose, :max_leaf_nodes, :warm_start, :validation_fraction, :n_iter_no_change, :tol)`"
 ":hyperparameter_types" = "`(\"String\", \"Float64\", \"Int64\", \"Float64\", \"String\", \"Union{Float64, Int64}\", \"Union{Float64, Int64}\", \"Float64\", \"Int64\", \"Float64\", \"Any\", \"Any\", \"Union{Nothing, Float64, Int64, String}\", \"Int64\", \"Union{Nothing, Int64}\", \"Bool\", \"Float64\", \"Union{Nothing, Int64}\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -742,7 +742,7 @@
 ":name" = "GaussianProcessRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:kernel, :alpha, :optimizer, :n_restarts_optimizer, :normalize_y, :copy_X_train, :random_state)`"
 ":hyperparameter_types" = "`(\"Any\", \"Union{Float64, AbstractArray}\", \"Any\", \"Int64\", \"Bool\", \"Bool\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -764,7 +764,7 @@
 ":name" = "SVMLinearRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:epsilon, :tol, :C, :loss, :fit_intercept, :intercept_scaling, :dual, :random_state, :max_iter)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Float64\", \"Float64\", \"String\", \"Bool\", \"Float64\", \"Bool\", \"Any\", \"Int64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -786,7 +786,7 @@
 ":name" = "LarsRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:fit_intercept, :verbose, :normalize, :precompute, :n_nonzero_coefs, :eps, :copy_X, :fit_path)`"
 ":hyperparameter_types" = "`(\"Bool\", \"Union{Bool, Int64}\", \"Bool\", \"Union{Bool, String, AbstractArray{T,2} where T}\", \"Int64\", \"Float64\", \"Bool\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -808,7 +808,7 @@
 ":name" = "MeanShift"
 ":is_supervised" = "`false`"
 ":prediction_type" = ":unknown"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:bandwidth, :seeds, :bin_seeding, :min_bin_freq, :cluster_all, :n_jobs)`"
 ":hyperparameter_types" = "`(\"Union{Nothing, Float64}\", \"Union{Nothing, AbstractArray}\", \"Bool\", \"Int64\", \"Bool\", \"Union{Nothing, Int64}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -830,7 +830,7 @@
 ":name" = "AdaBoostRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:base_estimator, :n_estimators, :learning_rate, :loss, :random_state)`"
 ":hyperparameter_types" = "`(\"Any\", \"Int64\", \"Float64\", \"String\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing)`"
@@ -852,7 +852,7 @@
 ":name" = "AffinityPropagation"
 ":is_supervised" = "`false`"
 ":prediction_type" = ":unknown"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:damping, :max_iter, :convergence_iter, :copy, :preference, :affinity, :verbose)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Int64\", \"Int64\", \"Bool\", \"Any\", \"String\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -874,7 +874,7 @@
 ":name" = "MultiTaskLassoCVRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:eps, :n_alphas, :alphas, :fit_intercept, :normalize, :max_iter, :tol, :copy_X, :cv, :verbose, :n_jobs, :random_state, :selection)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Int64\", \"Any\", \"Bool\", \"Bool\", \"Int64\", \"Float64\", \"Bool\", \"Any\", \"Union{Bool, Int64}\", \"Union{Nothing, Int64}\", \"Any\", \"String\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -896,7 +896,7 @@
 ":name" = "OrthogonalMatchingPursuitRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:n_nonzero_coefs, :tol, :fit_intercept, :normalize, :precompute)`"
 ":hyperparameter_types" = "`(\"Union{Nothing, Int64}\", \"Union{Nothing, Float64}\", \"Bool\", \"Bool\", \"Union{Bool, String, AbstractArray{T,2} where T}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing)`"
@@ -918,7 +918,7 @@
 ":name" = "RidgeCVRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:alphas, :fit_intercept, :normalize, :scoring, :cv, :gcv_mode, :store_cv_values)`"
 ":hyperparameter_types" = "`(\"Any\", \"Bool\", \"Bool\", \"Any\", \"Any\", \"Union{Nothing, String}\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -940,7 +940,7 @@
 ":name" = "PassiveAggressiveClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:C, :fit_intercept, :max_iter, :tol, :early_stopping, :validation_fraction, :n_iter_no_change, :shuffle, :verbose, :loss, :n_jobs, :random_state, :warm_start, :class_weight, :average)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Bool\", \"Int64\", \"Float64\", \"Bool\", \"Float64\", \"Int64\", \"Bool\", \"Int64\", \"String\", \"Union{Nothing, Int64}\", \"Any\", \"Bool\", \"Any\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -962,7 +962,7 @@
 ":name" = "SVMRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:kernel, :degree, :gamma, :coef0, :tol, :C, :epsilon, :shrinking, :cache_size, :max_iter)`"
 ":hyperparameter_types" = "`(\"Union{Function, String}\", \"Int64\", \"Union{Float64, String}\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Any\", \"Int64\", \"Int64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -984,7 +984,7 @@
 ":name" = "BernoulliNBClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:alpha, :binarize, :fit_prior, :class_prior)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Union{Nothing, Float64}\", \"Bool\", \"Union{Nothing, AbstractArray{T,1} where T}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing)`"
@@ -1006,7 +1006,7 @@
 ":name" = "GaussianNBClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:priors, :var_smoothing)`"
 ":hyperparameter_types" = "`(\"Union{Nothing, AbstractArray{Float64,1}}\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
@@ -1028,7 +1028,7 @@
 ":name" = "ExtraTreesClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:n_estimators, :criterion, :max_depth, :min_samples_split, :min_samples_leaf, :min_weight_fraction_leaf, :max_features, :max_leaf_nodes, :min_impurity_decrease, :bootstrap, :oob_score, :n_jobs, :random_state, :verbose, :warm_start, :class_weight)`"
 ":hyperparameter_types" = "`(\"Int64\", \"String\", \"Union{Nothing, Int64}\", \"Union{Float64, Int64}\", \"Union{Float64, Int64}\", \"Float64\", \"Union{Nothing, Float64, Int64, String}\", \"Union{Nothing, Int64}\", \"Float64\", \"Bool\", \"Bool\", \"Union{Nothing, Int64}\", \"Any\", \"Int64\", \"Bool\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -1050,7 +1050,7 @@
 ":name" = "KMeans"
 ":is_supervised" = "`false`"
 ":prediction_type" = ":unknown"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params", ":transform"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict", ":transform"]
 ":hyperparameters" = "`(:n_clusters, :n_init, :max_iter, :tol, :verbose, :random_state, :copy_x, :n_jobs, :algorithm, :precompute_distances, :init)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Int64\", \"Int64\", \"Float64\", \"Int64\", \"Any\", \"Bool\", \"Union{Nothing, Int64}\", \"String\", \"Union{Bool, String}\", \"Union{String, AbstractArray}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -1072,7 +1072,7 @@
 ":name" = "MultiTaskElasticNetCVRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:l1_ratio, :eps, :n_alphas, :alphas, :fit_intercept, :normalize, :max_iter, :tol, :cv, :copy_X, :verbose, :n_jobs, :random_state, :selection)`"
 ":hyperparameter_types" = "`(\"Union{Float64, Array{Float64,1}}\", \"Float64\", \"Int64\", \"Any\", \"Bool\", \"Bool\", \"Int64\", \"Float64\", \"Any\", \"Bool\", \"Union{Bool, Int64}\", \"Union{Nothing, Int64}\", \"Any\", \"String\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -1094,7 +1094,7 @@
 ":name" = "LassoLarsCVRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:fit_intercept, :verbose, :max_iter, :normalize, :precompute, :cv, :max_n_alphas, :n_jobs, :eps, :copy_X, :positive)`"
 ":hyperparameter_types" = "`(\"Bool\", \"Union{Bool, Int64}\", \"Int64\", \"Bool\", \"Union{Bool, String, AbstractArray{T,2} where T}\", \"Any\", \"Int64\", \"Union{Nothing, Int64}\", \"Float64\", \"Bool\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -1116,7 +1116,7 @@
 ":name" = "OrthogonalMatchingPursuitCVRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:copy, :fit_intercept, :normalize, :max_iter, :cv, :n_jobs, :verbose)`"
 ":hyperparameter_types" = "`(\"Bool\", \"Bool\", \"Bool\", \"Union{Nothing, Int64}\", \"Any\", \"Union{Nothing, Int64}\", \"Union{Bool, Int64}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -1138,7 +1138,7 @@
 ":name" = "AdaBoostClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:base_estimator, :n_estimators, :learning_rate, :algorithm, :random_state)`"
 ":hyperparameter_types" = "`(\"Any\", \"Int64\", \"Float64\", \"String\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing)`"
@@ -1160,7 +1160,7 @@
 ":name" = "PassiveAggressiveRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:C, :fit_intercept, :max_iter, :tol, :early_stopping, :validation_fraction, :n_iter_no_change, :shuffle, :verbose, :loss, :epsilon, :random_state, :warm_start, :average)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Bool\", \"Int64\", \"Float64\", \"Bool\", \"Float64\", \"Int64\", \"Bool\", \"Union{Bool, Int64}\", \"String\", \"Float64\", \"Any\", \"Bool\", \"Union{Bool, Int64}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -1182,7 +1182,7 @@
 ":name" = "BayesianRidgeRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:n_iter, :tol, :alpha_1, :alpha_2, :lambda_1, :lambda_2, :compute_score, :fit_intercept, :normalize, :copy_X, :verbose)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Bool\", \"Bool\", \"Bool\", \"Bool\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -1204,7 +1204,7 @@
 ":name" = "RANSACRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:base_estimator, :min_samples, :residual_threshold, :is_data_valid, :is_model_valid, :max_trials, :max_skips, :stop_n_inliers, :stop_score, :stop_probability, :loss, :random_state)`"
 ":hyperparameter_types" = "`(\"Any\", \"Union{Float64, Int64}\", \"Union{Nothing, Float64}\", \"Any\", \"Any\", \"Int64\", \"Int64\", \"Int64\", \"Float64\", \"Float64\", \"Union{Function, String}\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -1226,7 +1226,7 @@
 ":name" = "BaggingClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:base_estimator, :n_estimators, :max_samples, :max_features, :bootstrap, :bootstrap_features, :oob_score, :warm_start, :n_jobs, :random_state, :verbose)`"
 ":hyperparameter_types" = "`(\"Any\", \"Int64\", \"Union{Float64, Int64}\", \"Union{Float64, Int64}\", \"Bool\", \"Bool\", \"Bool\", \"Bool\", \"Union{Nothing, Int64}\", \"Any\", \"Int64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -1248,7 +1248,7 @@
 ":name" = "GaussianProcessClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:kernel, :optimizer, :n_restarts_optimizer, :copy_X_train, :random_state, :max_iter_predict, :warm_start, :multi_class)`"
 ":hyperparameter_types" = "`(\"Any\", \"Any\", \"Int64\", \"Bool\", \"Any\", \"Int64\", \"Bool\", \"String\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -1292,7 +1292,7 @@
 ":name" = "KNeighborsRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:n_neighbors, :weights, :algorithm, :leaf_size, :p, :metric, :metric_params, :n_jobs)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Union{Function, String}\", \"String\", \"Int64\", \"Int64\", \"Any\", \"Any\", \"Union{Nothing, Int64}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -1314,7 +1314,7 @@
 ":name" = "MiniBatchKMeans"
 ":is_supervised" = "`false`"
 ":prediction_type" = ":unknown"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params", ":transform"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict", ":transform"]
 ":hyperparameters" = "`(:n_clusters, :max_iter, :batch_size, :verbose, :compute_labels, :random_state, :tol, :max_no_improvement, :init_size, :n_init, :init, :reassignment_ratio)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Int64\", \"Int64\", \"Int64\", \"Bool\", \"Any\", \"Float64\", \"Int64\", \"Union{Nothing, Int64}\", \"Int64\", \"Union{String, AbstractArray}\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -1336,7 +1336,7 @@
 ":name" = "LassoCVRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:eps, :n_alphas, :alphas, :fit_intercept, :normalize, :precompute, :max_iter, :tol, :copy_X, :cv, :verbose, :n_jobs, :positive, :random_state, :selection)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Int64\", \"Any\", \"Bool\", \"Bool\", \"Union{Bool, String, AbstractArray{T,2} where T}\", \"Int64\", \"Float64\", \"Bool\", \"Any\", \"Union{Bool, Int64}\", \"Union{Nothing, Int64}\", \"Bool\", \"Any\", \"String\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -1358,7 +1358,7 @@
 ":name" = "DummyRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:strategy, :constant, :quantile)`"
 ":hyperparameter_types" = "`(\"String\", \"Any\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing)`"
@@ -1380,7 +1380,7 @@
 ":name" = "LassoLarsRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:alpha, :fit_intercept, :verbose, :normalize, :precompute, :max_iter, :eps, :copy_X, :fit_path, :positive)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Bool\", \"Union{Bool, Int64}\", \"Bool\", \"Union{Bool, String, AbstractArray{T,2} where T}\", \"Int64\", \"Float64\", \"Bool\", \"Bool\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -1402,7 +1402,7 @@
 ":name" = "LarsCVRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:fit_intercept, :verbose, :max_iter, :normalize, :precompute, :cv, :max_n_alphas, :n_jobs, :eps, :copy_X)`"
 ":hyperparameter_types" = "`(\"Bool\", \"Union{Bool, Int64}\", \"Int64\", \"Bool\", \"Union{Bool, String, AbstractArray{T,2} where T}\", \"Any\", \"Int64\", \"Union{Nothing, Int64}\", \"Float64\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -1424,7 +1424,7 @@
 ":name" = "KNeighborsClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:n_neighbors, :weights, :algorithm, :leaf_size, :p, :metric, :metric_params, :n_jobs)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Union{Function, String}\", \"String\", \"Int64\", \"Int64\", \"Any\", \"Any\", \"Union{Nothing, Int64}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -1446,7 +1446,7 @@
 ":name" = "SVMLinearClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:penalty, :loss, :dual, :tol, :C, :multi_class, :fit_intercept, :intercept_scaling, :random_state, :max_iter)`"
 ":hyperparameter_types" = "`(\"String\", \"String\", \"Bool\", \"Float64\", \"Float64\", \"String\", \"Bool\", \"Float64\", \"Any\", \"Int64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -1490,7 +1490,7 @@
 ":name" = "DummyClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:strategy, :constant, :random_state)`"
 ":hyperparameter_types" = "`(\"String\", \"Any\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing)`"
@@ -1512,7 +1512,7 @@
 ":name" = "BaggingRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:base_estimator, :n_estimators, :max_samples, :max_features, :bootstrap, :bootstrap_features, :oob_score, :warm_start, :n_jobs, :random_state, :verbose)`"
 ":hyperparameter_types" = "`(\"Any\", \"Int64\", \"Union{Float64, Int64}\", \"Union{Float64, Int64}\", \"Bool\", \"Bool\", \"Bool\", \"Bool\", \"Union{Nothing, Int64}\", \"Any\", \"Int64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -1534,7 +1534,7 @@
 ":name" = "BayesianQDA"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:priors, :reg_param, :store_covariance, :tol)`"
 ":hyperparameter_types" = "`(\"Union{Nothing, AbstractArray{T,1} where T}\", \"Float64\", \"Bool\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing)`"
@@ -1556,7 +1556,7 @@
 ":name" = "BayesianLDA"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:solver, :shrinkage, :priors, :n_components, :store_covariance, :tol)`"
 ":hyperparameter_types" = "`(\"String\", \"Union{Nothing, Float64, String}\", \"Union{Nothing, AbstractArray{T,1} where T}\", \"Union{Nothing, Int64}\", \"Bool\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -1578,7 +1578,7 @@
 ":name" = "SGDClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:loss, :penalty, :alpha, :l1_ratio, :fit_intercept, :max_iter, :tol, :shuffle, :verbose, :epsilon, :n_jobs, :random_state, :learning_rate, :eta0, :power_t, :early_stopping, :validation_fraction, :n_iter_no_change, :class_weight, :warm_start, :average)`"
 ":hyperparameter_types" = "`(\"String\", \"String\", \"Float64\", \"Float64\", \"Bool\", \"Int64\", \"Union{Nothing, Float64}\", \"Bool\", \"Int64\", \"Float64\", \"Union{Nothing, Int64}\", \"Any\", \"String\", \"Float64\", \"Float64\", \"Bool\", \"Float64\", \"Int64\", \"Any\", \"Bool\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -1600,7 +1600,7 @@
 ":name" = "TheilSenRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:fit_intercept, :copy_X, :max_subpopulation, :n_subsamples, :max_iter, :tol, :random_state, :n_jobs, :verbose)`"
 ":hyperparameter_types" = "`(\"Bool\", \"Bool\", \"Int64\", \"Union{Nothing, Int64}\", \"Int64\", \"Float64\", \"Any\", \"Union{Nothing, Int64}\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -1644,7 +1644,7 @@
 ":name" = "Birch"
 ":is_supervised" = "`false`"
 ":prediction_type" = ":unknown"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params", ":transform"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict", ":transform"]
 ":hyperparameters" = "`(:threshold, :branching_factor, :n_clusters, :compute_labels, :copy)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Int64\", \"Int64\", \"Bool\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing)`"
@@ -1688,7 +1688,7 @@
 ":name" = "ElasticNetRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:alpha, :l1_ratio, :fit_intercept, :normalize, :precompute, :max_iter, :copy_X, :tol, :warm_start, :positive, :random_state, :selection)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Float64\", \"Bool\", \"Bool\", \"Union{Bool, AbstractArray{T,2} where T}\", \"Int64\", \"Bool\", \"Float64\", \"Bool\", \"Bool\", \"Any\", \"String\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -1710,7 +1710,7 @@
 ":name" = "RandomForestClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:n_estimators, :criterion, :max_depth, :min_samples_split, :min_samples_leaf, :min_weight_fraction_leaf, :max_features, :max_leaf_nodes, :min_impurity_decrease, :bootstrap, :oob_score, :n_jobs, :random_state, :verbose, :warm_start, :class_weight, :ccp_alpha, :max_samples)`"
 ":hyperparameter_types" = "`(\"Int64\", \"String\", \"Union{Nothing, Int64}\", \"Union{Float64, Int64}\", \"Union{Float64, Int64}\", \"Float64\", \"Union{Nothing, Float64, Int64, String}\", \"Union{Nothing, Int64}\", \"Float64\", \"Bool\", \"Bool\", \"Union{Nothing, Int64}\", \"Any\", \"Int64\", \"Bool\", \"Any\", \"Float64\", \"Union{Nothing, Float64, Int64}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -1732,7 +1732,7 @@
 ":name" = "LogisticCVClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:Cs, :fit_intercept, :cv, :dual, :penalty, :scoring, :solver, :tol, :max_iter, :class_weight, :n_jobs, :verbose, :refit, :intercept_scaling, :multi_class, :random_state, :l1_ratios)`"
 ":hyperparameter_types" = "`(\"Union{Int64, AbstractArray{Float64,1}}\", \"Bool\", \"Any\", \"Bool\", \"String\", \"Any\", \"String\", \"Float64\", \"Int64\", \"Any\", \"Union{Nothing, Int64}\", \"Int64\", \"Bool\", \"Float64\", \"String\", \"Any\", \"Union{Nothing, AbstractArray{Float64,1}}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -1754,7 +1754,7 @@
 ":name" = "MultiTaskElasticNetRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:alpha, :l1_ratio, :fit_intercept, :normalize, :copy_X, :max_iter, :tol, :warm_start, :random_state, :selection)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Union{Float64, Array{Float64,1}}\", \"Bool\", \"Bool\", \"Bool\", \"Int64\", \"Float64\", \"Bool\", \"Any\", \"String\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -1776,7 +1776,7 @@
 ":name" = "ExtraTreesRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:n_estimators, :criterion, :max_depth, :min_samples_split, :min_samples_leaf, :min_weight_fraction_leaf, :max_features, :max_leaf_nodes, :min_impurity_decrease, :bootstrap, :oob_score, :n_jobs, :random_state, :verbose, :warm_start)`"
 ":hyperparameter_types" = "`(\"Int64\", \"String\", \"Union{Nothing, Int64}\", \"Union{Float64, Int64}\", \"Union{Float64, Int64}\", \"Float64\", \"Union{Nothing, Float64, Int64, String}\", \"Union{Nothing, Int64}\", \"Float64\", \"Bool\", \"Bool\", \"Union{Nothing, Int64}\", \"Any\", \"Int64\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -1798,7 +1798,7 @@
 ":name" = "LassoRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:alpha, :fit_intercept, :normalize, :precompute, :copy_X, :max_iter, :tol, :warm_start, :positive, :random_state, :selection)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Bool\", \"Bool\", \"Union{Bool, AbstractArray{T,2} where T}\", \"Bool\", \"Int64\", \"Float64\", \"Bool\", \"Bool\", \"Any\", \"String\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -1820,7 +1820,7 @@
 ":name" = "MultinomialNBClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:alpha, :fit_prior, :class_prior)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Bool\", \"Union{Nothing, AbstractArray{T,1} where T}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing)`"
@@ -1842,7 +1842,7 @@
 ":name" = "GradientBoostingRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:loss, :learning_rate, :n_estimators, :subsample, :criterion, :min_samples_split, :min_samples_leaf, :min_weight_fraction_leaf, :max_depth, :min_impurity_decrease, :init, :random_state, :max_features, :alpha, :verbose, :max_leaf_nodes, :warm_start, :validation_fraction, :n_iter_no_change, :tol)`"
 ":hyperparameter_types" = "`(\"String\", \"Float64\", \"Int64\", \"Float64\", \"String\", \"Union{Float64, Int64}\", \"Union{Float64, Int64}\", \"Float64\", \"Int64\", \"Float64\", \"Any\", \"Any\", \"Union{Nothing, Float64, Int64, String}\", \"Float64\", \"Int64\", \"Union{Nothing, Int64}\", \"Bool\", \"Float64\", \"Union{Nothing, Int64}\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -1864,7 +1864,7 @@
 ":name" = "SVMClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:C, :kernel, :degree, :gamma, :coef0, :shrinking, :tol, :cache_size, :max_iter, :decision_function_shape, :random_state)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Union{Function, String}\", \"Int64\", \"Union{Float64, String}\", \"Float64\", \"Bool\", \"Float64\", \"Int64\", \"Int64\", \"String\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -1886,7 +1886,7 @@
 ":name" = "KMeans"
 ":is_supervised" = "`false`"
 ":prediction_type" = ":unknown"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params", ":transform"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict", ":transform"]
 ":hyperparameters" = "`(:algo, :k_init, :k, :tol, :max_iters, :copy, :threads, :rng, :weights, :init)`"
 ":hyperparameter_types" = "`(\"Union{Symbol, ParallelKMeans.AbstractKMeansAlg}\", \"String\", \"Int64\", \"Float64\", \"Int64\", \"Bool\", \"Int64\", \"Union{Int64, Random.AbstractRNG}\", \"Any\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -1908,7 +1908,7 @@
 ":name" = "GaussianNBClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":predict", ":fit", ":fitted_params"]
+":implemented_methods" = [":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "``"
 ":hyperparameter_types" = "``"
 ":hyperparameter_ranges" = "``"
@@ -1930,7 +1930,7 @@
 ":name" = "MultinomialNBClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":predict", ":fit", ":fitted_params"]
+":implemented_methods" = [":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:alpha,)`"
 ":hyperparameter_types" = "`(\"Int64\",)`"
 ":hyperparameter_ranges" = "`(nothing,)`"
@@ -1952,7 +1952,7 @@
 ":name" = "DeterministicSurrogate"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":fitted_params", ":inverse_transform", ":machine", ":predict_joint", ":transform"]
+":implemented_methods" = [":fitted_params", ":inverse_transform", ":predict", ":predict_joint", ":transform", ":machine"]
 ":hyperparameters" = "``"
 ":hyperparameter_types" = "``"
 ":hyperparameter_ranges" = "``"
@@ -1996,7 +1996,7 @@
 ":name" = "IntervalSurrogate"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":interval"
-":implemented_methods" = [":predict", ":fitted_params", ":inverse_transform", ":machine", ":predict_joint", ":transform"]
+":implemented_methods" = [":fitted_params", ":inverse_transform", ":predict", ":predict_joint", ":transform", ":machine"]
 ":hyperparameters" = "``"
 ":hyperparameter_types" = "``"
 ":hyperparameter_ranges" = "``"
@@ -2018,7 +2018,7 @@
 ":name" = "UnsupervisedSurrogate"
 ":is_supervised" = "`false`"
 ":prediction_type" = ":unknown"
-":implemented_methods" = [":predict", ":fitted_params", ":inverse_transform", ":machine", ":predict_joint", ":transform"]
+":implemented_methods" = [":fitted_params", ":inverse_transform", ":predict", ":predict_joint", ":transform", ":machine"]
 ":hyperparameters" = "``"
 ":hyperparameter_types" = "``"
 ":hyperparameter_ranges" = "``"
@@ -2040,7 +2040,7 @@
 ":name" = "JointProbabilisticSurrogate"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":predict", ":fitted_params", ":inverse_transform", ":machine", ":predict_joint", ":transform"]
+":implemented_methods" = [":fitted_params", ":inverse_transform", ":predict", ":predict_joint", ":transform", ":machine"]
 ":hyperparameters" = "``"
 ":hyperparameter_types" = "``"
 ":hyperparameter_ranges" = "``"
@@ -2064,7 +2064,7 @@
 ":prediction_type" = ":unknown"
 ":implemented_methods" = [":clean!", ":evaluate", ":fit"]
 ":hyperparameters" = "`(:model, :resampling, :measure, :weights, :operation, :acceleration, :check_measure, :repeats)`"
-":hyperparameter_types" = "`(\"Union{Nothing, MLJModelInterface.Supervised}\", \"Any\", \"Any\", \"Union{Nothing, AbstractArray{_s359,1} where _s359<:Real}\", \"Any\", \"ComputationalResources.AbstractResource\", \"Bool\", \"Int64\")`"
+":hyperparameter_types" = "`(\"Union{Nothing, MLJModelInterface.Supervised}\", \"Any\", \"Any\", \"Union{Nothing, AbstractArray{_s358,1} where _s358<:Real}\", \"Any\", \"ComputationalResources.AbstractResource\", \"Bool\", \"Int64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [MLJBase.StaticSurrogate]
@@ -2084,7 +2084,7 @@
 ":name" = "StaticSurrogate"
 ":is_supervised" = "`false`"
 ":prediction_type" = ":unknown"
-":implemented_methods" = [":predict", ":fitted_params", ":inverse_transform", ":machine", ":predict_joint", ":transform"]
+":implemented_methods" = [":fitted_params", ":inverse_transform", ":predict", ":predict_joint", ":transform", ":machine"]
 ":hyperparameters" = "``"
 ":hyperparameter_types" = "``"
 ":hyperparameter_ranges" = "``"
@@ -2106,7 +2106,7 @@
 ":name" = "ProbabilisticSurrogate"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":predict", ":fitted_params", ":inverse_transform", ":machine", ":predict_joint", ":predict_mean", ":predict_median", ":predict_mode", ":transform"]
+":implemented_methods" = [":fitted_params", ":inverse_transform", ":predict", ":predict_joint", ":predict_mean", ":predict_median", ":predict_mode", ":transform", ":machine"]
 ":hyperparameters" = "``"
 ":hyperparameter_types" = "``"
 ":hyperparameter_ranges" = "``"
@@ -2128,7 +2128,7 @@
 ":name" = "LDA"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params", ":transform"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict", ":transform"]
 ":hyperparameters" = "`(:method, :cov_w, :cov_b, :out_dim, :regcoef, :dist)`"
 ":hyperparameter_types" = "`(\"Symbol\", \"StatsBase.CovarianceEstimator\", \"StatsBase.CovarianceEstimator\", \"Int64\", \"Float64\", \"Distances.SemiMetric\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -2150,7 +2150,7 @@
 ":name" = "BayesianSubspaceLDA"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params", ":transform"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict", ":transform"]
 ":hyperparameters" = "`(:normalize, :out_dim, :priors)`"
 ":hyperparameter_types" = "`(\"Bool\", \"Int64\", \"Union{Nothing, Array{Float64,1}}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing)`"
@@ -2194,7 +2194,7 @@
 ":name" = "LinearRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:bias,)`"
 ":hyperparameter_types" = "`(\"Bool\",)`"
 ":hyperparameter_ranges" = "`(nothing,)`"
@@ -2260,7 +2260,7 @@
 ":name" = "RidgeRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:lambda, :bias)`"
 ":hyperparameter_types" = "`(\"Union{Real, Union{AbstractArray{T,1}, AbstractArray{T,2}} where T}\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
@@ -2304,7 +2304,7 @@
 ":name" = "SubspaceLDA"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params", ":transform"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict", ":transform"]
 ":hyperparameters" = "`(:normalize, :out_dim, :dist)`"
 ":hyperparameter_types" = "`(\"Bool\", \"Int64\", \"Distances.SemiMetric\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing)`"
@@ -2326,7 +2326,7 @@
 ":name" = "BayesianLDA"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params", ":transform"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict", ":transform"]
 ":hyperparameters" = "`(:method, :cov_w, :cov_b, :out_dim, :regcoef, :priors)`"
 ":hyperparameter_types" = "`(\"Symbol\", \"StatsBase.CovarianceEstimator\", \"StatsBase.CovarianceEstimator\", \"Int64\", \"Float64\", \"Union{Nothing, Array{Float64,1}}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -2356,7 +2356,7 @@
 [DecisionTree.AdaBoostStumpClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:Union{AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous, AbstractArray{_s23,1} where _s23<:ScientificTypes.Count, AbstractArray{_s23,1} where _s23<:ScientificTypes.OrderedFactor}`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{_s77,1} where _s77<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s109,1} where _s109<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "DecisionTree"
 ":package_license" = "MIT"
@@ -2370,7 +2370,7 @@
 ":name" = "AdaBoostStumpClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:n_iter, :pdf_smoothing)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
@@ -2392,7 +2392,7 @@
 ":name" = "DecisionTreeRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:max_depth, :min_samples_leaf, :min_samples_split, :min_purity_increase, :n_subfeatures, :post_prune, :merge_purity_threshold)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Int64\", \"Int64\", \"Float64\", \"Int64\", \"Bool\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -2400,7 +2400,7 @@
 [DecisionTree.DecisionTreeClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:Union{AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous, AbstractArray{_s23,1} where _s23<:ScientificTypes.Count, AbstractArray{_s23,1} where _s23<:ScientificTypes.OrderedFactor}`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{_s77,1} where _s77<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s109,1} where _s109<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "DecisionTree"
 ":package_license" = "MIT"
@@ -2414,7 +2414,7 @@
 ":name" = "DecisionTreeClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:max_depth, :min_samples_leaf, :min_samples_split, :min_purity_increase, :n_subfeatures, :post_prune, :merge_purity_threshold, :pdf_smoothing, :display_depth)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Int64\", \"Int64\", \"Float64\", \"Int64\", \"Bool\", \"Float64\", \"Float64\", \"Int64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -2436,7 +2436,7 @@
 ":name" = "RandomForestRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:max_depth, :min_samples_leaf, :min_samples_split, :min_purity_increase, :n_subfeatures, :n_trees, :sampling_fraction, :pdf_smoothing)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Int64\", \"Int64\", \"Float64\", \"Int64\", \"Int64\", \"Float64\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -2444,7 +2444,7 @@
 [DecisionTree.RandomForestClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:Union{AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous, AbstractArray{_s23,1} where _s23<:ScientificTypes.Count, AbstractArray{_s23,1} where _s23<:ScientificTypes.OrderedFactor}`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{_s77,1} where _s77<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s109,1} where _s109<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "DecisionTree"
 ":package_license" = "MIT"
@@ -2458,7 +2458,7 @@
 ":name" = "RandomForestClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "`(:max_depth, :min_samples_leaf, :min_samples_split, :min_purity_increase, :n_subfeatures, :n_trees, :sampling_fraction, :pdf_smoothing)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Int64\", \"Int64\", \"Float64\", \"Int64\", \"Int64\", \"Float64\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -2470,17 +2470,17 @@
 ":is_pure_julia" = "`true`"
 ":package_name" = "Clustering"
 ":package_license" = "MIT"
-":load_path" = "MLJModels.Clustering_.KMeans"
+":load_path" = "MLJClusteringInterface.KMeans"
 ":package_uuid" = "aaaa29a8-35af-508c-8bc3-b662a17a0fe5"
 ":package_url" = "https://github.com/JuliaStats/Clustering.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
 ":supports_online" = "`false`"
-":docstring" = "K-Means algorithm: find K centroids corresponding to K clusters in the data.\n\n→ based on [Clustering](https://github.com/JuliaStats/Clustering.jl).\n→ do `@load KMeans pkg=\"Clustering\"` to use the model.\n→ do `?KMeans` for documentation."
+":docstring" = "K-Means algorithm: find K centroids corresponding to K clusters in the data.   \n\n→ based on [Clustering](https://github.com/JuliaStats/Clustering.jl).\n→ do `@load KMeans pkg=\"Clustering\"` to use the model.\n→ do `?KMeans` for documentation."
 ":name" = "KMeans"
 ":is_supervised" = "`false`"
 ":prediction_type" = ":unknown"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params", ":transform"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict", ":transform"]
 ":hyperparameters" = "`(:k, :metric)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Distances.SemiMetric\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
@@ -2492,17 +2492,17 @@
 ":is_pure_julia" = "`true`"
 ":package_name" = "Clustering"
 ":package_license" = "MIT"
-":load_path" = "MLJModels.Clustering_.KMedoids"
+":load_path" = "MLJClusteringInterface.KMedoids"
 ":package_uuid" = "aaaa29a8-35af-508c-8bc3-b662a17a0fe5"
 ":package_url" = "https://github.com/JuliaStats/Clustering.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
 ":supports_online" = "`false`"
-":docstring" = "K-Medoids algorithm: find K centroids corresponding to K clusters in the data.\nUnlike K-Means, the centroids are found among data points themselves.\"\n\n→ based on [Clustering](https://github.com/JuliaStats/Clustering.jl).\n→ do `@load KMedoids pkg=\"Clustering\"` to use the model.\n→ do `?KMedoids` for documentation."
+":docstring" = "K-Medoids algorithm: find K centroids corresponding to K clusters in the data.\nUnlike K-Means, the centroids are found among data points themselves.\n\n→ based on [Clustering](https://github.com/JuliaStats/Clustering.jl).\n→ do `@load KMedoids pkg=\"Clustering\"` to use the model.\n→ do `?KMedoids` for documentation."
 ":name" = "KMedoids"
 ":is_supervised" = "`false`"
 ":prediction_type" = ":unknown"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":fitted_params", ":transform"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict", ":transform"]
 ":hyperparameters" = "`(:k, :metric)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Distances.SemiMetric\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
@@ -2524,7 +2524,7 @@
 ":name" = "XGBoostCount"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":clean!", ":fit"]
+":implemented_methods" = [":clean!", ":fit", ":predict"]
 ":hyperparameters" = "`(:num_round, :booster, :disable_default_eval_metric, :eta, :gamma, :max_depth, :min_child_weight, :max_delta_step, :subsample, :colsample_bytree, :colsample_bylevel, :lambda, :alpha, :tree_method, :sketch_eps, :scale_pos_weight, :updater, :refresh_leaf, :process_type, :grow_policy, :max_leaves, :max_bin, :predictor, :sample_type, :normalize_type, :rate_drop, :one_drop, :skip_drop, :feature_selector, :top_k, :tweedie_variance_power, :objective, :base_score, :eval_metric, :seed)`"
 ":hyperparameter_types" = "`(\"Int64\", \"String\", \"Int64\", \"Float64\", \"Float64\", \"Int64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"String\", \"Float64\", \"Float64\", \"String\", \"Union{Bool, Int64}\", \"String\", \"String\", \"Int64\", \"Int64\", \"String\", \"String\", \"String\", \"Float64\", \"Any\", \"Float64\", \"String\", \"Int64\", \"Float64\", \"Any\", \"Float64\", \"Any\", \"Int64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -2546,7 +2546,7 @@
 ":name" = "XGBoostRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":clean!", ":fit"]
+":implemented_methods" = [":clean!", ":fit", ":predict"]
 ":hyperparameters" = "`(:num_round, :booster, :disable_default_eval_metric, :eta, :gamma, :max_depth, :min_child_weight, :max_delta_step, :subsample, :colsample_bytree, :colsample_bylevel, :lambda, :alpha, :tree_method, :sketch_eps, :scale_pos_weight, :updater, :refresh_leaf, :process_type, :grow_policy, :max_leaves, :max_bin, :predictor, :sample_type, :normalize_type, :rate_drop, :one_drop, :skip_drop, :feature_selector, :top_k, :tweedie_variance_power, :objective, :base_score, :eval_metric, :seed)`"
 ":hyperparameter_types" = "`(\"Int64\", \"String\", \"Int64\", \"Float64\", \"Float64\", \"Int64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"String\", \"Float64\", \"Float64\", \"String\", \"Union{Bool, Int64}\", \"String\", \"String\", \"Int64\", \"Int64\", \"String\", \"String\", \"String\", \"Float64\", \"Any\", \"Float64\", \"String\", \"Int64\", \"Float64\", \"Any\", \"Float64\", \"Any\", \"Int64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -2568,7 +2568,7 @@
 ":name" = "XGBoostClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":predict", ":clean!", ":fit"]
+":implemented_methods" = [":clean!", ":fit", ":predict"]
 ":hyperparameters" = "`(:num_round, :booster, :disable_default_eval_metric, :eta, :gamma, :max_depth, :min_child_weight, :max_delta_step, :subsample, :colsample_bytree, :colsample_bylevel, :lambda, :alpha, :tree_method, :sketch_eps, :scale_pos_weight, :updater, :refresh_leaf, :process_type, :grow_policy, :max_leaves, :max_bin, :predictor, :sample_type, :normalize_type, :rate_drop, :one_drop, :skip_drop, :feature_selector, :top_k, :tweedie_variance_power, :objective, :base_score, :eval_metric, :seed)`"
 ":hyperparameter_types" = "`(\"Int64\", \"String\", \"Int64\", \"Float64\", \"Float64\", \"Int64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"String\", \"Float64\", \"Float64\", \"String\", \"Union{Bool, Int64}\", \"String\", \"String\", \"Int64\", \"Int64\", \"String\", \"String\", \"String\", \"Float64\", \"Any\", \"Float64\", \"String\", \"Int64\", \"Float64\", \"Any\", \"Float64\", \"Any\", \"Int64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -2590,7 +2590,7 @@
 ":name" = "LGBMClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":update"]
+":implemented_methods" = [":clean!", ":fit", ":predict", ":update"]
 ":hyperparameters" = "`(:boosting, :num_iterations, :learning_rate, :num_leaves, :max_depth, :tree_learner, :histogram_pool_size, :min_data_in_leaf, :min_sum_hessian_in_leaf, :lambda_l1, :lambda_l2, :min_gain_to_split, :feature_fraction, :feature_fraction_seed, :bagging_fraction, :bagging_freq, :bagging_seed, :early_stopping_round, :max_bin, :init_score, :drop_rate, :max_drop, :skip_drop, :xgboost_dart_mode, :uniform_drop, :drop_seed, :top_rate, :other_rate, :objective, :categorical_feature, :data_random_seed, :is_sparse, :is_unbalance, :metric, :metric_freq, :is_training_metric, :ndcg_at, :num_machines, :num_threads, :local_listen_port, :time_out, :machine_list_file, :save_binary, :device_type)`"
 ":hyperparameter_types" = "`(\"String\", \"Int64\", \"Float64\", \"Int64\", \"Int64\", \"String\", \"Float64\", \"Int64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Int64\", \"Float64\", \"Int64\", \"Int64\", \"Int64\", \"Int64\", \"String\", \"Float64\", \"Int64\", \"Float64\", \"Bool\", \"Bool\", \"Int64\", \"Float64\", \"Float64\", \"String\", \"Array{Int64,1}\", \"Int64\", \"Bool\", \"Bool\", \"Array{String,1}\", \"Int64\", \"Bool\", \"Array{Int64,1}\", \"Int64\", \"Int64\", \"Int64\", \"Int64\", \"String\", \"Bool\", \"String\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -2612,7 +2612,7 @@
 ":name" = "LGBMRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":clean!", ":fit", ":update"]
+":implemented_methods" = [":clean!", ":fit", ":predict", ":update"]
 ":hyperparameters" = "`(:boosting, :num_iterations, :learning_rate, :num_leaves, :max_depth, :tree_learner, :histogram_pool_size, :min_data_in_leaf, :min_sum_hessian_in_leaf, :lambda_l1, :lambda_l2, :min_gain_to_split, :feature_fraction, :feature_fraction_seed, :bagging_fraction, :bagging_freq, :bagging_seed, :early_stopping_round, :max_bin, :init_score, :drop_rate, :max_drop, :skip_drop, :xgboost_dart_mode, :uniform_drop, :drop_seed, :top_rate, :other_rate, :objective, :categorical_feature, :data_random_seed, :is_sparse, :is_unbalance, :metric, :metric_freq, :is_training_metric, :ndcg_at, :num_machines, :num_threads, :local_listen_port, :time_out, :machine_list_file, :save_binary, :device_type)`"
 ":hyperparameter_types" = "`(\"String\", \"Int64\", \"Float64\", \"Int64\", \"Int64\", \"String\", \"Float64\", \"Int64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Int64\", \"Float64\", \"Int64\", \"Int64\", \"Int64\", \"Int64\", \"String\", \"Float64\", \"Int64\", \"Float64\", \"Bool\", \"Bool\", \"Int64\", \"Float64\", \"Float64\", \"String\", \"Array{Int64,1}\", \"Int64\", \"Bool\", \"Bool\", \"Array{String,1}\", \"Int64\", \"Bool\", \"Array{Int64,1}\", \"Int64\", \"Int64\", \"Int64\", \"Int64\", \"String\", \"Bool\", \"String\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -2722,7 +2722,7 @@
 ":name" = "ConstantClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":predict", ":fit", ":fitted_params"]
+":implemented_methods" = [":fit", ":fitted_params", ":predict"]
 ":hyperparameters" = "``"
 ":hyperparameter_types" = "``"
 ":hyperparameter_ranges" = "``"
@@ -2766,7 +2766,7 @@
 ":name" = "DeterministicConstantClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":fit"]
+":implemented_methods" = [":fit", ":predict"]
 ":hyperparameters" = "``"
 ":hyperparameter_types" = "``"
 ":hyperparameter_ranges" = "``"
@@ -2876,7 +2876,7 @@
 ":name" = "ConstantRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":predict", ":fitted_params"]
+":implemented_methods" = [":fitted_params", ":predict"]
 ":hyperparameters" = "`(:distribution_type,)`"
 ":hyperparameter_types" = "`(\"Type{D} where D<:Distributions.Sampleable\",)`"
 ":hyperparameter_ranges" = "`(nothing,)`"
@@ -2942,7 +2942,7 @@
 ":name" = "BinaryThresholdPredictor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":fit", ":fitted_params", ":update"]
+":implemented_methods" = [":fit", ":fitted_params", ":predict", ":update"]
 ":hyperparameters" = "`(:wrapped_model, :threshold)`"
 ":hyperparameter_types" = "`(\"MLJModelInterface.Probabilistic\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
@@ -2986,7 +2986,7 @@
 ":name" = "DeterministicConstantRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":fit"]
+":implemented_methods" = [":fit", ":predict"]
 ":hyperparameters" = "``"
 ":hyperparameter_types" = "``"
 ":hyperparameter_ranges" = "``"
@@ -3052,7 +3052,7 @@
 ":name" = "EpsilonSVR"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":fit"]
+":implemented_methods" = [":fit", ":predict"]
 ":hyperparameters" = "`(:kernel, :gamma, :epsilon, :cost, :cachesize, :degree, :coef0, :tolerance, :shrinking)`"
 ":hyperparameter_types" = "`(\"LIBSVM.Kernel.KERNEL\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Int32\", \"Float64\", \"Float64\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -3060,7 +3060,7 @@
 [LIBSVM.LinearSVC]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{_s76,1} where _s76<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s108,1} where _s108<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "LIBSVM"
 ":package_license" = "unknown"
@@ -3074,7 +3074,7 @@
 ":name" = "LinearSVC"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":fit"]
+":implemented_methods" = [":fit", ":predict"]
 ":hyperparameters" = "`(:solver, :weights, :tolerance, :cost, :p, :bias)`"
 ":hyperparameter_types" = "`(\"LIBSVM.Linearsolver.LINEARSOLVER\", \"Union{Nothing, Dict}\", \"Float64\", \"Float64\", \"Float64\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -3096,7 +3096,7 @@
 ":name" = "NuSVR"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":fit"]
+":implemented_methods" = [":fit", ":predict"]
 ":hyperparameters" = "`(:kernel, :gamma, :nu, :cost, :cachesize, :degree, :coef0, :tolerance, :shrinking)`"
 ":hyperparameter_types" = "`(\"LIBSVM.Kernel.KERNEL\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Int32\", \"Float64\", \"Float64\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -3104,7 +3104,7 @@
 [LIBSVM.NuSVC]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{_s76,1} where _s76<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s108,1} where _s108<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "LIBSVM"
 ":package_license" = "unknown"
@@ -3118,7 +3118,7 @@
 ":name" = "NuSVC"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":fit"]
+":implemented_methods" = [":fit", ":predict"]
 ":hyperparameters" = "`(:kernel, :gamma, :weights, :nu, :cost, :cachesize, :degree, :coef0, :tolerance, :shrinking)`"
 ":hyperparameter_types" = "`(\"LIBSVM.Kernel.KERNEL\", \"Float64\", \"Union{Nothing, Dict}\", \"Float64\", \"Float64\", \"Float64\", \"Int32\", \"Float64\", \"Float64\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -3126,7 +3126,7 @@
 [LIBSVM.SVC]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{_s76,1} where _s76<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s108,1} where _s108<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "LIBSVM"
 ":package_license" = "unknown"
@@ -3140,14 +3140,14 @@
 ":name" = "SVC"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
-":implemented_methods" = [":predict", ":fit"]
+":implemented_methods" = [":fit", ":predict"]
 ":hyperparameters" = "`(:kernel, :gamma, :weights, :cost, :cachesize, :degree, :coef0, :tolerance, :shrinking, :probability)`"
 ":hyperparameter_types" = "`(\"LIBSVM.Kernel.KERNEL\", \"Float64\", \"Union{Nothing, Dict}\", \"Float64\", \"Float64\", \"Int32\", \"Float64\", \"Float64\", \"Bool\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [LIBSVM.OneClassSVM]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
-":output_scitype" = "`AbstractArray{_s76,1} where _s76<:ScientificTypes.Finite{2}`"
+":output_scitype" = "`AbstractArray{_s108,1} where _s108<:ScientificTypes.Finite{2}`"
 ":target_scitype" = "`ScientificTypes.Unknown`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "LIBSVM"
@@ -3170,7 +3170,7 @@
 [GLM.LinearBinaryClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{_s77,1} where _s77<:ScientificTypes.Finite{2}`"
+":target_scitype" = "`AbstractArray{_s109,1} where _s109<:ScientificTypes.Finite{2}`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "GLM"
 ":package_license" = "MIT"
@@ -3184,7 +3184,7 @@
 ":name" = "LinearBinaryClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":predict", ":fit", ":predict_mean"]
+":implemented_methods" = [":fit", ":predict", ":predict_mean"]
 ":hyperparameters" = "`(:fit_intercept, :link)`"
 ":hyperparameter_types" = "`(\"Bool\", \"GLM.Link01\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
@@ -3206,7 +3206,7 @@
 ":name" = "LinearCountRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":predict", ":fit"]
+":implemented_methods" = [":fit", ":predict"]
 ":hyperparameters" = "`(:fit_intercept, :distribution, :link)`"
 ":hyperparameter_types" = "`(\"Bool\", \"Distributions.Distribution\", \"GLM.Link\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing)`"
@@ -3228,7 +3228,7 @@
 ":name" = "LinearRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":predict", ":fit"]
+":implemented_methods" = [":fit", ":predict"]
 ":hyperparameters" = "`(:fit_intercept, :allowrankdeficient)`"
 ":hyperparameter_types" = "`(\"Bool\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
@@ -3272,7 +3272,7 @@
 ":name" = "NeuralNetworkClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":predict", ":fit", ":fitted_params", ":update"]
+":implemented_methods" = [":fit", ":fitted_params", ":predict", ":update"]
 ":hyperparameters" = "`(:builder, :finaliser, :optimiser, :loss, :epochs, :batch_size, :lambda, :alpha, :optimiser_changes_trigger_retraining)`"
 ":hyperparameter_types" = "`(\"Any\", \"Any\", \"Any\", \"Any\", \"Int64\", \"Int64\", \"Float64\", \"Float64\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -3294,7 +3294,7 @@
 ":name" = "ImageClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
-":implemented_methods" = [":predict", ":fit", ":fitted_params", ":update"]
+":implemented_methods" = [":fit", ":fitted_params", ":predict", ":update"]
 ":hyperparameters" = "`(:builder, :finaliser, :optimiser, :loss, :epochs, :batch_size, :lambda, :alpha, :optimiser_changes_trigger_retraining)`"
 ":hyperparameter_types" = "`(\"Any\", \"Any\", \"Any\", \"Any\", \"Int64\", \"Int64\", \"Float64\", \"Float64\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
