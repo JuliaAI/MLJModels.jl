@@ -37,7 +37,6 @@ Tables = "^0.2,^1.0"
 julia = "1"
 
 [extras]
-DecisionTree = "7806a523-6efd-50cb-b5f6-3fa6f1930dbb"
 Distances = "b4f34e82-e78d-54a5-968a-f98e89d6e8f7"
 GLM = "38e38edf-8417-5370-95a0-9cbb8c7f171a"
 LIBSVM = "b1bec4e5-fd48-53fe-b0cb-9723c09d164b"
@@ -48,4 +47,4 @@ StableRNGs = "860ef19b-820b-49d6-a774-d7a799459cd3"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]
-test = ["DecisionTree", "Distances", "GLM", "LIBSVM", "MLJMultivariateStatsInterface", "NearestNeighbors", "ScientificTypes", "StableRNGs", "Test"]
+test = ["Distances", "GLM", "LIBSVM", "MLJMultivariateStatsInterface", "NearestNeighbors", "ScientificTypes", "StableRNGs", "Test"]
