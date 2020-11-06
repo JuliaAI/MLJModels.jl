@@ -16,9 +16,7 @@ cnst = info("ConstantRegressor", pkg="MLJModels")
     tree = info("DecisionTreeRegressor")
     @test cnst in localmodels(modl=TestModelSearch)
     @test !(tree in localmodels(modl=TestModelSearch))
-    import MLJModels
-    import DecisionTree
-    import MLJModels.DecisionTree_.DecisionTreeRegressor
+    import MLJDecisionTreeInterface.DecisionTreeRegressor
     @test tree in localmodels(modl=TestModelSearch)
 end
 
