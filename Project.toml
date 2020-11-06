@@ -1,7 +1,7 @@
 name = "MLJModels"
 uuid = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
 authors = ["Anthony D. Blaom <anthony.blaom@gmail.com>"]
-version = "0.12.10"
+version = "0.12.11"
 
 [deps]
 CategoricalArrays = "324d7699-5711-5eae-9e2f-1d82baa6b597"
@@ -41,6 +41,7 @@ DecisionTree = "7806a523-6efd-50cb-b5f6-3fa6f1930dbb"
 Distances = "b4f34e82-e78d-54a5-968a-f98e89d6e8f7"
 GLM = "38e38edf-8417-5370-95a0-9cbb8c7f171a"
 LIBSVM = "b1bec4e5-fd48-53fe-b0cb-9723c09d164b"
+MLJDecisionTreeInterface = "c6f25543-311c-4c74-83dc-3ea6d1015661"
 MLJMultivariateStatsInterface = "1b6a4a23-ba22-4f51-9698-8599985d3728"
 NearestNeighbors = "b8a86587-4115-5ab1-83bc-aa920d37bbce"
 ScientificTypes = "321657f4-b219-11e9-178b-2701a2544e81"
@@ -48,4 +49,4 @@ StableRNGs = "860ef19b-820b-49d6-a774-d7a799459cd3"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]
-test = ["DecisionTree", "Distances", "GLM", "LIBSVM", "MLJMultivariateStatsInterface", "NearestNeighbors", "ScientificTypes", "StableRNGs", "Test"]
+test = ["DecisionTree", "Distances", "GLM", "LIBSVM", "MLJDecisionTreeInterface", "MLJMultivariateStatsInterface", "NearestNeighbors", "ScientificTypes", "StableRNGs", "Test"]

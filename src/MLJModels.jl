@@ -71,8 +71,6 @@ append!(NAMES, model_names(INFO_GIVEN_HANDLE))
 
 # lazily load in strap-on model interfaces for external packages:
 function __init__()
-    @require(DecisionTree="7806a523-6efd-50cb-b5f6-3fa6f1930dbb",
-             include("DecisionTree.jl"))
     @require(GLM="38e38edf-8417-5370-95a0-9cbb8c7f171a",
              include("GLM.jl"))
     @require(LIBSVM="b1bec4e5-fd48-53fe-b0cb-9723c09d164b",
