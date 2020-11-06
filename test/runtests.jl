@@ -24,10 +24,6 @@ end
     end
 end
 
-@testset "DecisionTree       " begin
-    @test include("DecisionTree.jl")
-end
-
 @testset "GLM                " begin
     @test include("GLM.jl")
 end
