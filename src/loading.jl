@@ -1,139 +1,46 @@
-## FUNTIONS TO LOAD MODEL IMPLEMENTATION CODE
+## FUNCTIONS TO LOAD MODEL IMPLEMENTATION CODE
 
-# helper:
+### Helpers
 
-
-"""
-    load(name::String; pkg=nothing, modl=Main, verbosity=1, name=nothing)
-
-Load the model implementation code for the model type with specified
-`name` (first argument) into the module `modl`, specifying `pkg` if
-necesssary to resolve duplicate names. Return an instance of the model type
-with default hyper-parameters.
-
-To bind the name of the model type to a name different from the first
-argument, specify `name=...`.
-
-    load(proxy; kwargs...1)
-
-In the case that `proxy` is a return value of `traits` (ie, has the
-form `(name = ..., package_name = ..., etc)`) this is equivalent to
-`load(name=proxy.name, pkg=proxy.package_name; kwargs...)`.
-
-See also [`@load`](@ref)
-
-### Examples
-
-    load("RidgeRegressor",
-         pkg="MLJLinearModels",
-         modl=MyPackage,
-         name="NewRidge",
-         verbosity=0)
-
-    load(localmodels()[1])
-
-See also [`@load`](@ref)
-
-"""
-function load(proxy::ModelProxy; modl=Main, verbosity=1, name=nothing)
-
-    # decide what to print
-    toprint = verbosity > 0
-
-    # get name, package and load path:
-    model_name = proxy.name
-    pkg = proxy.package_name
-    handle = (name=model_name, pkg=pkg)
-
-    # see if the model has already been loaded:
-    type_already_loaded = handle in map(localmodels(modl=modl)) do m
-        (name=m.name, pkg=m.package_name)
-    end
-
-    if type_already_loaded && name == nothing
-        toprint && @info "Model code for $model_name already loaded"
-        # return an instance of the type:
-        for M in localmodeltypes(modl)
-             i = info(M)
-            if i.name == model_name && i.package_name == pkg
-                return M()
-            end
-        end
-    end
-
-    # from now on work with symbols not strings:
-    path = INFO_GIVEN_HANDLE[handle][:load_path]
-    path_components = Symbol.(split(path, '.') )
-    model_name = Symbol(model_name)
-    pkg = Symbol(pkg)
-
-    verbosity > 0 && @info "Loading into module \"$modl\": "
-
-    # create `name`, the actual name (symbol) to be bound to the
-    # new type in the global namespace of `modl`. Note two packages
-    # might provide models with the same `model_name`.
-    if name === nothing
-        name = MLJBase.available_name(modl, Symbol(model_name))
-        name == model_name || verbosity < 0 ||
-            @warn "New model type being bound to "*
-            "`$name` to avoid conflict with an existing name. "
-    else
-        name = Symbol(name)
-    end
-
-    # the package providing the implementation of the MLJ model
-    # interface could be different from `pkg`, which is the package
-    # name exposed to the user (and where the core alogrithms live,
-    # but that this not actually relevant here).
-    api_pkg = path_components[1]
-
-    # if needed, put MLJModels in the calling module's namespace:
-    if api_pkg == :MLJModels
-        toprint && print("import MLJModels ")
-        # the latter pass exists as a fallback, and shouldn't happen
-        # for end users, but we need that for testing, etc
-        load_ex =
-            isdefined(modl, :MLJ) ? :(import MLJ.MLJModels) :
-            :(import MLJModels)
-        modl.eval(load_ex)
-        toprint && println('\u2714')
-    end
-
-    # load `api_pkg`, unless this is MLJModels, in which case load
-    # `pkg` to trigger lazy-loading of implementation code:
-    pkg_ex = api_pkg == :MLJModels ? pkg : api_pkg
-    toprint && print("import $pkg_ex ")
-    modl.eval(:(import $pkg_ex))
-
-    toprint && println('\u2714')
-
-    # load the model:
-    # the latter pass exists as a fallback, and shouldn't happen for
-    # end users, but we need that for testing, etc
-    if api_pkg == "MLJModels" && isdefined(modl, :MLJ)
-        pushfirst!(path_components, :MLJ)
-    end
-    root_components = path_components[1:(end - 1)]
-    root_str = join(string.(root_components), '.')
-    import_ex = Expr(:import, Expr(:(.), root_components...))
-    path_str = join(string.(path_components), '.')
-    path_ex = path_str |> Meta.parse
-    program =
-        quote
-            $import_ex
-            const $name = $path_ex
-        end
-
-    toprint && print("import ", root_str, " ")
-    modl.eval(program)
-    toprint && println('\u2714')
-
-    return modl.eval(:($name()))
-
+function _append!(program, ex, doprint::Bool)
+    str = string(ex)
+    doprint && push!(program.args, :(print($str)))
+    push!(program.args, ex)
+    doprint && push!(program.args, :(println(" \u2714")))
+    return program
 end
 
-load(name::String; pkg=nothing, kwargs...) =
-    load(info(name; pkg=pkg); kwargs...)
+"""
+    load_path(model::String, pkg=nothing)
+
+Return the load path for model type with name `model`, specifying the
+package name `pkg` to resolve name conflicts if necessary.
+
+    load_path(model)
+
+Return the load path of a `model` instance or type. Usually requires
+necessary model code to have been separately loaded. Supply a string
+as above if code is not loaded.
+
+"""
+function MLJModelInterface.load_path(proxy::ModelProxy)
+    handle = (name=proxy.name, pkg=proxy.package_name)
+    return INFO_GIVEN_HANDLE[handle][:load_path]
+end
+function MLJModelInterface.load_path(name::String; pkg=nothing)
+    proxy = info(name; pkg=pkg)
+    return load_path(proxy)
+end
+
+# to also get pkg, which could be different from glue code pkg
+# appearing in load_path:
+function load_path_and_pkg(name::String; pkg=nothing)
+    proxy = info(name; pkg=pkg)
+    handle = (name=proxy.name, pkg=proxy.package_name)
+    _info = INFO_GIVEN_HANDLE[handle]
+
+    return _info[:load_path], _info[:package_name]
+end
 
 """
     @load name pkg=nothing verbosity=0 name=nothing
@@ -157,7 +64,27 @@ See also [`load`](@ref)
 
 """
 macro load(name_ex, kw_exs...)
+    program, instance_ex = _load(__module__, name_ex, kw_exs...)
+    push!(program.args, instance_ex)
+    esc(program)
+end
+
+# builds the program to be evaluated by the @load macro:
+function _load(modl, name_ex, kw_exs...)
+
+    # initialize:
+    program = quote end
+
+    # fallbacks:
+    pkg = nothing
+    verbosity = 1
+    new_name = nothing
+
+    # parse name_ex:
     name_ = string(name_ex)
+    # get rid of parentheses in `name_`, as in
+    # "(MLJModels.Clustering).KMedoids":
+    name = filter(name_) do c !(c in ['(',')']) end
 
     # parse kwargs:
     warning = "Invalid @load syntax.\n "*
@@ -171,18 +98,88 @@ macro load(name_ex, kw_exs...)
         elseif variable_ex == :verbosity
             verbosity = value_ex
         elseif variable_ex == :name
-	    model_name = value_ex
-	else
+            new_name = value_ex
+        else
             throw(ArgumentError(warning))
         end
     end
-    (@isdefined pkg) || (pkg = nothing)
-    (@isdefined verbosity) || (verbosity = 0)
-    (@isdefined model_name) || (model_name = nothing)
-    # get rid brackets in name_, as in
-    # "(MLJModels.Clustering).KMedoids":
-    name = filter(name_) do c !(c in ['(',')']) end
-    
-    load(name, modl=__module__, pkg=pkg, verbosity=verbosity, name=model_name)
 
+    # are we printing stuff to stdout?
+    doprint = verbosity > 0
+
+    doprint && @info "For silent loading, specify `verbosity=0`. "
+
+    # get load path and update pkg (could be `nothing`):
+    path, pkg = load_path_and_pkg(name, pkg=pkg)
+
+    # see if the model type has already been loaded:
+    handle = (name=name, pkg=pkg)
+    type_already_loaded = handle in map(localmodels(modl=modl)) do m
+        (name=m.name, pkg=m.package_name)
+    end
+
+    # if so, return with program generating an instance:
+    if type_already_loaded && new_name == nothing
+        doprint && @info "Model code for $name already loaded"
+        # return an instance of the type:
+        for M in localmodeltypes(modl)
+            i = info(M)
+            if i.name == name && i.package_name == pkg
+                instance_ex = :($M())
+                return program, instance_ex
+            end
+        end
+    end
+
+    # determine `new_name`, to be bound to imported model type (in
+    # general, different from `name`):
+    if new_name === nothing
+        new_name = MLJBase.available_name(modl, Symbol(name))
+        new_name == Symbol(name) || verbosity < 0 ||
+            @warn "New model type being bound to "*
+            "`$new_name` to avoid conflict with an existing name. "
+    else
+        new_name = Symbol(new_name)
+    end
+
+    path_components = Symbol.(split(path, '.') )
+
+    # get pkg containing implementation of model API implementation:
+    api_pkg = path_components[1]
+    pkg = Symbol(pkg)
+
+    # if needed, put MLJModels in the calling module's namespace:
+    if api_pkg == :MLJModels
+        load_ex =
+            isdefined(modl, :MLJ) ? :(import MLJ.MLJModels) :
+            :(import MLJModels)
+        _append!(program, load_ex, doprint)
+        # TODO: remove next line of code after disintegration of
+        # MLJModels (for triggering loading of glue code module):
+        api_pkg == pkg || _append!(program, :(import $pkg), doprint)
+    end
+
+    root_components = path_components[1:(end - 1)]
+    import_ex = Expr(:import, Expr(:(.), root_components...))
+    path_str = join(string.(path_components), '.')
+    path_ex = path_str |> Meta.parse
+    api_pkg == :MLJmodels || _append!(program, import_ex, doprint)
+    _append!(program, :(const $new_name = $path_ex), doprint)
+
+    instance_ex = doprint ? :($new_name()) : :($new_name();)
+
+    return program, instance_ex
 end
+
+## DEPRECATED
+
+_deperror() = error(
+    "The `load` function is no longer supported. "*
+    "Use the `@load` macro instead, as in "*
+    "`@load RandomForestRegressor pkg = DecisionTree`.\n"*
+    "For explicit importing, you can discover a model's "*
+    "full load path with the `load_path` function, as in "*
+    "`load_path(\"RandomForestRegressor\", pkg=\"DecisionTree\")`. )")
+
+load(proxy::ModelProxy; kwargs...) = _deperror()
+load(name::String; kwargs...) = _deperror()
