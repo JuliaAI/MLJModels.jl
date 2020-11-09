@@ -2,11 +2,12 @@
 
 ### Helpers
 
-function _append!(program, ex, doprint::Bool)
+function _append!(program, ex, doprint::Bool, tick_early::Bool)
     str = string(ex)
     doprint && push!(program.args, :(print($str)))
+    doprint && !tick_early && push!(program.args, :(println(" \u2714")))
     push!(program.args, ex)
-    doprint && push!(program.args, :(println(" \u2714")))
+    tick_early && doprint && push!(program.args, :(println(" \u2714")))
     return program
 end
 
@@ -64,13 +65,13 @@ See also [`load`](@ref)
 
 """
 macro load(name_ex, kw_exs...)
-    program, instance_ex = _load(__module__, name_ex, kw_exs...)
-    push!(program.args, instance_ex)
+    program, instance_prgm = _load(__module__, name_ex, kw_exs...)
+    append!(program.args, instance_prgm.args)
     esc(program)
 end
 
 macro loadcode(name_ex, kw_exs...)
-    program, instance_ex = _load(__module__, name_ex, kw_exs...)
+    program, _ = _load(__module__, name_ex, kw_exs...)
     esc(program)
 end
 
@@ -81,6 +82,7 @@ function _load(modl, name_ex, kw_exs...)
 
     # initialize:
     program = quote end
+    instance_prgm = quote end
 
     # fallbacks:
     pkg = nothing
@@ -132,8 +134,8 @@ function _load(modl, name_ex, kw_exs...)
         for M in localmodeltypes(modl)
             i = info(M)
             if i.name == name && i.package_name == pkg
-                instance_ex = :($M())
-                return program, instance_ex
+                _append!(instance_prgm, :($M()), doprint, false)
+                return program, instance_prgm
             end
         end
     end
@@ -160,22 +162,23 @@ function _load(modl, name_ex, kw_exs...)
         load_ex =
             isdefined(modl, :MLJ) ? :(import MLJ.MLJModels) :
             :(import MLJModels)
-        _append!(program, load_ex, doprint)
+        _append!(program, load_ex, doprint, true)
         # TODO: remove next line of code after disintegration of
         # MLJModels (for triggering loading of glue code module):
-        api_pkg == pkg || _append!(program, :(import $pkg), doprint)
+        api_pkg == pkg || _append!(program, :(import $pkg), doprint, true)
     end
 
     root_components = path_components[1:(end - 1)]
     import_ex = Expr(:import, Expr(:(.), root_components...))
     path_str = join(string.(path_components), '.')
     path_ex = path_str |> Meta.parse
-    api_pkg == :MLJmodels || _append!(program, import_ex, doprint)
-    _append!(program, :(const $new_name = $path_ex), doprint)
+    api_pkg == :MLJmodels || _append!(program, import_ex, doprint, true)
+    _append!(program, :(const $new_name = $path_ex), doprint, true)
 
     instance_ex = doprint ? :($new_name()) : :($new_name();)
+    _append!(instance_prgm, instance_ex, doprint, false)
 
-    return program, instance_ex
+    return program, instance_prgm
 end
 
 
