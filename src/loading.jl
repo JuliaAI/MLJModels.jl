@@ -69,6 +69,13 @@ macro load(name_ex, kw_exs...)
     esc(program)
 end
 
+macro loadcode(name_ex, kw_exs...)
+    program, instance_ex = _load(__module__, name_ex, kw_exs...)
+    esc(program)
+end
+
+
+
 # builds the program to be evaluated by the @load macro:
 function _load(modl, name_ex, kw_exs...)
 
@@ -171,7 +178,8 @@ function _load(modl, name_ex, kw_exs...)
     return program, instance_ex
 end
 
-## DEPRECATED
+
+## NO LONGER SUPPORTED
 
 _deperror() = error(
     "The `load` function is no longer supported. "*

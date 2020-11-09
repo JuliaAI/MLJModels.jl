@@ -17,7 +17,7 @@ import Distributions
 export @update, check_registry
 
 # from loading.jl:
-export load, @load, info
+export load, @load, info, @loadcode
 
 # from model_search:
 export models, localmodels

@@ -4,6 +4,7 @@ module TestLoading
 using Test
 using MLJModels
 
+@loadcode RandomForestClassifier pkg=DecisionTree verbosity=0
 
 @load RidgeRegressor pkg=MultivariateStats verbosity=0
 
@@ -30,7 +31,7 @@ eval(program)
 program, _ = MLJModels._load(TestLoading,
                 :(DecisionTreeClassifier),
                 :(pkg=DecisionTree),
-                :(name=RidgeRegressor))
+                             :(name=RidgeRegressor))
 
 @test_throws Exception eval(program)
 
