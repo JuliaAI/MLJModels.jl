@@ -263,11 +263,11 @@ end
 
     let dt = [Date(2018, 6, 15) + Day(i) for i=0:10],
         transformer = UnivariateTimeTypeToContinuous()
-        @test_logs(
-            (:warn, "Cannot add `TimePeriod` `step` to `Date` `zero_time`. Converting `step` to `Day`."),
+        fr, _, _ = @test_logs(
+            (:warn, r"Cannot add `TimePeriod` `step`"),
             MLJBase.fit(transformer, 1, dt)
         )
-        fr, _, _ = MLJBase.fit(transformer, 1, dt)
+        fr, _, _ = @test_logs (:warn, r"C") MLJBase.fit(transformer, 1, dt)
         @test fr == (Date(2018, 6, 15), Day(1))
         dt_continuous = MLJBase.transform(transformer, fr, dt)
         @test all(dt_continuous .== Float64.(0:10))
@@ -304,11 +304,7 @@ end
     let dt = [DateTime(2018, 6, 15) + Day(i) for i=0:10],
         step=Hour(1),
         zero_time=Date(2018, 6, 15),
-        transformer = UnivariateTimeTypeToContinuous(;
-            step=step,
-            zero_time=zero_time,
-        )
-        @test_logs(
+        transformer = @test_logs(
             (:warn, "Cannot add `TimePeriod` `step` to `Date` `zero_time`. Converting `zero_time` to `DateTime`."),
             UnivariateTimeTypeToContinuous(;
                 step=step,
@@ -325,11 +321,7 @@ end
     let dt = [Time(0, 0, 0) + Hour(i) for i=0:3:30],
         zero_time=Time(0, 0, 0),
         step=Day(1),
-        transformer = UnivariateTimeTypeToContinuous(;
-            step=step,
-            zero_time=zero_time,
-        )
-        @test_logs(
+        transformer = @test_logs(
             (:warn, "Cannot add `DatePeriod` `step` to `Time` `zero_time`. Converting `step` to `Hour`."),
             UnivariateTimeTypeToContinuous(;
                 step=step,
@@ -354,11 +346,10 @@ end
             step=step,
             zero_time=zero_time,
         )
-        @test_logs(
-            (:warn, "`Dates.Date` `zero_time` is not compatible with `Dates.DateTime` vector. Attempting to convert `zero_time`."),
+        fr, _, _ = @test_logs(
+            (:warn, r"`Date"),
             MLJBase.fit(transformer, 1, dt)
         )
-        fr, _, _ = MLJBase.fit(transformer, 1, dt)
 
         @test fr == (zero_time, step)
         dt_continuous = MLJBase.transform(transformer, fr, dt)
