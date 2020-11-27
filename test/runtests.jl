@@ -24,15 +24,6 @@ end
     end
 end
 
-@testset "GLM                " begin
-    @test include("GLM.jl")
-end
-
-@testset "LIBSVM             " begin
-    @test include("LIBSVM.jl")
-end
-
 @testset "NearestNeighbors" begin
     @test include("NearestNeighbors.jl")
 end
-
