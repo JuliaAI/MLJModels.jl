@@ -38,6 +38,9 @@ program, _ = MLJModels._load(TestLoading,
 @test_throws Exception load("model", pkg = "pkg")
 @test_throws Exception load(models()[1])
 
+@testset "scope=:local inside a @testset" begin
+    @load RidgeRegressor pkg=MultivariateStats verbosity=0 scope=:local
+end
 
 end # module
 
