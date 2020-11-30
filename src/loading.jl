@@ -44,7 +44,7 @@ function load_path_and_pkg(name::String; pkg=nothing)
 end
 
 """
-    @load name pkg=nothing verbosity=0 name=nothing
+    @load name pkg=nothing verbosity=0 name=nothing scope=:global
 
 Load the model implementation code for the model named in the first
 argument into the calling module, specfying `pkg` in the case of
@@ -88,6 +88,7 @@ function _load(modl, name_ex, kw_exs...)
     pkg = nothing
     verbosity = 1
     new_name = nothing
+    scope = :global
 
     # parse name_ex:
     name_ = string(name_ex)
@@ -108,9 +109,21 @@ function _load(modl, name_ex, kw_exs...)
             verbosity = value_ex
         elseif variable_ex == :name
             new_name = value_ex
+        elseif variable_ex == :scope
+            scope = value_ex
         else
             throw(ArgumentError(warning))
         end
+    end
+
+    if scope == :(:global)
+        scope = :global
+    end
+    if scope == :(:local)
+        scope = :local
+    end
+    if !( scope in [:global, :local] )
+        throw(ArgumentError("Invalid value for scope: $(scope). Valid values are :global or :local"))
     end
 
     # are we printing stuff to stdout?
@@ -173,7 +186,12 @@ function _load(modl, name_ex, kw_exs...)
     path_str = join(string.(path_components), '.')
     path_ex = path_str |> Meta.parse
     api_pkg == :MLJmodels || _append!(program, import_ex, doprint, true)
-    _append!(program, :(const $new_name = $path_ex), doprint, true)
+    if scope == :local
+        # we cannot use the `const` keyword in front of local variables
+        _append!(program, :($new_name = $path_ex), doprint, true)
+    else
+        _append!(program, :(const $new_name = $path_ex), doprint, true)
+    end
 
     instance_ex = doprint ? :($new_name()) : :($new_name();)
     _append!(instance_prgm, instance_ex, doprint, false)
