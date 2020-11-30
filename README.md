@@ -1,6 +1,6 @@
 # MLJModels
 
-[![Build Status](https://travis-ci.com/alan-turing-institute/MLJModels.jl.svg?branch=master)](https://travis-ci.com/alan-turing-institute/MLJModels.jl)
+[![Build Status](https://github.com/alan-turing-institute/MLJModels.jl/workflows/CI/badge.svg)](https://github.com/alan-turing-institute/MLJModels.jl/actions)
 
 Repository of selected
 [MLJ](https://github.com/alan-turing-institute/MLJ.jl) model
