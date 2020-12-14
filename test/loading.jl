@@ -42,6 +42,11 @@ program, _ = MLJModels._load(TestLoading,
     @load RidgeRegressor pkg=MultivariateStats verbosity=0 scope=:local
 end
 
+@testset "install_pkgs=true" begin
+    @load KMeans pkg=Clustering verbosity=0 scope=:local install_pkgs=true
+    @load KMeans pkg=Clustering verbosity=0 scope=:local install_pkgs=true
+end
+
 end # module
 
 true
