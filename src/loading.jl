@@ -44,7 +44,7 @@ function load_path_and_pkg(name::String; pkg=nothing)
 end
 
 """
-    @load name pkg=nothing verbosity=0 name=nothing scope=:global
+    @load name pkg=nothing verbosity=0 name=nothing scope=:global install_pkgs=false
 
 Load the model implementation code for the model named in the first
 argument into the calling module, specfying `pkg` in the case of
@@ -89,6 +89,7 @@ function _load(modl, name_ex, kw_exs...)
     verbosity = 1
     new_name = nothing
     scope = :global
+    install_pkgs = false
 
     # parse name_ex:
     name_ = string(name_ex)
@@ -111,6 +112,8 @@ function _load(modl, name_ex, kw_exs...)
             new_name = value_ex
         elseif variable_ex == :scope
             scope = value_ex
+        elseif variable_ex == :install_pkgs
+            install_pkgs = value_ex
         else
             throw(ArgumentError(warning))
         end
@@ -183,6 +186,17 @@ function _load(modl, name_ex, kw_exs...)
 
     root_components = path_components[1:(end - 1)]
     import_ex = Expr(:import, Expr(:(.), root_components...))
+    if install_pkgs
+        install_ex = quote
+            try
+                $(import_ex)
+            catch
+                import Pkg
+                Pkg.add($(string(api_pkg)))
+            end
+        end
+        _append!(program, install_ex, doprint, true)
+    end
     path_str = join(string.(path_components), '.')
     path_ex = path_str |> Meta.parse
     api_pkg == :MLJmodels || _append!(program, import_ex, doprint, true)
