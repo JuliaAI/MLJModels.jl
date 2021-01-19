@@ -93,7 +93,6 @@ function MLJScientificTypes.info(name::String; pkg=nothing)
 
 end
 
-
 """
    info(model::Model)
 

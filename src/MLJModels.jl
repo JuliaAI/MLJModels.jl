@@ -20,7 +20,7 @@ export @update, check_registry
 export load, @load, info, @loadcode
 
 # from model_search:
-export models, localmodels
+export models, localmodels, matching
 
 # from model/Constant
 export ConstantRegressor, ConstantClassifier,
