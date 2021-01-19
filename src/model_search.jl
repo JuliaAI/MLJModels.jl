@@ -109,7 +109,31 @@ MLJScientificTypes.info(model::MMI.Model) = info(typeof(model))
 
 ## MATCHING
 
-## SEARCH TOOL
+# Note. `ModelProxy` is the type of a model's metadata entry (a named
+# tuple). So, `info("PCA")` has this type, for example.
+
+
+# Basic idea
+
+if false
+
+    matching(model::MLJModels.ModelProxy, X) =
+        !(model.is_supervised) && scitype(X) <: model.input_scitype
+
+    matching(model::MLJModels.ModelProxy, X, y) =
+        model.is_supervised &&
+        scitype(X) <: model.input_scitype &&
+        scitype(y) <: model.target_scitype
+
+    matching(model::MLJModels.ModelProxy, X, y, w::AbstractVector{<:Real}) =
+        model.is_supervised &&
+        model.supports_weights &&
+        scitype(X) <: model.input_scitype &&
+        scitype(y) <: model.target_scitype
+
+end
+
+# Implementation
 
 struct Checker{is_supervised,
                supports_weights,
