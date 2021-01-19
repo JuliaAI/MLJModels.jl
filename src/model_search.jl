@@ -54,6 +54,9 @@ function info_as_named_tuple(i)
     return NamedTuple{PROPERTY_NAMES}(property_values)
 end
 
+
+## INFO
+
 MLJScientificTypes.info(handle::Handle) =
     info_as_named_tuple(INFO_GIVEN_HANDLE[handle])
 
@@ -102,6 +105,113 @@ Return the traits associated with the specified `model`. Equivalent to
 MLJScientificTypes.info(M::Type{<:MMI.Model}) =
     info_as_named_tuple(MLJBase.info_dict(M))
 MLJScientificTypes.info(model::MMI.Model) = info(typeof(model))
+
+
+## MATCHING
+
+## SEARCH TOOL
+
+struct Checker{is_supervised,
+               supports_weights,
+               supports_class_weights,
+               input_scitype,
+               target_scitype} end
+
+function Base.getproperty(::Checker{is_supervised,
+                                    supports_weights,
+                                    supports_class_weights,
+                                    input_scitype,
+                                    target_scitype},
+                          field::Symbol) where {is_supervised,
+                                                supports_weights,
+                                                supports_class_weights,
+                                                input_scitype,
+                                                target_scitype}
+    if field === :is_supervised
+        return is_supervised
+    elseif field === :supports_weights
+        return supports_weights
+    elseif field === :supports_class_weights
+        return supports_class_weights
+    elseif field === :input_scitype
+        return input_scitype
+    elseif field === :target_scitype
+        return target_scitype
+    else
+        throw(ArgumentError("Unsupported property. "))
+    end
+end
+
+Base.propertynames(::Checker) =
+    (:is_supervised,
+     :supports_weights,
+     :supports_class_weights,
+     :input_scitype,
+     :target_scitype)
+
+function _as_named_tuple(s::Checker)
+    names = propertynames(s)
+    NamedTuple{names}(Tuple(getproperty(s, p) for p in names))
+end
+
+# function Base.show(io::IO, ::MIME"text/plain", S::Checker)
+#     show(io, MIME("text/plain"), _as_named_tuple(S))
+# end
+
+matching(X)       = Checker{false,missing,missing,scitype(X),missing}()
+matching(X, y)    = Checker{true,missing,missing,scitype(X),scitype(y)}()
+matching(X, y, w) = Checker{true,true,false,scitype(X),scitype(y)}()
+matching(X, y, w::AbstractDict) =
+    Checker{true,false,true,scitype(X),scitype(y)}()
+
+(f::Checker{false,
+            missing,
+            missing,
+            XS,
+            missing})(model::MLJModels.ModelProxy) where XS =
+    !(model.is_supervised) &&
+    XS <: model.input_scitype
+
+(f::Checker{true,
+            missing,
+            missing,
+            XS,
+            yS})(model::MLJModels.ModelProxy) where {XS,yS} =
+    model.is_supervised &&
+    XS <: model.input_scitype &&
+    yS <: model.target_scitype
+
+(f::Checker{true,
+            true,
+            false,
+            XS,
+            yS})(model::MLJModels.ModelProxy) where {XS,yS} =
+    model.is_supervised &&
+    model.supports_weights &&
+    XS <: model.input_scitype &&
+    yS <: model.target_scitype
+
+(f::Checker{true,
+            false,
+            true,
+            XS,
+            yS})(model::MLJModels.ModelProxy) where {XS,yS} =
+    model.is_supervised &&
+    model.supports_class_weights &&
+    XS <: model.input_scitype &&
+    yS <: model.target_scitype
+
+(f::Checker)(name::String; pkg=nothing) = f(info(name, pkg=pkg))
+(f::Checker)(realmodel::Model) = f(info(realmodel))
+
+matching(model::MLJModels.ModelProxy, args...) = matching(args...)(model)
+matching(name::String, args...; pkg=nothing) =
+    matching(info(name, pkg=pkg), args...)
+matching(realmodel::Model, args...) = matching(info(realmodel), args...)
+
+
+## MODEL QUERY
+
 
 """
     models()
