@@ -24,8 +24,15 @@ eval(program)
 
 # load the same model again, with a different binding:
 @load RidgeRegressor pkg=MultivariateStats name=Foo
-
 @test Foo() == RidgeRegressor()
+
+# load a model with same name from different package:
+@test_logs (:warn, r"New model type") begin
+    MLJModels._load(TestLoading,
+                    "RidgeRegressor",
+                    :(pkg=MLJLinearModels),
+                    :(verbosity=0))
+end
 
 # try to use the name of an existing object for new type name
 program, _ = MLJModels._load(TestLoading,
