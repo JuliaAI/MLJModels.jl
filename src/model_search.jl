@@ -274,7 +274,7 @@ predictions.
 See also: [`localmodels`](@ref).
 
 """
-function MLJBase.models(conditions...)
+function models(conditions...)
     unsorted = filter(info.(keys(INFO_GIVEN_HANDLE))) do model
         all(c(model) for c in conditions)
     end
@@ -286,9 +286,9 @@ end
 
 List all models whole `name` or `docstring` matches a given `needle`.
 """
-function MLJBase.models(needle::Union{AbstractString,Regex})
+function models(needle::Union{AbstractString,Regex})
     f = model -> occursin(needle, model.name) || occursin(needle, model.docstring)
-    return MLJBase.models(f)
+    return models(f)
 end
 
 """
