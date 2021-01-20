@@ -6,8 +6,8 @@ import MLJModelInterface: MODEL_TRAITS
 using MLJScientificTypes
 const ScientificTypes = MLJScientificTypes.ScientificTypes
 
+# still needed b/s UnivariateFinite type used in ThresholdPredictor:
 using MLJBase
-import MLJBase.@load
 
 using Requires, Pkg, Pkg.TOML, OrderedCollections, Parameters
 using Tables, CategoricalArrays, StatsBase, Statistics, Dates
