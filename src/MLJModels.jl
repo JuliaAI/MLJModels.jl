@@ -11,6 +11,7 @@ import MLJBase.@load
 
 using Requires, Pkg, Pkg.TOML, OrderedCollections, Parameters
 using Tables, CategoricalArrays, StatsBase, Statistics, Dates
+using MacroTools
 import Distributions
 
 # for administrators to update Metadata.toml:

@@ -1,4 +1,4 @@
-function check_registry() 
+function check_registry()
 #    basedir = joinpath(dirname(pathof(MLJModels)), "registry")
     basedir = Registry.environment_path
     Pkg.activate(basedir)
@@ -11,8 +11,11 @@ function check_registry()
         for (model, meta) in model_dict
             # check if new entry or changed entry, otherwise don't test
             key = "$package.$model"
+            program = quote
+                @load $model pkg=$package verbosity=-1
+            end
             try
-                load(model; pkg=package, verbosity=-1)
+                eval(program)
                 # add/refresh entry
                 print(rpad("Entry for $key was loaded properly ✓", 79)*"\r")
             catch
@@ -21,4 +24,3 @@ function check_registry()
         end
     end
 end
-

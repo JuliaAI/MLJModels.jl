@@ -1,7 +1,7 @@
 name = "MLJModels"
 uuid = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
 authors = ["Anthony D. Blaom <anthony.blaom@gmail.com>"]
-version = "0.13.2"
+version = "0.13.3"
 
 [deps]
 CategoricalArrays = "324d7699-5711-5eae-9e2f-1d82baa6b597"
@@ -13,6 +13,7 @@ LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 MLJBase = "a7f614a8-145f-11e9-1d2a-a57a1082229d"
 MLJModelInterface = "e80e1ace-859a-464e-9ed9-23947d8ae3ea"
 MLJScientificTypes = "2e2323e0-db8b-457b-ae0d-bdfb3bc63afd"
+MacroTools = "1914dd2f-81c6-5fcd-8719-6d5c9610ff09"
 OrderedCollections = "bac558e1-5e72-5ebc-8fee-abe8a469f55d"
 Parameters = "d96e819e-fc66-5662-9728-84c9c7592b0a"
 Pkg = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
@@ -29,6 +30,7 @@ Distributions = "^0.22,^0.23,^0.24"
 MLJBase = "^0.14,^0.15,^0.16"
 MLJModelInterface = "^0.3.4"
 MLJScientificTypes = "^0.3,^0.4.1"
+MacroTools = "^0.5"
 OrderedCollections = "^1.1"
 Parameters = "^0.12"
 Requires = "^0.5, ^1"
@@ -39,7 +41,6 @@ julia = "1"
 [extras]
 DecisionTree = "7806a523-6efd-50cb-b5f6-3fa6f1930dbb"
 Distances = "b4f34e82-e78d-54a5-968a-f98e89d6e8f7"
-GLM = "38e38edf-8417-5370-95a0-9cbb8c7f171a"
 LIBSVM = "b1bec4e5-fd48-53fe-b0cb-9723c09d164b"
 MLJDecisionTreeInterface = "c6f25543-311c-4c74-83dc-3ea6d1015661"
 MLJMultivariateStatsInterface = "1b6a4a23-ba22-4f51-9698-8599985d3728"
@@ -50,4 +51,4 @@ StableRNGs = "860ef19b-820b-49d6-a774-d7a799459cd3"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]
-test = ["DecisionTree", "Distances", "GLM", "LIBSVM", "MLJDecisionTreeInterface", "MLJMultivariateStatsInterface", "NearestNeighbors", "Pkg", "ScientificTypes", "StableRNGs", "Test"]
+test = ["DecisionTree", "Distances", "LIBSVM", "MLJDecisionTreeInterface", "MLJMultivariateStatsInterface", "NearestNeighbors", "Pkg", "ScientificTypes", "StableRNGs", "Test"]

@@ -184,8 +184,7 @@ function _load(modl, name_ex, kw_exs...)
         api_pkg == pkg || _append!(program, :(import $pkg), doprint, true)
     end
 
-    root_components = path_components[1:(end - 1)]
-    import_ex = Expr(:import, Expr(:(.), root_components...))
+    import_ex = :(import $api_pkg)
     if install_pkgs
         install_ex = quote
             try
@@ -195,10 +194,11 @@ function _load(modl, name_ex, kw_exs...)
                 Pkg.add($(string(api_pkg)))
             end
         end
+        install_ex = MacroTools.prewalk(rmlines, install_ex)
         _append!(program, install_ex, doprint, true)
     end
-    path_str = join(string.(path_components), '.')
-    path_ex = path_str |> Meta.parse
+
+    path_ex = path |> Meta.parse
     api_pkg == :MLJmodels || _append!(program, import_ex, doprint, true)
     if scope == :local
         # we cannot use the `const` keyword in front of local variables
