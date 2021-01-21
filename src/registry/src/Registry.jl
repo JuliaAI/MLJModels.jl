@@ -1,4 +1,4 @@
-module Registry
+module Registry 
 
 # for this module
 import Pkg
@@ -84,7 +84,7 @@ function _update(mod, test_env_only)
         meta_given_package = Dict()
 
         for M in modeltypes
-            _info = MLJBase.info_dict(M)
+            _info = MLJModels.info_dict(M)
             pkg = _info[:package_name]
             path = _info[:load_path]
             api_pkg = split(path, '.') |> first

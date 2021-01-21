@@ -102,7 +102,7 @@ Return the traits associated with the specified `model`. Equivalent to
 
 """
 MLJScientificTypes.info(M::Type{<:MMI.Model}) =
-    info_as_named_tuple(MLJBase.info_dict(M))
+    info_as_named_tuple(info_dict(M))
 MLJScientificTypes.info(model::MMI.Model) = info(typeof(model))
 
 

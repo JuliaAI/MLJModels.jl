@@ -45,6 +45,7 @@ end
 
 nonmissing = nonmissingtype
 
+include("info_dict.jl")
 include("metadata.jl")
 include("model_search.jl")
 include("loading.jl")
