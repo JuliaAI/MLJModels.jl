@@ -13,12 +13,13 @@ using Requires, Pkg, Pkg.TOML, OrderedCollections, Parameters
 using Tables, CategoricalArrays, StatsBase, Statistics, Dates
 using MacroTools
 import Distributions
+import REPL # stdlib, needed for Term
 
 # for administrators to update Metadata.toml:
 export @update, check_registry
 
 # from loading.jl:
-export load, @load, info, @loadcode
+export load, @load, @iload, @loadcode, info
 
 # from model_search:
 export models, localmodels
