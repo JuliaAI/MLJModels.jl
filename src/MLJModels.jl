@@ -11,7 +11,6 @@ import MLJBase.@load
 
 using Requires, Pkg, Pkg.TOML, OrderedCollections, Parameters
 using Tables, CategoricalArrays, StatsBase, Statistics, Dates
-using MacroTools
 import Distributions
 import REPL # stdlib, needed for Term
 
@@ -46,6 +45,7 @@ end
 
 nonmissing = nonmissingtype
 
+include("utilities.jl")
 include("metadata.jl")
 include("model_search.jl")
 include("loading.jl")
