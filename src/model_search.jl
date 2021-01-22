@@ -181,10 +181,10 @@ See also [`models`](@ref), [`load_path`](@ref).
 """
 function localmodels(args...; modl=Main)
     modeltypes = localmodeltypes(modl)
-    names = map(modeltypes) do M
-        MMI.name(M)
+    handles = map(modeltypes) do M
+        Handle(MMI.name(M), MMI.package_name(M))
     end
-    return filter(models(args...)) do handle
-        handle.name in names
+    return filter(models(args...)) do model
+        Handle(model.name, model.package_name) in handles
     end
 end
