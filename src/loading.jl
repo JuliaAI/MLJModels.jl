@@ -11,6 +11,11 @@ function _append!(program, ex, doprint::Bool, tick_early::Bool)
     return program
 end
 
+function _request(query, options...)
+    menu = REPL.TerminalMenus.RadioMenu([options...])
+    return REPL.TerminalMenus.request(query*"\n", menu) # index of option
+end
+
 """
     load_path(model::String, pkg=nothing)
 
@@ -43,8 +48,10 @@ function load_path_and_pkg(name::String; pkg=nothing)
     return _info[:load_path], _info[:package_name]
 end
 
+## the @load and @iload macros
+
 """
-    @load name pkg=nothing verbosity=0 name=nothing scope=:global install_pkgs=false
+    @load name pkg=nothing verbosity=0 name=nothing scope=:global install=false
 
 Load the model implementation code for the model named in the first
 argument into the calling module, specfying `pkg` in the case of
@@ -70,15 +77,22 @@ macro load(name_ex, kw_exs...)
     esc(program)
 end
 
+macro iload(name_ex, kw_exs...)
+    program, instance_prgm = _load(__module__,
+                                   name_ex,
+                                   kw_exs...;
+                                   interactive=true)
+    append!(program.args, instance_prgm.args)
+    esc(program)
+end
+
 macro loadcode(name_ex, kw_exs...)
     program, _ = _load(__module__, name_ex, kw_exs...)
     esc(program)
 end
 
-
-
 # builds the program to be evaluated by the @load macro:
-function _load(modl, name_ex, kw_exs...)
+function _load(modl, name_ex, kw_exs...; interactive=false)
 
     # initialize:
     program = quote end
@@ -99,7 +113,7 @@ function _load(modl, name_ex, kw_exs...)
 
     # parse kwargs:
     warning = "Invalid @load syntax.\n "*
-    "Sample usage: @load PCA pkg=\"MultivariateStats\" verbosity=1"
+    "Sample usage: @load PCA pkg=MultivariateStats verbosity=0 install=true"
     for ex in kw_exs
         ex.head == :(=) || throw(ArgumentError(warning))
         variable_ex = ex.args[1]
@@ -114,6 +128,8 @@ function _load(modl, name_ex, kw_exs...)
             scope = value_ex
         elseif variable_ex == :install_pkgs
             install_pkgs = value_ex
+        elseif variable_ex == :install
+            install_pkgs = value_ex
         else
             throw(ArgumentError(warning))
         end
@@ -126,7 +142,8 @@ function _load(modl, name_ex, kw_exs...)
         scope = :local
     end
     if !( scope in [:global, :local] )
-        throw(ArgumentError("Invalid value for scope: $(scope). Valid values are :global or :local"))
+        throw(ArgumentError("Invalid value for `scope`: `$(scope)`. "*
+                            "Valid values are `:global` or `:local`"))
     end
 
     # are we printing stuff to stdout?
@@ -160,9 +177,25 @@ function _load(modl, name_ex, kw_exs...)
     # general, different from `name`):
     if new_name === nothing
         new_name = MLJBase.available_name(modl, Symbol(name))
-        new_name == Symbol(name) || verbosity < 0 ||
-            @warn "New model type being bound to "*
-            "`$new_name` to avoid conflict with an existing name. "
+        if new_name != Symbol(name)
+            if interactive
+                choice =_request(
+                    "New model type will be bound to `$new_name` to "*
+                    "avoid conflict with existing type. ",
+                    ## choices:
+                    "Accept `$new_name`",
+                    "Choose new type name")
+                if choice == 2
+                    print("\nNew name: ")
+                    new_name = Symbol(readline())
+                elseif choice == -1
+                    throw(InterruptException)
+                end
+            elseif verbosity > -1
+                @warn "New model type being bound to "*
+                "`$new_name` to avoid conflict with an existing name. "
+            end
+        end
     else
         new_name = Symbol(new_name)
     end
