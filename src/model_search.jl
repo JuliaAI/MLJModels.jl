@@ -186,8 +186,8 @@ examples:
 See also [`models`](@ref), [`load_path`](@ref).
 
 """
-function localmodels(args...; modl=Main)
-    modeltypes = localmodeltypes(modl)
+function localmodels(args...; modl=Main, toplevel=false)
+    modeltypes = localmodeltypes(modl, toplevel=toplevel)
     handles = map(modeltypes) do M
         Handle(MMI.name(M), MMI.package_name(M))
     end

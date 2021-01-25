@@ -1,6 +1,9 @@
-## FUNCTIONS TO LOAD MODEL IMPLEMENTATION CODE
+###############################################
+# FUNCTIONS TO LOAD MODEL IMPLEMENTATION CODE #
+###############################################
 
-### Helpers
+
+## HELPERS
 
 function _append!(program, ex, doprint::Bool, tick_early::Bool)
     str = string(ex)
@@ -10,6 +13,49 @@ function _append!(program, ex, doprint::Bool, tick_early::Bool)
     tick_early && doprint && push!(program.args, :(println(" \u2714")))
     return program
 end
+
+macro _expose_mljmodels(scope, doprint)
+    doprint = doprint && scope == :global
+    modl = __module__
+    ex = scope == :local ? :(MLJModels = $modl.MLJModels) :
+        :(const MLJModels = $modl.MLJModels)
+    ex_string = string(ex)
+    esc(quote
+        $doprint && print($ex_string)
+        $ex
+        $doprint && println(" \u2714")
+        end)
+end
+
+function _import(modl, api_pkg, pkg, doprint)
+    # can be removed once MLJModel #331 is resolved:
+    if pkg == :NearestNeighbors
+        doprint && print("import NearestNeighbors")
+        modl.eval(:(import NearestNeighbors))
+        doprint && println(" \u2714")
+    else
+        doprint && print("import $api_pkg")
+        modl.eval(:(import $api_pkg))
+        doprint && println(" \u2714")
+    end
+end
+
+function _eval(modl, path::String)
+    ex = Meta.parse(path)
+    modl.eval(ex)
+end
+
+function _eval_and_bind(modl, path::String, name::Symbol, doprint)
+    value = _eval(modl, path)
+    doprint && print("const $(string(name)) = $value")
+    modl.eval(:(const $name = $value))
+    doprint && println(" \u2714")
+end
+
+const available_name = MLJBase.available_name
+
+
+## OVERLOADING load_path
 
 """
     load_path(model::String, pkg=nothing)
@@ -43,7 +89,8 @@ function load_path_and_pkg(name::String; pkg=nothing, interactive=false)
     return _info[:load_path], _info[:package_name]
 end
 
-## the @load and @iload macros
+
+## THE CODE LOADING MACROS
 
 """
     @load name pkg=nothing verbosity=0 name=nothing scope=:global install=false
@@ -67,36 +114,29 @@ See also [`load`](@ref)
 
 """
 macro load(name_ex, kw_exs...)
-    program, instance_prgm = _load(__module__, name_ex, kw_exs...)
-    append!(program.args, instance_prgm.args)
-    esc(program)
+    _load(__module__, name_ex, kw_exs...)
 end
 
 macro iload(name_ex, kw_exs...)
-    program, instance_prgm = _load(__module__,
-                                   name_ex,
-                                   kw_exs...;
-                                   interactive=true)
-    append!(program.args, instance_prgm.args)
-    esc(program)
+    _load(__module__, name_ex, kw_exs...; interactive=true)
 end
 
 macro loadcode(name_ex, kw_exs...)
-    program, _ = _load(__module__, name_ex, kw_exs...)
-    esc(program)
+    _load(__module__, name_ex, kw_exs...; return_instance=false)
 end
 
 # builds the program to be evaluated by the @load macro:
-function _load(modl, name_ex, kw_exs...; interactive=false)
+function _load(modl, name_ex, kw_exs...;
+               interactive=false,
+               return_instance=true)
 
     # initialize:
     program = quote end
-    instance_prgm = quote end
 
     # fallbacks:
     pkg = nothing
-    verbosity = 1
-    new_name = nothing
+    verbosity = nothing
+    name_specified = nothing
     scope = :global
     install_pkgs = false
 
@@ -108,7 +148,7 @@ function _load(modl, name_ex, kw_exs...; interactive=false)
 
     # parse kwargs:
     warning = "Invalid @load syntax.\n "*
-    "Sample usage: @load PCA pkg=MultivariateStats verbosity=0 install=true"
+        "Sample usage: @load PCA pkg=MultivariateStats verbosity=0 install=true"
     for ex in kw_exs
         ex.head == :(=) || throw(ArgumentError(warning))
         variable_ex = ex.args[1]
@@ -118,7 +158,7 @@ function _load(modl, name_ex, kw_exs...; interactive=false)
         elseif variable_ex == :verbosity
             verbosity = value_ex
         elseif variable_ex == :name
-            new_name = value_ex
+            name_specified = string(value_ex)
         elseif variable_ex == :scope
             scope = value_ex
         elseif variable_ex == :install_pkgs
@@ -133,126 +173,195 @@ function _load(modl, name_ex, kw_exs...; interactive=false)
     if scope == :(:global)
         scope = :global
     end
+
     if scope == :(:local)
         scope = :local
     end
+
     if !( scope in [:global, :local] )
         throw(ArgumentError("Invalid value for `scope`: `$(scope)`. "*
-                            "Valid values are `:global` or `:local`"))
+                            "Valid values are `:global` and `:local`"))
+    end
+
+    if interactive && scope == :local
+        throw(ArgumentError("Cannot use `@iload` with `scope=:local`. "))
+    end
+
+    if scope == :local && name === nothing
+        throw(ArgumentError("When specifying `scope=:local`, you must also "*
+                            "specify a name to be bound to the new model "*
+                            "type, as in `name=NewModelType`. "))
+    end
+
+    if verbosity == nothing
+        verbosity = scope == :global ? 1 : 0
     end
 
     # are we printing stuff to stdout?
     doprint = verbosity > 0
 
-    doprint && @info "For silent loading, specify `verbosity=0`. "
+    # next expression defines run-time variables `path`, `path_ex`,
+    # `pkg_str`, `pkg`, `type_already_loaded`:
+    ex  = quote
+        $doprint && @info "For silent loading, specify `verbosity=0`. "
 
-    # get load path and update pkg (could be `nothing`):
-    path, pkg = load_path_and_pkg(name, pkg=pkg, interactive=interactive)
+        @isdefined(MLJModels) || @_expose_mljmodels $scope $doprint
 
-    # see if the model type has already been loaded:
-    handle = (name=name, pkg=pkg)
-    type_already_loaded = handle in map(localmodels(modl=modl)) do m
-        (name=m.name, pkg=m.package_name)
-    end
+        proxy = MLJModels.info($name; pkg=$pkg, interactive=$interactive)
+        handle = (name=proxy.name, pkg=proxy.package_name)
+        dic = MLJModels.INFO_GIVEN_HANDLE[handle]
+        path, pkg_str = dic[:load_path], dic[:package_name]
+        path_ex = path |> Meta.parse
 
-    # if so, return with program generating an instance:
-    if type_already_loaded && new_name == nothing
-        doprint && @info "Model code for `$name` (from `$pkg`) already loaded. "
-        # return an instance of the type:
-        for M in localmodeltypes(modl)
-            i = info(M)
-            if i.name == name && i.package_name == pkg
-                _append!(instance_prgm, :($M()), doprint, false)
-                return program, instance_prgm
+        # see if the model type is already in top-level scope:
+        type_already_loaded =
+            handle in map(MLJModels.localmodels(modl=$modl, toplevel=true)) do m
+                (name=m.name, pkg=m.package_name)
             end
+        if type_already_loaded && $doprint
+            @info "Model code for `$($name)` (from `$pkg_str`) "*
+                "already loaded. "
+            $name_specified === nothing || $verbosity < 0 ||
+                @warn "Ignoring specification `name=$($name_specified)`. "
+        end
+
+        pkg = Symbol(pkg_str)
+    end
+    push!(program.args, ex)
+
+    # Note. In interactive mode the name to be bound to the new type,
+    # `new_name`, is determined at run-time. Otherwise, they are
+    # determined at compile time. We start by auto-generating the name
+    # (different from `name` this is already name of object in
+    # scope).:
+
+    # create `candidate` for `new_name`:
+    if name_specified === nothing
+        candidate = available_name(modl, Symbol(name))
+    else
+        candidate = Symbol(name_specified)
+    end
+    candidate_str = string(candidate)
+
+    if !interactive
+        new_name = candidate
+        if verbosity > -1 &&
+            new_name != Symbol(name) && name_specified === nothing
+            str = string(new_name)
+            ex = quote
+                type_already_loaded ||
+                    @warn "New model type being bound to name `$($str)` "*
+                    "to avoid conflict "*
+                    "with an existing name. "
+            end
+            push!(program.args, ex)
         end
     end
 
-    # determine `new_name`, to be bound to imported model type (in
-    # general, different from `name`):
-    if new_name === nothing
-        new_name = MLJBase.available_name(modl, Symbol(name))
-        if new_name != Symbol(name)
-            if interactive
-                invalid = true
-                while invalid
-                    choice = request(
-                        "Model type name conflicts with an existing "*
-                        "name in scope. \nWhat do you want to do? ",
-                        ## choices:
-                        "Accept autogenerated name, `$new_name`.",
-                        "Choose new type name.")
-                    if choice == 2
-                        print("New name: ")
-                        new_name = Symbol(readline())
+    if interactive
+        ex = quote
+            if !type_already_loaded
+                new_name = Symbol($candidate_str)
+                if new_name != Symbol($name)
+                    invalid = true
+                    while invalid
+                        choice = request(
+                            "Model type name conflicts with an existing "*
+                            "name in scope. \nWhat do you want to do? ",
+                            ## choices:
+                            "Accept autogenerated name, `$($candidate_str)`.",
+                            "Enter different type name.")
+                        if choice == 2
+                            print("New name: ")
+                            new_name = Symbol(readline())
+                        end
+                        invalid =
+                            MLJModels.available_name($modl, new_name)!=new_name
                     end
-                    invalid = MLJBase.available_name(modl, new_name) != new_name
                 end
-            elseif verbosity > -1
-                @warn "New model type being bound to "*
-                "`$new_name` to avoid conflict with an existing name. "
+            end
+            end
+        push!(program.args, ex)
+    end
+
+    ex = quote
+        if !type_already_loaded
+            path_components = Symbol.(split(path, '.') )
+
+            # get pkg containing implementation of model API implementation:
+            api_pkg = path_components[1]
+            api_pkg_str = string(api_pkg)
+
+            if $install_pkgs || $interactive
+                try
+                    MLJModels._import($modl, api_pkg, pkg, false)
+                catch
+                    if $interactive
+                        MLJModels.request(
+                            "The package providing an interface to `$($name)` "*
+                            "is not in your "*
+                            "current environment.\n"*
+                            "What do you want to do? ",
+                            # choices:
+                            "Install $api_pkg_str in current environment.",
+                            "Abort.") == 1 || throw(InterruptException)
+                    end
+                    MLJModels._import($modl, :Pkg, :Pkg, false)
+                    Pkg.add(api_pkg_str)
+                end
+            end
+            MLJModels._import($modl, api_pkg, pkg, $doprint)
+        end
+    end
+    push!(program.args, ex)
+
+    # next expression binds new model type to `new_name`:
+    ex = if !interactive
+        if scope == :local
+            # we cannot use the `const` keyword in front of local variables:
+            quote
+                if !type_already_loaded
+                    $(esc(new_name)) = MLJModels._eval($modl, path)
+                end
+            end
+        else
+            new_name_str = string(new_name)
+            quote
+                if !type_already_loaded
+                    value = MLJModels._eval($modl, path)
+                    $doprint && print("const $($new_name_str) = $value")
+                    const $(esc(new_name)) = value
+                    $doprint && println(" \u2714")
+                end
             end
         end
     else
-        new_name = Symbol(new_name)
-    end
-
-    path_components = Symbol.(split(path, '.') )
-
-    # get pkg containing implementation of model API implementation:
-    api_pkg = path_components[1]
-    pkg = Symbol(pkg)
-
-    # if needed, put MLJModels in the calling module's namespace:
-    if api_pkg == :MLJModels
-        load_ex =
-            isdefined(modl, :MLJ) ? :(import MLJ.MLJModels) :
-            :(import MLJModels)
-        _append!(program, load_ex, doprint, true)
-        # TODO: remove next line of code after disintegration of
-        # MLJModels (for triggering loading of glue code module):
-        api_pkg == pkg || _append!(program, :(import $pkg), doprint, true)
-    end
-
-    api_pkg_str = string(api_pkg)
-
-    import_ex = :(import $api_pkg)
-
-    if install_pkgs || interactive
-        install_ex = quote
-            try
-                $(import_ex)
-            catch
-                if $interactive
-                    MLJModels.request(
-                        "The package providing an interface to `$($name)` "*
-                        "is not in your "*
-                        "current environment.\n"*
-                        "What do you want to do? ",
-                        # choices:
-                        "Install $($api_pkg_str) in current environment.",
-                        "Abort.") == 1 || throw(InterruptException)
-                end
-                import Pkg
-                Pkg.add($(string(api_pkg)))
+        quote
+            if !type_already_loaded
+                MLJModels._eval_and_bind($modl, path, new_name, $doprint)
             end
         end
-        _append!(program, install_ex, false, true)
     end
+    push!(program.args, ex)
 
-    path_ex = path |> Meta.parse
-    api_pkg == :MLJmodels || _append!(program, import_ex, doprint, true)
-    if scope == :local
-        # we cannot use the `const` keyword in front of local variables
-        _append!(program, :($new_name = $path_ex), doprint, true)
+    ex = if return_instance
+        quote
+            model_types = MLJModels.localmodeltypes($modl)
+            idx = findfirst(model_types) do M
+                i = MLJModels.info(M)
+                i.name == $name && i.package_name == pkg_str
+            end
+            M = model_types[idx]
+            $doprint && print("($M)()")
+            $doprint && println(" \u2714")
+            M()
+        end
     else
-        _append!(program, :(const $new_name = $path_ex), doprint, true)
+        :nothing
     end
+    push!(program.args, ex)
 
-    instance_ex = doprint ? :($new_name()) : :($new_name();)
-    _append!(instance_prgm, instance_ex, doprint, false)
-
-    return program, instance_prgm
+    return program
 end
 
 

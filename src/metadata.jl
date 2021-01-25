@@ -91,7 +91,7 @@ end
 ## INITIALIZATION
 
 # get the model types in top-level of given module's namespace:
-function localmodeltypes(modl)
+function localmodeltypes(modl; toplevel=false)
     ft = MLJBase.finaltypes(Model)
     return filter!(ft) do M
         if M in (Supervised, Unsupervised, Deterministic,
@@ -99,10 +99,9 @@ function localmodeltypes(modl)
                  ProbabilisticNetwork, UnsupervisedNetwork, Static)
             return false
         else
-            !MLJBase.is_wrapper(M)
-            # name = MLJBase.name(M)
-            # wrap = MLJBase.is_wrapper(M)
-            # return isdefined(modl, Symbol(name)) && !wrap
+            name = MLJBase.name(M)
+            test1 = !toplevel || isdefined(modl, Symbol(name))
+            !MLJBase.is_wrapper(M) && test1
         end
     end
 end
