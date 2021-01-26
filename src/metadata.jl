@@ -99,9 +99,10 @@ function localmodeltypes(modl)
                  ProbabilisticNetwork, UnsupervisedNetwork, Static)
             return false
         else
-            name = MLJBase.name(M)
-            wrap = MLJBase.is_wrapper(M)
-            return isdefined(modl, Symbol(name)) && !wrap
+            !MLJBase.is_wrapper(M)
+            # name = MLJBase.name(M)
+            # wrap = MLJBase.is_wrapper(M)
+            # return isdefined(modl, Symbol(name)) && !wrap
         end
     end
 end
