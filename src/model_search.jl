@@ -167,19 +167,28 @@ end
 
 """
     localmodels(; modl=Main)
-    localmodels(conditions...; modl=Main)
+    localmodels(filters...; modl=Main)
     localmodels(needle::Union{AbstractString,Regex}; modl=Main)
 
 
-List all models whose names are in the namespace of the specified
-module `modl`, or meeting the `conditions`, if specified. Here a
-*condition* is a `Bool`-valued function on models.
+List all models currently available to the user from the module `modl`
+without importing a package, and which additional pass through the
+specified filters. Here a *filter* is a `Bool`-valued function on
+models.
 
-See also [`models`](@ref)
+Use `load_path` to get the path to some model returned, as in these
+examples:
+
+    ms = localmodels()
+    model = ms[1]
+    load_path(model)
+
+See also [`models`](@ref), [`load_path`](@ref).
 
 """
-function localmodels(args...; modl=Main)
-    modeltypes = localmodeltypes(modl)
+
+function localmodels(args...; modl=Main, toplevel=false)
+    modeltypes = localmodeltypes(modl, toplevel=toplevel)
     handles = map(modeltypes) do M
         Handle(MMI.name(M), MMI.package_name(M))
     end

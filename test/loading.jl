@@ -1,10 +1,12 @@
 module TestLoading
 
-# using Revise
 using Test
 using MLJModels
 
-@loadcode RandomForestClassifier pkg=DecisionTree verbosity=0
+@loadcode AdaBoostStumpClassifier pkg=DecisionTree verbosity=0
+@test "AdaBoostStumpClassifier" in map(localmodels()) do m
+    m.name
+end
 
 @load RidgeRegressor pkg=MultivariateStats verbosity=0
 
@@ -13,28 +15,30 @@ using MLJModels
     localmodels(modl=TestLoading)
 
 # if we load the same model again:
-program, _ = @test_logs((:info, r"For silent"),
-           (:info, r"Model code"),
-           MLJModels._load(TestLoading,
-                           :(RidgeRegressor),
-                           :(pkg=MultivariateStats)))
-eval(program)
+# @test_logs((:info, r"For silent"),
+#            (:info, r"Model code"),
+#            @load(RidgeRegressor,
+#                  pkg=MultivariateStats,
+#                  scope=:local,
+#                  verbosity=1))
+@load(RidgeRegressor,
+      pkg=MultivariateStats,
+      scope=:local,
+      verbosity=1)
 
 @test !isdefined(TestLoading, :RidgeRegressor2)
 
 # load the same model again, with a different binding:
-@load RidgeRegressor pkg=MultivariateStats name=Foo
+@test_logs((:info, r"For silent"),
+           (:info, r"Model code"),
+           (:warn, r"Ignoring specification"),
+           @load(RidgeRegressor,
+                 pkg=MultivariateStats,
+                 name=Foo,
+                 scope=:local,
+                 verbosity=1))
 
-@test Foo() == RidgeRegressor()
-
-# try to use the name of an existing object for new type name
-program, _ = MLJModels._load(TestLoading,
-                :(DecisionTreeClassifier),
-                :(pkg=DecisionTree),
-                             :(name=RidgeRegressor))
-
-@test_throws Exception eval(program)
-
+# deprecated methods:
 @test_throws Exception load("model", pkg = "pkg")
 @test_throws Exception load(models()[1])
 
@@ -44,7 +48,7 @@ end
 
 @testset "install_pkgs=true" begin
     @load KMeans pkg=Clustering verbosity=0 scope=:local install_pkgs=true
-    @load KMeans pkg=Clustering verbosity=0 scope=:local install_pkgs=true
+    @load KMeans pkg=Clustering verbosity=0 scope=:local install=true
 end
 
 end # module
