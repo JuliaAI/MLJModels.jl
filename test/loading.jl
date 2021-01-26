@@ -8,6 +8,9 @@ using MLJModels
     m.name
 end
 
+# built-ins load fine:
+@load Standardizer verbosity=0
+
 @load RidgeRegressor pkg=MultivariateStats verbosity=0
 
 @test isdefined(TestLoading, :RidgeRegressor)

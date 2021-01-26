@@ -14,23 +14,19 @@ function _append!(program, ex, doprint::Bool, tick_early::Bool)
     return program
 end
 
-macro _expose_mljmodels(scope, doprint)
-    doprint = doprint && scope == :global
-    modl = __module__
-    ex = scope == :local ? :(MLJModels = $modl.MLJModels) :
-        :(const MLJModels = $modl.MLJModels)
-    ex_string = string(ex)
-    esc(quote
-        $doprint && print($ex_string)
-        $ex
-        $doprint && println(" \u2714")
-        end)
-end
-
 function _import(modl, api_pkg, pkg, doprint)
     # can be removed once MLJModel #331 is resolved:
     if pkg == :NearestNeighbors
         doprint && print("import NearestNeighbors")
+        try
+            modl.eval(:(import MLJModels))
+        catch
+            try
+                modl.eval(:(import MLJ.MLJModels))
+            catch
+                error("Problem putting MLJModels into scope. ")
+            end
+        end
         modl.eval(:(import NearestNeighbors))
         doprint && println(" \u2714")
     else
@@ -203,8 +199,6 @@ function _load(modl, name_ex, kw_exs...;
     # `pkg_str`, `pkg`, `type_already_loaded`:
     ex  = quote
         $doprint && @info "For silent loading, specify `verbosity=0`. "
-
-        @isdefined(MLJModels) || @_expose_mljmodels $scope $doprint
 
         proxy = MLJModels.info($name; pkg=$pkg, interactive=$interactive)
         handle = (name=proxy.name, pkg=proxy.package_name)
