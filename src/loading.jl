@@ -88,7 +88,7 @@ end
 ## THE CODE LOADING MACROS
 
 """
-    @load name pkg=nothing verbosity=0 name=nothing scope=:global install=false
+    @load ModelName pkg=nothing verbosity=0 name=nothing scope=:global install=false
 
 Load the model implementation code for the model named in the first
 argument into the calling module, specfying `pkg` in the case of
@@ -112,6 +112,12 @@ macro load(name_ex, kw_exs...)
     _load(__module__, name_ex, kw_exs...)
 end
 
+"""
+    @iload ModelName
+
+Interactive alternative to @load. See [`@load`](@ref)
+
+"""
 macro iload(name_ex, kw_exs...)
     _load(__module__, name_ex, kw_exs...; interactive=true)
 end
@@ -339,7 +345,8 @@ function _load(modl, name_ex, kw_exs...;
 
     ex = if return_instance
         quote
-            model_types = MLJModels.localmodeltypes($modl)
+            model_types = MLJModels.localmodeltypes($modl);
+            @show "##########"
             idx = findfirst(model_types) do M
                 i = MLJModels.info(M)
                 i.name == $name && i.package_name == pkg_str
