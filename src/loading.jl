@@ -201,7 +201,7 @@ function _load(modl, name_ex, kw_exs...;
         $doprint && @info "For silent loading, specify `verbosity=0`. "
 
         proxy = MLJModels.info($name; pkg=$pkg, interactive=$interactive)
-        handle = (name=proxy.name, pkg=proxy.package_name)
+        handle = MLJModels.Handle(proxy.name, proxy.package_name)
         dic = MLJModels.INFO_GIVEN_HANDLE[handle]
         path, pkg_str = dic[:load_path], dic[:package_name]
         path_ex = path |> Meta.parse

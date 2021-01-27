@@ -49,7 +49,15 @@ end
     @load RidgeRegressor pkg=MultivariateStats verbosity=0 scope=:local
 end
 
+module FooBar
+using MLJModels
+ld() = @load KMeans pkg=Clustering verbosity=0 scope=:local install_pkgs=true
+end
+
+using .FooBar
+
 @testset "install_pkgs=true" begin
+    FooBar.ld()
     @load KMeans pkg=Clustering verbosity=0 scope=:local install_pkgs=true
     @load KMeans pkg=Clustering verbosity=0 scope=:local install=true
 end
