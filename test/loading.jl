@@ -24,12 +24,12 @@ end
 @test_throws ArgumentError @load RidgeRegressor
 
 # error if not in project:
-@test !isloaded("RidgeRegressor", "MLJLinearModels")
-@test_throws ArgumentError @load RidgeRegressor pkg=MLJLinearModels verbosity=0
+@test !isloaded("KMeans", "Clustering")
+@test_throws ArgumentError @load KMeans pkg=Clustering verbosity=0
 
 # use add option:
-@load RidgeRegressor pkg=MLJLinearModels verbosity=0 add=true
-@test isloaded("RidgeRegressor", "MultivariateStats")
+@load KMeans pkg=Clustering verbosity=0 add=true
+@test isloaded("KMeans", "Clustering")
 
 # deprecated methods:
 @test_throws Exception load("model", pkg = "pkg")
