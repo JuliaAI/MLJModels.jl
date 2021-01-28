@@ -3,63 +3,50 @@ module TestLoading
 using Test
 using MLJModels
 
-@loadcode AdaBoostStumpClassifier pkg=DecisionTree verbosity=0
-@test "AdaBoostStumpClassifier" in map(localmodels()) do m
-    m.name
+function isloaded(name::String, pkg::String)
+    (name, pkg) in map(localmodels()) do m
+        (m.name, m.package_name)
+    end
 end
+
+@load AdaBoostStumpClassifier pkg=DecisionTree verbosity=0
+@test isloaded("AdaBoostStumpClassifier", "DecisionTree")
 
 # built-ins load fine:
 @load Standardizer verbosity=0
 
+# load one version of a RidgeRegressor:
+@test !isloaded("RidgeRegressor", "MultivariateStats")
 @load RidgeRegressor pkg=MultivariateStats verbosity=0
+@test isloaded("RidgeRegressor", "MultivariateStats")
 
-@test isdefined(TestLoading, :RidgeRegressor)
-@test MLJModels.info("RidgeRegressor", pkg="MultivariateStats") in
-    localmodels(modl=TestLoading)
+# error if ambiguous:
+@test_throws ArgumentError @load RidgeRegressor
 
-# if we load the same model again:
-# @test_logs((:info, r"For silent"),
-#            (:info, r"Model code"),
-#            @load(RidgeRegressor,
-#                  pkg=MultivariateStats,
-#                  scope=:local,
-#                  verbosity=1))
-@load(RidgeRegressor,
-      pkg=MultivariateStats,
-      scope=:local,
-      verbosity=1)
+# error if not in project:
+@test !isloaded("RidgeRegressor", "MLJLinearModels")
+@test_throws ArgumentError @load RidgeRegressor pkg=MLJLinearModels verbosity=0
 
-@test !isdefined(TestLoading, :RidgeRegressor2)
-
-# load the same model again, with a different binding:
-@test_logs((:info, r"For silent"),
-           (:info, r"Model code"),
-           (:warn, r"Ignoring specification"),
-           @load(RidgeRegressor,
-                 pkg=MultivariateStats,
-                 name=Foo,
-                 scope=:local,
-                 verbosity=1))
+# use add option:
+@load RidgeRegressor pkg=MLJLinearModels verbosity=0 add=true
+@test isloaded("RidgeRegressor", "MultivariateStats")
 
 # deprecated methods:
 @test_throws Exception load("model", pkg = "pkg")
 @test_throws Exception load(models()[1])
 
-@testset "scope=:local inside a @testset" begin
-    @load RidgeRegressor pkg=MultivariateStats verbosity=0 scope=:local
-end
-
 module FooBar
 using MLJModels
-ld() = @load KMeans pkg=Clustering verbosity=0 scope=:local install_pkgs=true
+function regressor()
+    Regressor = @load LinearRegressor pkg=MultivariateStats verbosity=0
+    return Regressor()
 end
-
+end
 using .FooBar
 
-@testset "install_pkgs=true" begin
-    FooBar.ld()
-    @load KMeans pkg=Clustering verbosity=0 scope=:local install_pkgs=true
-    @load KMeans pkg=Clustering verbosity=0 scope=:local install=true
+@testset "@load from within a function within a module" begin
+    model = FooBar.regressor()
+    @test isdefined(model, :bias)
 end
 
 end # module
