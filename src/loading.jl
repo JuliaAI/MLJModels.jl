@@ -40,15 +40,6 @@ function _eval(modl, path::Union{Expr,Symbol})
     modl.eval(path)
 end
 
-function _eval_and_bind(modl, path::String, name::Symbol, doprint)
-    value = _eval(modl, path)
-    doprint && print("const $(string(name)) = $value")
-    modl.eval(:(const $name = $value))
-    doprint && println(" \u2714")
-end
-
-const available_name = MLJBase.available_name
-
 
 ## OVERLOADING load_path
 
