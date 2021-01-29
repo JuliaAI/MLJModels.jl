@@ -1152,8 +1152,7 @@ function MMI.fit(transformer::OneHotEncoder, verbosity::Int, X)
 
     fitresult = OneHotEncoderResult(collect(all_features),
                                     ref_name_pairs_given_feature,
-                                    known_levels
-                                    )
+                                    known_levels)
 
     # get new feature names
     d = ref_name_pairs_given_feature
