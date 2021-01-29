@@ -1,6 +1,9 @@
-# `info_dict` returns a dictionary of model trait values suitable, after
-# encoding, to serializing to TOML file. Not intended to be exposed to
-# user.
+# `info_dict` returns a dictionary of model traits which, after
+# encoding, can be serializing to TOML file to create the "model
+# registry". Not intended to be exposed to user. Note that `info` gets
+# the list of traits from the registry but `info_dict` gets the list
+# from MLJModelInterface.MODEL_TRAITS, which is larger when new traits are
+# added but the registry is not yet updated.
 
 info_dict(model::Model) = info_dict(typeof(model))
 

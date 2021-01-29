@@ -1,10 +1,11 @@
 ## FUNCTIONS TO INSPECT METADATA OF REGISTERED MODELS AND TO
 ## FACILITATE MODEL SEARCH
 
-property_names = sort(MODEL_TRAITS)
-alpha = [:name, :package_name, :is_supervised]
-omega = [:input_scitype, :target_scitype, :output_scitype]
-both = vcat(alpha, omega)
+# sort and add to the model trait names:
+const property_names = sort(MODEL_TRAITS_IN_REGISTRY)
+const alpha = [:name, :package_name, :is_supervised]
+const omega = [:input_scitype, :target_scitype, :output_scitype]
+const both = vcat(alpha, omega)
 filter!(!in(both), property_names)
 prepend!(property_names, alpha)
 append!(property_names, omega)
@@ -101,8 +102,12 @@ Return the traits associated with the specified `model`. Equivalent to
 `pkg::String` the name of the package containing it.
 
 """
-MLJScientificTypes.info(M::Type{<:MMI.Model}) =
+function MLJScientificTypes.info(M::Type{<:MMI.Model})
+    values =
+        tuple([eval(:($trait($M))) for trait in PROPERTY_NAMES]...)
     info_as_named_tuple(info_dict(M))
+    return NamedTuple{PROPERTY_NAMES}(values)
+end
 MLJScientificTypes.info(model::MMI.Model) = info(typeof(model))
 
 

@@ -1,5 +1,5 @@
 function check_registry()
-#    basedir = joinpath(dirname(pathof(MLJModels)), "registry")
+
     basedir = Registry.environment_path
     Pkg.activate(basedir)
 
