@@ -1092,6 +1092,7 @@ end
 struct OneHotEncoderResult <: MMI.MLJType
     all_features::Vector{Symbol} # all feature labels
     ref_name_pairs_given_feature::Dict{Symbol,Vector{Pair{<:Unsigned,Symbol}}}
+    known_levels::Dict{Symbol, CategoricalArray}
 end
 
 # join feature and level into new label without clashing with anything
@@ -1125,6 +1126,7 @@ function MMI.fit(transformer::OneHotEncoder, verbosity::Int, X)
         Dict{Symbol,Vector{Pair{<:Unsigned,Symbol}}}()
 
     allowed_scitypes = ifelse(transformer.ordered_factor, Finite, Multiclass)
+    known_levels = Dict{Symbol, CategoricalArray}()
     col_scitypes = schema(X).scitypes
     # apply on each feature
     for j in eachindex(all_features)
@@ -1135,6 +1137,7 @@ function MMI.fit(transformer::OneHotEncoder, verbosity::Int, X)
             ref_name_pairs_given_feature[ftr] = Pair{<:Unsigned,Symbol}[]
             shift = transformer.drop_last ? 1 : 0
             levels = MMI.classes(first(col))
+            known_levels[ftr] = levels
             if verbosity > 0
                 @info "Spawning $(length(levels)-shift) sub-features "*
                 "to one-hot encode feature :$ftr."
@@ -1148,7 +1151,9 @@ function MMI.fit(transformer::OneHotEncoder, verbosity::Int, X)
     end
 
     fitresult = OneHotEncoderResult(collect(all_features),
-                                    ref_name_pairs_given_feature)
+                                    ref_name_pairs_given_feature,
+                                    known_levels
+                                    )
 
     # get new feature names
     d = ref_name_pairs_given_feature
@@ -1191,6 +1196,10 @@ function MMI.transform(transformer::OneHotEncoder, fitresult, X)
     for ftr in features
         col = MMI.selectcols(X, ftr)
         if ftr in features_to_be_transformed
+            Set(fitresult.known_levels[ftr]) == Set(MMI.classes(col)) ||
+            error("Found category level mismatch in feature `$(ftr)`. "*
+            "Consider using `levels!` to ensure fitted and transforming "*
+            "features have the same category levels.")
             append!(new_features, last.(d[ftr]))
             pairs = d[ftr]
             refs = first.(pairs)
