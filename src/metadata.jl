@@ -73,9 +73,6 @@ function inverse(d::Dict{S,Set{T}}) where {S,T}
     return dinv
 end
 
-Handle = NamedTuple{(:name, :pkg), Tuple{String,String}}
-(::Type{Handle})(name,string) = NamedTuple{(:name, :pkg)}((name, string))
-
 function Base.isless(h1::Handle, h2::Handle)
     if isless(h1.name, h2.name)
         return true
@@ -151,7 +148,6 @@ function pkgs_given_name(info_given_handle)
     return ret
 end
 
-# for use in __init__ to define NAMES
 function model_names(info_given_handle)
     names_allowing_duplicates = map(keys(info_given_handle) |> collect) do handle
         handle.name
@@ -167,20 +163,8 @@ function (::Type{Handle})(name::String)
     end
 end
 
+function model_traits_in_registry(info_given_handle)
+    first_entry = info_given_handle[Handle("ConstantRegressor")]
+    return keys(first_entry) |> collect
+end
 
-## METADATA INTITIALIZATION
-
-# # Note. This more naturally sits in __init__ but then causes issues
-# # with pre-compilation:
-#
-# metadata_file = joinpath(srcdir, "registry", "Metadata.toml")
-# try
-#     global INFO_GIVEN_HANDLE = info_given_handle(metadata_file)
-#     global AMBIGUOUS_NAMES = ambiguous_names(INFO_GIVEN_HANDLE)
-#     global PKGS_GIVEN_NAME = pkgs_given_name(INFO_GIVEN_HANDLE)
-#     global NAMES = model_names(INFO_GIVEN_HANDLE)
-#     @info "Model metadata loaded from registry. "
-# catch
-#     @warn "Problem loading registry from $metadata_file. "*
-#     "Model search and model code loading disabled. "
-# end

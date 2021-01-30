@@ -1,6 +1,10 @@
 using Test, MLJModels
 
 @testset "metadata" begin
+    @testset "info_dict" begin
+        @test include("info_dict.jl")
+    end
+
     @testset "reading and extracting model metadata" begin
         @test include("metadata.jl")
     end

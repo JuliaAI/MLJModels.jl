@@ -1,13 +1,12 @@
 module MLJModels
 
 import MLJModelInterface
-import MLJModelInterface: MODEL_TRAITS
 
 using MLJScientificTypes
 const ScientificTypes = MLJScientificTypes.ScientificTypes
 
+# still needed b/s UnivariateFinite type used in ThresholdPredictor:
 using MLJBase
-import MLJBase.@load
 
 using Requires, Pkg, Pkg.TOML, OrderedCollections, Parameters
 using Tables, CategoricalArrays, StatsBase, Statistics, Dates
@@ -21,7 +20,7 @@ export @update, check_registry
 export load, @load, info, @loadcode
 
 # from model_search:
-export models, localmodels
+export models, localmodels, matching
 
 # from model/Constant
 export ConstantRegressor, ConstantClassifier,
@@ -45,9 +44,24 @@ end
 
 nonmissing = nonmissingtype
 
+Handle = NamedTuple{(:name, :pkg), Tuple{String,String}}
+(::Type{Handle})(name,string) = NamedTuple{(:name, :pkg)}((name, string))
+
+# load metadata utilities:
 include("metadata.jl")
+
+# read in the metadata:
+metadata_file = joinpath(srcdir, "registry", "Metadata.toml")
+const INFO_GIVEN_HANDLE = info_given_handle(metadata_file)
+const PKGS_GIVEN_NAME = pkgs_given_name(INFO_GIVEN_HANDLE)
+const AMBIGUOUS_NAMES = ambiguous_names(INFO_GIVEN_HANDLE)
+const NAMES = model_names(INFO_GIVEN_HANDLE)
+const MODEL_TRAITS_IN_REGISTRY = model_traits_in_registry(INFO_GIVEN_HANDLE)
+
+# model search and registry code:
 include("model_search.jl")
 include("loading.jl")
+include("registry/src/info_dict.jl")
 include("registry/src/Registry.jl")
 include("registry/src/check_registry.jl")
 import .Registry.@update
@@ -56,19 +70,6 @@ import .Registry.@update
 include("builtins/Constant.jl")
 include("builtins/Transformers.jl")
 include("builtins/ThresholdPredictors.jl")
-
-const INFO_GIVEN_HANDLE = Dict{Handle,Any}()
-const PKGS_GIVEN_NAME   = Dict{String,Vector{String}}()
-const AMBIGUOUS_NAMES   = String[]
-const NAMES             = String[]
-
-metadata_file = joinpath(srcdir, "registry", "Metadata.toml")
-
-merge!(INFO_GIVEN_HANDLE, info_given_handle(metadata_file))
-merge!(PKGS_GIVEN_NAME, pkgs_given_name(INFO_GIVEN_HANDLE))
-append!(AMBIGUOUS_NAMES, ambiguous_names(INFO_GIVEN_HANDLE))
-append!(NAMES, model_names(INFO_GIVEN_HANDLE))
-@info "Model metadata loaded from registry. "
 
 # lazily load in strap-on model interfaces for external packages:
 function __init__()

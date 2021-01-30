@@ -72,7 +72,7 @@ import MLJBase
     )
     
     # Test model Metadata
-    infos = MLJBase.info_dict(selector)
+    infos = MLJModels.info_dict(selector)
     @test infos[:input_scitype]  == MLJBase.Table
     @test infos[:output_scitype] == MLJBase.Table
 end
@@ -129,7 +129,7 @@ end
     @test round.(Int, MLJBase.transform(stand, f, [0,4,8])) == [-1.0,1.0,3.0]
     @test round.(Int, MLJBase.inverse_transform(stand, f, [-1, 1, 3])) ==
         [0, 4, 8]
-    infos = MLJBase.info_dict(stand)
+    infos = MLJModels.info_dict(stand)
 
     N = 5
     rand_char = rand("abcefgh", N)
@@ -233,7 +233,7 @@ end
     @test Xnew[4] == X[4]
     @test Xnew[5] == X[5]
 
-    infos = MLJBase.info_dict(stand)
+    infos = MLJModels.info_dict(stand)
 
     @test infos[:name] == "Standardizer"
     @test infos[:input_scitype] ==
@@ -372,7 +372,7 @@ end
     e = v - MLJBase.inverse_transform(t, f, MLJBase.transform(t, f, v))
     @test sum(abs, e) <= 5000*eps()
 
-    infos = MLJBase.info_dict(t)
+    infos = MLJModels.info_dict(t)
 
     @test infos[:name] == "UnivariateBoxCoxTransformer"
     @test infos[:input_scitype] == AbstractVector{MLJBase.Continuous}
@@ -443,7 +443,7 @@ end
          gender     = categorical(['M', 'M', 'F', 'M']))
     @test_throws Exception MLJBase.transform(t, f, X)
 
-    infos = MLJBase.info_dict(t)
+    infos = MLJModels.info_dict(t)
 
     @test infos[:name] == "OneHotEncoder"
     @test infos[:input_scitype] == MLJBase.Table
