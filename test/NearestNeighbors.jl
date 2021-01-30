@@ -128,7 +128,7 @@ end
 
 # test metadata
 
-infos = info_dict(knn)
+infos = MLJModels.info_dict(knn)
 
 # PKG
 @test infos[:package_name] == "NearestNeighbors"
@@ -138,7 +138,7 @@ infos = info_dict(knn)
 
 infos[:docstring]
 
-infos = info_dict(knnr)
+infos = MLJModels.info_dict(knnr)
 
 @test infos[:input_scitype] == Table(Continuous)
 @test infos[:target_scitype] == Union{AbstractVector{Continuous}, Table(Continuous)}

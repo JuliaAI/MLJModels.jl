@@ -122,7 +122,7 @@ macro iload(name_ex, kw_exs...)
     _load(__module__, name_ex, kw_exs...; interactive=true)
 end
 
-# builds the program to be evaluated by the @load macro:
+# builds the program to be evaluated by the @load/@iload macros:
 function _load(modl, name_ex, kw_exs...; interactive=false)
 
     # initialize:

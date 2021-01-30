@@ -68,7 +68,7 @@ end
                    MLJModels.localmodeltypes(MLJModels))
     @test MLJModels.info_given_handle(metadata_file)[pca][:name] == "PCA"
     d1 = MLJModels.info_given_handle(metadata_file)[cnst]
-    d2 = MLJBase.info_dict(ConstantRegressor)
+    d2 = MLJModels.info_dict(ConstantRegressor)
     for (k, v) in d1
         if v isa Vector
             @test Set(v) == Set(d2[k])
