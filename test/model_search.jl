@@ -10,7 +10,7 @@ cnst = info("ConstantRegressor", pkg="MLJModels")
 
 @test_throws ArgumentError info("Julia")
 
-@info(ConstantRegressor) == cnst
+@test info(ConstantRegressor) == cnst
 @test info(Standardizer()) == info("Standardizer", pkg="MLJModels")
 
 @testset "localmodels" begin

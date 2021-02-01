@@ -10,14 +10,14 @@ using MLJBase
 
 using Requires, Pkg, Pkg.TOML, OrderedCollections, Parameters
 using Tables, CategoricalArrays, StatsBase, Statistics, Dates
-using MacroTools
 import Distributions
+import REPL # stdlib, needed for Term
 
 # for administrators to update Metadata.toml:
 export @update, check_registry
 
 # from loading.jl:
-export load, @load, info, @loadcode
+export load, @load, @iload, @loadcode, info
 
 # from model_search:
 export models, localmodels, matching
@@ -44,10 +44,12 @@ end
 
 nonmissing = nonmissingtype
 
+include("utilities.jl")
+
 Handle = NamedTuple{(:name, :pkg), Tuple{String,String}}
 (::Type{Handle})(name,string) = NamedTuple{(:name, :pkg)}((name, string))
 
-# load metadata utilities:
+# load utilities for reading model metadata from file:
 include("metadata.jl")
 
 # read in the metadata:

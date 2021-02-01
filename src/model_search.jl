@@ -62,26 +62,33 @@ MLJScientificTypes.info(handle::Handle) =
     info_as_named_tuple(INFO_GIVEN_HANDLE[handle])
 
 """
-    info(name::String; pkg=nothing)
+    info(name::String; pkg=nothing, interactive=false)
 
 Returns the metadata for the registered model type with specified
 `name`. The key-word argument `pkg` is required in the case of
 duplicate names.
 
 """
-function MLJScientificTypes.info(name::String; pkg=nothing)
+function MLJScientificTypes.info(name::String; pkg=nothing, interactive=false)
     name in NAMES ||
         throw(ArgumentError("There is no model named \"$name\" in "*
                             "the registry. \n Run `models()` to view all "*
                             "registered models."))
     # get the handle:
     if pkg == nothing
-        handle  = Handle(name)
+        handle  = Handle(name) # returns (name=..., pkg=missing) if ambiguous
         if ismissing(handle.pkg)
             pkgs = PKGS_GIVEN_NAME[name]
-            message = "Ambiguous model name. Use pkg=... .\n"*
-            "The model $name is provided by these packages:\n $pkgs.\n"
-            throw(ArgumentError(message))
+            if interactive
+                choice = request(
+                    "Multiple packages provide $name. Choose a package: ",
+                    pkgs...)
+                handle = Handle(name, pkgs[choice])
+            else
+                message = "Ambiguous model type name. Use pkg=... .\n"*
+                    "The model $name is provided by these packages:\n $pkgs.\n"
+                throw(ArgumentError(message))
+            end
         end
     else
         handle = Handle(name, pkg)
@@ -317,12 +324,13 @@ examples:
 See also [`models`](@ref), [`load_path`](@ref).
 
 """
-function localmodels(args...; modl=Main)
-    modeltypes = localmodeltypes(modl)
-    names = map(modeltypes) do M
-        MMI.name(M)
+
+function localmodels(args...; modl=Main, toplevel=false)
+    modeltypes = localmodeltypes(modl, toplevel=toplevel)
+    handles = map(modeltypes) do M
+        Handle(MMI.name(M), MMI.package_name(M))
     end
-    return filter(models(args...)) do handle
-        handle.name in names
+    return filter(models(args...)) do model
+        Handle(model.name, model.package_name) in handles
     end
 end
