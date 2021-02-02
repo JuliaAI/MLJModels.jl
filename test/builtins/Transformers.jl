@@ -421,6 +421,9 @@ end
     t = OneHotEncoder(features=[:name,], ignore=true)
     f, = MLJBase.fit(t, 0, X)
     Xt = MLJBase.transform(t, f, X)
+    @test MLJBase.schema(Xt).names == (:name, :height, :favourite_number__5,
+                               :favourite_number__7, :favourite_number__10,
+                               :age)
 
     # test exclusion of ordered factors:
     t  = OneHotEncoder(ordered_factor=false)
@@ -442,6 +445,19 @@ end
          age        = [23, 23, 14, 23],
          gender     = categorical(['M', 'M', 'F', 'M']))
     @test_throws Exception MLJBase.transform(t, f, X)
+    
+    # test to throw exception when category level mismatch is found
+    X = (name   = categorical(["Ben", "John", "Mary", "John"], ordered=true),
+         height = [1.85, 1.67, 1.5, 1.67],
+         favourite_number = categorical([7, 5, 10, 5]),
+         age    = [23, 23, 14, 23])
+    Xmiss = (name   = categorical(["John", "Mary", "John"], ordered=true),
+             height = X.height,
+             favourite_number = X.favourite_number,
+             age    = X.age)
+    t  = OneHotEncoder()
+    f, = MLJBase.fit(t, 0, X)
+    @test_throws Exception MLJBase.transform(t, f, Xmiss)
 
     infos = MLJModels.info_dict(t)
 
