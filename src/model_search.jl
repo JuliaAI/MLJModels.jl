@@ -324,7 +324,6 @@ examples:
 See also [`models`](@ref), [`load_path`](@ref).
 
 """
-
 function localmodels(args...; modl=Main, toplevel=false)
     modeltypes = localmodeltypes(modl, toplevel=toplevel)
     handles = map(modeltypes) do M
