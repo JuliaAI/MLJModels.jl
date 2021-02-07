@@ -1,4 +1,4 @@
-module MLJModels
+module MLJModels 
 
 import MLJModelInterface
 
@@ -8,7 +8,7 @@ const ScientificTypes = MLJScientificTypes.ScientificTypes
 # still needed b/s UnivariateFinite type used in ThresholdPredictor:
 using MLJBase
 
-using Requires, Pkg, Pkg.TOML, OrderedCollections, Parameters
+using Pkg, Pkg.TOML, OrderedCollections, Parameters
 using Tables, CategoricalArrays, StatsBase, Statistics, Dates
 import Distributions
 import REPL # stdlib, needed for Term
@@ -72,11 +72,5 @@ import .Registry.@update
 include("builtins/Constant.jl")
 include("builtins/Transformers.jl")
 include("builtins/ThresholdPredictors.jl")
-
-# lazily load in strap-on model interfaces for external packages:
-function __init__()
-    @require(NearestNeighbors="b8a86587-4115-5ab1-83bc-aa920d37bbce",
-             include("NearestNeighbors.jl"))
-end
 
 end # module
