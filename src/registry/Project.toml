@@ -15,13 +15,13 @@ MLJMultivariateStatsInterface = "1b6a4a23-ba22-4f51-9698-8599985d3728"
 MLJNaiveBayesInterface = "33e4bacb-b9e2-458e-9a13-5d9a90b235fa"
 MLJScikitLearnInterface = "5ae90465-5518-4432-b9d2-8a1def2f0cab"
 MLJXGBoostInterface = "54119dfa-1dab-4055-a167-80440f4f7a91"
-NearestNeighbors = "b8a86587-4115-5ab1-83bc-aa920d37bbce"
+NearestNeighborModels = "636a865e-7cf4-491e-846c-de09b730eb36"
 ParallelKMeans = "42b8e9d4-006b-409a-8472-7f34b3fb58af"
 PartialLeastSquaresRegressor = "f4b1acfe-f311-436c-bb79-8483f53c17d5"
 Pkg = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
 
 [compat]
-MLJModelInterface = "^0.3"
+MLJModelInterface = "^0.3,^0.4"
 
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
