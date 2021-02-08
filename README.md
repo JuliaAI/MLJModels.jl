@@ -19,21 +19,27 @@ For instructions on integrating a new model with MLJ visit
 ## Who is this repo for?
 
 General users of the MLJ machine learning platform should refer to
-[MLJ home page](https://github.com/alan-turing-institute/MLJ.jl) for
-usage and installation instructions. While MLJ users are required to
-have MLJModels installed in their project environment, they can
-otherwise ignore it.
+[MLJ home page](https://alan-turing-institute.github.io/MLJ.jl/dev/)
+for usage and installation instructions. MLJModels is a dependency of
+MLJ that the general user can ignore.
 
-This repository is for developers wishing to: 
+This repository is for developers wishing to
+[register](#instructions-for-updating-the-mlj-model-registry) new MLJ
+model interfaces, whether they be:
 
-- add a model interface for a third party package that does not provide, or is
-  not willing to provide, an MLJ interface natively
+- implemented **natively** in a
+  package providing the core machine learning algorithm, as in
+  [`EvoTrees.jl`](https://github.com/Evovest/EvoTrees.jl/blob/master/src/MLJ.jl); or
   
-- [register](#instructions-for-updating-the-mlj-model-registry) new
-  MLJ interfaces, whether they be defined here or in a third party
-  package
+- implemented in a separate "interface" package, such as
+  [MLJDecisionTreeInterface.jl](https://github.com/alan-turing-institute/MLJDecisionTreeInterface.jl).
 
-To list *all* model interfaces currently registered, do `using MLJ` or `using MLJModels` and run:
+It also a place for developers to add transformers, such as
+`OneHotEncoder`, that are exported for "built-in" use in MLJ. In the
+future these models may live in a separate transformer package.)
+
+To list *all* model interfaces currently registered, do `using MLJ` or
+`using MLJModels` and run:
 
 - `localmodels()` to list built-in models (updated when external models are loaded with `@load`)
 
@@ -49,11 +55,7 @@ ambiguous cases.
 
 MLJModels contains:
 
-- interfaces, under [/src/](/src/), for "essential" Julia machine
-  learning packages which do not yet provide, or are unlikely to
-  provide, native MLJ model interfaces.
-  
-- a few models that are pre-loaded into MLJ, located at
+- transformers to be pre-loaded into MLJ, located at
   [/src/builtins](/src/builtins), such as `OneHotEncoder`
   and `ConstantClassifier`. 
 
