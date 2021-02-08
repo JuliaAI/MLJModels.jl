@@ -27,7 +27,3 @@ end
         @test include("builtins/ThresholdPredictors.jl")
     end
 end
-
-@testset "NearestNeighbors" begin
-    @test include("NearestNeighbors.jl")
-end
