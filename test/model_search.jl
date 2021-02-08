@@ -2,14 +2,15 @@ module TestModelSearch
 
 using Test
 using MLJModels
-import MLJBase.info
+import MLJBase
+using MLJScientificTypes
 
 pca = info("PCA", pkg="MultivariateStats")
 cnst = info("ConstantRegressor", pkg="MLJModels")
 
 @test_throws ArgumentError info("Julia")
 
-@info(ConstantRegressor) == cnst
+@test info(ConstantRegressor) == cnst
 @test info(Standardizer()) == info("Standardizer", pkg="MLJModels")
 
 @testset "localmodels" begin
@@ -18,6 +19,41 @@ cnst = info("ConstantRegressor", pkg="MLJModels")
     @test !(tree in localmodels(modl=TestModelSearch))
     import MLJDecisionTreeInterface.DecisionTreeRegressor
     @test tree in localmodels(modl=TestModelSearch)
+end
+
+@testset "matching" begin
+    X = ones(2,3)
+    y = ones(2)
+    w = ones(2)
+    w_class = Dict(:male => 1.0, :female => 10.0)
+
+    task = matching(X)
+    @test !task.is_supervised
+    @test ismissing(task.supports_weights)
+    @test ismissing(task.supports_class_weights)
+    @test task.input_scitype == scitype(X)
+    @test ismissing(task.target_scitype)
+
+    task = matching(X, y)
+    @test task.is_supervised
+    @test ismissing(task.supports_weights)
+    @test ismissing(task.supports_class_weights)
+    @test task.input_scitype == scitype(X)
+    @test task.target_scitype == scitype(y)
+
+    task = matching(X, y, w)
+    @test task.is_supervised
+    @test task.supports_weights
+    @test !task.supports_class_weights
+    @test task.input_scitype == scitype(X)
+    @test task.target_scitype == scitype(y)
+
+    task = matching(X, y, w_class)
+    @test task.is_supervised
+    @test !task.supports_weights
+    @test task.supports_class_weights
+    @test task.input_scitype == scitype(X)
+    @test task.target_scitype == scitype(y)
 end
 
 @testset "models() and localmodels()" begin
@@ -34,7 +70,23 @@ end
     @test !(cnst in models(u, t))
 end
 
-@testset "models(needle::Union{AbstractString,Regex}) and localmodels(needle::Union{AbstractString,Regex})" begin
+@testset "models(matching())" begin
+    X = MLJBase.table(ones(2,3))
+    y = MLJBase.coerce(["a", "b"], Multiclass)
+    w = ones(2)
+    ms = models(matching(X, y, w))
+
+    # by hand:
+    ms2 = models() do m
+        m.is_supervised &&
+            AbstractVector{Multiclass{2}} <: m.target_scitype &&
+            Table(Continuous) <: m.input_scitype &&
+            m.supports_weights
+    end
+    @test ms == ms2
+end
+
+@testset "models(needle) and localmodels(needle)" begin
     @test pca in models("PCA")
     @test pca ∉ models("PCA′")
 

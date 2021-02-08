@@ -1,5 +1,5 @@
 function check_registry()
-#    basedir = joinpath(dirname(pathof(MLJModels)), "registry")
+
     basedir = Registry.environment_path
     Pkg.activate(basedir)
 
@@ -19,7 +19,7 @@ function check_registry()
                 # add/refresh entry
                 print(rpad("Entry for $key was loaded properly ✓", 79)*"\r")
             catch
-                println("⚠ there was an issue trying to load $key")
+                @error "⚠ there was an issue trying to load $key"
             end
         end
     end

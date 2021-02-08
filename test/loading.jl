@@ -1,50 +1,52 @@
 module TestLoading
 
-# using Revise
 using Test
 using MLJModels
 
-@loadcode RandomForestClassifier pkg=DecisionTree verbosity=0
+function isloaded(name::String, pkg::String)
+    (name, pkg) in map(localmodels()) do m
+        (m.name, m.package_name)
+    end
+end
 
+@load AdaBoostStumpClassifier pkg=DecisionTree verbosity=0
+@test isloaded("AdaBoostStumpClassifier", "DecisionTree")
+
+# built-ins load fine:
+@load Standardizer verbosity=0
+
+# load one version of a RidgeRegressor:
+@test !isloaded("RidgeRegressor", "MultivariateStats")
 @load RidgeRegressor pkg=MultivariateStats verbosity=0
+@test isloaded("RidgeRegressor", "MultivariateStats")
 
-@test isdefined(TestLoading, :RidgeRegressor)
-@test MLJModels.info("RidgeRegressor", pkg="MultivariateStats") in
-    localmodels(modl=TestLoading)
+# error if ambiguous:
+@test_throws ArgumentError @load RidgeRegressor
 
-# if we load the same model again:
-program, _ = @test_logs((:info, r"For silent"),
-           (:info, r"Model code"),
-           MLJModels._load(TestLoading,
-                           :(RidgeRegressor),
-                           :(pkg=MultivariateStats)))
-eval(program)
+# error if not in project:
+@test !isloaded("KMeans", "Clustering")
+@test_throws ArgumentError @load KMeans pkg=Clustering verbosity=0
 
-@test !isdefined(TestLoading, :RidgeRegressor2)
+# use add option:
+@load KMeans pkg=Clustering verbosity=0 add=true
+@test isloaded("KMeans", "Clustering")
 
-# load the same model again, with a different binding:
-@load RidgeRegressor pkg=MultivariateStats name=Foo
-
-@test Foo() == RidgeRegressor()
-
-# try to use the name of an existing object for new type name
-program, _ = MLJModels._load(TestLoading,
-                :(DecisionTreeClassifier),
-                :(pkg=DecisionTree),
-                             :(name=RidgeRegressor))
-
-@test_throws Exception eval(program)
-
+# deprecated methods:
 @test_throws Exception load("model", pkg = "pkg")
 @test_throws Exception load(models()[1])
 
-@testset "scope=:local inside a @testset" begin
-    @load RidgeRegressor pkg=MultivariateStats verbosity=0 scope=:local
+module FooBar
+using MLJModels
+function regressor()
+    Regressor = @load LinearRegressor pkg=MultivariateStats verbosity=0
+    return Regressor()
 end
+end
+using .FooBar
 
-@testset "install_pkgs=true" begin
-    @load KMeans pkg=Clustering verbosity=0 scope=:local install_pkgs=true
-    @load KMeans pkg=Clustering verbosity=0 scope=:local install_pkgs=true
+@testset "@load from within a function within a module" begin
+    model = FooBar.regressor()
+    @test isdefined(model, :bias)
 end
 
 end # module

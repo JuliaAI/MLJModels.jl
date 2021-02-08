@@ -1,6 +1,9 @@
-## FUNCTIONS TO LOAD MODEL IMPLEMENTATION CODE
+###############################################
+# FUNCTIONS TO LOAD MODEL IMPLEMENTATION CODE #
+###############################################
 
-### Helpers
+
+## HELPERS
 
 function _append!(program, ex, doprint::Bool, tick_early::Bool)
     str = string(ex)
@@ -10,6 +13,35 @@ function _append!(program, ex, doprint::Bool, tick_early::Bool)
     tick_early && doprint && push!(program.args, :(println(" \u2714")))
     return program
 end
+
+function _import(modl, api_pkg, pkg, doprint)
+    # can be removed once MLJModel #331 is resolved:
+    if pkg == :NearestNeighbors
+        doprint && print("import NearestNeighbors")
+        try
+            modl.eval(:(import MLJModels))
+        catch
+            try
+                modl.eval(:(import MLJ.MLJModels))
+            catch
+                error("Problem putting MLJModels into scope. ")
+            end
+        end
+        modl.eval(:(import NearestNeighbors))
+        doprint && println(" \u2714")
+    else
+        doprint && print("import $api_pkg")
+        modl.eval(:(import $api_pkg))
+        doprint && println(" \u2714")
+    end
+end
+
+function _eval(modl, path::Union{Expr,Symbol})
+    modl.eval(path)
+end
+
+
+## OVERLOADING load_path
 
 """
     load_path(model::String, pkg=nothing)
@@ -35,59 +67,70 @@ end
 
 # to also get pkg, which could be different from glue code pkg
 # appearing in load_path:
-function load_path_and_pkg(name::String; pkg=nothing)
-    proxy = info(name; pkg=pkg)
+function load_path_and_pkg(name::String; pkg=nothing, interactive=false)
+    proxy = info(name; pkg=pkg, interactive=interactive)
     handle = (name=proxy.name, pkg=proxy.package_name)
     _info = INFO_GIVEN_HANDLE[handle]
 
     return _info[:load_path], _info[:package_name]
 end
 
+
+## THE CODE LOADING MACROS
+
 """
-    @load name pkg=nothing verbosity=0 name=nothing scope=:global install_pkgs=false
+    @load ModelName pkg=nothing verbosity=0 add=false
 
-Load the model implementation code for the model named in the first
-argument into the calling module, specfying `pkg` in the case of
-duplicate names. Return a model instance with default
-hyper-parameters.
+Import the model type the model named in the first argument into the
+calling module, specfying `pkg` in the case of an ambiguous name (to
+packages providing a model type with the same name). Returns the model
+type.
 
-To bind the new model type to a name different from the first
-argument, specify `name=...`.
+**Warning** In older versions of MLJ/MLJModels, `@load` returned an
+*instance* instead.
 
+To automatically add required interface packages to the current
+environment, specify `add=true`. For interactive loading, use
+`@iload` instead.
 
 ### Examples
 
-    @load DecisionTreeeRegressor
-    @load PCA verbosity=1
-    @load SVC pkg=LIBSVM name=MyOtherSVC
+    Tree = @load DecisionTreeRegressor
+    tree = Tree()
+    tree2 = Tree(min_samples_split=6)
 
-See also [`load`](@ref)
+    SVM = @load SVC pkg=LIBSVM
+    svm = SVM()
+
+See also [`@iload`](@ref)
 
 """
 macro load(name_ex, kw_exs...)
-    program, instance_prgm = _load(__module__, name_ex, kw_exs...)
-    append!(program.args, instance_prgm.args)
-    esc(program)
+    _load(__module__, name_ex, kw_exs...)
 end
 
-macro loadcode(name_ex, kw_exs...)
-    program, _ = _load(__module__, name_ex, kw_exs...)
-    esc(program)
+"""
+    @iload ModelName
+
+Interactive alternative to @load. Provides user with an optioin to
+install (add) the required interface package to the current
+environment, and to choose the relevant model-providing package in
+ambiguous cases.  See [`@load`](@ref)
+
+"""
+macro iload(name_ex, kw_exs...)
+    _load(__module__, name_ex, kw_exs...; interactive=true)
 end
 
-
-
-# builds the program to be evaluated by the @load macro:
-function _load(modl, name_ex, kw_exs...)
+# builds the program to be evaluated by the @load/@iload macros:
+function _load(modl, name_ex, kw_exs...; interactive=false)
 
     # initialize:
     program = quote end
-    instance_prgm = quote end
 
     # fallbacks:
-    pkg = nothing
+    pkg_str = nothing
     verbosity = 1
-    new_name = nothing
     scope = :global
     install_pkgs = false
 
@@ -95,122 +138,78 @@ function _load(modl, name_ex, kw_exs...)
     name_ = string(name_ex)
     # get rid of parentheses in `name_`, as in
     # "(MLJModels.Clustering).KMedoids":
-    name = filter(name_) do c !(c in ['(',')']) end
+    name_str = filter(name_) do c !(c in ['(',')']) end
+    name = Symbol(name_str)
 
     # parse kwargs:
-    warning = "Invalid @load syntax.\n "*
-    "Sample usage: @load PCA pkg=\"MultivariateStats\" verbosity=1"
+    warning = "Invalid @load or @iload  syntax.\n "*
+        "Sample usage: @load PCA pkg=MultivariateStats verbosity=0 install=true"
     for ex in kw_exs
         ex.head == :(=) || throw(ArgumentError(warning))
         variable_ex = ex.args[1]
         value_ex = ex.args[2]
         if variable_ex == :pkg
-            pkg = string(value_ex)
+            pkg_str = string(value_ex)
         elseif variable_ex == :verbosity
             verbosity = value_ex
-        elseif variable_ex == :name
-            new_name = value_ex
-        elseif variable_ex == :scope
-            scope = value_ex
-        elseif variable_ex == :install_pkgs
+        elseif variable_ex in [:install_pkgs, :install, :add]
             install_pkgs = value_ex
         else
             throw(ArgumentError(warning))
         end
     end
 
-    if scope == :(:global)
-        scope = :global
-    end
-    if scope == :(:local)
-        scope = :local
-    end
-    if !( scope in [:global, :local] )
-        throw(ArgumentError("Invalid value for scope: $(scope). Valid values are :global or :local"))
-    end
-
     # are we printing stuff to stdout?
     doprint = verbosity > 0
 
-    doprint && @info "For silent loading, specify `verbosity=0`. "
-
-    # get load path and update pkg (could be `nothing`):
-    path, pkg = load_path_and_pkg(name, pkg=pkg)
-
-    # see if the model type has already been loaded:
-    handle = (name=name, pkg=pkg)
-    type_already_loaded = handle in map(localmodels(modl=modl)) do m
-        (name=m.name, pkg=m.package_name)
+    # next expression defines "program" variables `path`, `path_ex`,
+    # `pkg_str`, `pkg`, `type_already_loaded`:
+    ex  = quote
+        $doprint && @info "For silent loading, specify `verbosity=0`. "
+        proxy = MLJModels.info($name_str;
+                               pkg=$pkg_str,
+                               interactive=$interactive)
+        handle = MLJModels.Handle(proxy.name, proxy.package_name)
+        dic = MLJModels.INFO_GIVEN_HANDLE[handle]
+        path_str, pkg_str = dic[:load_path], dic[:package_name]
+        path = path_str |> Meta.parse
+        pkg = Symbol(pkg_str)
     end
+    push!(program.args, ex)
 
-    # if so, return with program generating an instance:
-    if type_already_loaded && new_name == nothing
-        doprint && @info "Model code for $name already loaded"
-        # return an instance of the type:
-        for M in localmodeltypes(modl)
-            i = info(M)
-            if i.name == name && i.package_name == pkg
-                _append!(instance_prgm, :($M()), doprint, false)
-                return program, instance_prgm
-            end
-        end
-    end
+    ex = quote
+        path_components = Symbol.(split(path_str, '.') )
 
-    # determine `new_name`, to be bound to imported model type (in
-    # general, different from `name`):
-    if new_name === nothing
-        new_name = MLJBase.available_name(modl, Symbol(name))
-        new_name == Symbol(name) || verbosity < 0 ||
-            @warn "New model type being bound to "*
-            "`$new_name` to avoid conflict with an existing name. "
-    else
-        new_name = Symbol(new_name)
-    end
+        # get pkg containing implementation of model API implementation:
+        api_pkg = path_components[1]
+        api_pkg_str = string(api_pkg)
 
-    path_components = Symbol.(split(path, '.') )
-
-    # get pkg containing implementation of model API implementation:
-    api_pkg = path_components[1]
-    pkg = Symbol(pkg)
-
-    # if needed, put MLJModels in the calling module's namespace:
-    if api_pkg == :MLJModels
-        load_ex =
-            isdefined(modl, :MLJ) ? :(import MLJ.MLJModels) :
-            :(import MLJModels)
-        _append!(program, load_ex, doprint, true)
-        # TODO: remove next line of code after disintegration of
-        # MLJModels (for triggering loading of glue code module):
-        api_pkg == pkg || _append!(program, :(import $pkg), doprint, true)
-    end
-
-    import_ex = :(import $api_pkg)
-    if install_pkgs
-        install_ex = quote
+        if $install_pkgs || $interactive
             try
-                $(import_ex)
+                MLJModels._import($modl, api_pkg, pkg, false)
             catch
-                import Pkg
-                Pkg.add($(string(api_pkg)))
+                if $interactive
+                    MLJModels.request(
+                        "The package providing an interface "*
+                        "to `$($name_str)` "*
+                        "is not in your "*
+                        "current environment.\n"*
+                        "What do you want to do? ",
+                        # choices:
+                        "Install $api_pkg_str in current environment.",
+                        "Abort.") == 1 || throw(InterruptException)
+                end
+                MLJModels._import($modl, :Pkg, :Pkg, false)
+                Pkg.add(api_pkg_str)
             end
         end
-        install_ex = MacroTools.prewalk(rmlines, install_ex)
-        _append!(program, install_ex, doprint, true)
+        MLJModels._import($modl, api_pkg, pkg, $doprint)
+        MLJModels._eval($modl, path)
     end
+    push!(program.args, ex)
 
-    path_ex = path |> Meta.parse
-    api_pkg == :MLJmodels || _append!(program, import_ex, doprint, true)
-    if scope == :local
-        # we cannot use the `const` keyword in front of local variables
-        _append!(program, :($new_name = $path_ex), doprint, true)
-    else
-        _append!(program, :(const $new_name = $path_ex), doprint, true)
-    end
+    return program
 
-    instance_ex = doprint ? :($new_name()) : :($new_name();)
-    _append!(instance_prgm, instance_ex, doprint, false)
-
-    return program, instance_prgm
 end
 
 

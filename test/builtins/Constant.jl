@@ -19,13 +19,13 @@ X = NamedTuple{(:x1,:x2,:x3)}((rand(10), rand(10), rand(10)))
     @test MLJBase.predict(model, fitresult, X)[7].μ ≈ d.μ
     @test MLJBase.predict_mean(model, fitresult, X) ≈ fill(1.5, 10)
 
-    d = MLJBase.info_dict(model)
+    d = MLJModels.info_dict(model)
     @test d[:input_scitype] == MLJBase.Table
     @test d[:target_scitype] == AbstractVector{MLJBase.Continuous}
     @test d[:name] == "ConstantRegressor"
     @test d[:load_path] == "MLJModels.ConstantRegressor"
 
-    d = MLJBase.info_dict(DeterministicConstantRegressor)
+    d = MLJModels.info_dict(DeterministicConstantRegressor)
     @test d[:input_scitype] == MLJBase.Table
     @test d[:target_scitype] == AbstractVector{MLJBase.Continuous}
     @test d[:name] == "DeterministicConstantRegressor"
@@ -59,13 +59,13 @@ end
     fitresult, cache, report =  MLJBase.fit(model, 1, X, y, w)
     d = MLJBase.UnivariateFinite([y[1], y[2], y[4]], [1/3, 1/4, 5/12])
 
-    d = MLJBase.info_dict(model)
+    d = MLJModels.info_dict(model)
     @test d[:input_scitype] == MLJBase.Table
     @test d[:target_scitype] == AbstractVector{<:MLJBase.Finite}
     @test d[:name] == "ConstantClassifier"
     @test d[:load_path] == "MLJModels.ConstantClassifier"
 
-    d = MLJBase.info_dict(DeterministicConstantClassifier)
+    d = MLJModels.info_dict(DeterministicConstantClassifier)
     @test d[:input_scitype] == MLJBase.Table
     @test d[:target_scitype] == AbstractVector{<:MLJBase.Finite}
     @test d[:name] == "DeterministicConstantClassifier"

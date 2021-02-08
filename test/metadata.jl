@@ -54,8 +54,8 @@ i = MLJModels.info_given_handle(metadata_file)[pca]
 end
 
 @testset "building INFO_GIVEN_HANDLE" begin
-    loc = MLJModels.localmodeltypes(MLJBase)
-    @test length(loc) in [0, 1]
+    @test MLJModels.localmodeltypes(MLJBase) ==
+        MLJModels.localmodeltypes(MLJModels)
     @test issubset(Set([DeterministicConstantClassifier,
                         DeterministicConstantRegressor,
                         ConstantClassifier,
@@ -68,7 +68,7 @@ end
                    MLJModels.localmodeltypes(MLJModels))
     @test MLJModels.info_given_handle(metadata_file)[pca][:name] == "PCA"
     d1 = MLJModels.info_given_handle(metadata_file)[cnst]
-    d2 = MLJBase.info_dict(ConstantRegressor)
+    d2 = MLJModels.info_dict(ConstantRegressor)
     for (k, v) in d1
         if v isa Vector
             @test Set(v) == Set(d2[k])

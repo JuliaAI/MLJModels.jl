@@ -60,7 +60,7 @@ import MLJBase
     @test MLJBase.predict(model, model_fr, X) ==
         [y[1] for i in 1:MLJBase.nrows(X)]
 
-    d = MLJBase.info_dict(model)
+    d = MLJModels.info_dict(model)
     @test d[:supports_weights] == MLJBase.supports_weights(model.wrapped_model)
     @test d[:input_scitype] == MLJBase.input_scitype(model.wrapped_model)
     @test d[:target_scitype] == AbstractVector{<:MLJBase.Finite{2}}

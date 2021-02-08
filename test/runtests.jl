@@ -1,6 +1,10 @@
 using Test, MLJModels
 
 @testset "metadata" begin
+    @testset "info_dict" begin
+        @test include("info_dict.jl")
+    end
+
     @testset "reading and extracting model metadata" begin
         @test include("metadata.jl")
     end
@@ -22,8 +26,4 @@ end
     @testset "ThresholdPredictors" begin
         @test include("builtins/ThresholdPredictors.jl")
     end
-end
-
-@testset "NearestNeighbors" begin
-    @test include("NearestNeighbors.jl")
 end
