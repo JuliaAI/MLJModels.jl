@@ -2,9 +2,10 @@
 
 [![Build Status](https://github.com/alan-turing-institute/MLJModels.jl/workflows/CI/badge.svg)](https://github.com/alan-turing-institute/MLJModels.jl/actions)
 
-Repository of selected
-[MLJ](https://github.com/alan-turing-institute/MLJ.jl) model
-interfaces, and home of the MLJ model registry.
+Repository of selected models for use in the
+[MLJ](https://github.com/alan-turing-institute/MLJ.jl) MLJ machine
+learning framework, without the need to import third party packages; and the
+home of the MLJ model registry.
 
 For instructions on integrating a new model with MLJ visit
 [here](https://alan-turing-institute.github.io/MLJ.jl/dev/adding_models_for_general_use/)
@@ -31,12 +32,12 @@ model interfaces, whether they be:
   package providing the core machine learning algorithm, as in
   [`EvoTrees.jl`](https://github.com/Evovest/EvoTrees.jl/blob/master/src/MLJ.jl); or
   
-- implemented in a separate "interface" package, such as
+- implemented in a separate **interface package**, such as
   [MLJDecisionTreeInterface.jl](https://github.com/alan-turing-institute/MLJDecisionTreeInterface.jl).
 
-It also a place for developers to add transformers, such as
-`OneHotEncoder`, that are exported for "built-in" use in MLJ. In the
-future these models may live in a separate transformer package.)
+It also a place for developers to add models (mostly transformers)
+such as `OneHotEncoder`, that are exported for "built-in" use in
+MLJ. (In the future these models may live in a separate package.)
 
 To list *all* model interfaces currently registered, do `using MLJ` or
 `using MLJModels` and run:
