@@ -13,9 +13,6 @@ using Tables, CategoricalArrays, StatsBase, Statistics, Dates
 import Distributions
 import REPL # stdlib, needed for Term
 
-# for administrators to update Metadata.toml:
-export @update, check_registry
-
 # from loading.jl:
 export load, @load, @iload, @loadcode, info
 
