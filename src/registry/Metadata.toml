@@ -1,4 +1,172 @@
 
+[BetaML.PerceptronClassifier]
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Infinite)`"
+":output_scitype" = "`ScientificTypes.Unknown`"
+":target_scitype" = "`AbstractArray{_s172,1} where _s172<:ScientificTypes.Finite`"
+":is_pure_julia" = "`true`"
+":package_name" = "BetaML"
+":package_license" = "MIT"
+":load_path" = "BetaML.Perceptron.PerceptronClassifier"
+":package_uuid" = "024491cd-cc6b-443e-8034-08ea7eb7db2b"
+":package_url" = "https://github.com/sylvaticus/BetaML.jl"
+":is_wrapper" = "`false`"
+":supports_weights" = "`false`"
+":supports_class_weights" = "`false`"
+":supports_online" = "`false`"
+":docstring" = "The classical perceptron algorithm using one-vs-all for multiclass, from the Beta Machine Learning Toolkit (BetaML).\n→ based on [BetaML](https://github.com/sylvaticus/BetaML.jl).\n→ do `@load PerceptronClassifier pkg=\"BetaML\"` to use the model.\n→ do `?PerceptronClassifier` for documentation."
+":name" = "PerceptronClassifier"
+":is_supervised" = "`true`"
+":prediction_type" = ":probabilistic"
+":implemented_methods" = [":predict", ":fit"]
+":hyperparameters" = "`(:initialθ, :initialθ₀, :maxEpochs, :shuffle, :forceOrigin, :returnMeanHyperplane)`"
+":hyperparameter_types" = "`(\"Array{Float64,1}\", \"Float64\", \"Int64\", \"Bool\", \"Bool\", \"Bool\")`"
+":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
+
+[BetaML.DecisionTreeRegressor]
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:Union{AbstractArray{_s23,1} where _s23<:Missing, AbstractArray{_s23,1} where _s23<:ScientificTypes.Known}`"
+":output_scitype" = "`ScientificTypes.Unknown`"
+":target_scitype" = "`AbstractArray{_s229,1} where _s229<:ScientificTypes.Continuous`"
+":is_pure_julia" = "`true`"
+":package_name" = "BetaML"
+":package_license" = "MIT"
+":load_path" = "BetaML.Trees.DecisionTreeRegressor"
+":package_uuid" = "024491cd-cc6b-443e-8034-08ea7eb7db2b"
+":package_url" = "https://github.com/sylvaticus/BetaML.jl"
+":is_wrapper" = "`false`"
+":supports_weights" = "`false`"
+":supports_class_weights" = "`false`"
+":supports_online" = "`false`"
+":docstring" = "A simple Decision Tree for regression with support for Missing data, from the Beta Machine Learning Toolkit (BetaML).\n→ based on [BetaML](https://github.com/sylvaticus/BetaML.jl).\n→ do `@load DecisionTreeRegressor pkg=\"BetaML\"` to use the model.\n→ do `?DecisionTreeRegressor` for documentation."
+":name" = "DecisionTreeRegressor"
+":is_supervised" = "`true`"
+":prediction_type" = ":deterministic"
+":implemented_methods" = [":predict", ":fit"]
+":hyperparameters" = "`(:maxDepth, :minGain, :minRecords, :maxFeatures, :splittingCriterion)`"
+":hyperparameter_types" = "`(\"Int64\", \"Float64\", \"Int64\", \"Int64\", \"Function\")`"
+":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
+
+[BetaML.DecisionTreeClassifier]
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:Union{AbstractArray{_s23,1} where _s23<:Missing, AbstractArray{_s23,1} where _s23<:ScientificTypes.Known}`"
+":output_scitype" = "`ScientificTypes.Unknown`"
+":target_scitype" = "`AbstractArray{_s229,1} where _s229<:Union{Missing, ScientificTypes.Finite}`"
+":is_pure_julia" = "`true`"
+":package_name" = "BetaML"
+":package_license" = "MIT"
+":load_path" = "BetaML.Trees.DecisionTreeClassifier"
+":package_uuid" = "024491cd-cc6b-443e-8034-08ea7eb7db2b"
+":package_url" = "https://github.com/sylvaticus/BetaML.jl"
+":is_wrapper" = "`false`"
+":supports_weights" = "`false`"
+":supports_class_weights" = "`false`"
+":supports_online" = "`false`"
+":docstring" = "A simple Decision Tree for classification with support for Missing data, from the Beta Machine Learning Toolkit (BetaML).\n→ based on [BetaML](https://github.com/sylvaticus/BetaML.jl).\n→ do `@load DecisionTreeClassifier pkg=\"BetaML\"` to use the model.\n→ do `?DecisionTreeClassifier` for documentation."
+":name" = "DecisionTreeClassifier"
+":is_supervised" = "`true`"
+":prediction_type" = ":probabilistic"
+":implemented_methods" = [":predict", ":fit"]
+":hyperparameters" = "`(:maxDepth, :minGain, :minRecords, :maxFeatures, :splittingCriterion)`"
+":hyperparameter_types" = "`(\"Int64\", \"Float64\", \"Int64\", \"Int64\", \"Function\")`"
+":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
+
+[BetaML.RandomForestRegressor]
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:Union{AbstractArray{_s23,1} where _s23<:Missing, AbstractArray{_s23,1} where _s23<:ScientificTypes.Known}`"
+":output_scitype" = "`ScientificTypes.Unknown`"
+":target_scitype" = "`AbstractArray{_s229,1} where _s229<:ScientificTypes.Continuous`"
+":is_pure_julia" = "`true`"
+":package_name" = "BetaML"
+":package_license" = "MIT"
+":load_path" = "BetaML.Trees.RandomForestRegressor"
+":package_uuid" = "024491cd-cc6b-443e-8034-08ea7eb7db2b"
+":package_url" = "https://github.com/sylvaticus/BetaML.jl"
+":is_wrapper" = "`false`"
+":supports_weights" = "`false`"
+":supports_class_weights" = "`false`"
+":supports_online" = "`false`"
+":docstring" = "A simple Random Forest ensemble for regression with support for Missing data, from the Beta Machine Learning Toolkit (BetaML).\n→ based on [BetaML](https://github.com/sylvaticus/BetaML.jl).\n→ do `@load RandomForestRegressor pkg=\"BetaML\"` to use the model.\n→ do `?RandomForestRegressor` for documentation."
+":name" = "RandomForestRegressor"
+":is_supervised" = "`true`"
+":prediction_type" = ":deterministic"
+":implemented_methods" = [":predict", ":fit"]
+":hyperparameters" = "`(:nTrees, :maxDepth, :minGain, :minRecords, :maxFeatures, :splittingCriterion, :β)`"
+":hyperparameter_types" = "`(\"Int64\", \"Int64\", \"Float64\", \"Int64\", \"Int64\", \"Function\", \"Float64\")`"
+":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
+
+[BetaML.PegasosClassifier]
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Infinite)`"
+":output_scitype" = "`ScientificTypes.Unknown`"
+":target_scitype" = "`AbstractArray{_s172,1} where _s172<:ScientificTypes.Finite`"
+":is_pure_julia" = "`true`"
+":package_name" = "BetaML"
+":package_license" = "MIT"
+":load_path" = "BetaML.Perceptron.PegasosClassifier"
+":package_uuid" = "024491cd-cc6b-443e-8034-08ea7eb7db2b"
+":package_url" = "https://github.com/sylvaticus/BetaML.jl"
+":is_wrapper" = "`false`"
+":supports_weights" = "`false`"
+":supports_class_weights" = "`false`"
+":supports_online" = "`false`"
+":docstring" = "The gradient-based linear \"pegasos\" classifier using one-vs-all for multiclass, from the Beta Machine Learning Toolkit (BetaML).\n→ based on [BetaML](https://github.com/sylvaticus/BetaML.jl).\n→ do `@load PegasosClassifier pkg=\"BetaML\"` to use the model.\n→ do `?PegasosClassifier` for documentation."
+":name" = "PegasosClassifier"
+":is_supervised" = "`true`"
+":prediction_type" = ":probabilistic"
+":implemented_methods" = [":predict", ":fit"]
+":hyperparameters" = "`(:initialθ, :initialθ₀, :λ, :η, :maxEpochs, :shuffle, :forceOrigin, :returnMeanHyperplane)`"
+":hyperparameter_types" = "`(\"Array{Float64,1}\", \"Float64\", \"Float64\", \"Function\", \"Int64\", \"Bool\", \"Bool\", \"Bool\")`"
+":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
+
+[BetaML.KernelPerceptronClassifier]
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Infinite)`"
+":output_scitype" = "`ScientificTypes.Unknown`"
+":target_scitype" = "`AbstractArray{_s172,1} where _s172<:ScientificTypes.Finite`"
+":is_pure_julia" = "`true`"
+":package_name" = "BetaML"
+":package_license" = "MIT"
+":load_path" = "BetaML.Perceptron.KernelPerceptronClassifier"
+":package_uuid" = "024491cd-cc6b-443e-8034-08ea7eb7db2b"
+":package_url" = "https://github.com/sylvaticus/BetaML.jl"
+":is_wrapper" = "`false`"
+":supports_weights" = "`false`"
+":supports_class_weights" = "`false`"
+":supports_online" = "`false`"
+":docstring" = "The kernel perceptron algorithm using one-vs-one for multiclass, from the Beta Machine Learning Toolkit (BetaML).\n→ based on [BetaML](https://github.com/sylvaticus/BetaML.jl).\n→ do `@load KernelPerceptronClassifier pkg=\"BetaML\"` to use the model.\n→ do `?KernelPerceptronClassifier` for documentation."
+":name" = "KernelPerceptronClassifier"
+":is_supervised" = "`true`"
+":prediction_type" = ":probabilistic"
+":implemented_methods" = [":predict", ":fit"]
+":hyperparameters" = "`(:K, :maxEpochs, :initialα, :shuffle)`"
+":hyperparameter_types" = "`(\"Function\", \"Int64\", \"Array{Int64,1}\", \"Bool\")`"
+":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
+
+[BetaML.RandomForestClassifier]
+":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:Union{AbstractArray{_s23,1} where _s23<:Missing, AbstractArray{_s23,1} where _s23<:ScientificTypes.Known}`"
+":output_scitype" = "`ScientificTypes.Unknown`"
+":target_scitype" = "`AbstractArray{_s229,1} where _s229<:Union{Missing, ScientificTypes.Finite}`"
+":is_pure_julia" = "`true`"
+":package_name" = "BetaML"
+":package_license" = "MIT"
+":load_path" = "BetaML.Trees.RandomForestClassifier"
+":package_uuid" = "024491cd-cc6b-443e-8034-08ea7eb7db2b"
+":package_url" = "https://github.com/sylvaticus/BetaML.jl"
+":is_wrapper" = "`false`"
+":supports_weights" = "`false`"
+":supports_class_weights" = "`false`"
+":supports_online" = "`false`"
+":docstring" = "A simple Random Forest ensemble for classification with support for Missing data, from the Beta Machine Learning Toolkit (BetaML).\n→ based on [BetaML](https://github.com/sylvaticus/BetaML.jl).\n→ do `@load RandomForestClassifier pkg=\"BetaML\"` to use the model.\n→ do `?RandomForestClassifier` for documentation."
+":name" = "RandomForestClassifier"
+":is_supervised" = "`true`"
+":prediction_type" = ":probabilistic"
+":implemented_methods" = [":predict", ":fit"]
+":hyperparameters" = "`(:nTrees, :maxDepth, :minGain, :minRecords, :maxFeatures, :splittingCriterion, :β)`"
+":hyperparameter_types" = "`(\"Int64\", \"Int64\", \"Float64\", \"Int64\", \"Int64\", \"Function\", \"Float64\")`"
+":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
+
 [NearestNeighborModels.KNNClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
@@ -21,6 +189,7 @@
 ":hyperparameters" = "`(:K, :algorithm, :metric, :leafsize, :reorder, :weights)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Symbol\", \"Distances.Metric\", \"Int64\", \"Bool\", \"NearestNeighborModels.KNNKernel\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [NearestNeighborModels.MultitargetKNNClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -44,6 +213,7 @@
 ":hyperparameters" = "`(:K, :algorithm, :metric, :leafsize, :reorder, :weights, :output_type)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Symbol\", \"Distances.Metric\", \"Int64\", \"Bool\", \"NearestNeighborModels.KNNKernel\", \"Type{_s21} where _s21<:Union{AbstractDict{K,V} where V<:(AbstractArray{T,1} where T) where K<:Symbol, NamedTuple{names,T} where T<:Tuple{Vararg{AbstractArray{S,D} where S,N}} where names where D where N}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [NearestNeighborModels.MultitargetKNNRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -67,6 +237,7 @@
 ":hyperparameters" = "`(:K, :algorithm, :metric, :leafsize, :reorder, :weights)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Symbol\", \"Distances.Metric\", \"Int64\", \"Bool\", \"NearestNeighborModels.KNNKernel\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [NearestNeighborModels.KNNRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -90,6 +261,7 @@
 ":hyperparameters" = "`(:K, :algorithm, :metric, :leafsize, :reorder, :weights)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Symbol\", \"Distances.Metric\", \"Int64\", \"Bool\", \"NearestNeighborModels.KNNKernel\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [PartialLeastSquaresRegressor.KPLSRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -113,6 +285,7 @@
 ":hyperparameters" = "`(:n_factors, :kernel, :width)`"
 ":hyperparameter_types" = "`(\"Integer\", \"String\", \"Real\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [PartialLeastSquaresRegressor.PLSRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -136,6 +309,7 @@
 ":hyperparameters" = "`(:n_factors,)`"
 ":hyperparameter_types" = "`(\"Int64\",)`"
 ":hyperparameter_ranges" = "`(nothing,)`"
+":iteration_parameter" = "`nothing`"
 
 [MLJLinearModels.QuantileRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -159,6 +333,7 @@
 ":hyperparameters" = "`(:delta, :lambda, :gamma, :penalty, :fit_intercept, :penalize_intercept, :solver)`"
 ":hyperparameter_types" = "`(\"Real\", \"Real\", \"Real\", \"Union{String, Symbol}\", \"Bool\", \"Bool\", \"Union{Nothing, MLJLinearModels.Solver}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [MLJLinearModels.LogisticClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -182,6 +357,7 @@
 ":hyperparameters" = "`(:lambda, :gamma, :penalty, :fit_intercept, :penalize_intercept, :solver)`"
 ":hyperparameter_types" = "`(\"Real\", \"Real\", \"Union{String, Symbol}\", \"Bool\", \"Bool\", \"Union{Nothing, MLJLinearModels.Solver}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [MLJLinearModels.MultinomialClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -205,6 +381,7 @@
 ":hyperparameters" = "`(:lambda, :gamma, :penalty, :fit_intercept, :penalize_intercept, :solver)`"
 ":hyperparameter_types" = "`(\"Real\", \"Real\", \"Union{String, Symbol}\", \"Bool\", \"Bool\", \"Union{Nothing, MLJLinearModels.Solver}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [MLJLinearModels.LADRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -228,6 +405,7 @@
 ":hyperparameters" = "`(:lambda, :gamma, :penalty, :fit_intercept, :penalize_intercept, :solver)`"
 ":hyperparameter_types" = "`(\"Real\", \"Real\", \"Union{String, Symbol}\", \"Bool\", \"Bool\", \"Union{Nothing, MLJLinearModels.Solver}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [MLJLinearModels.RidgeRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -251,6 +429,7 @@
 ":hyperparameters" = "`(:lambda, :fit_intercept, :penalize_intercept, :solver)`"
 ":hyperparameter_types" = "`(\"Real\", \"Bool\", \"Bool\", \"Union{Nothing, MLJLinearModels.Solver}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [MLJLinearModels.RobustRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -274,6 +453,7 @@
 ":hyperparameters" = "`(:rho, :lambda, :gamma, :penalty, :fit_intercept, :penalize_intercept, :solver)`"
 ":hyperparameter_types" = "`(\"MLJLinearModels.RobustRho\", \"Real\", \"Real\", \"Union{String, Symbol}\", \"Bool\", \"Bool\", \"Union{Nothing, MLJLinearModels.Solver}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [MLJLinearModels.ElasticNetRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -297,6 +477,7 @@
 ":hyperparameters" = "`(:lambda, :gamma, :fit_intercept, :penalize_intercept, :solver)`"
 ":hyperparameter_types" = "`(\"Real\", \"Real\", \"Bool\", \"Bool\", \"Union{Nothing, MLJLinearModels.Solver}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [MLJLinearModels.LinearRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -320,6 +501,7 @@
 ":hyperparameters" = "`(:fit_intercept, :solver)`"
 ":hyperparameter_types" = "`(\"Bool\", \"Union{Nothing, MLJLinearModels.Solver}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [MLJLinearModels.LassoRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -343,6 +525,7 @@
 ":hyperparameters" = "`(:lambda, :fit_intercept, :penalize_intercept, :solver)`"
 ":hyperparameter_types" = "`(\"Real\", \"Bool\", \"Bool\", \"Union{Nothing, MLJLinearModels.Solver}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [MLJLinearModels.HuberRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -366,6 +549,7 @@
 ":hyperparameters" = "`(:delta, :lambda, :gamma, :penalty, :fit_intercept, :penalize_intercept, :solver)`"
 ":hyperparameter_types" = "`(\"Real\", \"Real\", \"Real\", \"Union{String, Symbol}\", \"Bool\", \"Bool\", \"Union{Nothing, MLJLinearModels.Solver}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.ProbabilisticSGDClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -389,6 +573,7 @@
 ":hyperparameters" = "`(:loss, :penalty, :alpha, :l1_ratio, :fit_intercept, :max_iter, :tol, :shuffle, :verbose, :epsilon, :n_jobs, :random_state, :learning_rate, :eta0, :power_t, :early_stopping, :validation_fraction, :n_iter_no_change, :class_weight, :warm_start, :average)`"
 ":hyperparameter_types" = "`(\"String\", \"String\", \"Float64\", \"Float64\", \"Bool\", \"Int64\", \"Union{Nothing, Float64}\", \"Bool\", \"Int64\", \"Float64\", \"Union{Nothing, Int64}\", \"Any\", \"String\", \"Float64\", \"Float64\", \"Bool\", \"Float64\", \"Int64\", \"Any\", \"Bool\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.RidgeCVClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -412,6 +597,7 @@
 ":hyperparameters" = "`(:alphas, :fit_intercept, :normalize, :scoring, :cv, :class_weight, :store_cv_values)`"
 ":hyperparameter_types" = "`(\"AbstractArray{Float64,N} where N\", \"Bool\", \"Bool\", \"Any\", \"Int64\", \"Any\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.LogisticClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -435,6 +621,7 @@
 ":hyperparameters" = "`(:penalty, :dual, :tol, :C, :fit_intercept, :intercept_scaling, :class_weight, :random_state, :solver, :max_iter, :multi_class, :verbose, :warm_start, :n_jobs, :l1_ratio)`"
 ":hyperparameter_types" = "`(\"String\", \"Bool\", \"Float64\", \"Float64\", \"Bool\", \"Float64\", \"Any\", \"Any\", \"String\", \"Int64\", \"String\", \"Int64\", \"Bool\", \"Union{Nothing, Int64}\", \"Union{Nothing, Float64}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.RandomForestRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:Union{AbstractArray{_s23,1} where _s23<:ScientificTypes.Count, AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous}`"
@@ -458,6 +645,7 @@
 ":hyperparameters" = "`(:n_estimators, :criterion, :max_depth, :min_samples_split, :min_samples_leaf, :min_weight_fraction_leaf, :max_features, :max_leaf_nodes, :min_impurity_decrease, :bootstrap, :oob_score, :n_jobs, :random_state, :verbose, :warm_start, :ccp_alpha, :max_samples)`"
 ":hyperparameter_types" = "`(\"Int64\", \"String\", \"Union{Nothing, Int64}\", \"Union{Float64, Int64}\", \"Union{Float64, Int64}\", \"Float64\", \"Union{Nothing, Float64, Int64, String}\", \"Union{Nothing, Int64}\", \"Float64\", \"Bool\", \"Bool\", \"Union{Nothing, Int64}\", \"Any\", \"Int64\", \"Bool\", \"Float64\", \"Union{Nothing, Float64, Int64}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.ElasticNetCVRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -481,6 +669,7 @@
 ":hyperparameters" = "`(:l1_ratio, :eps, :n_alphas, :alphas, :fit_intercept, :normalize, :precompute, :max_iter, :tol, :cv, :copy_X, :verbose, :n_jobs, :positive, :random_state, :selection)`"
 ":hyperparameter_types" = "`(\"Union{Float64, Array{Float64,1}}\", \"Float64\", \"Int64\", \"Any\", \"Bool\", \"Bool\", \"Union{Bool, String, AbstractArray{T,2} where T}\", \"Int64\", \"Float64\", \"Any\", \"Bool\", \"Union{Bool, Int64}\", \"Union{Nothing, Int64}\", \"Bool\", \"Any\", \"String\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.PerceptronClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -504,6 +693,7 @@
 ":hyperparameters" = "`(:penalty, :alpha, :fit_intercept, :max_iter, :tol, :shuffle, :verbose, :eta0, :n_jobs, :random_state, :early_stopping, :validation_fraction, :n_iter_no_change, :class_weight, :warm_start)`"
 ":hyperparameter_types" = "`(\"Union{Nothing, String}\", \"Float64\", \"Bool\", \"Int64\", \"Union{Nothing, Float64}\", \"Bool\", \"Int64\", \"Float64\", \"Union{Nothing, Int64}\", \"Any\", \"Bool\", \"Float64\", \"Int64\", \"Any\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.MultiTaskLassoRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -527,6 +717,7 @@
 ":hyperparameters" = "`(:alpha, :fit_intercept, :normalize, :max_iter, :tol, :copy_X, :random_state, :selection)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Bool\", \"Bool\", \"Int64\", \"Float64\", \"Bool\", \"Any\", \"String\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.LinearRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -550,6 +741,7 @@
 ":hyperparameters" = "`(:fit_intercept, :normalize, :copy_X, :n_jobs)`"
 ":hyperparameter_types" = "`(\"Bool\", \"Bool\", \"Bool\", \"Union{Nothing, Int64}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.DBSCAN]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -573,6 +765,7 @@
 ":hyperparameters" = "`(:eps, :min_samples, :metric, :algorithm, :leaf_size, :p, :n_jobs)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Int64\", \"String\", \"String\", \"Int64\", \"Union{Nothing, Float64}\", \"Union{Nothing, Int64}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.RidgeRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -596,6 +789,7 @@
 ":hyperparameters" = "`(:alpha, :fit_intercept, :normalize, :copy_X, :max_iter, :tol, :solver, :random_state)`"
 ":hyperparameter_types" = "`(\"Union{Float64, Array{Float64,1}}\", \"Bool\", \"Bool\", \"Bool\", \"Int64\", \"Float64\", \"String\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.LassoLarsICRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -619,6 +813,7 @@
 ":hyperparameters" = "`(:criterion, :fit_intercept, :verbose, :normalize, :precompute, :max_iter, :eps, :copy_X, :positive)`"
 ":hyperparameter_types" = "`(\"String\", \"Bool\", \"Union{Bool, Int64}\", \"Bool\", \"Union{Bool, String, AbstractArray{T,2} where T}\", \"Int64\", \"Float64\", \"Bool\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.ARDRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -642,6 +837,7 @@
 ":hyperparameters" = "`(:n_iter, :tol, :alpha_1, :alpha_2, :lambda_1, :lambda_2, :compute_score, :threshold_lambda, :fit_intercept, :normalize, :copy_X, :verbose)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Bool\", \"Float64\", \"Bool\", \"Bool\", \"Bool\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.SVMNuRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -665,6 +861,7 @@
 ":hyperparameters" = "`(:nu, :C, :kernel, :degree, :gamma, :coef0, :shrinking, :tol, :cache_size, :max_iter)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Float64\", \"Union{Function, String}\", \"Int64\", \"Union{Float64, String}\", \"Float64\", \"Any\", \"Float64\", \"Int64\", \"Int64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.RidgeClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -688,6 +885,7 @@
 ":hyperparameters" = "`(:alpha, :fit_intercept, :normalize, :copy_X, :max_iter, :tol, :class_weight, :solver, :random_state)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Bool\", \"Bool\", \"Bool\", \"Union{Nothing, Int64}\", \"Float64\", \"Any\", \"String\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.SGDRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -711,6 +909,7 @@
 ":hyperparameters" = "`(:loss, :penalty, :alpha, :l1_ratio, :fit_intercept, :max_iter, :tol, :shuffle, :verbose, :epsilon, :random_state, :learning_rate, :eta0, :power_t, :early_stopping, :validation_fraction, :n_iter_no_change, :warm_start, :average)`"
 ":hyperparameter_types" = "`(\"String\", \"String\", \"Float64\", \"Float64\", \"Bool\", \"Int64\", \"Float64\", \"Bool\", \"Union{Bool, Int64}\", \"Float64\", \"Any\", \"String\", \"Float64\", \"Float64\", \"Bool\", \"Float64\", \"Int64\", \"Bool\", \"Union{Bool, Int64}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.ComplementNBClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Count)`"
@@ -734,6 +933,7 @@
 ":hyperparameters" = "`(:alpha, :fit_prior, :class_prior, :norm)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Bool\", \"Union{Nothing, AbstractArray{T,1} where T}\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.HuberRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -757,6 +957,7 @@
 ":hyperparameters" = "`(:epsilon, :max_iter, :alpha, :warm_start, :fit_intercept, :tol)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Int64\", \"Float64\", \"Bool\", \"Bool\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.SVMNuClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -780,6 +981,7 @@
 ":hyperparameters" = "`(:nu, :kernel, :degree, :gamma, :coef0, :shrinking, :tol, :cache_size, :max_iter, :decision_function_shape, :random_state)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Union{Function, String}\", \"Int64\", \"Union{Float64, String}\", \"Float64\", \"Bool\", \"Float64\", \"Int64\", \"Int64\", \"String\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.GradientBoostingClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -803,6 +1005,7 @@
 ":hyperparameters" = "`(:loss, :learning_rate, :n_estimators, :subsample, :criterion, :min_samples_split, :min_samples_leaf, :min_weight_fraction_leaf, :max_depth, :min_impurity_decrease, :init, :random_state, :max_features, :verbose, :max_leaf_nodes, :warm_start, :validation_fraction, :n_iter_no_change, :tol)`"
 ":hyperparameter_types" = "`(\"String\", \"Float64\", \"Int64\", \"Float64\", \"String\", \"Union{Float64, Int64}\", \"Union{Float64, Int64}\", \"Float64\", \"Int64\", \"Float64\", \"Any\", \"Any\", \"Union{Nothing, Float64, Int64, String}\", \"Int64\", \"Union{Nothing, Int64}\", \"Bool\", \"Float64\", \"Union{Nothing, Int64}\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.GaussianProcessRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -826,6 +1029,7 @@
 ":hyperparameters" = "`(:kernel, :alpha, :optimizer, :n_restarts_optimizer, :normalize_y, :copy_X_train, :random_state)`"
 ":hyperparameter_types" = "`(\"Any\", \"Union{Float64, AbstractArray}\", \"Any\", \"Int64\", \"Bool\", \"Bool\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.SVMLinearRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -849,6 +1053,7 @@
 ":hyperparameters" = "`(:epsilon, :tol, :C, :loss, :fit_intercept, :intercept_scaling, :dual, :random_state, :max_iter)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Float64\", \"Float64\", \"String\", \"Bool\", \"Float64\", \"Bool\", \"Any\", \"Int64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.LarsRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -872,6 +1077,7 @@
 ":hyperparameters" = "`(:fit_intercept, :verbose, :normalize, :precompute, :n_nonzero_coefs, :eps, :copy_X, :fit_path)`"
 ":hyperparameter_types" = "`(\"Bool\", \"Union{Bool, Int64}\", \"Bool\", \"Union{Bool, String, AbstractArray{T,2} where T}\", \"Int64\", \"Float64\", \"Bool\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.MeanShift]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -895,6 +1101,7 @@
 ":hyperparameters" = "`(:bandwidth, :seeds, :bin_seeding, :min_bin_freq, :cluster_all, :n_jobs)`"
 ":hyperparameter_types" = "`(\"Union{Nothing, Float64}\", \"Union{Nothing, AbstractArray}\", \"Bool\", \"Int64\", \"Bool\", \"Union{Nothing, Int64}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.AdaBoostRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -918,6 +1125,7 @@
 ":hyperparameters" = "`(:base_estimator, :n_estimators, :learning_rate, :loss, :random_state)`"
 ":hyperparameter_types" = "`(\"Any\", \"Int64\", \"Float64\", \"String\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.AffinityPropagation]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -941,6 +1149,7 @@
 ":hyperparameters" = "`(:damping, :max_iter, :convergence_iter, :copy, :preference, :affinity, :verbose)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Int64\", \"Int64\", \"Bool\", \"Any\", \"String\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.MultiTaskLassoCVRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -964,6 +1173,7 @@
 ":hyperparameters" = "`(:eps, :n_alphas, :alphas, :fit_intercept, :normalize, :max_iter, :tol, :copy_X, :cv, :verbose, :n_jobs, :random_state, :selection)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Int64\", \"Any\", \"Bool\", \"Bool\", \"Int64\", \"Float64\", \"Bool\", \"Any\", \"Union{Bool, Int64}\", \"Union{Nothing, Int64}\", \"Any\", \"String\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.OrthogonalMatchingPursuitRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -987,6 +1197,7 @@
 ":hyperparameters" = "`(:n_nonzero_coefs, :tol, :fit_intercept, :normalize, :precompute)`"
 ":hyperparameter_types" = "`(\"Union{Nothing, Int64}\", \"Union{Nothing, Float64}\", \"Bool\", \"Bool\", \"Union{Bool, String, AbstractArray{T,2} where T}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.RidgeCVRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1010,6 +1221,7 @@
 ":hyperparameters" = "`(:alphas, :fit_intercept, :normalize, :scoring, :cv, :gcv_mode, :store_cv_values)`"
 ":hyperparameter_types" = "`(\"Any\", \"Bool\", \"Bool\", \"Any\", \"Any\", \"Union{Nothing, String}\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.PassiveAggressiveClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1033,6 +1245,7 @@
 ":hyperparameters" = "`(:C, :fit_intercept, :max_iter, :tol, :early_stopping, :validation_fraction, :n_iter_no_change, :shuffle, :verbose, :loss, :n_jobs, :random_state, :warm_start, :class_weight, :average)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Bool\", \"Int64\", \"Float64\", \"Bool\", \"Float64\", \"Int64\", \"Bool\", \"Int64\", \"String\", \"Union{Nothing, Int64}\", \"Any\", \"Bool\", \"Any\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.SVMRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1056,6 +1269,7 @@
 ":hyperparameters" = "`(:kernel, :degree, :gamma, :coef0, :tol, :C, :epsilon, :shrinking, :cache_size, :max_iter)`"
 ":hyperparameter_types" = "`(\"Union{Function, String}\", \"Int64\", \"Union{Float64, String}\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Any\", \"Int64\", \"Int64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.BernoulliNBClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Count)`"
@@ -1079,6 +1293,7 @@
 ":hyperparameters" = "`(:alpha, :binarize, :fit_prior, :class_prior)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Union{Nothing, Float64}\", \"Bool\", \"Union{Nothing, AbstractArray{T,1} where T}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.GaussianNBClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1102,6 +1317,7 @@
 ":hyperparameters" = "`(:priors, :var_smoothing)`"
 ":hyperparameter_types" = "`(\"Union{Nothing, AbstractArray{Float64,1}}\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.ExtraTreesClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1125,6 +1341,7 @@
 ":hyperparameters" = "`(:n_estimators, :criterion, :max_depth, :min_samples_split, :min_samples_leaf, :min_weight_fraction_leaf, :max_features, :max_leaf_nodes, :min_impurity_decrease, :bootstrap, :oob_score, :n_jobs, :random_state, :verbose, :warm_start, :class_weight)`"
 ":hyperparameter_types" = "`(\"Int64\", \"String\", \"Union{Nothing, Int64}\", \"Union{Float64, Int64}\", \"Union{Float64, Int64}\", \"Float64\", \"Union{Nothing, Float64, Int64, String}\", \"Union{Nothing, Int64}\", \"Float64\", \"Bool\", \"Bool\", \"Union{Nothing, Int64}\", \"Any\", \"Int64\", \"Bool\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.KMeans]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1148,6 +1365,7 @@
 ":hyperparameters" = "`(:n_clusters, :n_init, :max_iter, :tol, :verbose, :random_state, :copy_x, :n_jobs, :algorithm, :precompute_distances, :init)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Int64\", \"Int64\", \"Float64\", \"Int64\", \"Any\", \"Bool\", \"Union{Nothing, Int64}\", \"String\", \"Union{Bool, String}\", \"Union{String, AbstractArray}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.MultiTaskElasticNetCVRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1171,6 +1389,7 @@
 ":hyperparameters" = "`(:l1_ratio, :eps, :n_alphas, :alphas, :fit_intercept, :normalize, :max_iter, :tol, :cv, :copy_X, :verbose, :n_jobs, :random_state, :selection)`"
 ":hyperparameter_types" = "`(\"Union{Float64, Array{Float64,1}}\", \"Float64\", \"Int64\", \"Any\", \"Bool\", \"Bool\", \"Int64\", \"Float64\", \"Any\", \"Bool\", \"Union{Bool, Int64}\", \"Union{Nothing, Int64}\", \"Any\", \"String\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.LassoLarsCVRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1194,6 +1413,7 @@
 ":hyperparameters" = "`(:fit_intercept, :verbose, :max_iter, :normalize, :precompute, :cv, :max_n_alphas, :n_jobs, :eps, :copy_X, :positive)`"
 ":hyperparameter_types" = "`(\"Bool\", \"Union{Bool, Int64}\", \"Int64\", \"Bool\", \"Union{Bool, String, AbstractArray{T,2} where T}\", \"Any\", \"Int64\", \"Union{Nothing, Int64}\", \"Float64\", \"Bool\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.OrthogonalMatchingPursuitCVRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1217,6 +1437,7 @@
 ":hyperparameters" = "`(:copy, :fit_intercept, :normalize, :max_iter, :cv, :n_jobs, :verbose)`"
 ":hyperparameter_types" = "`(\"Bool\", \"Bool\", \"Bool\", \"Union{Nothing, Int64}\", \"Any\", \"Union{Nothing, Int64}\", \"Union{Bool, Int64}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.AdaBoostClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1240,6 +1461,7 @@
 ":hyperparameters" = "`(:base_estimator, :n_estimators, :learning_rate, :algorithm, :random_state)`"
 ":hyperparameter_types" = "`(\"Any\", \"Int64\", \"Float64\", \"String\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.PassiveAggressiveRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1263,6 +1485,7 @@
 ":hyperparameters" = "`(:C, :fit_intercept, :max_iter, :tol, :early_stopping, :validation_fraction, :n_iter_no_change, :shuffle, :verbose, :loss, :epsilon, :random_state, :warm_start, :average)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Bool\", \"Int64\", \"Float64\", \"Bool\", \"Float64\", \"Int64\", \"Bool\", \"Union{Bool, Int64}\", \"String\", \"Float64\", \"Any\", \"Bool\", \"Union{Bool, Int64}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.BayesianRidgeRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1286,6 +1509,7 @@
 ":hyperparameters" = "`(:n_iter, :tol, :alpha_1, :alpha_2, :lambda_1, :lambda_2, :compute_score, :fit_intercept, :normalize, :copy_X, :verbose)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Bool\", \"Bool\", \"Bool\", \"Bool\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.RANSACRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1309,6 +1533,7 @@
 ":hyperparameters" = "`(:base_estimator, :min_samples, :residual_threshold, :is_data_valid, :is_model_valid, :max_trials, :max_skips, :stop_n_inliers, :stop_score, :stop_probability, :loss, :random_state)`"
 ":hyperparameter_types" = "`(\"Any\", \"Union{Float64, Int64}\", \"Union{Nothing, Float64}\", \"Any\", \"Any\", \"Int64\", \"Int64\", \"Int64\", \"Float64\", \"Float64\", \"Union{Function, String}\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.BaggingClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1332,6 +1557,7 @@
 ":hyperparameters" = "`(:base_estimator, :n_estimators, :max_samples, :max_features, :bootstrap, :bootstrap_features, :oob_score, :warm_start, :n_jobs, :random_state, :verbose)`"
 ":hyperparameter_types" = "`(\"Any\", \"Int64\", \"Union{Float64, Int64}\", \"Union{Float64, Int64}\", \"Bool\", \"Bool\", \"Bool\", \"Bool\", \"Union{Nothing, Int64}\", \"Any\", \"Int64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.GaussianProcessClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1355,6 +1581,7 @@
 ":hyperparameters" = "`(:kernel, :optimizer, :n_restarts_optimizer, :copy_X_train, :random_state, :max_iter_predict, :warm_start, :multi_class)`"
 ":hyperparameter_types" = "`(\"Any\", \"Any\", \"Int64\", \"Bool\", \"Any\", \"Int64\", \"Bool\", \"String\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.OPTICS]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1378,6 +1605,7 @@
 ":hyperparameters" = "`(:min_samples, :max_eps, :metric, :p, :cluster_method, :eps, :xi, :predecessor_correction, :min_cluster_size, :algorithm, :leaf_size, :n_jobs)`"
 ":hyperparameter_types" = "`(\"Union{Float64, Int64}\", \"Float64\", \"String\", \"Int64\", \"String\", \"Union{Nothing, Float64}\", \"Float64\", \"Bool\", \"Union{Nothing, Float64, Int64}\", \"String\", \"Int64\", \"Union{Nothing, Int64}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.KNeighborsRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1401,6 +1629,7 @@
 ":hyperparameters" = "`(:n_neighbors, :weights, :algorithm, :leaf_size, :p, :metric, :metric_params, :n_jobs)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Union{Function, String}\", \"String\", \"Int64\", \"Int64\", \"Any\", \"Any\", \"Union{Nothing, Int64}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.MiniBatchKMeans]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1424,6 +1653,7 @@
 ":hyperparameters" = "`(:n_clusters, :max_iter, :batch_size, :verbose, :compute_labels, :random_state, :tol, :max_no_improvement, :init_size, :n_init, :init, :reassignment_ratio)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Int64\", \"Int64\", \"Int64\", \"Bool\", \"Any\", \"Float64\", \"Int64\", \"Union{Nothing, Int64}\", \"Int64\", \"Union{String, AbstractArray}\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.LassoCVRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1447,6 +1677,7 @@
 ":hyperparameters" = "`(:eps, :n_alphas, :alphas, :fit_intercept, :normalize, :precompute, :max_iter, :tol, :copy_X, :cv, :verbose, :n_jobs, :positive, :random_state, :selection)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Int64\", \"Any\", \"Bool\", \"Bool\", \"Union{Bool, String, AbstractArray{T,2} where T}\", \"Int64\", \"Float64\", \"Bool\", \"Any\", \"Union{Bool, Int64}\", \"Union{Nothing, Int64}\", \"Bool\", \"Any\", \"String\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.DummyRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1470,6 +1701,7 @@
 ":hyperparameters" = "`(:strategy, :constant, :quantile)`"
 ":hyperparameter_types" = "`(\"String\", \"Any\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.LassoLarsRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1493,6 +1725,7 @@
 ":hyperparameters" = "`(:alpha, :fit_intercept, :verbose, :normalize, :precompute, :max_iter, :eps, :copy_X, :fit_path, :positive)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Bool\", \"Union{Bool, Int64}\", \"Bool\", \"Union{Bool, String, AbstractArray{T,2} where T}\", \"Int64\", \"Float64\", \"Bool\", \"Bool\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.LarsCVRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1516,6 +1749,7 @@
 ":hyperparameters" = "`(:fit_intercept, :verbose, :max_iter, :normalize, :precompute, :cv, :max_n_alphas, :n_jobs, :eps, :copy_X)`"
 ":hyperparameter_types" = "`(\"Bool\", \"Union{Bool, Int64}\", \"Int64\", \"Bool\", \"Union{Bool, String, AbstractArray{T,2} where T}\", \"Any\", \"Int64\", \"Union{Nothing, Int64}\", \"Float64\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.KNeighborsClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1539,6 +1773,7 @@
 ":hyperparameters" = "`(:n_neighbors, :weights, :algorithm, :leaf_size, :p, :metric, :metric_params, :n_jobs)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Union{Function, String}\", \"String\", \"Int64\", \"Int64\", \"Any\", \"Any\", \"Union{Nothing, Int64}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.SVMLinearClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1562,6 +1797,7 @@
 ":hyperparameters" = "`(:penalty, :loss, :dual, :tol, :C, :multi_class, :fit_intercept, :intercept_scaling, :random_state, :max_iter)`"
 ":hyperparameter_types" = "`(\"String\", \"String\", \"Bool\", \"Float64\", \"Float64\", \"String\", \"Bool\", \"Float64\", \"Any\", \"Int64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.FeatureAgglomeration]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1585,6 +1821,7 @@
 ":hyperparameters" = "`(:n_clusters, :memory, :connectivity, :affinity, :compute_full_tree, :linkage, :distance_threshold)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Any\", \"Any\", \"Any\", \"Union{Bool, String}\", \"String\", \"Union{Nothing, Float64}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.DummyClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1608,6 +1845,7 @@
 ":hyperparameters" = "`(:strategy, :constant, :random_state)`"
 ":hyperparameter_types" = "`(\"String\", \"Any\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.BaggingRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1631,6 +1869,7 @@
 ":hyperparameters" = "`(:base_estimator, :n_estimators, :max_samples, :max_features, :bootstrap, :bootstrap_features, :oob_score, :warm_start, :n_jobs, :random_state, :verbose)`"
 ":hyperparameter_types" = "`(\"Any\", \"Int64\", \"Union{Float64, Int64}\", \"Union{Float64, Int64}\", \"Bool\", \"Bool\", \"Bool\", \"Bool\", \"Union{Nothing, Int64}\", \"Any\", \"Int64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.BayesianQDA]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1654,6 +1893,7 @@
 ":hyperparameters" = "`(:priors, :reg_param, :store_covariance, :tol)`"
 ":hyperparameter_types" = "`(\"Union{Nothing, AbstractArray{T,1} where T}\", \"Float64\", \"Bool\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.BayesianLDA]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1677,6 +1917,7 @@
 ":hyperparameters" = "`(:solver, :shrinkage, :priors, :n_components, :store_covariance, :tol)`"
 ":hyperparameter_types" = "`(\"String\", \"Union{Nothing, Float64, String}\", \"Union{Nothing, AbstractArray{T,1} where T}\", \"Union{Nothing, Int64}\", \"Bool\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.SGDClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1700,6 +1941,7 @@
 ":hyperparameters" = "`(:loss, :penalty, :alpha, :l1_ratio, :fit_intercept, :max_iter, :tol, :shuffle, :verbose, :epsilon, :n_jobs, :random_state, :learning_rate, :eta0, :power_t, :early_stopping, :validation_fraction, :n_iter_no_change, :class_weight, :warm_start, :average)`"
 ":hyperparameter_types" = "`(\"String\", \"String\", \"Float64\", \"Float64\", \"Bool\", \"Int64\", \"Union{Nothing, Float64}\", \"Bool\", \"Int64\", \"Float64\", \"Union{Nothing, Int64}\", \"Any\", \"String\", \"Float64\", \"Float64\", \"Bool\", \"Float64\", \"Int64\", \"Any\", \"Bool\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.TheilSenRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1723,6 +1965,7 @@
 ":hyperparameters" = "`(:fit_intercept, :copy_X, :max_subpopulation, :n_subsamples, :max_iter, :tol, :random_state, :n_jobs, :verbose)`"
 ":hyperparameter_types" = "`(\"Bool\", \"Bool\", \"Int64\", \"Union{Nothing, Int64}\", \"Int64\", \"Float64\", \"Any\", \"Union{Nothing, Int64}\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.SpectralClustering]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1746,6 +1989,7 @@
 ":hyperparameters" = "`(:n_clusters, :eigen_solver, :random_state, :n_init, :gamma, :affinity, :n_neighbors, :eigen_tol, :assign_labels, :n_jobs)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Union{Nothing, String}\", \"Any\", \"Int64\", \"Float64\", \"String\", \"Int64\", \"Float64\", \"String\", \"Union{Nothing, Int64}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.Birch]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1769,6 +2013,7 @@
 ":hyperparameters" = "`(:threshold, :branching_factor, :n_clusters, :compute_labels, :copy)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Int64\", \"Int64\", \"Bool\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.AgglomerativeClustering]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1792,6 +2037,7 @@
 ":hyperparameters" = "`(:n_clusters, :affinity, :memory, :connectivity, :compute_full_tree, :linkage, :distance_threshold)`"
 ":hyperparameter_types" = "`(\"Int64\", \"String\", \"Any\", \"Any\", \"Union{Bool, String}\", \"String\", \"Union{Nothing, Float64}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.ElasticNetRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1815,6 +2061,7 @@
 ":hyperparameters" = "`(:alpha, :l1_ratio, :fit_intercept, :normalize, :precompute, :max_iter, :copy_X, :tol, :warm_start, :positive, :random_state, :selection)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Float64\", \"Bool\", \"Bool\", \"Union{Bool, AbstractArray{T,2} where T}\", \"Int64\", \"Bool\", \"Float64\", \"Bool\", \"Bool\", \"Any\", \"String\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.RandomForestClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:Union{AbstractArray{_s23,1} where _s23<:ScientificTypes.Count, AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous}`"
@@ -1838,6 +2085,7 @@
 ":hyperparameters" = "`(:n_estimators, :criterion, :max_depth, :min_samples_split, :min_samples_leaf, :min_weight_fraction_leaf, :max_features, :max_leaf_nodes, :min_impurity_decrease, :bootstrap, :oob_score, :n_jobs, :random_state, :verbose, :warm_start, :class_weight, :ccp_alpha, :max_samples)`"
 ":hyperparameter_types" = "`(\"Int64\", \"String\", \"Union{Nothing, Int64}\", \"Union{Float64, Int64}\", \"Union{Float64, Int64}\", \"Float64\", \"Union{Nothing, Float64, Int64, String}\", \"Union{Nothing, Int64}\", \"Float64\", \"Bool\", \"Bool\", \"Union{Nothing, Int64}\", \"Any\", \"Int64\", \"Bool\", \"Any\", \"Float64\", \"Union{Nothing, Float64, Int64}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.LogisticCVClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1861,6 +2109,7 @@
 ":hyperparameters" = "`(:Cs, :fit_intercept, :cv, :dual, :penalty, :scoring, :solver, :tol, :max_iter, :class_weight, :n_jobs, :verbose, :refit, :intercept_scaling, :multi_class, :random_state, :l1_ratios)`"
 ":hyperparameter_types" = "`(\"Union{Int64, AbstractArray{Float64,1}}\", \"Bool\", \"Any\", \"Bool\", \"String\", \"Any\", \"String\", \"Float64\", \"Int64\", \"Any\", \"Union{Nothing, Int64}\", \"Int64\", \"Bool\", \"Float64\", \"String\", \"Any\", \"Union{Nothing, AbstractArray{Float64,1}}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.MultiTaskElasticNetRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1884,6 +2133,7 @@
 ":hyperparameters" = "`(:alpha, :l1_ratio, :fit_intercept, :normalize, :copy_X, :max_iter, :tol, :warm_start, :random_state, :selection)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Union{Float64, Array{Float64,1}}\", \"Bool\", \"Bool\", \"Bool\", \"Int64\", \"Float64\", \"Bool\", \"Any\", \"String\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.ExtraTreesRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1907,6 +2157,7 @@
 ":hyperparameters" = "`(:n_estimators, :criterion, :max_depth, :min_samples_split, :min_samples_leaf, :min_weight_fraction_leaf, :max_features, :max_leaf_nodes, :min_impurity_decrease, :bootstrap, :oob_score, :n_jobs, :random_state, :verbose, :warm_start)`"
 ":hyperparameter_types" = "`(\"Int64\", \"String\", \"Union{Nothing, Int64}\", \"Union{Float64, Int64}\", \"Union{Float64, Int64}\", \"Float64\", \"Union{Nothing, Float64, Int64, String}\", \"Union{Nothing, Int64}\", \"Float64\", \"Bool\", \"Bool\", \"Union{Nothing, Int64}\", \"Any\", \"Int64\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.LassoRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1930,6 +2181,7 @@
 ":hyperparameters" = "`(:alpha, :fit_intercept, :normalize, :precompute, :copy_X, :max_iter, :tol, :warm_start, :positive, :random_state, :selection)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Bool\", \"Bool\", \"Union{Bool, AbstractArray{T,2} where T}\", \"Bool\", \"Int64\", \"Float64\", \"Bool\", \"Bool\", \"Any\", \"String\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.MultinomialNBClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Count)`"
@@ -1953,6 +2205,7 @@
 ":hyperparameters" = "`(:alpha, :fit_prior, :class_prior)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Bool\", \"Union{Nothing, AbstractArray{T,1} where T}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.GradientBoostingRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1976,6 +2229,7 @@
 ":hyperparameters" = "`(:loss, :learning_rate, :n_estimators, :subsample, :criterion, :min_samples_split, :min_samples_leaf, :min_weight_fraction_leaf, :max_depth, :min_impurity_decrease, :init, :random_state, :max_features, :alpha, :verbose, :max_leaf_nodes, :warm_start, :validation_fraction, :n_iter_no_change, :tol)`"
 ":hyperparameter_types" = "`(\"String\", \"Float64\", \"Int64\", \"Float64\", \"String\", \"Union{Float64, Int64}\", \"Union{Float64, Int64}\", \"Float64\", \"Int64\", \"Float64\", \"Any\", \"Any\", \"Union{Nothing, Float64, Int64, String}\", \"Float64\", \"Int64\", \"Union{Nothing, Int64}\", \"Bool\", \"Float64\", \"Union{Nothing, Int64}\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.SVMClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1999,6 +2253,7 @@
 ":hyperparameters" = "`(:C, :kernel, :degree, :gamma, :coef0, :shrinking, :tol, :cache_size, :max_iter, :decision_function_shape, :random_state)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Union{Function, String}\", \"Int64\", \"Union{Float64, String}\", \"Float64\", \"Bool\", \"Float64\", \"Int64\", \"Int64\", \"String\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [ParallelKMeans.KMeans]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -2022,6 +2277,7 @@
 ":hyperparameters" = "`(:algo, :k_init, :k, :tol, :max_iters, :copy, :threads, :rng, :weights, :init)`"
 ":hyperparameter_types" = "`(\"Union{Symbol, ParallelKMeans.AbstractKMeansAlg}\", \"String\", \"Int64\", \"Float64\", \"Int64\", \"Bool\", \"Int64\", \"Union{Int64, Random.AbstractRNG}\", \"Any\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [NaiveBayes.GaussianNBClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -2045,6 +2301,7 @@
 ":hyperparameters" = "`()`"
 ":hyperparameter_types" = "`()`"
 ":hyperparameter_ranges" = "`()`"
+":iteration_parameter" = "`nothing`"
 
 [NaiveBayes.MultinomialNBClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Count)`"
@@ -2068,6 +2325,7 @@
 ":hyperparameters" = "`(:alpha,)`"
 ":hyperparameter_types" = "`(\"Int64\",)`"
 ":hyperparameter_ranges" = "`(nothing,)`"
+":iteration_parameter" = "`nothing`"
 
 [MLJBase.DeterministicSurrogate]
 ":input_scitype" = "`ScientificTypes.Unknown`"
@@ -2091,6 +2349,7 @@
 ":hyperparameters" = "`()`"
 ":hyperparameter_types" = "`()`"
 ":hyperparameter_ranges" = "`()`"
+":iteration_parameter" = "`nothing`"
 
 [MLJBase.WrappedFunction]
 ":input_scitype" = "`ScientificTypes.Unknown`"
@@ -2114,6 +2373,7 @@
 ":hyperparameters" = "`(:f,)`"
 ":hyperparameter_types" = "`(\"Any\",)`"
 ":hyperparameter_ranges" = "`(nothing,)`"
+":iteration_parameter" = "`nothing`"
 
 [MLJBase.IntervalSurrogate]
 ":input_scitype" = "`ScientificTypes.Unknown`"
@@ -2137,6 +2397,7 @@
 ":hyperparameters" = "`()`"
 ":hyperparameter_types" = "`()`"
 ":hyperparameter_ranges" = "`()`"
+":iteration_parameter" = "`nothing`"
 
 [MLJBase.UnsupervisedSurrogate]
 ":input_scitype" = "`ScientificTypes.Unknown`"
@@ -2160,6 +2421,7 @@
 ":hyperparameters" = "`()`"
 ":hyperparameter_types" = "`()`"
 ":hyperparameter_ranges" = "`()`"
+":iteration_parameter" = "`nothing`"
 
 [MLJBase.JointProbabilisticSurrogate]
 ":input_scitype" = "`ScientificTypes.Unknown`"
@@ -2183,6 +2445,7 @@
 ":hyperparameters" = "`()`"
 ":hyperparameter_types" = "`()`"
 ":hyperparameter_ranges" = "`()`"
+":iteration_parameter" = "`nothing`"
 
 [MLJBase.Resampler]
 ":input_scitype" = "`ScientificTypes.Unknown`"
@@ -2206,6 +2469,7 @@
 ":hyperparameters" = "`(:model, :resampling, :measure, :weights, :operation, :acceleration, :check_measure, :repeats, :cache)`"
 ":hyperparameter_types" = "`(\"Union{Nothing, MLJModelInterface.Supervised}\", \"Any\", \"Any\", \"Union{Nothing, AbstractArray{_s248,1} where _s248<:Real}\", \"Any\", \"ComputationalResources.AbstractResource\", \"Bool\", \"Int64\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [MLJBase.StaticSurrogate]
 ":input_scitype" = "`ScientificTypes.Unknown`"
@@ -2229,6 +2493,7 @@
 ":hyperparameters" = "`()`"
 ":hyperparameter_types" = "`()`"
 ":hyperparameter_ranges" = "`()`"
+":iteration_parameter" = "`nothing`"
 
 [MLJBase.ProbabilisticSurrogate]
 ":input_scitype" = "`ScientificTypes.Unknown`"
@@ -2252,6 +2517,7 @@
 ":hyperparameters" = "`()`"
 ":hyperparameter_types" = "`()`"
 ":hyperparameter_ranges" = "`()`"
+":iteration_parameter" = "`nothing`"
 
 [MultivariateStats.LDA]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -2275,6 +2541,7 @@
 ":hyperparameters" = "`(:method, :cov_w, :cov_b, :out_dim, :regcoef, :dist)`"
 ":hyperparameter_types" = "`(\"Symbol\", \"StatsBase.CovarianceEstimator\", \"StatsBase.CovarianceEstimator\", \"Int64\", \"Float64\", \"Distances.SemiMetric\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [MultivariateStats.MultitargetLinearRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -2298,6 +2565,7 @@
 ":hyperparameters" = "`(:bias,)`"
 ":hyperparameter_types" = "`(\"Bool\",)`"
 ":hyperparameter_ranges" = "`(nothing,)`"
+":iteration_parameter" = "`nothing`"
 
 [MultivariateStats.BayesianSubspaceLDA]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -2321,6 +2589,7 @@
 ":hyperparameters" = "`(:normalize, :out_dim, :priors)`"
 ":hyperparameter_types" = "`(\"Bool\", \"Int64\", \"Union{Nothing, Array{Float64,1}}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [MultivariateStats.FactorAnalysis]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -2344,6 +2613,7 @@
 ":hyperparameters" = "`(:method, :maxoutdim, :maxiter, :tol, :eta, :mean)`"
 ":hyperparameter_types" = "`(\"Symbol\", \"Int64\", \"Int64\", \"Real\", \"Real\", \"Union{Nothing, Array{Float64,1}, Real}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [MultivariateStats.LinearRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -2367,6 +2637,7 @@
 ":hyperparameters" = "`(:bias,)`"
 ":hyperparameter_types" = "`(\"Bool\",)`"
 ":hyperparameter_ranges" = "`(nothing,)`"
+":iteration_parameter" = "`nothing`"
 
 [MultivariateStats.ICA]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -2390,6 +2661,7 @@
 ":hyperparameters" = "`(:k, :alg, :fun, :do_whiten, :maxiter, :tol, :winit, :mean)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Symbol\", \"Symbol\", \"Bool\", \"Int64\", \"Real\", \"Union{Nothing, Array{_s41,2} where _s41<:Real}\", \"Union{Nothing, Array{Float64,1}, Real}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [MultivariateStats.PPCA]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -2413,6 +2685,7 @@
 ":hyperparameters" = "`(:maxoutdim, :method, :maxiter, :tol, :mean)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Symbol\", \"Int64\", \"Real\", \"Union{Nothing, Array{Float64,1}, Real}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [MultivariateStats.RidgeRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -2436,6 +2709,7 @@
 ":hyperparameters" = "`(:lambda, :bias)`"
 ":hyperparameter_types" = "`(\"Union{Real, Union{AbstractArray{T,1}, AbstractArray{T,2}} where T}\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [MultivariateStats.KernelPCA]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -2459,6 +2733,7 @@
 ":hyperparameters" = "`(:maxoutdim, :kernel, :solver, :inverse, :beta, :tol, :maxiter)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Union{Nothing, Function}\", \"Symbol\", \"Bool\", \"Real\", \"Real\", \"Int64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [MultivariateStats.MultitargetRidgeRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -2482,6 +2757,7 @@
 ":hyperparameters" = "`(:lambda, :bias)`"
 ":hyperparameter_types" = "`(\"Union{Real, Union{AbstractArray{T,1}, AbstractArray{T,2}} where T}\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [MultivariateStats.SubspaceLDA]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -2505,6 +2781,7 @@
 ":hyperparameters" = "`(:normalize, :out_dim, :dist)`"
 ":hyperparameter_types" = "`(\"Bool\", \"Int64\", \"Distances.SemiMetric\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [MultivariateStats.BayesianLDA]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -2528,6 +2805,7 @@
 ":hyperparameters" = "`(:method, :cov_w, :cov_b, :out_dim, :regcoef, :priors)`"
 ":hyperparameter_types" = "`(\"Symbol\", \"StatsBase.CovarianceEstimator\", \"StatsBase.CovarianceEstimator\", \"Int64\", \"Float64\", \"Union{Nothing, Array{Float64,1}}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [MultivariateStats.PCA]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -2551,6 +2829,7 @@
 ":hyperparameters" = "`(:maxoutdim, :method, :pratio, :mean)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Symbol\", \"Float64\", \"Union{Nothing, Array{Float64,1}, Real}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [DecisionTree.AdaBoostStumpClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:Union{AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous, AbstractArray{_s23,1} where _s23<:ScientificTypes.Count, AbstractArray{_s23,1} where _s23<:ScientificTypes.OrderedFactor}`"
@@ -2574,6 +2853,7 @@
 ":hyperparameters" = "`(:n_iter, :pdf_smoothing)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [DecisionTree.DecisionTreeRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:Union{AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous, AbstractArray{_s23,1} where _s23<:ScientificTypes.Count, AbstractArray{_s23,1} where _s23<:ScientificTypes.OrderedFactor}`"
@@ -2597,6 +2877,7 @@
 ":hyperparameters" = "`(:max_depth, :min_samples_leaf, :min_samples_split, :min_purity_increase, :n_subfeatures, :post_prune, :merge_purity_threshold)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Int64\", \"Int64\", \"Float64\", \"Int64\", \"Bool\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [DecisionTree.DecisionTreeClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:Union{AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous, AbstractArray{_s23,1} where _s23<:ScientificTypes.Count, AbstractArray{_s23,1} where _s23<:ScientificTypes.OrderedFactor}`"
@@ -2620,6 +2901,7 @@
 ":hyperparameters" = "`(:max_depth, :min_samples_leaf, :min_samples_split, :min_purity_increase, :n_subfeatures, :post_prune, :merge_purity_threshold, :pdf_smoothing, :display_depth)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Int64\", \"Int64\", \"Float64\", \"Int64\", \"Bool\", \"Float64\", \"Float64\", \"Int64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [DecisionTree.RandomForestRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:Union{AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous, AbstractArray{_s23,1} where _s23<:ScientificTypes.Count, AbstractArray{_s23,1} where _s23<:ScientificTypes.OrderedFactor}`"
@@ -2643,6 +2925,7 @@
 ":hyperparameters" = "`(:max_depth, :min_samples_leaf, :min_samples_split, :min_purity_increase, :n_subfeatures, :n_trees, :sampling_fraction, :pdf_smoothing)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Int64\", \"Int64\", \"Float64\", \"Int64\", \"Int64\", \"Float64\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [DecisionTree.RandomForestClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:Union{AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous, AbstractArray{_s23,1} where _s23<:ScientificTypes.Count, AbstractArray{_s23,1} where _s23<:ScientificTypes.OrderedFactor}`"
@@ -2666,6 +2949,7 @@
 ":hyperparameters" = "`(:max_depth, :min_samples_leaf, :min_samples_split, :min_purity_increase, :n_subfeatures, :n_trees, :sampling_fraction, :pdf_smoothing)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Int64\", \"Int64\", \"Float64\", \"Int64\", \"Int64\", \"Float64\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [Clustering.KMeans]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -2689,6 +2973,7 @@
 ":hyperparameters" = "`(:k, :metric)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Distances.SemiMetric\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [Clustering.KMedoids]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -2712,6 +2997,7 @@
 ":hyperparameters" = "`(:k, :metric)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Distances.SemiMetric\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [XGBoost.XGBoostCount]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -2735,6 +3021,7 @@
 ":hyperparameters" = "`(:num_round, :booster, :disable_default_eval_metric, :eta, :gamma, :max_depth, :min_child_weight, :max_delta_step, :subsample, :colsample_bytree, :colsample_bylevel, :lambda, :alpha, :tree_method, :sketch_eps, :scale_pos_weight, :updater, :refresh_leaf, :process_type, :grow_policy, :max_leaves, :max_bin, :predictor, :sample_type, :normalize_type, :rate_drop, :one_drop, :skip_drop, :feature_selector, :top_k, :tweedie_variance_power, :objective, :base_score, :eval_metric, :seed)`"
 ":hyperparameter_types" = "`(\"Int64\", \"String\", \"Int64\", \"Float64\", \"Float64\", \"Int64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"String\", \"Float64\", \"Float64\", \"String\", \"Union{Bool, Int64}\", \"String\", \"String\", \"Int64\", \"Int64\", \"String\", \"String\", \"String\", \"Float64\", \"Any\", \"Float64\", \"String\", \"Int64\", \"Float64\", \"Any\", \"Float64\", \"Any\", \"Int64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [XGBoost.XGBoostRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -2758,6 +3045,7 @@
 ":hyperparameters" = "`(:num_round, :booster, :disable_default_eval_metric, :eta, :gamma, :max_depth, :min_child_weight, :max_delta_step, :subsample, :colsample_bytree, :colsample_bylevel, :lambda, :alpha, :tree_method, :sketch_eps, :scale_pos_weight, :updater, :refresh_leaf, :process_type, :grow_policy, :max_leaves, :max_bin, :predictor, :sample_type, :normalize_type, :rate_drop, :one_drop, :skip_drop, :feature_selector, :top_k, :tweedie_variance_power, :objective, :base_score, :eval_metric, :seed)`"
 ":hyperparameter_types" = "`(\"Int64\", \"String\", \"Int64\", \"Float64\", \"Float64\", \"Int64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"String\", \"Float64\", \"Float64\", \"String\", \"Union{Bool, Int64}\", \"String\", \"String\", \"Int64\", \"Int64\", \"String\", \"String\", \"String\", \"Float64\", \"Any\", \"Float64\", \"String\", \"Int64\", \"Float64\", \"Any\", \"Float64\", \"Any\", \"Int64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [XGBoost.XGBoostClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -2781,6 +3069,7 @@
 ":hyperparameters" = "`(:num_round, :booster, :disable_default_eval_metric, :eta, :gamma, :max_depth, :min_child_weight, :max_delta_step, :subsample, :colsample_bytree, :colsample_bylevel, :lambda, :alpha, :tree_method, :sketch_eps, :scale_pos_weight, :updater, :refresh_leaf, :process_type, :grow_policy, :max_leaves, :max_bin, :predictor, :sample_type, :normalize_type, :rate_drop, :one_drop, :skip_drop, :feature_selector, :top_k, :tweedie_variance_power, :objective, :base_score, :eval_metric, :seed)`"
 ":hyperparameter_types" = "`(\"Int64\", \"String\", \"Int64\", \"Float64\", \"Float64\", \"Int64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"String\", \"Float64\", \"Float64\", \"String\", \"Union{Bool, Int64}\", \"String\", \"String\", \"Int64\", \"Int64\", \"String\", \"String\", \"String\", \"Float64\", \"Any\", \"Float64\", \"String\", \"Int64\", \"Float64\", \"Any\", \"Float64\", \"Any\", \"Int64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [LightGBM.LGBMClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -2804,6 +3093,7 @@
 ":hyperparameters" = "`(:boosting, :num_iterations, :learning_rate, :num_leaves, :max_depth, :tree_learner, :histogram_pool_size, :min_data_in_leaf, :min_sum_hessian_in_leaf, :max_delta_step, :lambda_l1, :lambda_l2, :min_gain_to_split, :feature_fraction, :feature_fraction_bynode, :feature_fraction_seed, :bagging_fraction, :pos_bagging_fraction, :neg_bagging_fraction, :bagging_freq, :bagging_seed, :early_stopping_round, :extra_trees, :extra_seed, :max_bin, :bin_construct_sample_cnt, :init_score, :drop_rate, :max_drop, :skip_drop, :xgboost_dart_mode, :uniform_drop, :drop_seed, :top_rate, :other_rate, :min_data_per_group, :max_cat_threshold, :cat_l2, :cat_smooth, :objective, :categorical_feature, :data_random_seed, :is_sparse, :is_unbalance, :boost_from_average, :scale_pos_weight, :use_missing, :metric, :metric_freq, :is_training_metric, :ndcg_at, :num_machines, :num_threads, :local_listen_port, :time_out, :machine_list_file, :save_binary, :device_type, :force_col_wise, :force_row_wise)`"
 ":hyperparameter_types" = "`(\"String\", \"Int64\", \"Float64\", \"Int64\", \"Int64\", \"String\", \"Float64\", \"Int64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Int64\", \"Float64\", \"Float64\", \"Float64\", \"Int64\", \"Int64\", \"Int64\", \"Bool\", \"Int64\", \"Int64\", \"Any\", \"String\", \"Float64\", \"Int64\", \"Float64\", \"Bool\", \"Bool\", \"Int64\", \"Float64\", \"Float64\", \"Int64\", \"Int64\", \"Float64\", \"Float64\", \"String\", \"Array{Int64,1}\", \"Int64\", \"Bool\", \"Bool\", \"Bool\", \"Any\", \"Bool\", \"Array{String,1}\", \"Int64\", \"Bool\", \"Array{Int64,1}\", \"Int64\", \"Int64\", \"Int64\", \"Int64\", \"String\", \"Bool\", \"String\", \"Bool\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [LightGBM.LGBMRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -2827,6 +3117,7 @@
 ":hyperparameters" = "`(:boosting, :num_iterations, :learning_rate, :num_leaves, :max_depth, :tree_learner, :histogram_pool_size, :min_data_in_leaf, :min_sum_hessian_in_leaf, :max_delta_step, :lambda_l1, :lambda_l2, :min_gain_to_split, :feature_fraction, :feature_fraction_bynode, :feature_fraction_seed, :bagging_fraction, :bagging_freq, :bagging_seed, :early_stopping_round, :extra_trees, :extra_seed, :max_bin, :bin_construct_sample_cnt, :init_score, :drop_rate, :max_drop, :skip_drop, :xgboost_dart_mode, :uniform_drop, :drop_seed, :top_rate, :other_rate, :min_data_per_group, :max_cat_threshold, :cat_l2, :cat_smooth, :objective, :categorical_feature, :data_random_seed, :is_sparse, :is_unbalance, :boost_from_average, :use_missing, :alpha, :metric, :metric_freq, :is_training_metric, :ndcg_at, :num_machines, :num_threads, :local_listen_port, :time_out, :machine_list_file, :save_binary, :device_type, :force_col_wise, :force_row_wise)`"
 ":hyperparameter_types" = "`(\"String\", \"Int64\", \"Float64\", \"Int64\", \"Int64\", \"String\", \"Float64\", \"Int64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Int64\", \"Float64\", \"Int64\", \"Int64\", \"Int64\", \"Bool\", \"Int64\", \"Int64\", \"Any\", \"String\", \"Float64\", \"Int64\", \"Float64\", \"Bool\", \"Bool\", \"Int64\", \"Float64\", \"Float64\", \"Int64\", \"Int64\", \"Float64\", \"Float64\", \"String\", \"Array{Int64,1}\", \"Int64\", \"Bool\", \"Bool\", \"Bool\", \"Bool\", \"Float64\", \"Array{String,1}\", \"Int64\", \"Bool\", \"Array{Int64,1}\", \"Int64\", \"Int64\", \"Int64\", \"Int64\", \"String\", \"Bool\", \"String\", \"Bool\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [EvoTrees.EvoTreeClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -2850,6 +3141,7 @@
 ":hyperparameters" = "`(:loss, :nrounds, :λ, :γ, :η, :max_depth, :min_weight, :rowsample, :colsample, :nbins, :α, :metric, :seed)`"
 ":hyperparameter_types" = "`(\"EvoTrees.ModelType\", \"Int64\", \"AbstractFloat\", \"AbstractFloat\", \"AbstractFloat\", \"Int64\", \"AbstractFloat\", \"AbstractFloat\", \"AbstractFloat\", \"Int64\", \"AbstractFloat\", \"Symbol\", \"Int64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [EvoTrees.EvoTreeGaussian]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -2873,6 +3165,7 @@
 ":hyperparameters" = "`(:loss, :nrounds, :λ, :γ, :η, :max_depth, :min_weight, :rowsample, :colsample, :nbins, :α, :metric, :seed)`"
 ":hyperparameter_types" = "`(\"EvoTrees.ModelType\", \"Int64\", \"AbstractFloat\", \"AbstractFloat\", \"AbstractFloat\", \"Int64\", \"AbstractFloat\", \"AbstractFloat\", \"AbstractFloat\", \"Int64\", \"AbstractFloat\", \"Symbol\", \"Int64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [EvoTrees.EvoTreeRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -2896,6 +3189,7 @@
 ":hyperparameters" = "`(:loss, :nrounds, :λ, :γ, :η, :max_depth, :min_weight, :rowsample, :colsample, :nbins, :α, :metric, :seed)`"
 ":hyperparameter_types" = "`(\"EvoTrees.ModelType\", \"Int64\", \"AbstractFloat\", \"AbstractFloat\", \"AbstractFloat\", \"Int64\", \"AbstractFloat\", \"AbstractFloat\", \"AbstractFloat\", \"Int64\", \"AbstractFloat\", \"Symbol\", \"Int64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [EvoTrees.EvoTreeCount]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -2919,6 +3213,7 @@
 ":hyperparameters" = "`(:loss, :nrounds, :λ, :γ, :η, :max_depth, :min_weight, :rowsample, :colsample, :nbins, :α, :metric, :seed)`"
 ":hyperparameter_types" = "`(\"EvoTrees.ModelType\", \"Int64\", \"AbstractFloat\", \"AbstractFloat\", \"AbstractFloat\", \"Int64\", \"AbstractFloat\", \"AbstractFloat\", \"AbstractFloat\", \"Int64\", \"AbstractFloat\", \"Symbol\", \"Int64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [MLJModels.ConstantClassifier]
 ":input_scitype" = "`ScientificTypes.Table`"
@@ -2942,6 +3237,7 @@
 ":hyperparameters" = "`()`"
 ":hyperparameter_types" = "`()`"
 ":hyperparameter_ranges" = "`()`"
+":iteration_parameter" = "`nothing`"
 
 [MLJModels.Standardizer]
 ":input_scitype" = "`Union{AbstractArray{_s78,1} where _s78<:ScientificTypes.Continuous, ScientificTypes.Table}`"
@@ -2965,6 +3261,7 @@
 ":hyperparameters" = "`(:features, :ignore, :ordered_factor, :count)`"
 ":hyperparameter_types" = "`(\"Union{AbstractArray{Symbol,1}, Function}\", \"Bool\", \"Bool\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [MLJModels.DeterministicConstantClassifier]
 ":input_scitype" = "`ScientificTypes.Table`"
@@ -2988,6 +3285,7 @@
 ":hyperparameters" = "`()`"
 ":hyperparameter_types" = "`()`"
 ":hyperparameter_ranges" = "`()`"
+":iteration_parameter" = "`nothing`"
 
 [MLJModels.UnivariateTimeTypeToContinuous]
 ":input_scitype" = "`AbstractArray{_s78,1} where _s78<:ScientificTypes.ScientificTimeType`"
@@ -3011,6 +3309,7 @@
 ":hyperparameters" = "`(:zero_time, :step)`"
 ":hyperparameter_types" = "`(\"Union{Nothing, Dates.TimeType}\", \"Dates.Period\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [MLJModels.OneHotEncoder]
 ":input_scitype" = "`ScientificTypes.Table`"
@@ -3034,6 +3333,7 @@
 ":hyperparameters" = "`(:features, :drop_last, :ordered_factor, :ignore)`"
 ":hyperparameter_types" = "`(\"Array{Symbol,1}\", \"Bool\", \"Bool\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [MLJModels.ContinuousEncoder]
 ":input_scitype" = "`ScientificTypes.Table`"
@@ -3057,6 +3357,7 @@
 ":hyperparameters" = "`(:drop_last, :one_hot_ordered_factors)`"
 ":hyperparameter_types" = "`(\"Bool\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [MLJModels.UnivariateBoxCoxTransformer]
 ":input_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
@@ -3080,6 +3381,7 @@
 ":hyperparameters" = "`(:n, :shift)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [MLJModels.ConstantRegressor]
 ":input_scitype" = "`ScientificTypes.Table`"
@@ -3103,6 +3405,7 @@
 ":hyperparameters" = "`(:distribution_type,)`"
 ":hyperparameter_types" = "`(\"Type{D} where D<:Distributions.Sampleable\",)`"
 ":hyperparameter_ranges" = "`(nothing,)`"
+":iteration_parameter" = "`nothing`"
 
 [MLJModels.FeatureSelector]
 ":input_scitype" = "`ScientificTypes.Table`"
@@ -3126,6 +3429,7 @@
 ":hyperparameters" = "`(:features, :ignore)`"
 ":hyperparameter_types" = "`(\"Union{Array{Symbol,1}, Function}\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [MLJModels.UnivariateDiscretizer]
 ":input_scitype" = "`AbstractArray{_s78,1} where _s78<:ScientificTypes.Continuous`"
@@ -3149,6 +3453,7 @@
 ":hyperparameters" = "`(:n_classes,)`"
 ":hyperparameter_types" = "`(\"Int64\",)`"
 ":hyperparameter_ranges" = "`(nothing,)`"
+":iteration_parameter" = "`nothing`"
 
 [MLJModels.BinaryThresholdPredictor]
 ":input_scitype" = "`ScientificTypes.Unknown`"
@@ -3172,6 +3477,7 @@
 ":hyperparameters" = "`(:wrapped_model, :threshold)`"
 ":hyperparameter_types" = "`(\"MLJModelInterface.Probabilistic\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [MLJModels.FillImputer]
 ":input_scitype" = "`ScientificTypes.Table`"
@@ -3195,6 +3501,7 @@
 ":hyperparameters" = "`(:features, :continuous_fill, :count_fill, :finite_fill)`"
 ":hyperparameter_types" = "`(\"Array{Symbol,1}\", \"Function\", \"Function\", \"Function\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [MLJModels.DeterministicConstantRegressor]
 ":input_scitype" = "`ScientificTypes.Table`"
@@ -3218,6 +3525,7 @@
 ":hyperparameters" = "`()`"
 ":hyperparameter_types" = "`()`"
 ":hyperparameter_ranges" = "`()`"
+":iteration_parameter" = "`nothing`"
 
 [MLJModels.UnivariateStandardizer]
 ":input_scitype" = "`AbstractArray{_s78,1} where _s78<:ScientificTypes.Infinite`"
@@ -3241,6 +3549,7 @@
 ":hyperparameters" = "`()`"
 ":hyperparameter_types" = "`()`"
 ":hyperparameter_ranges" = "`()`"
+":iteration_parameter" = "`nothing`"
 
 [MLJModels.UnivariateFillImputer]
 ":input_scitype" = "`Union{AbstractArray{_s78,1} where _s78<:Union{Missing, ScientificTypes.Continuous}, AbstractArray{_s77,1} where _s77<:Union{Missing, ScientificTypes.Count}, AbstractArray{_s53,1} where _s53<:Union{Missing, ScientificTypes.Finite}}`"
@@ -3264,6 +3573,7 @@
 ":hyperparameters" = "`(:continuous_fill, :count_fill, :finite_fill)`"
 ":hyperparameter_types" = "`(\"Function\", \"Function\", \"Function\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [LIBSVM.EpsilonSVR]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -3287,6 +3597,7 @@
 ":hyperparameters" = "`(:kernel, :gamma, :epsilon, :cost, :cachesize, :degree, :coef0, :tolerance, :shrinking)`"
 ":hyperparameter_types" = "`(\"LIBSVM.Kernel.KERNEL\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Int32\", \"Float64\", \"Float64\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [LIBSVM.LinearSVC]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -3310,6 +3621,7 @@
 ":hyperparameters" = "`(:solver, :weights, :tolerance, :cost, :p, :bias)`"
 ":hyperparameter_types" = "`(\"LIBSVM.Linearsolver.LINEARSOLVER\", \"Union{Nothing, Dict}\", \"Float64\", \"Float64\", \"Float64\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [LIBSVM.NuSVR]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -3333,6 +3645,7 @@
 ":hyperparameters" = "`(:kernel, :gamma, :nu, :cost, :cachesize, :degree, :coef0, :tolerance, :shrinking)`"
 ":hyperparameter_types" = "`(\"LIBSVM.Kernel.KERNEL\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Int32\", \"Float64\", \"Float64\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [LIBSVM.NuSVC]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -3356,6 +3669,7 @@
 ":hyperparameters" = "`(:kernel, :gamma, :weights, :nu, :cost, :cachesize, :degree, :coef0, :tolerance, :shrinking)`"
 ":hyperparameter_types" = "`(\"LIBSVM.Kernel.KERNEL\", \"Float64\", \"Union{Nothing, Dict}\", \"Float64\", \"Float64\", \"Float64\", \"Int32\", \"Float64\", \"Float64\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [LIBSVM.SVC]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -3379,6 +3693,7 @@
 ":hyperparameters" = "`(:kernel, :gamma, :weights, :cost, :cachesize, :degree, :coef0, :tolerance, :shrinking, :probability)`"
 ":hyperparameter_types" = "`(\"LIBSVM.Kernel.KERNEL\", \"Float64\", \"Union{Nothing, Dict}\", \"Float64\", \"Float64\", \"Int32\", \"Float64\", \"Float64\", \"Bool\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [LIBSVM.OneClassSVM]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -3402,6 +3717,7 @@
 ":hyperparameters" = "`(:kernel, :gamma, :nu, :cost, :cachesize, :degree, :coef0, :tolerance, :shrinking)`"
 ":hyperparameter_types" = "`(\"LIBSVM.Kernel.KERNEL\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Int32\", \"Float64\", \"Float64\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [GLM.LinearBinaryClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -3425,6 +3741,7 @@
 ":hyperparameters" = "`(:fit_intercept, :link)`"
 ":hyperparameter_types" = "`(\"Bool\", \"GLM.Link01\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [GLM.LinearCountRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -3448,6 +3765,7 @@
 ":hyperparameters" = "`(:fit_intercept, :distribution, :link)`"
 ":hyperparameter_types" = "`(\"Bool\", \"Distributions.Distribution\", \"GLM.Link\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [GLM.LinearRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -3471,6 +3789,7 @@
 ":hyperparameters" = "`(:fit_intercept, :allowrankdeficient)`"
 ":hyperparameter_types" = "`(\"Bool\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [MLJFlux.MultitargetNeuralNetworkRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -3494,6 +3813,7 @@
 ":hyperparameters" = "`(:builder, :optimiser, :loss, :epochs, :batch_size, :lambda, :alpha, :optimiser_changes_trigger_retraining, :acceleration)`"
 ":hyperparameter_types" = "`(\"Any\", \"Any\", \"Any\", \"Int64\", \"Int64\", \"Float64\", \"Float64\", \"Bool\", \"ComputationalResources.AbstractResource\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [MLJFlux.NeuralNetworkClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -3517,6 +3837,7 @@
 ":hyperparameters" = "`(:builder, :finaliser, :optimiser, :loss, :epochs, :batch_size, :lambda, :alpha, :optimiser_changes_trigger_retraining, :acceleration)`"
 ":hyperparameter_types" = "`(\"Any\", \"Any\", \"Any\", \"Any\", \"Int64\", \"Int64\", \"Float64\", \"Float64\", \"Bool\", \"ComputationalResources.AbstractResource\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [MLJFlux.ImageClassifier]
 ":input_scitype" = "`AbstractArray{_s86,1} where _s86<:ScientificTypes.GrayImage`"
@@ -3540,6 +3861,7 @@
 ":hyperparameters" = "`(:builder, :finaliser, :optimiser, :loss, :epochs, :batch_size, :lambda, :alpha, :optimiser_changes_trigger_retraining, :acceleration)`"
 ":hyperparameter_types" = "`(\"Any\", \"Any\", \"Any\", \"Any\", \"Int64\", \"Int64\", \"Float64\", \"Float64\", \"Bool\", \"ComputationalResources.AbstractResource\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
 
 [MLJFlux.NeuralNetworkRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -3563,3 +3885,4 @@
 ":hyperparameters" = "`(:builder, :optimiser, :loss, :epochs, :batch_size, :lambda, :alpha, :optimiser_changes_trigger_retraining, :acceleration)`"
 ":hyperparameter_types" = "`(\"Any\", \"Any\", \"Any\", \"Int64\", \"Int64\", \"Float64\", \"Float64\", \"Bool\", \"ComputationalResources.AbstractResource\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
