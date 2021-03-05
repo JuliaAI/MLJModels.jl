@@ -11,7 +11,6 @@
 ":package_url" = "https://github.com/sylvaticus/BetaML.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "The classical perceptron algorithm using one-vs-all for multiclass, from the Beta Machine Learning Toolkit (BetaML).\n→ based on [BetaML](https://github.com/sylvaticus/BetaML.jl).\n→ do `@load PerceptronClassifier pkg=\"BetaML\"` to use the model.\n→ do `?PerceptronClassifier` for documentation."
 ":name" = "PerceptronClassifier"
@@ -21,7 +20,6 @@
 ":hyperparameters" = "`(:initialθ, :initialθ₀, :maxEpochs, :shuffle, :forceOrigin, :returnMeanHyperplane)`"
 ":hyperparameter_types" = "`(\"Array{Float64,1}\", \"Float64\", \"Int64\", \"Bool\", \"Bool\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [BetaML.DecisionTreeRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:Union{AbstractArray{_s23,1} where _s23<:Missing, AbstractArray{_s23,1} where _s23<:ScientificTypes.Known}`"
@@ -35,7 +33,6 @@
 ":package_url" = "https://github.com/sylvaticus/BetaML.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "A simple Decision Tree for regression with support for Missing data, from the Beta Machine Learning Toolkit (BetaML).\n→ based on [BetaML](https://github.com/sylvaticus/BetaML.jl).\n→ do `@load DecisionTreeRegressor pkg=\"BetaML\"` to use the model.\n→ do `?DecisionTreeRegressor` for documentation."
 ":name" = "DecisionTreeRegressor"
@@ -45,7 +42,6 @@
 ":hyperparameters" = "`(:maxDepth, :minGain, :minRecords, :maxFeatures, :splittingCriterion)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Float64\", \"Int64\", \"Int64\", \"Function\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [BetaML.DecisionTreeClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:Union{AbstractArray{_s23,1} where _s23<:Missing, AbstractArray{_s23,1} where _s23<:ScientificTypes.Known}`"
@@ -59,7 +55,6 @@
 ":package_url" = "https://github.com/sylvaticus/BetaML.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "A simple Decision Tree for classification with support for Missing data, from the Beta Machine Learning Toolkit (BetaML).\n→ based on [BetaML](https://github.com/sylvaticus/BetaML.jl).\n→ do `@load DecisionTreeClassifier pkg=\"BetaML\"` to use the model.\n→ do `?DecisionTreeClassifier` for documentation."
 ":name" = "DecisionTreeClassifier"
@@ -69,7 +64,6 @@
 ":hyperparameters" = "`(:maxDepth, :minGain, :minRecords, :maxFeatures, :splittingCriterion)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Float64\", \"Int64\", \"Int64\", \"Function\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [BetaML.RandomForestRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:Union{AbstractArray{_s23,1} where _s23<:Missing, AbstractArray{_s23,1} where _s23<:ScientificTypes.Known}`"
@@ -83,7 +77,6 @@
 ":package_url" = "https://github.com/sylvaticus/BetaML.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "A simple Random Forest ensemble for regression with support for Missing data, from the Beta Machine Learning Toolkit (BetaML).\n→ based on [BetaML](https://github.com/sylvaticus/BetaML.jl).\n→ do `@load RandomForestRegressor pkg=\"BetaML\"` to use the model.\n→ do `?RandomForestRegressor` for documentation."
 ":name" = "RandomForestRegressor"
@@ -93,7 +86,6 @@
 ":hyperparameters" = "`(:nTrees, :maxDepth, :minGain, :minRecords, :maxFeatures, :splittingCriterion, :β)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Int64\", \"Float64\", \"Int64\", \"Int64\", \"Function\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [BetaML.PegasosClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Infinite)`"
@@ -107,7 +99,6 @@
 ":package_url" = "https://github.com/sylvaticus/BetaML.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "The gradient-based linear \"pegasos\" classifier using one-vs-all for multiclass, from the Beta Machine Learning Toolkit (BetaML).\n→ based on [BetaML](https://github.com/sylvaticus/BetaML.jl).\n→ do `@load PegasosClassifier pkg=\"BetaML\"` to use the model.\n→ do `?PegasosClassifier` for documentation."
 ":name" = "PegasosClassifier"
@@ -117,7 +108,6 @@
 ":hyperparameters" = "`(:initialθ, :initialθ₀, :λ, :η, :maxEpochs, :shuffle, :forceOrigin, :returnMeanHyperplane)`"
 ":hyperparameter_types" = "`(\"Array{Float64,1}\", \"Float64\", \"Float64\", \"Function\", \"Int64\", \"Bool\", \"Bool\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [BetaML.KernelPerceptronClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Infinite)`"
@@ -131,7 +121,6 @@
 ":package_url" = "https://github.com/sylvaticus/BetaML.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "The kernel perceptron algorithm using one-vs-one for multiclass, from the Beta Machine Learning Toolkit (BetaML).\n→ based on [BetaML](https://github.com/sylvaticus/BetaML.jl).\n→ do `@load KernelPerceptronClassifier pkg=\"BetaML\"` to use the model.\n→ do `?KernelPerceptronClassifier` for documentation."
 ":name" = "KernelPerceptronClassifier"
@@ -141,7 +130,6 @@
 ":hyperparameters" = "`(:K, :maxEpochs, :initialα, :shuffle)`"
 ":hyperparameter_types" = "`(\"Function\", \"Int64\", \"Array{Int64,1}\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [BetaML.RandomForestClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:Union{AbstractArray{_s23,1} where _s23<:Missing, AbstractArray{_s23,1} where _s23<:ScientificTypes.Known}`"
@@ -155,7 +143,6 @@
 ":package_url" = "https://github.com/sylvaticus/BetaML.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "A simple Random Forest ensemble for classification with support for Missing data, from the Beta Machine Learning Toolkit (BetaML).\n→ based on [BetaML](https://github.com/sylvaticus/BetaML.jl).\n→ do `@load RandomForestClassifier pkg=\"BetaML\"` to use the model.\n→ do `?RandomForestClassifier` for documentation."
 ":name" = "RandomForestClassifier"
@@ -165,7 +152,6 @@
 ":hyperparameters" = "`(:nTrees, :maxDepth, :minGain, :minRecords, :maxFeatures, :splittingCriterion, :β)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Int64\", \"Float64\", \"Int64\", \"Int64\", \"Function\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [NearestNeighborModels.KNNClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -179,7 +165,6 @@
 ":package_url" = "https://github.com/alan-turing-institute/NearestNeighborModels.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`true`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "K-Nearest Neighbors classifier: predicts the class associated with a new point\nby taking a vote over the classes of the K-nearest points.\n\n→ based on [NearestNeighborModels](https://github.com/alan-turing-institute/NearestNeighborModels.jl).\n→ do `@load KNNClassifier pkg=\"NearestNeighborModels\"` to use the model.\n→ do `?KNNClassifier` for documentation."
 ":name" = "KNNClassifier"
@@ -189,7 +174,6 @@
 ":hyperparameters" = "`(:K, :algorithm, :metric, :leafsize, :reorder, :weights)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Symbol\", \"Distances.Metric\", \"Int64\", \"Bool\", \"NearestNeighborModels.KNNKernel\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [NearestNeighborModels.MultitargetKNNClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -203,7 +187,6 @@
 ":package_url" = "https://github.com/alan-turing-institute/NearestNeighborModels.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`true`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "K-Nearest Neighbors classifier: predicts the class associated with a new point\nby taking a vote over the classes of the K-nearest points.\n\n→ based on [NearestNeighborModels](https://github.com/alan-turing-institute/NearestNeighborModels.jl).\n→ do `@load MultitargetKNNClassifier pkg=\"NearestNeighborModels\"` to use the model.\n→ do `?MultitargetKNNClassifier` for documentation."
 ":name" = "MultitargetKNNClassifier"
@@ -213,7 +196,6 @@
 ":hyperparameters" = "`(:K, :algorithm, :metric, :leafsize, :reorder, :weights, :output_type)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Symbol\", \"Distances.Metric\", \"Int64\", \"Bool\", \"NearestNeighborModels.KNNKernel\", \"Type{_s21} where _s21<:Union{AbstractDict{K,V} where V<:(AbstractArray{T,1} where T) where K<:Symbol, NamedTuple{names,T} where T<:Tuple{Vararg{AbstractArray{S,D} where S,N}} where names where D where N}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [NearestNeighborModels.MultitargetKNNRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -227,7 +209,6 @@
 ":package_url" = "https://github.com/alan-turing-institute/NearestNeighborModels.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`true`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "K-Nearest Neighbors regressor: predicts the response associated with a new point\nby taking an weighted average of the response of the K-nearest points.\n\n→ based on [NearestNeighborModels](https://github.com/alan-turing-institute/NearestNeighborModels.jl).\n→ do `@load MultitargetKNNRegressor pkg=\"NearestNeighborModels\"` to use the model.\n→ do `?MultitargetKNNRegressor` for documentation."
 ":name" = "MultitargetKNNRegressor"
@@ -237,7 +218,6 @@
 ":hyperparameters" = "`(:K, :algorithm, :metric, :leafsize, :reorder, :weights)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Symbol\", \"Distances.Metric\", \"Int64\", \"Bool\", \"NearestNeighborModels.KNNKernel\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [NearestNeighborModels.KNNRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -251,7 +231,6 @@
 ":package_url" = "https://github.com/alan-turing-institute/NearestNeighborModels.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`true`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "K-Nearest Neighbors regressor: predicts the response associated with a new point\nby taking an weighted average of the response of the K-nearest points.\n\n→ based on [NearestNeighborModels](https://github.com/alan-turing-institute/NearestNeighborModels.jl).\n→ do `@load KNNRegressor pkg=\"NearestNeighborModels\"` to use the model.\n→ do `?KNNRegressor` for documentation."
 ":name" = "KNNRegressor"
@@ -261,7 +240,6 @@
 ":hyperparameters" = "`(:K, :algorithm, :metric, :leafsize, :reorder, :weights)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Symbol\", \"Distances.Metric\", \"Int64\", \"Bool\", \"NearestNeighborModels.KNNKernel\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [PartialLeastSquaresRegressor.KPLSRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -275,7 +253,6 @@
 ":package_url" = "https://github.com/lalvim/PartialLeastSquaresRegressor.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "A Kernel Partial Least Squares Regressor. A Kernel PLS2 NIPALS algorithms. Can be used mainly for regression.\n→ based on [PartialLeastSquaresRegressor](https://github.com/lalvim/PartialLeastSquaresRegressor.jl).\n→ do `@load KPLSRegressor pkg=\"PartialLeastSquaresRegressor\"` to use the model.\n→ do `?KPLSRegressor` for documentation."
 ":name" = "KPLSRegressor"
@@ -285,7 +262,6 @@
 ":hyperparameters" = "`(:n_factors, :kernel, :width)`"
 ":hyperparameter_types" = "`(\"Integer\", \"String\", \"Real\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [PartialLeastSquaresRegressor.PLSRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -299,7 +275,6 @@
 ":package_url" = "https://github.com/lalvim/PartialLeastSquaresRegressor.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "A Partial Least Squares Regressor. Contains PLS1, PLS2 (multi target) algorithms. Can be used mainly for regression.\n→ based on [PartialLeastSquaresRegressor](https://github.com/lalvim/PartialLeastSquaresRegressor.jl).\n→ do `@load PLSRegressor pkg=\"PartialLeastSquaresRegressor\"` to use the model.\n→ do `?PLSRegressor` for documentation."
 ":name" = "PLSRegressor"
@@ -309,7 +284,6 @@
 ":hyperparameters" = "`(:n_factors,)`"
 ":hyperparameter_types" = "`(\"Int64\",)`"
 ":hyperparameter_ranges" = "`(nothing,)`"
-":iteration_parameter" = "`nothing`"
 
 [MLJLinearModels.QuantileRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -323,7 +297,6 @@
 ":package_url" = "https://github.com/alan-turing-institute/MLJLinearModels.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Robust regression with objective ``∑ρ(Xθ - y) + λ|θ|₂² + γ|θ|₁`` where `ρ` is the Quantile Loss.\n→ based on [MLJLinearModels](https://github.com/alan-turing-institute/MLJLinearModels.jl)\n→ do `@load QuantileRegressor pkg=\"MLJLinearModels\" to use the model.`\n→ do `?QuantileRegressor` for documentation.\n→ based on [MLJLinearModels](https://github.com/alan-turing-institute/MLJLinearModels.jl).\n→ do `@load QuantileRegressor pkg=\"MLJLinearModels\"` to use the model.\n→ do `?QuantileRegressor` for documentation."
 ":name" = "QuantileRegressor"
@@ -333,7 +306,6 @@
 ":hyperparameters" = "`(:delta, :lambda, :gamma, :penalty, :fit_intercept, :penalize_intercept, :solver)`"
 ":hyperparameter_types" = "`(\"Real\", \"Real\", \"Real\", \"Union{String, Symbol}\", \"Bool\", \"Bool\", \"Union{Nothing, MLJLinearModels.Solver}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [MLJLinearModels.LogisticClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -347,7 +319,6 @@
 ":package_url" = "https://github.com/alan-turing-institute/MLJLinearModels.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Classifier corresponding to the loss function ``L(y, Xθ) + λ|θ|₂²/2 + γ|θ|₁`` where `L` is the logistic loss.\n→ based on [MLJLinearModels](https://github.com/alan-turing-institute/MLJLinearModels.jl)\n→ do `@load LogisticClassifier pkg=\"MLJLinearModels\" to use the model.`\n→ do `?LogisticClassifier` for documentation.\n→ based on [MLJLinearModels](https://github.com/alan-turing-institute/MLJLinearModels.jl).\n→ do `@load LogisticClassifier pkg=\"MLJLinearModels\"` to use the model.\n→ do `?LogisticClassifier` for documentation."
 ":name" = "LogisticClassifier"
@@ -357,7 +328,6 @@
 ":hyperparameters" = "`(:lambda, :gamma, :penalty, :fit_intercept, :penalize_intercept, :solver)`"
 ":hyperparameter_types" = "`(\"Real\", \"Real\", \"Union{String, Symbol}\", \"Bool\", \"Bool\", \"Union{Nothing, MLJLinearModels.Solver}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [MLJLinearModels.MultinomialClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -371,7 +341,6 @@
 ":package_url" = "https://github.com/alan-turing-institute/MLJLinearModels.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Classifier corresponding to the loss function ``L(y, Xθ) + λ|θ|₂²/2 + γ|θ|₁`` where `L` is the multinomial loss.\n→ based on [MLJLinearModels](https://github.com/alan-turing-institute/MLJLinearModels.jl)\n→ do `@load MultinomialClassifier pkg=\"MLJLinearModels\" to use the model.`\n→ do `?MultinomialClassifier` for documentation.\n→ based on [MLJLinearModels](https://github.com/alan-turing-institute/MLJLinearModels.jl).\n→ do `@load MultinomialClassifier pkg=\"MLJLinearModels\"` to use the model.\n→ do `?MultinomialClassifier` for documentation."
 ":name" = "MultinomialClassifier"
@@ -381,7 +350,6 @@
 ":hyperparameters" = "`(:lambda, :gamma, :penalty, :fit_intercept, :penalize_intercept, :solver)`"
 ":hyperparameter_types" = "`(\"Real\", \"Real\", \"Union{String, Symbol}\", \"Bool\", \"Bool\", \"Union{Nothing, MLJLinearModels.Solver}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [MLJLinearModels.LADRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -395,7 +363,6 @@
 ":package_url" = "https://github.com/alan-turing-institute/MLJLinearModels.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Robust regression with objective ``∑ρ(Xθ - y) + λ|θ|₂² + γ|θ|₁`` where `ρ` is the Absolute Loss.\n→ based on [MLJLinearModels](https://github.com/alan-turing-institute/MLJLinearModels.jl)\n→ do `@load LADRegressor pkg=\"MLJLinearModels\" to use the model.`\n→ do `?LADRegressor` for documentation.\n→ based on [MLJLinearModels](https://github.com/alan-turing-institute/MLJLinearModels.jl).\n→ do `@load LADRegressor pkg=\"MLJLinearModels\"` to use the model.\n→ do `?LADRegressor` for documentation."
 ":name" = "LADRegressor"
@@ -405,7 +372,6 @@
 ":hyperparameters" = "`(:lambda, :gamma, :penalty, :fit_intercept, :penalize_intercept, :solver)`"
 ":hyperparameter_types" = "`(\"Real\", \"Real\", \"Union{String, Symbol}\", \"Bool\", \"Bool\", \"Union{Nothing, MLJLinearModels.Solver}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [MLJLinearModels.RidgeRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -419,7 +385,6 @@
 ":package_url" = "https://github.com/alan-turing-institute/MLJLinearModels.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Regression with objective function ``|Xθ - y|₂²/2 + λ|θ|₂²/2``.\n→ based on [MLJLinearModels](https://github.com/alan-turing-institute/MLJLinearModels.jl)\n→ do `@load RidgeRegressor pkg=\"MLJLinearModels\" to use the model.`\n→ do `?RidgeRegressor` for documentation.\n→ based on [MLJLinearModels](https://github.com/alan-turing-institute/MLJLinearModels.jl).\n→ do `@load RidgeRegressor pkg=\"MLJLinearModels\"` to use the model.\n→ do `?RidgeRegressor` for documentation."
 ":name" = "RidgeRegressor"
@@ -429,7 +394,6 @@
 ":hyperparameters" = "`(:lambda, :fit_intercept, :penalize_intercept, :solver)`"
 ":hyperparameter_types" = "`(\"Real\", \"Bool\", \"Bool\", \"Union{Nothing, MLJLinearModels.Solver}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [MLJLinearModels.RobustRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -443,7 +407,6 @@
 ":package_url" = "https://github.com/alan-turing-institute/MLJLinearModels.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Robust regression with objective ``∑ρ(Xθ - y) + λ|θ|₂² + γ|θ|₁`` for a given robust `ρ`.\n→ based on [MLJLinearModels](https://github.com/alan-turing-institute/MLJLinearModels.jl)\n→ do `@load RobustRegressor pkg=\"MLJLinearModels\" to use the model.`\n→ do `?RobustRegressor` for documentation.\n→ based on [MLJLinearModels](https://github.com/alan-turing-institute/MLJLinearModels.jl).\n→ do `@load RobustRegressor pkg=\"MLJLinearModels\"` to use the model.\n→ do `?RobustRegressor` for documentation."
 ":name" = "RobustRegressor"
@@ -453,7 +416,6 @@
 ":hyperparameters" = "`(:rho, :lambda, :gamma, :penalty, :fit_intercept, :penalize_intercept, :solver)`"
 ":hyperparameter_types" = "`(\"MLJLinearModels.RobustRho\", \"Real\", \"Real\", \"Union{String, Symbol}\", \"Bool\", \"Bool\", \"Union{Nothing, MLJLinearModels.Solver}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [MLJLinearModels.ElasticNetRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -467,7 +429,6 @@
 ":package_url" = "https://github.com/alan-turing-institute/MLJLinearModels.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Regression with objective function ``|Xθ - y|₂²/2 + λ|θ|₂²/2 + γ|θ|₁``.\n→ based on [MLJLinearModels](https://github.com/alan-turing-institute/MLJLinearModels.jl)\n→ do `@load ElasticNetRegressor pkg=\"MLJLinearModels\" to use the model.`\n→ do `?ElasticNetRegressor` for documentation.\n→ based on [MLJLinearModels](https://github.com/alan-turing-institute/MLJLinearModels.jl).\n→ do `@load ElasticNetRegressor pkg=\"MLJLinearModels\"` to use the model.\n→ do `?ElasticNetRegressor` for documentation."
 ":name" = "ElasticNetRegressor"
@@ -477,7 +438,6 @@
 ":hyperparameters" = "`(:lambda, :gamma, :fit_intercept, :penalize_intercept, :solver)`"
 ":hyperparameter_types" = "`(\"Real\", \"Real\", \"Bool\", \"Bool\", \"Union{Nothing, MLJLinearModels.Solver}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [MLJLinearModels.LinearRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -491,7 +451,6 @@
 ":package_url" = "https://github.com/alan-turing-institute/MLJLinearModels.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Regression with objective function ``|Xθ - y|₂²/2``.\n→ based on [MLJLinearModels](https://github.com/alan-turing-institute/MLJLinearModels.jl)\n→ do `@load LinearRegressor pkg=\"MLJLinearModels\" to use the model.`\n→ do `?LinearRegressor` for documentation.\n→ based on [MLJLinearModels](https://github.com/alan-turing-institute/MLJLinearModels.jl).\n→ do `@load LinearRegressor pkg=\"MLJLinearModels\"` to use the model.\n→ do `?LinearRegressor` for documentation."
 ":name" = "LinearRegressor"
@@ -501,7 +460,6 @@
 ":hyperparameters" = "`(:fit_intercept, :solver)`"
 ":hyperparameter_types" = "`(\"Bool\", \"Union{Nothing, MLJLinearModels.Solver}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [MLJLinearModels.LassoRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -515,7 +473,6 @@
 ":package_url" = "https://github.com/alan-turing-institute/MLJLinearModels.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Regression with objective function ``|Xθ - y|₂²/2 + λ|θ|₁``.\n→ based on [MLJLinearModels](https://github.com/alan-turing-institute/MLJLinearModels.jl)\n→ do `@load LassoRegressor pkg=\"MLJLinearModels\" to use the model.`\n→ do `?LassoRegressor` for documentation.\n→ based on [MLJLinearModels](https://github.com/alan-turing-institute/MLJLinearModels.jl).\n→ do `@load LassoRegressor pkg=\"MLJLinearModels\"` to use the model.\n→ do `?LassoRegressor` for documentation."
 ":name" = "LassoRegressor"
@@ -525,7 +482,6 @@
 ":hyperparameters" = "`(:lambda, :fit_intercept, :penalize_intercept, :solver)`"
 ":hyperparameter_types" = "`(\"Real\", \"Bool\", \"Bool\", \"Union{Nothing, MLJLinearModels.Solver}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [MLJLinearModels.HuberRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -539,7 +495,6 @@
 ":package_url" = "https://github.com/alan-turing-institute/MLJLinearModels.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Robust regression with objective ``∑ρ(Xθ - y) + λ|θ|₂² + γ|θ|₁`` where `ρ` is the Huber Loss.\n→ based on [MLJLinearModels](https://github.com/alan-turing-institute/MLJLinearModels.jl)\n→ do `@load HuberRegressor pkg=\"MLJLinearModels\" to use the model.`\n→ do `?HuberRegressor` for documentation.\n→ based on [MLJLinearModels](https://github.com/alan-turing-institute/MLJLinearModels.jl).\n→ do `@load HuberRegressor pkg=\"MLJLinearModels\"` to use the model.\n→ do `?HuberRegressor` for documentation."
 ":name" = "HuberRegressor"
@@ -549,7 +504,6 @@
 ":hyperparameters" = "`(:delta, :lambda, :gamma, :penalty, :fit_intercept, :penalize_intercept, :solver)`"
 ":hyperparameter_types" = "`(\"Real\", \"Real\", \"Real\", \"Union{String, Symbol}\", \"Bool\", \"Bool\", \"Union{Nothing, MLJLinearModels.Solver}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.ProbabilisticSGDClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -563,7 +517,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Linear classifier with stochastic gradient descent training.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load ProbabilisticSGDClassifier pkg=\"ScikitLearn\"` to use the model.\n→ do `?ProbabilisticSGDClassifier` for documentation."
 ":name" = "ProbabilisticSGDClassifier"
@@ -573,7 +526,6 @@
 ":hyperparameters" = "`(:loss, :penalty, :alpha, :l1_ratio, :fit_intercept, :max_iter, :tol, :shuffle, :verbose, :epsilon, :n_jobs, :random_state, :learning_rate, :eta0, :power_t, :early_stopping, :validation_fraction, :n_iter_no_change, :class_weight, :warm_start, :average)`"
 ":hyperparameter_types" = "`(\"String\", \"String\", \"Float64\", \"Float64\", \"Bool\", \"Int64\", \"Union{Nothing, Float64}\", \"Bool\", \"Int64\", \"Float64\", \"Union{Nothing, Int64}\", \"Any\", \"String\", \"Float64\", \"Float64\", \"Bool\", \"Float64\", \"Int64\", \"Any\", \"Bool\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.RidgeCVClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -587,7 +539,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Ridge regression classifier with built-in cross-validation.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load RidgeCVClassifier pkg=\"ScikitLearn\"` to use the model.\n→ do `?RidgeCVClassifier` for documentation."
 ":name" = "RidgeCVClassifier"
@@ -597,7 +548,6 @@
 ":hyperparameters" = "`(:alphas, :fit_intercept, :normalize, :scoring, :cv, :class_weight, :store_cv_values)`"
 ":hyperparameter_types" = "`(\"AbstractArray{Float64,N} where N\", \"Bool\", \"Bool\", \"Any\", \"Int64\", \"Any\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.LogisticClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -611,7 +561,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Logistic regression classifier.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load LogisticClassifier pkg=\"ScikitLearn\"` to use the model.\n→ do `?LogisticClassifier` for documentation."
 ":name" = "LogisticClassifier"
@@ -621,7 +570,6 @@
 ":hyperparameters" = "`(:penalty, :dual, :tol, :C, :fit_intercept, :intercept_scaling, :class_weight, :random_state, :solver, :max_iter, :multi_class, :verbose, :warm_start, :n_jobs, :l1_ratio)`"
 ":hyperparameter_types" = "`(\"String\", \"Bool\", \"Float64\", \"Float64\", \"Bool\", \"Float64\", \"Any\", \"Any\", \"String\", \"Int64\", \"String\", \"Int64\", \"Bool\", \"Union{Nothing, Int64}\", \"Union{Nothing, Float64}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.RandomForestRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:Union{AbstractArray{_s23,1} where _s23<:ScientificTypes.Count, AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous}`"
@@ -635,7 +583,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Random forest regressor.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load RandomForestRegressor pkg=\"ScikitLearn\"` to use the model.\n→ do `?RandomForestRegressor` for documentation."
 ":name" = "RandomForestRegressor"
@@ -645,7 +592,6 @@
 ":hyperparameters" = "`(:n_estimators, :criterion, :max_depth, :min_samples_split, :min_samples_leaf, :min_weight_fraction_leaf, :max_features, :max_leaf_nodes, :min_impurity_decrease, :bootstrap, :oob_score, :n_jobs, :random_state, :verbose, :warm_start, :ccp_alpha, :max_samples)`"
 ":hyperparameter_types" = "`(\"Int64\", \"String\", \"Union{Nothing, Int64}\", \"Union{Float64, Int64}\", \"Union{Float64, Int64}\", \"Float64\", \"Union{Nothing, Float64, Int64, String}\", \"Union{Nothing, Int64}\", \"Float64\", \"Bool\", \"Bool\", \"Union{Nothing, Int64}\", \"Any\", \"Int64\", \"Bool\", \"Float64\", \"Union{Nothing, Float64, Int64}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.ElasticNetCVRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -659,7 +605,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Elastic net regression with built-in cross-validation.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load ElasticNetCVRegressor pkg=\"ScikitLearn\"` to use the model.\n→ do `?ElasticNetCVRegressor` for documentation."
 ":name" = "ElasticNetCVRegressor"
@@ -669,7 +614,6 @@
 ":hyperparameters" = "`(:l1_ratio, :eps, :n_alphas, :alphas, :fit_intercept, :normalize, :precompute, :max_iter, :tol, :cv, :copy_X, :verbose, :n_jobs, :positive, :random_state, :selection)`"
 ":hyperparameter_types" = "`(\"Union{Float64, Array{Float64,1}}\", \"Float64\", \"Int64\", \"Any\", \"Bool\", \"Bool\", \"Union{Bool, String, AbstractArray{T,2} where T}\", \"Int64\", \"Float64\", \"Any\", \"Bool\", \"Union{Bool, Int64}\", \"Union{Nothing, Int64}\", \"Bool\", \"Any\", \"String\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.PerceptronClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -683,7 +627,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Perceptron classifier.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load PerceptronClassifier pkg=\"ScikitLearn\"` to use the model.\n→ do `?PerceptronClassifier` for documentation."
 ":name" = "PerceptronClassifier"
@@ -693,7 +636,6 @@
 ":hyperparameters" = "`(:penalty, :alpha, :fit_intercept, :max_iter, :tol, :shuffle, :verbose, :eta0, :n_jobs, :random_state, :early_stopping, :validation_fraction, :n_iter_no_change, :class_weight, :warm_start)`"
 ":hyperparameter_types" = "`(\"Union{Nothing, String}\", \"Float64\", \"Bool\", \"Int64\", \"Union{Nothing, Float64}\", \"Bool\", \"Int64\", \"Float64\", \"Union{Nothing, Int64}\", \"Any\", \"Bool\", \"Float64\", \"Int64\", \"Any\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.MultiTaskLassoRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -707,7 +649,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "MultiTask Lasso regression.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load MultiTaskLassoRegressor pkg=\"ScikitLearn\"` to use the model.\n→ do `?MultiTaskLassoRegressor` for documentation."
 ":name" = "MultiTaskLassoRegressor"
@@ -717,7 +658,6 @@
 ":hyperparameters" = "`(:alpha, :fit_intercept, :normalize, :max_iter, :tol, :copy_X, :random_state, :selection)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Bool\", \"Bool\", \"Int64\", \"Float64\", \"Bool\", \"Any\", \"String\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.LinearRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -731,7 +671,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Ordinary least-square regression (OLS).\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load LinearRegressor pkg=\"ScikitLearn\"` to use the model.\n→ do `?LinearRegressor` for documentation."
 ":name" = "LinearRegressor"
@@ -741,7 +680,6 @@
 ":hyperparameters" = "`(:fit_intercept, :normalize, :copy_X, :n_jobs)`"
 ":hyperparameter_types" = "`(\"Bool\", \"Bool\", \"Bool\", \"Union{Nothing, Int64}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.DBSCAN]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -755,7 +693,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Density-Based Spatial Clustering of Applications with Noise. Finds core samples of high density and expands clusters from them. Good for data which contains clusters of similar density.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load DBSCAN pkg=\"ScikitLearn\"` to use the model.\n→ do `?DBSCAN` for documentation."
 ":name" = "DBSCAN"
@@ -765,7 +702,6 @@
 ":hyperparameters" = "`(:eps, :min_samples, :metric, :algorithm, :leaf_size, :p, :n_jobs)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Int64\", \"String\", \"String\", \"Int64\", \"Union{Nothing, Float64}\", \"Union{Nothing, Int64}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.RidgeRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -779,7 +715,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Ridge regression.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load RidgeRegressor pkg=\"ScikitLearn\"` to use the model.\n→ do `?RidgeRegressor` for documentation."
 ":name" = "RidgeRegressor"
@@ -789,7 +724,6 @@
 ":hyperparameters" = "`(:alpha, :fit_intercept, :normalize, :copy_X, :max_iter, :tol, :solver, :random_state)`"
 ":hyperparameter_types" = "`(\"Union{Float64, Array{Float64,1}}\", \"Bool\", \"Bool\", \"Bool\", \"Int64\", \"Float64\", \"String\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.LassoLarsICRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -803,7 +737,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Lasso model with Lars using BIC or AIC for model selection.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load LassoLarsICRegressor pkg=\"ScikitLearn\"` to use the model.\n→ do `?LassoLarsICRegressor` for documentation."
 ":name" = "LassoLarsICRegressor"
@@ -813,7 +746,6 @@
 ":hyperparameters" = "`(:criterion, :fit_intercept, :verbose, :normalize, :precompute, :max_iter, :eps, :copy_X, :positive)`"
 ":hyperparameter_types" = "`(\"String\", \"Bool\", \"Union{Bool, Int64}\", \"Bool\", \"Union{Bool, String, AbstractArray{T,2} where T}\", \"Int64\", \"Float64\", \"Bool\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.ARDRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -827,7 +759,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Bayesian ARD regression.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load ARDRegressor pkg=\"ScikitLearn\"` to use the model.\n→ do `?ARDRegressor` for documentation."
 ":name" = "ARDRegressor"
@@ -837,7 +768,6 @@
 ":hyperparameters" = "`(:n_iter, :tol, :alpha_1, :alpha_2, :lambda_1, :lambda_2, :compute_score, :threshold_lambda, :fit_intercept, :normalize, :copy_X, :verbose)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Bool\", \"Float64\", \"Bool\", \"Bool\", \"Bool\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.SVMNuRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -851,7 +781,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Nu-Support Vector Regression.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load SVMNuRegressor pkg=\"ScikitLearn\"` to use the model.\n→ do `?SVMNuRegressor` for documentation."
 ":name" = "SVMNuRegressor"
@@ -861,7 +790,6 @@
 ":hyperparameters" = "`(:nu, :C, :kernel, :degree, :gamma, :coef0, :shrinking, :tol, :cache_size, :max_iter)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Float64\", \"Union{Function, String}\", \"Int64\", \"Union{Float64, String}\", \"Float64\", \"Any\", \"Float64\", \"Int64\", \"Int64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.RidgeClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -875,7 +803,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Ridge regression classifier.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load RidgeClassifier pkg=\"ScikitLearn\"` to use the model.\n→ do `?RidgeClassifier` for documentation."
 ":name" = "RidgeClassifier"
@@ -885,7 +812,6 @@
 ":hyperparameters" = "`(:alpha, :fit_intercept, :normalize, :copy_X, :max_iter, :tol, :class_weight, :solver, :random_state)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Bool\", \"Bool\", \"Bool\", \"Union{Nothing, Int64}\", \"Float64\", \"Any\", \"String\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.SGDRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -899,7 +825,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Stochastic gradient descent-based regressor.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load SGDRegressor pkg=\"ScikitLearn\"` to use the model.\n→ do `?SGDRegressor` for documentation."
 ":name" = "SGDRegressor"
@@ -909,7 +834,6 @@
 ":hyperparameters" = "`(:loss, :penalty, :alpha, :l1_ratio, :fit_intercept, :max_iter, :tol, :shuffle, :verbose, :epsilon, :random_state, :learning_rate, :eta0, :power_t, :early_stopping, :validation_fraction, :n_iter_no_change, :warm_start, :average)`"
 ":hyperparameter_types" = "`(\"String\", \"String\", \"Float64\", \"Float64\", \"Bool\", \"Int64\", \"Float64\", \"Bool\", \"Union{Bool, Int64}\", \"Float64\", \"Any\", \"String\", \"Float64\", \"Float64\", \"Bool\", \"Float64\", \"Int64\", \"Bool\", \"Union{Bool, Int64}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.ComplementNBClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Count)`"
@@ -923,7 +847,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Similar to Multinomial NB classifier but with more robust assumptions. Suited for imbalanced datasets.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load ComplementNBClassifier pkg=\"ScikitLearn\"` to use the model.\n→ do `?ComplementNBClassifier` for documentation."
 ":name" = "ComplementNBClassifier"
@@ -933,7 +856,6 @@
 ":hyperparameters" = "`(:alpha, :fit_prior, :class_prior, :norm)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Bool\", \"Union{Nothing, AbstractArray{T,1} where T}\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.HuberRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -947,7 +869,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Huber regression.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load HuberRegressor pkg=\"ScikitLearn\"` to use the model.\n→ do `?HuberRegressor` for documentation."
 ":name" = "HuberRegressor"
@@ -957,7 +878,6 @@
 ":hyperparameters" = "`(:epsilon, :max_iter, :alpha, :warm_start, :fit_intercept, :tol)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Int64\", \"Float64\", \"Bool\", \"Bool\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.SVMNuClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -971,7 +891,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Nu-Support Vector Classification.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load SVMNuClassifier pkg=\"ScikitLearn\"` to use the model.\n→ do `?SVMNuClassifier` for documentation."
 ":name" = "SVMNuClassifier"
@@ -981,7 +900,6 @@
 ":hyperparameters" = "`(:nu, :kernel, :degree, :gamma, :coef0, :shrinking, :tol, :cache_size, :max_iter, :decision_function_shape, :random_state)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Union{Function, String}\", \"Int64\", \"Union{Float64, String}\", \"Float64\", \"Bool\", \"Float64\", \"Int64\", \"Int64\", \"String\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.GradientBoostingClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -995,7 +913,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Gradient boosting ensemble classifier.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load GradientBoostingClassifier pkg=\"ScikitLearn\"` to use the model.\n→ do `?GradientBoostingClassifier` for documentation."
 ":name" = "GradientBoostingClassifier"
@@ -1005,7 +922,6 @@
 ":hyperparameters" = "`(:loss, :learning_rate, :n_estimators, :subsample, :criterion, :min_samples_split, :min_samples_leaf, :min_weight_fraction_leaf, :max_depth, :min_impurity_decrease, :init, :random_state, :max_features, :verbose, :max_leaf_nodes, :warm_start, :validation_fraction, :n_iter_no_change, :tol)`"
 ":hyperparameter_types" = "`(\"String\", \"Float64\", \"Int64\", \"Float64\", \"String\", \"Union{Float64, Int64}\", \"Union{Float64, Int64}\", \"Float64\", \"Int64\", \"Float64\", \"Any\", \"Any\", \"Union{Nothing, Float64, Int64, String}\", \"Int64\", \"Union{Nothing, Int64}\", \"Bool\", \"Float64\", \"Union{Nothing, Int64}\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.GaussianProcessRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1019,7 +935,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Gaussian process regressor.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load GaussianProcessRegressor pkg=\"ScikitLearn\"` to use the model.\n→ do `?GaussianProcessRegressor` for documentation."
 ":name" = "GaussianProcessRegressor"
@@ -1029,7 +944,6 @@
 ":hyperparameters" = "`(:kernel, :alpha, :optimizer, :n_restarts_optimizer, :normalize_y, :copy_X_train, :random_state)`"
 ":hyperparameter_types" = "`(\"Any\", \"Union{Float64, AbstractArray}\", \"Any\", \"Int64\", \"Bool\", \"Bool\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.SVMLinearRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1043,7 +957,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Linear Support Vector Regression.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load SVMLinearRegressor pkg=\"ScikitLearn\"` to use the model.\n→ do `?SVMLinearRegressor` for documentation."
 ":name" = "SVMLinearRegressor"
@@ -1053,7 +966,6 @@
 ":hyperparameters" = "`(:epsilon, :tol, :C, :loss, :fit_intercept, :intercept_scaling, :dual, :random_state, :max_iter)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Float64\", \"Float64\", \"String\", \"Bool\", \"Float64\", \"Bool\", \"Any\", \"Int64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.LarsRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1067,7 +979,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Lars regression.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load LarsRegressor pkg=\"ScikitLearn\"` to use the model.\n→ do `?LarsRegressor` for documentation."
 ":name" = "LarsRegressor"
@@ -1077,7 +988,6 @@
 ":hyperparameters" = "`(:fit_intercept, :verbose, :normalize, :precompute, :n_nonzero_coefs, :eps, :copy_X, :fit_path)`"
 ":hyperparameter_types" = "`(\"Bool\", \"Union{Bool, Int64}\", \"Bool\", \"Union{Bool, String, AbstractArray{T,2} where T}\", \"Int64\", \"Float64\", \"Bool\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.MeanShift]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1091,7 +1001,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Mean shift clustering using a flat kernel. Mean shift clustering aims to discover \"blobs\" in a smooth density of samples. It is a centroid-based algorithm, which works by updating candidates for centroids to be the mean of the points within a given region. These candidates are then filtered in a post-processing stage to eliminate near-duplicates to form the final set of centroids.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load MeanShift pkg=\"ScikitLearn\"` to use the model.\n→ do `?MeanShift` for documentation."
 ":name" = "MeanShift"
@@ -1101,7 +1010,6 @@
 ":hyperparameters" = "`(:bandwidth, :seeds, :bin_seeding, :min_bin_freq, :cluster_all, :n_jobs)`"
 ":hyperparameter_types" = "`(\"Union{Nothing, Float64}\", \"Union{Nothing, AbstractArray}\", \"Bool\", \"Int64\", \"Bool\", \"Union{Nothing, Int64}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.AdaBoostRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1115,7 +1023,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "AdaBoost ensemble regression.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load AdaBoostRegressor pkg=\"ScikitLearn\"` to use the model.\n→ do `?AdaBoostRegressor` for documentation."
 ":name" = "AdaBoostRegressor"
@@ -1125,7 +1032,6 @@
 ":hyperparameters" = "`(:base_estimator, :n_estimators, :learning_rate, :loss, :random_state)`"
 ":hyperparameter_types" = "`(\"Any\", \"Int64\", \"Float64\", \"String\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.AffinityPropagation]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1139,7 +1045,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Perform Affinity Propagation Clustering of data.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load AffinityPropagation pkg=\"ScikitLearn\"` to use the model.\n→ do `?AffinityPropagation` for documentation."
 ":name" = "AffinityPropagation"
@@ -1149,7 +1054,6 @@
 ":hyperparameters" = "`(:damping, :max_iter, :convergence_iter, :copy, :preference, :affinity, :verbose)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Int64\", \"Int64\", \"Bool\", \"Any\", \"String\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.MultiTaskLassoCVRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1163,7 +1067,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "MultiTask Lasso regression with built-in cross-validation.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load MultiTaskLassoCVRegressor pkg=\"ScikitLearn\"` to use the model.\n→ do `?MultiTaskLassoCVRegressor` for documentation."
 ":name" = "MultiTaskLassoCVRegressor"
@@ -1173,7 +1076,6 @@
 ":hyperparameters" = "`(:eps, :n_alphas, :alphas, :fit_intercept, :normalize, :max_iter, :tol, :copy_X, :cv, :verbose, :n_jobs, :random_state, :selection)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Int64\", \"Any\", \"Bool\", \"Bool\", \"Int64\", \"Float64\", \"Bool\", \"Any\", \"Union{Bool, Int64}\", \"Union{Nothing, Int64}\", \"Any\", \"String\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.OrthogonalMatchingPursuitRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1187,7 +1089,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Orthogonal Matching Pursuit (OMP) model.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load OrthogonalMatchingPursuitRegressor pkg=\"ScikitLearn\"` to use the model.\n→ do `?OrthogonalMatchingPursuitRegressor` for documentation."
 ":name" = "OrthogonalMatchingPursuitRegressor"
@@ -1197,7 +1098,6 @@
 ":hyperparameters" = "`(:n_nonzero_coefs, :tol, :fit_intercept, :normalize, :precompute)`"
 ":hyperparameter_types" = "`(\"Union{Nothing, Int64}\", \"Union{Nothing, Float64}\", \"Bool\", \"Bool\", \"Union{Bool, String, AbstractArray{T,2} where T}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.RidgeCVRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1211,7 +1111,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Ridge regression with built-in cross-validation.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load RidgeCVRegressor pkg=\"ScikitLearn\"` to use the model.\n→ do `?RidgeCVRegressor` for documentation."
 ":name" = "RidgeCVRegressor"
@@ -1221,7 +1120,6 @@
 ":hyperparameters" = "`(:alphas, :fit_intercept, :normalize, :scoring, :cv, :gcv_mode, :store_cv_values)`"
 ":hyperparameter_types" = "`(\"Any\", \"Bool\", \"Bool\", \"Any\", \"Any\", \"Union{Nothing, String}\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.PassiveAggressiveClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1235,7 +1133,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Passive aggressive classifier.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load PassiveAggressiveClassifier pkg=\"ScikitLearn\"` to use the model.\n→ do `?PassiveAggressiveClassifier` for documentation."
 ":name" = "PassiveAggressiveClassifier"
@@ -1245,7 +1142,6 @@
 ":hyperparameters" = "`(:C, :fit_intercept, :max_iter, :tol, :early_stopping, :validation_fraction, :n_iter_no_change, :shuffle, :verbose, :loss, :n_jobs, :random_state, :warm_start, :class_weight, :average)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Bool\", \"Int64\", \"Float64\", \"Bool\", \"Float64\", \"Int64\", \"Bool\", \"Int64\", \"String\", \"Union{Nothing, Int64}\", \"Any\", \"Bool\", \"Any\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.SVMRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1259,7 +1155,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Epsilon-Support Vector Regression.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load SVMRegressor pkg=\"ScikitLearn\"` to use the model.\n→ do `?SVMRegressor` for documentation."
 ":name" = "SVMRegressor"
@@ -1269,7 +1164,6 @@
 ":hyperparameters" = "`(:kernel, :degree, :gamma, :coef0, :tol, :C, :epsilon, :shrinking, :cache_size, :max_iter)`"
 ":hyperparameter_types" = "`(\"Union{Function, String}\", \"Int64\", \"Union{Float64, String}\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Any\", \"Int64\", \"Int64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.BernoulliNBClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Count)`"
@@ -1283,7 +1177,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Binomial naive bayes classifier. It is suitable for classification with binary features; features will be binarized based on the `binarize` keyword (unless it's `nothing` in which case the features are assumed to be binary).\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load BernoulliNBClassifier pkg=\"ScikitLearn\"` to use the model.\n→ do `?BernoulliNBClassifier` for documentation."
 ":name" = "BernoulliNBClassifier"
@@ -1293,7 +1186,6 @@
 ":hyperparameters" = "`(:alpha, :binarize, :fit_prior, :class_prior)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Union{Nothing, Float64}\", \"Bool\", \"Union{Nothing, AbstractArray{T,1} where T}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.GaussianNBClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1307,7 +1199,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Gaussian naive bayes model.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load GaussianNBClassifier pkg=\"ScikitLearn\"` to use the model.\n→ do `?GaussianNBClassifier` for documentation."
 ":name" = "GaussianNBClassifier"
@@ -1317,7 +1208,6 @@
 ":hyperparameters" = "`(:priors, :var_smoothing)`"
 ":hyperparameter_types" = "`(\"Union{Nothing, AbstractArray{Float64,1}}\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.ExtraTreesClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1331,7 +1221,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Extra trees classifier, fits a number of randomized decision trees on various sub-samples of the dataset and uses averaging to improve the predictive accuracy and control over-fitting.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load ExtraTreesClassifier pkg=\"ScikitLearn\"` to use the model.\n→ do `?ExtraTreesClassifier` for documentation."
 ":name" = "ExtraTreesClassifier"
@@ -1341,7 +1230,6 @@
 ":hyperparameters" = "`(:n_estimators, :criterion, :max_depth, :min_samples_split, :min_samples_leaf, :min_weight_fraction_leaf, :max_features, :max_leaf_nodes, :min_impurity_decrease, :bootstrap, :oob_score, :n_jobs, :random_state, :verbose, :warm_start, :class_weight)`"
 ":hyperparameter_types" = "`(\"Int64\", \"String\", \"Union{Nothing, Int64}\", \"Union{Float64, Int64}\", \"Union{Float64, Int64}\", \"Float64\", \"Union{Nothing, Float64, Int64, String}\", \"Union{Nothing, Int64}\", \"Float64\", \"Bool\", \"Bool\", \"Union{Nothing, Int64}\", \"Any\", \"Int64\", \"Bool\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.KMeans]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1355,7 +1243,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "K-Means algorithm: find K centroids corresponding to K clusters in the data.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load KMeans pkg=\"ScikitLearn\"` to use the model.\n→ do `?KMeans` for documentation."
 ":name" = "KMeans"
@@ -1365,7 +1252,6 @@
 ":hyperparameters" = "`(:n_clusters, :n_init, :max_iter, :tol, :verbose, :random_state, :copy_x, :n_jobs, :algorithm, :precompute_distances, :init)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Int64\", \"Int64\", \"Float64\", \"Int64\", \"Any\", \"Bool\", \"Union{Nothing, Int64}\", \"String\", \"Union{Bool, String}\", \"Union{String, AbstractArray}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.MultiTaskElasticNetCVRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1379,7 +1265,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "MultiTask Elastic Net regression with built-in cross-validation.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load MultiTaskElasticNetCVRegressor pkg=\"ScikitLearn\"` to use the model.\n→ do `?MultiTaskElasticNetCVRegressor` for documentation."
 ":name" = "MultiTaskElasticNetCVRegressor"
@@ -1389,7 +1274,6 @@
 ":hyperparameters" = "`(:l1_ratio, :eps, :n_alphas, :alphas, :fit_intercept, :normalize, :max_iter, :tol, :cv, :copy_X, :verbose, :n_jobs, :random_state, :selection)`"
 ":hyperparameter_types" = "`(\"Union{Float64, Array{Float64,1}}\", \"Float64\", \"Int64\", \"Any\", \"Bool\", \"Bool\", \"Int64\", \"Float64\", \"Any\", \"Bool\", \"Union{Bool, Int64}\", \"Union{Nothing, Int64}\", \"Any\", \"String\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.LassoLarsCVRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1403,7 +1287,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Lasso model fit with least angle regression (LARS) with built-in cross-validation.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load LassoLarsCVRegressor pkg=\"ScikitLearn\"` to use the model.\n→ do `?LassoLarsCVRegressor` for documentation."
 ":name" = "LassoLarsCVRegressor"
@@ -1413,7 +1296,6 @@
 ":hyperparameters" = "`(:fit_intercept, :verbose, :max_iter, :normalize, :precompute, :cv, :max_n_alphas, :n_jobs, :eps, :copy_X, :positive)`"
 ":hyperparameter_types" = "`(\"Bool\", \"Union{Bool, Int64}\", \"Int64\", \"Bool\", \"Union{Bool, String, AbstractArray{T,2} where T}\", \"Any\", \"Int64\", \"Union{Nothing, Int64}\", \"Float64\", \"Bool\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.OrthogonalMatchingPursuitCVRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1427,7 +1309,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Orthogonal Matching Pursuit (OMP) model with built-in cross-validation.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load OrthogonalMatchingPursuitCVRegressor pkg=\"ScikitLearn\"` to use the model.\n→ do `?OrthogonalMatchingPursuitCVRegressor` for documentation."
 ":name" = "OrthogonalMatchingPursuitCVRegressor"
@@ -1437,7 +1318,6 @@
 ":hyperparameters" = "`(:copy, :fit_intercept, :normalize, :max_iter, :cv, :n_jobs, :verbose)`"
 ":hyperparameter_types" = "`(\"Bool\", \"Bool\", \"Bool\", \"Union{Nothing, Int64}\", \"Any\", \"Union{Nothing, Int64}\", \"Union{Bool, Int64}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.AdaBoostClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1451,7 +1331,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Adaboost ensemble classifier.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load AdaBoostClassifier pkg=\"ScikitLearn\"` to use the model.\n→ do `?AdaBoostClassifier` for documentation."
 ":name" = "AdaBoostClassifier"
@@ -1461,7 +1340,6 @@
 ":hyperparameters" = "`(:base_estimator, :n_estimators, :learning_rate, :algorithm, :random_state)`"
 ":hyperparameter_types" = "`(\"Any\", \"Int64\", \"Float64\", \"String\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.PassiveAggressiveRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1475,7 +1353,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Passive Aggressive Regressor.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load PassiveAggressiveRegressor pkg=\"ScikitLearn\"` to use the model.\n→ do `?PassiveAggressiveRegressor` for documentation."
 ":name" = "PassiveAggressiveRegressor"
@@ -1485,7 +1362,6 @@
 ":hyperparameters" = "`(:C, :fit_intercept, :max_iter, :tol, :early_stopping, :validation_fraction, :n_iter_no_change, :shuffle, :verbose, :loss, :epsilon, :random_state, :warm_start, :average)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Bool\", \"Int64\", \"Float64\", \"Bool\", \"Float64\", \"Int64\", \"Bool\", \"Union{Bool, Int64}\", \"String\", \"Float64\", \"Any\", \"Bool\", \"Union{Bool, Int64}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.BayesianRidgeRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1499,7 +1375,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Bayesian ridge regression.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load BayesianRidgeRegressor pkg=\"ScikitLearn\"` to use the model.\n→ do `?BayesianRidgeRegressor` for documentation."
 ":name" = "BayesianRidgeRegressor"
@@ -1509,7 +1384,6 @@
 ":hyperparameters" = "`(:n_iter, :tol, :alpha_1, :alpha_2, :lambda_1, :lambda_2, :compute_score, :fit_intercept, :normalize, :copy_X, :verbose)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Bool\", \"Bool\", \"Bool\", \"Bool\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.RANSACRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1523,7 +1397,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "RANSAC regressor.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load RANSACRegressor pkg=\"ScikitLearn\"` to use the model.\n→ do `?RANSACRegressor` for documentation."
 ":name" = "RANSACRegressor"
@@ -1533,7 +1406,6 @@
 ":hyperparameters" = "`(:base_estimator, :min_samples, :residual_threshold, :is_data_valid, :is_model_valid, :max_trials, :max_skips, :stop_n_inliers, :stop_score, :stop_probability, :loss, :random_state)`"
 ":hyperparameter_types" = "`(\"Any\", \"Union{Float64, Int64}\", \"Union{Nothing, Float64}\", \"Any\", \"Any\", \"Int64\", \"Int64\", \"Int64\", \"Float64\", \"Float64\", \"Union{Function, String}\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.BaggingClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1547,7 +1419,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Bagging ensemble classifier.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load BaggingClassifier pkg=\"ScikitLearn\"` to use the model.\n→ do `?BaggingClassifier` for documentation."
 ":name" = "BaggingClassifier"
@@ -1557,7 +1428,6 @@
 ":hyperparameters" = "`(:base_estimator, :n_estimators, :max_samples, :max_features, :bootstrap, :bootstrap_features, :oob_score, :warm_start, :n_jobs, :random_state, :verbose)`"
 ":hyperparameter_types" = "`(\"Any\", \"Int64\", \"Union{Float64, Int64}\", \"Union{Float64, Int64}\", \"Bool\", \"Bool\", \"Bool\", \"Bool\", \"Union{Nothing, Int64}\", \"Any\", \"Int64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.GaussianProcessClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1571,7 +1441,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Gaussian process classifier.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load GaussianProcessClassifier pkg=\"ScikitLearn\"` to use the model.\n→ do `?GaussianProcessClassifier` for documentation."
 ":name" = "GaussianProcessClassifier"
@@ -1581,7 +1450,6 @@
 ":hyperparameters" = "`(:kernel, :optimizer, :n_restarts_optimizer, :copy_X_train, :random_state, :max_iter_predict, :warm_start, :multi_class)`"
 ":hyperparameter_types" = "`(\"Any\", \"Any\", \"Int64\", \"Bool\", \"Any\", \"Int64\", \"Bool\", \"String\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.OPTICS]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1595,7 +1463,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "OPTICS (Ordering Points To Identify the Clustering Structure), closely related to DBSCAN, finds core sample of high density and expands clusters from them. Unlike DBSCAN, keeps cluster hierarchy for a variable neighborhood radius. Better suited for usage on large datasets than the current sklearn implementation of DBSCAN.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load OPTICS pkg=\"ScikitLearn\"` to use the model.\n→ do `?OPTICS` for documentation."
 ":name" = "OPTICS"
@@ -1605,7 +1472,6 @@
 ":hyperparameters" = "`(:min_samples, :max_eps, :metric, :p, :cluster_method, :eps, :xi, :predecessor_correction, :min_cluster_size, :algorithm, :leaf_size, :n_jobs)`"
 ":hyperparameter_types" = "`(\"Union{Float64, Int64}\", \"Float64\", \"String\", \"Int64\", \"String\", \"Union{Nothing, Float64}\", \"Float64\", \"Bool\", \"Union{Nothing, Float64, Int64}\", \"String\", \"Int64\", \"Union{Nothing, Int64}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.KNeighborsRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1619,7 +1485,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "K-Nearest Neighbors regressor: predicts the response associated with a new point by taking an average of the response of the K-nearest points.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load KNeighborsRegressor pkg=\"ScikitLearn\"` to use the model.\n→ do `?KNeighborsRegressor` for documentation."
 ":name" = "KNeighborsRegressor"
@@ -1629,7 +1494,6 @@
 ":hyperparameters" = "`(:n_neighbors, :weights, :algorithm, :leaf_size, :p, :metric, :metric_params, :n_jobs)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Union{Function, String}\", \"String\", \"Int64\", \"Int64\", \"Any\", \"Any\", \"Union{Nothing, Int64}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.MiniBatchKMeans]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1643,7 +1507,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Mini-Batch K-Means clustering.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load MiniBatchKMeans pkg=\"ScikitLearn\"` to use the model.\n→ do `?MiniBatchKMeans` for documentation."
 ":name" = "MiniBatchKMeans"
@@ -1653,7 +1516,6 @@
 ":hyperparameters" = "`(:n_clusters, :max_iter, :batch_size, :verbose, :compute_labels, :random_state, :tol, :max_no_improvement, :init_size, :n_init, :init, :reassignment_ratio)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Int64\", \"Int64\", \"Int64\", \"Bool\", \"Any\", \"Float64\", \"Int64\", \"Union{Nothing, Int64}\", \"Int64\", \"Union{String, AbstractArray}\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.LassoCVRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1667,7 +1529,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Lasso regression with built-in cross-validation.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load LassoCVRegressor pkg=\"ScikitLearn\"` to use the model.\n→ do `?LassoCVRegressor` for documentation."
 ":name" = "LassoCVRegressor"
@@ -1677,7 +1538,6 @@
 ":hyperparameters" = "`(:eps, :n_alphas, :alphas, :fit_intercept, :normalize, :precompute, :max_iter, :tol, :copy_X, :cv, :verbose, :n_jobs, :positive, :random_state, :selection)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Int64\", \"Any\", \"Bool\", \"Bool\", \"Union{Bool, String, AbstractArray{T,2} where T}\", \"Int64\", \"Float64\", \"Bool\", \"Any\", \"Union{Bool, Int64}\", \"Union{Nothing, Int64}\", \"Bool\", \"Any\", \"String\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.DummyRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1691,7 +1551,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "DummyRegressor is a regressor that makes predictions using simple rules.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load DummyRegressor pkg=\"ScikitLearn\"` to use the model.\n→ do `?DummyRegressor` for documentation."
 ":name" = "DummyRegressor"
@@ -1701,7 +1560,6 @@
 ":hyperparameters" = "`(:strategy, :constant, :quantile)`"
 ":hyperparameter_types" = "`(\"String\", \"Any\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.LassoLarsRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1715,7 +1573,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Lasso model fit with least angle regression (LARS).\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load LassoLarsRegressor pkg=\"ScikitLearn\"` to use the model.\n→ do `?LassoLarsRegressor` for documentation."
 ":name" = "LassoLarsRegressor"
@@ -1725,7 +1582,6 @@
 ":hyperparameters" = "`(:alpha, :fit_intercept, :verbose, :normalize, :precompute, :max_iter, :eps, :copy_X, :fit_path, :positive)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Bool\", \"Union{Bool, Int64}\", \"Bool\", \"Union{Bool, String, AbstractArray{T,2} where T}\", \"Int64\", \"Float64\", \"Bool\", \"Bool\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.LarsCVRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1739,7 +1595,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Lars regression with built-in cross-validation.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load LarsCVRegressor pkg=\"ScikitLearn\"` to use the model.\n→ do `?LarsCVRegressor` for documentation."
 ":name" = "LarsCVRegressor"
@@ -1749,7 +1604,6 @@
 ":hyperparameters" = "`(:fit_intercept, :verbose, :max_iter, :normalize, :precompute, :cv, :max_n_alphas, :n_jobs, :eps, :copy_X)`"
 ":hyperparameter_types" = "`(\"Bool\", \"Union{Bool, Int64}\", \"Int64\", \"Bool\", \"Union{Bool, String, AbstractArray{T,2} where T}\", \"Any\", \"Int64\", \"Union{Nothing, Int64}\", \"Float64\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.KNeighborsClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1763,7 +1617,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "K-Nearest Neighbors classifier: predicts the class associated with a new point by taking a vote over the classes of the K-nearest points.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load KNeighborsClassifier pkg=\"ScikitLearn\"` to use the model.\n→ do `?KNeighborsClassifier` for documentation."
 ":name" = "KNeighborsClassifier"
@@ -1773,7 +1626,6 @@
 ":hyperparameters" = "`(:n_neighbors, :weights, :algorithm, :leaf_size, :p, :metric, :metric_params, :n_jobs)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Union{Function, String}\", \"String\", \"Int64\", \"Int64\", \"Any\", \"Any\", \"Union{Nothing, Int64}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.SVMLinearClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1787,7 +1639,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Linear Support Vector Classification.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load SVMLinearClassifier pkg=\"ScikitLearn\"` to use the model.\n→ do `?SVMLinearClassifier` for documentation."
 ":name" = "SVMLinearClassifier"
@@ -1797,7 +1648,6 @@
 ":hyperparameters" = "`(:penalty, :loss, :dual, :tol, :C, :multi_class, :fit_intercept, :intercept_scaling, :random_state, :max_iter)`"
 ":hyperparameter_types" = "`(\"String\", \"String\", \"Bool\", \"Float64\", \"Float64\", \"String\", \"Bool\", \"Float64\", \"Any\", \"Int64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.FeatureAgglomeration]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1811,7 +1661,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Similar to AgglomerativeClustering, but recursively merges features instead of samples.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load FeatureAgglomeration pkg=\"ScikitLearn\"` to use the model.\n→ do `?FeatureAgglomeration` for documentation."
 ":name" = "FeatureAgglomeration"
@@ -1821,7 +1670,6 @@
 ":hyperparameters" = "`(:n_clusters, :memory, :connectivity, :affinity, :compute_full_tree, :linkage, :distance_threshold)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Any\", \"Any\", \"Any\", \"Union{Bool, String}\", \"String\", \"Union{Nothing, Float64}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.DummyClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1835,7 +1683,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "DummyClassifier is a classifier that makes predictions using simple rules.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load DummyClassifier pkg=\"ScikitLearn\"` to use the model.\n→ do `?DummyClassifier` for documentation."
 ":name" = "DummyClassifier"
@@ -1845,7 +1692,6 @@
 ":hyperparameters" = "`(:strategy, :constant, :random_state)`"
 ":hyperparameter_types" = "`(\"String\", \"Any\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.BaggingRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1859,7 +1705,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Bagging ensemble regression.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load BaggingRegressor pkg=\"ScikitLearn\"` to use the model.\n→ do `?BaggingRegressor` for documentation."
 ":name" = "BaggingRegressor"
@@ -1869,7 +1714,6 @@
 ":hyperparameters" = "`(:base_estimator, :n_estimators, :max_samples, :max_features, :bootstrap, :bootstrap_features, :oob_score, :warm_start, :n_jobs, :random_state, :verbose)`"
 ":hyperparameter_types" = "`(\"Any\", \"Int64\", \"Union{Float64, Int64}\", \"Union{Float64, Int64}\", \"Bool\", \"Bool\", \"Bool\", \"Bool\", \"Union{Nothing, Int64}\", \"Any\", \"Int64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.BayesianQDA]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1883,7 +1727,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Bayesian Quadratic Discriminant Analysis.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load BayesianQDA pkg=\"ScikitLearn\"` to use the model.\n→ do `?BayesianQDA` for documentation."
 ":name" = "BayesianQDA"
@@ -1893,7 +1736,6 @@
 ":hyperparameters" = "`(:priors, :reg_param, :store_covariance, :tol)`"
 ":hyperparameter_types" = "`(\"Union{Nothing, AbstractArray{T,1} where T}\", \"Float64\", \"Bool\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.BayesianLDA]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1907,7 +1749,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Bayesian Linear Discriminant Analysis.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load BayesianLDA pkg=\"ScikitLearn\"` to use the model.\n→ do `?BayesianLDA` for documentation."
 ":name" = "BayesianLDA"
@@ -1917,7 +1758,6 @@
 ":hyperparameters" = "`(:solver, :shrinkage, :priors, :n_components, :store_covariance, :tol)`"
 ":hyperparameter_types" = "`(\"String\", \"Union{Nothing, Float64, String}\", \"Union{Nothing, AbstractArray{T,1} where T}\", \"Union{Nothing, Int64}\", \"Bool\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.SGDClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1931,7 +1771,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Linear classifier with stochastic gradient descent training.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load SGDClassifier pkg=\"ScikitLearn\"` to use the model.\n→ do `?SGDClassifier` for documentation."
 ":name" = "SGDClassifier"
@@ -1941,7 +1780,6 @@
 ":hyperparameters" = "`(:loss, :penalty, :alpha, :l1_ratio, :fit_intercept, :max_iter, :tol, :shuffle, :verbose, :epsilon, :n_jobs, :random_state, :learning_rate, :eta0, :power_t, :early_stopping, :validation_fraction, :n_iter_no_change, :class_weight, :warm_start, :average)`"
 ":hyperparameter_types" = "`(\"String\", \"String\", \"Float64\", \"Float64\", \"Bool\", \"Int64\", \"Union{Nothing, Float64}\", \"Bool\", \"Int64\", \"Float64\", \"Union{Nothing, Int64}\", \"Any\", \"String\", \"Float64\", \"Float64\", \"Bool\", \"Float64\", \"Int64\", \"Any\", \"Bool\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.TheilSenRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1955,7 +1793,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Theil-Sen regressor.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load TheilSenRegressor pkg=\"ScikitLearn\"` to use the model.\n→ do `?TheilSenRegressor` for documentation."
 ":name" = "TheilSenRegressor"
@@ -1965,7 +1802,6 @@
 ":hyperparameters" = "`(:fit_intercept, :copy_X, :max_subpopulation, :n_subsamples, :max_iter, :tol, :random_state, :n_jobs, :verbose)`"
 ":hyperparameter_types" = "`(\"Bool\", \"Bool\", \"Int64\", \"Union{Nothing, Int64}\", \"Int64\", \"Float64\", \"Any\", \"Union{Nothing, Int64}\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.SpectralClustering]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -1979,7 +1815,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Apply clustering to a projection of the normalized Laplacian.\n    In practice Spectral Clustering is very useful when the structure of the individual clusters is highly non-convex or more generally when a measure of the center and spread of the cluster is not a suitable description of the complete cluster. For instance when clusters are nested circles on the 2D plane.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load SpectralClustering pkg=\"ScikitLearn\"` to use the model.\n→ do `?SpectralClustering` for documentation."
 ":name" = "SpectralClustering"
@@ -1989,7 +1824,6 @@
 ":hyperparameters" = "`(:n_clusters, :eigen_solver, :random_state, :n_init, :gamma, :affinity, :n_neighbors, :eigen_tol, :assign_labels, :n_jobs)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Union{Nothing, String}\", \"Any\", \"Int64\", \"Float64\", \"String\", \"Int64\", \"Float64\", \"String\", \"Union{Nothing, Int64}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.Birch]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -2003,7 +1837,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Memory-efficient, online-learning algorithm provided as an alternative to MiniBatchKMeans. Note: noisy samples are given the label -1.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load Birch pkg=\"ScikitLearn\"` to use the model.\n→ do `?Birch` for documentation."
 ":name" = "Birch"
@@ -2013,7 +1846,6 @@
 ":hyperparameters" = "`(:threshold, :branching_factor, :n_clusters, :compute_labels, :copy)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Int64\", \"Int64\", \"Bool\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.AgglomerativeClustering]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -2027,7 +1859,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Recursively merges the pair of clusters that minimally increases a given linkage distance. Note: there is no `predict` or `transform` method\n    associated with it; instead, inspect the `fitted_params`.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load AgglomerativeClustering pkg=\"ScikitLearn\"` to use the model.\n→ do `?AgglomerativeClustering` for documentation."
 ":name" = "AgglomerativeClustering"
@@ -2037,7 +1868,6 @@
 ":hyperparameters" = "`(:n_clusters, :affinity, :memory, :connectivity, :compute_full_tree, :linkage, :distance_threshold)`"
 ":hyperparameter_types" = "`(\"Int64\", \"String\", \"Any\", \"Any\", \"Union{Bool, String}\", \"String\", \"Union{Nothing, Float64}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.ElasticNetRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -2051,7 +1881,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Elastic net regression.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load ElasticNetRegressor pkg=\"ScikitLearn\"` to use the model.\n→ do `?ElasticNetRegressor` for documentation."
 ":name" = "ElasticNetRegressor"
@@ -2061,7 +1890,6 @@
 ":hyperparameters" = "`(:alpha, :l1_ratio, :fit_intercept, :normalize, :precompute, :max_iter, :copy_X, :tol, :warm_start, :positive, :random_state, :selection)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Float64\", \"Bool\", \"Bool\", \"Union{Bool, AbstractArray{T,2} where T}\", \"Int64\", \"Bool\", \"Float64\", \"Bool\", \"Bool\", \"Any\", \"String\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.RandomForestClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:Union{AbstractArray{_s23,1} where _s23<:ScientificTypes.Count, AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous}`"
@@ -2075,7 +1903,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Random forest classifier.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load RandomForestClassifier pkg=\"ScikitLearn\"` to use the model.\n→ do `?RandomForestClassifier` for documentation."
 ":name" = "RandomForestClassifier"
@@ -2085,7 +1912,6 @@
 ":hyperparameters" = "`(:n_estimators, :criterion, :max_depth, :min_samples_split, :min_samples_leaf, :min_weight_fraction_leaf, :max_features, :max_leaf_nodes, :min_impurity_decrease, :bootstrap, :oob_score, :n_jobs, :random_state, :verbose, :warm_start, :class_weight, :ccp_alpha, :max_samples)`"
 ":hyperparameter_types" = "`(\"Int64\", \"String\", \"Union{Nothing, Int64}\", \"Union{Float64, Int64}\", \"Union{Float64, Int64}\", \"Float64\", \"Union{Nothing, Float64, Int64, String}\", \"Union{Nothing, Int64}\", \"Float64\", \"Bool\", \"Bool\", \"Union{Nothing, Int64}\", \"Any\", \"Int64\", \"Bool\", \"Any\", \"Float64\", \"Union{Nothing, Float64, Int64}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.LogisticCVClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -2099,7 +1925,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Logistic regression classifier with built-in cross-validation.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load LogisticCVClassifier pkg=\"ScikitLearn\"` to use the model.\n→ do `?LogisticCVClassifier` for documentation."
 ":name" = "LogisticCVClassifier"
@@ -2109,7 +1934,6 @@
 ":hyperparameters" = "`(:Cs, :fit_intercept, :cv, :dual, :penalty, :scoring, :solver, :tol, :max_iter, :class_weight, :n_jobs, :verbose, :refit, :intercept_scaling, :multi_class, :random_state, :l1_ratios)`"
 ":hyperparameter_types" = "`(\"Union{Int64, AbstractArray{Float64,1}}\", \"Bool\", \"Any\", \"Bool\", \"String\", \"Any\", \"String\", \"Float64\", \"Int64\", \"Any\", \"Union{Nothing, Int64}\", \"Int64\", \"Bool\", \"Float64\", \"String\", \"Any\", \"Union{Nothing, AbstractArray{Float64,1}}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.MultiTaskElasticNetRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -2123,7 +1947,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "MultiTask Elastic Net regression.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load MultiTaskElasticNetRegressor pkg=\"ScikitLearn\"` to use the model.\n→ do `?MultiTaskElasticNetRegressor` for documentation."
 ":name" = "MultiTaskElasticNetRegressor"
@@ -2133,7 +1956,6 @@
 ":hyperparameters" = "`(:alpha, :l1_ratio, :fit_intercept, :normalize, :copy_X, :max_iter, :tol, :warm_start, :random_state, :selection)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Union{Float64, Array{Float64,1}}\", \"Bool\", \"Bool\", \"Bool\", \"Int64\", \"Float64\", \"Bool\", \"Any\", \"String\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.ExtraTreesRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -2147,7 +1969,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Extra trees regressor, fits a number of randomized decision trees on various sub-samples of the dataset and uses averaging to improve the predictive accuracy and control over-fitting.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load ExtraTreesRegressor pkg=\"ScikitLearn\"` to use the model.\n→ do `?ExtraTreesRegressor` for documentation."
 ":name" = "ExtraTreesRegressor"
@@ -2157,7 +1978,6 @@
 ":hyperparameters" = "`(:n_estimators, :criterion, :max_depth, :min_samples_split, :min_samples_leaf, :min_weight_fraction_leaf, :max_features, :max_leaf_nodes, :min_impurity_decrease, :bootstrap, :oob_score, :n_jobs, :random_state, :verbose, :warm_start)`"
 ":hyperparameter_types" = "`(\"Int64\", \"String\", \"Union{Nothing, Int64}\", \"Union{Float64, Int64}\", \"Union{Float64, Int64}\", \"Float64\", \"Union{Nothing, Float64, Int64, String}\", \"Union{Nothing, Int64}\", \"Float64\", \"Bool\", \"Bool\", \"Union{Nothing, Int64}\", \"Any\", \"Int64\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.LassoRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -2171,7 +1991,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Lasso regression.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load LassoRegressor pkg=\"ScikitLearn\"` to use the model.\n→ do `?LassoRegressor` for documentation."
 ":name" = "LassoRegressor"
@@ -2181,7 +2000,6 @@
 ":hyperparameters" = "`(:alpha, :fit_intercept, :normalize, :precompute, :copy_X, :max_iter, :tol, :warm_start, :positive, :random_state, :selection)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Bool\", \"Bool\", \"Union{Bool, AbstractArray{T,2} where T}\", \"Bool\", \"Int64\", \"Float64\", \"Bool\", \"Bool\", \"Any\", \"String\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.MultinomialNBClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Count)`"
@@ -2195,7 +2013,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Multinomial naive bayes classifier. It is suitable for classification with discrete features (e.g. word counts for text classification).\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load MultinomialNBClassifier pkg=\"ScikitLearn\"` to use the model.\n→ do `?MultinomialNBClassifier` for documentation."
 ":name" = "MultinomialNBClassifier"
@@ -2205,7 +2022,6 @@
 ":hyperparameters" = "`(:alpha, :fit_prior, :class_prior)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Bool\", \"Union{Nothing, AbstractArray{T,1} where T}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.GradientBoostingRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -2219,7 +2035,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Gradient boosting ensemble regression.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load GradientBoostingRegressor pkg=\"ScikitLearn\"` to use the model.\n→ do `?GradientBoostingRegressor` for documentation."
 ":name" = "GradientBoostingRegressor"
@@ -2229,7 +2044,6 @@
 ":hyperparameters" = "`(:loss, :learning_rate, :n_estimators, :subsample, :criterion, :min_samples_split, :min_samples_leaf, :min_weight_fraction_leaf, :max_depth, :min_impurity_decrease, :init, :random_state, :max_features, :alpha, :verbose, :max_leaf_nodes, :warm_start, :validation_fraction, :n_iter_no_change, :tol)`"
 ":hyperparameter_types" = "`(\"String\", \"Float64\", \"Int64\", \"Float64\", \"String\", \"Union{Float64, Int64}\", \"Union{Float64, Int64}\", \"Float64\", \"Int64\", \"Float64\", \"Any\", \"Any\", \"Union{Nothing, Float64, Int64, String}\", \"Float64\", \"Int64\", \"Union{Nothing, Int64}\", \"Bool\", \"Float64\", \"Union{Nothing, Int64}\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ScikitLearn.SVMClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -2243,7 +2057,6 @@
 ":package_url" = "https://github.com/cstjean/ScikitLearn.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "C-Support Vector Classification.\n→ based on [ScikitLearn](https://github.com/cstjean/ScikitLearn.jl).\n→ do `@load SVMClassifier pkg=\"ScikitLearn\"` to use the model.\n→ do `?SVMClassifier` for documentation."
 ":name" = "SVMClassifier"
@@ -2253,7 +2066,6 @@
 ":hyperparameters" = "`(:C, :kernel, :degree, :gamma, :coef0, :shrinking, :tol, :cache_size, :max_iter, :decision_function_shape, :random_state)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Union{Function, String}\", \"Int64\", \"Union{Float64, String}\", \"Float64\", \"Bool\", \"Float64\", \"Int64\", \"Int64\", \"String\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [ParallelKMeans.KMeans]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -2267,7 +2079,6 @@
 ":package_url" = "https://github.com/PyDataBlog/ParallelKMeans.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Parallel & lightning fast implementation of all available variants of the KMeans clustering algorithm\n                             in native Julia. Compatible with Julia 1.3+\n→ based on [ParallelKMeans](https://github.com/PyDataBlog/ParallelKMeans.jl).\n→ do `@load KMeans pkg=\"ParallelKMeans\"` to use the model.\n→ do `?KMeans` for documentation."
 ":name" = "KMeans"
@@ -2277,7 +2088,6 @@
 ":hyperparameters" = "`(:algo, :k_init, :k, :tol, :max_iters, :copy, :threads, :rng, :weights, :init)`"
 ":hyperparameter_types" = "`(\"Union{Symbol, ParallelKMeans.AbstractKMeansAlg}\", \"String\", \"Int64\", \"Float64\", \"Int64\", \"Bool\", \"Int64\", \"Union{Int64, Random.AbstractRNG}\", \"Any\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [NaiveBayes.GaussianNBClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -2291,7 +2101,6 @@
 ":package_url" = "https://github.com/dfdx/NaiveBayes.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "GaussianNBClassifier from NaiveBayes.jl.\n[Documentation](https://github.com/dfdx/NaiveBayes.jl)."
 ":name" = "GaussianNBClassifier"
@@ -2301,7 +2110,6 @@
 ":hyperparameters" = "`()`"
 ":hyperparameter_types" = "`()`"
 ":hyperparameter_ranges" = "`()`"
-":iteration_parameter" = "`nothing`"
 
 [NaiveBayes.MultinomialNBClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Count)`"
@@ -2315,7 +2123,6 @@
 ":package_url" = "https://github.com/dfdx/NaiveBayes.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "MultinomialNBClassifier from NaiveBayes.jl.\n[Documentation](https://github.com/dfdx/NaiveBayes.jl)."
 ":name" = "MultinomialNBClassifier"
@@ -2325,7 +2132,6 @@
 ":hyperparameters" = "`(:alpha,)`"
 ":hyperparameter_types" = "`(\"Int64\",)`"
 ":hyperparameter_ranges" = "`(nothing,)`"
-":iteration_parameter" = "`nothing`"
 
 [MLJBase.DeterministicSurrogate]
 ":input_scitype" = "`ScientificTypes.Unknown`"
@@ -2339,7 +2145,6 @@
 ":package_url" = "unknown"
 ":is_wrapper" = "`true`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "DeterministicSurrogate from MLJBase.jl.\n[Documentation](unknown)."
 ":name" = "DeterministicSurrogate"
@@ -2349,7 +2154,6 @@
 ":hyperparameters" = "`()`"
 ":hyperparameter_types" = "`()`"
 ":hyperparameter_ranges" = "`()`"
-":iteration_parameter" = "`nothing`"
 
 [MLJBase.WrappedFunction]
 ":input_scitype" = "`ScientificTypes.Unknown`"
@@ -2363,7 +2167,6 @@
 ":package_url" = "unknown"
 ":is_wrapper" = "`true`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "WrappedFunction from MLJBase.jl.\n[Documentation](unknown)."
 ":name" = "WrappedFunction"
@@ -2373,7 +2176,6 @@
 ":hyperparameters" = "`(:f,)`"
 ":hyperparameter_types" = "`(\"Any\",)`"
 ":hyperparameter_ranges" = "`(nothing,)`"
-":iteration_parameter" = "`nothing`"
 
 [MLJBase.IntervalSurrogate]
 ":input_scitype" = "`ScientificTypes.Unknown`"
@@ -2387,7 +2189,6 @@
 ":package_url" = "unknown"
 ":is_wrapper" = "`true`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "IntervalSurrogate from MLJBase.jl.\n[Documentation](unknown)."
 ":name" = "IntervalSurrogate"
@@ -2397,7 +2198,6 @@
 ":hyperparameters" = "`()`"
 ":hyperparameter_types" = "`()`"
 ":hyperparameter_ranges" = "`()`"
-":iteration_parameter" = "`nothing`"
 
 [MLJBase.UnsupervisedSurrogate]
 ":input_scitype" = "`ScientificTypes.Unknown`"
@@ -2411,7 +2211,6 @@
 ":package_url" = "unknown"
 ":is_wrapper" = "`true`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "UnsupervisedSurrogate from MLJBase.jl.\n[Documentation](unknown)."
 ":name" = "UnsupervisedSurrogate"
@@ -2421,7 +2220,6 @@
 ":hyperparameters" = "`()`"
 ":hyperparameter_types" = "`()`"
 ":hyperparameter_ranges" = "`()`"
-":iteration_parameter" = "`nothing`"
 
 [MLJBase.JointProbabilisticSurrogate]
 ":input_scitype" = "`ScientificTypes.Unknown`"
@@ -2435,7 +2233,6 @@
 ":package_url" = "unknown"
 ":is_wrapper" = "`true`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "JointProbabilisticSurrogate from MLJBase.jl.\n[Documentation](unknown)."
 ":name" = "JointProbabilisticSurrogate"
@@ -2445,7 +2242,6 @@
 ":hyperparameters" = "`()`"
 ":hyperparameter_types" = "`()`"
 ":hyperparameter_ranges" = "`()`"
-":iteration_parameter" = "`nothing`"
 
 [MLJBase.Resampler]
 ":input_scitype" = "`ScientificTypes.Unknown`"
@@ -2459,17 +2255,15 @@
 ":package_url" = "unknown"
 ":is_wrapper" = "`true`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Resampler from MLJBase.jl.\n[Documentation](unknown)."
 ":name" = "Resampler"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":unknown"
 ":implemented_methods" = [":clean!", ":evaluate", ":fit"]
-":hyperparameters" = "`(:model, :resampling, :measure, :weights, :operation, :acceleration, :check_measure, :repeats, :cache)`"
-":hyperparameter_types" = "`(\"Union{Nothing, MLJModelInterface.Supervised}\", \"Any\", \"Any\", \"Union{Nothing, AbstractArray{_s248,1} where _s248<:Real}\", \"Any\", \"ComputationalResources.AbstractResource\", \"Bool\", \"Int64\", \"Bool\")`"
-":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
+":hyperparameters" = "`(:model, :resampling, :measure, :weights, :operation, :acceleration, :check_measure, :repeats)`"
+":hyperparameter_types" = "`(\"Union{Nothing, MLJModelInterface.Supervised}\", \"Any\", \"Any\", \"Union{Nothing, AbstractArray{_s358,1} where _s358<:Real}\", \"Any\", \"ComputationalResources.AbstractResource\", \"Bool\", \"Int64\")`"
+":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [MLJBase.StaticSurrogate]
 ":input_scitype" = "`ScientificTypes.Unknown`"
@@ -2483,7 +2277,6 @@
 ":package_url" = "unknown"
 ":is_wrapper" = "`true`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "StaticSurrogate from MLJBase.jl.\n[Documentation](unknown)."
 ":name" = "StaticSurrogate"
@@ -2493,7 +2286,6 @@
 ":hyperparameters" = "`()`"
 ":hyperparameter_types" = "`()`"
 ":hyperparameter_ranges" = "`()`"
-":iteration_parameter" = "`nothing`"
 
 [MLJBase.ProbabilisticSurrogate]
 ":input_scitype" = "`ScientificTypes.Unknown`"
@@ -2507,7 +2299,6 @@
 ":package_url" = "unknown"
 ":is_wrapper" = "`true`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "ProbabilisticSurrogate from MLJBase.jl.\n[Documentation](unknown)."
 ":name" = "ProbabilisticSurrogate"
@@ -2517,7 +2308,6 @@
 ":hyperparameters" = "`()`"
 ":hyperparameter_types" = "`()`"
 ":hyperparameter_ranges" = "`()`"
-":iteration_parameter" = "`nothing`"
 
 [MultivariateStats.LDA]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -2531,7 +2321,6 @@
 ":package_url" = "https://github.com/JuliaStats/MultivariateStats.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "  Multiclass linear discriminant analysis. The algorithm learns a\nprojection matrix `P` that projects a feature matrix `Xtrain` onto a lower dimensional\nspace of dimension `out_dim` such that the trace of the transformed between-class \nscatter matrix(`Pᵀ*Sb*P`) is maximized relative to the trace of the transformed \nwithin-class scatter matrix (`Pᵀ*Sw*P`).The projection matrix is scaled such that \n`Pᵀ*Sw*P=I` or `Pᵀ*Σw*P=I`(where `Σw` is the within-class covariance matrix) .\nPredicted class posterior probability for feature matrix `Xtest` are derived by \napplying a softmax transformationto a matrix `Pr`, such that  rowᵢ of `Pr` contains \ncomputed distances(based on a distance metric) in the transformed space of rowᵢ in \n`Xtest` to the centroid of each class.\n\n→ based on [MultivariateStats](https://github.com/JuliaStats/MultivariateStats.jl).\n→ do `@load LDA pkg=\"MultivariateStats\"` to use the model.\n→ do `?LDA` for documentation."
 ":name" = "LDA"
@@ -2541,7 +2330,6 @@
 ":hyperparameters" = "`(:method, :cov_w, :cov_b, :out_dim, :regcoef, :dist)`"
 ":hyperparameter_types" = "`(\"Symbol\", \"StatsBase.CovarianceEstimator\", \"StatsBase.CovarianceEstimator\", \"Int64\", \"Float64\", \"Distances.SemiMetric\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [MultivariateStats.MultitargetLinearRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -2555,7 +2343,6 @@
 ":package_url" = "https://github.com/JuliaStats/MultivariateStats.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Multitarget Linear Regression. Learns linear combinations of given\nvariables to fit the responses by minimizing the squared error between.\n\n→ based on [MultivariateStats](https://github.com/JuliaStats/MultivariateStats.jl).\n→ do `@load MultitargetLinearRegressor pkg=\"MultivariateStats\"` to use the model.\n→ do `?MultitargetLinearRegressor` for documentation."
 ":name" = "MultitargetLinearRegressor"
@@ -2565,7 +2352,6 @@
 ":hyperparameters" = "`(:bias,)`"
 ":hyperparameter_types" = "`(\"Bool\",)`"
 ":hyperparameter_ranges" = "`(nothing,)`"
-":iteration_parameter" = "`nothing`"
 
 [MultivariateStats.BayesianSubspaceLDA]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -2579,7 +2365,6 @@
 ":package_url" = "https://github.com/JuliaStats/MultivariateStats.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "   Bayesian Multiclass linear discriminant analysis. Suitable for high dimensional data \n(Avoids computing scatter matrices `Sw` ,`Sb`). The algorithm learns a projection \nmatrix `P = W*L` (`Sw`), that projects a feature matrix `Xtrain` onto a lower \ndimensional space of dimension `nc-1` such that the trace of the transformed \nbetween-class scatter matrix(`Pᵀ*Sb*P`) is maximized relative to the trace of the \ntransformed within-class scatter matrix (`Pᵀ*Sw*P`). The projection matrix is scaled \nsuch that `Pᵀ*Sw*P = mult*I` or `Pᵀ*Σw*P=mult/(n-nc)*I` (where `n` is the number of \ntraining samples, `mult` is  one of `n` or `1` depending on whether `Sb` is normalized,\n`Σw` is the within-class covariance matrix, and `nc` is the number of unique classes in\n`y`) and also obeys `Wᵀ*Sb*p = λ*Wᵀ*Sw*p`, for every column `p` in `P`.\nPosterior class probability distibution are derived by applying Bayes rule with a\nmultivariate Gaussian class-conditional distribution\n\n→ based on [MultivariateStats](https://github.com/JuliaStats/MultivariateStats.jl).\n→ do `@load BayesianSubspaceLDA pkg=\"MultivariateStats\"` to use the model.\n→ do `?BayesianSubspaceLDA` for documentation."
 ":name" = "BayesianSubspaceLDA"
@@ -2589,7 +2374,6 @@
 ":hyperparameters" = "`(:normalize, :out_dim, :priors)`"
 ":hyperparameter_types" = "`(\"Bool\", \"Int64\", \"Union{Nothing, Array{Float64,1}}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [MultivariateStats.FactorAnalysis]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -2603,7 +2387,6 @@
 ":package_url" = "https://github.com/JuliaStats/MultivariateStats.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Factor Analysis\n→ based on [MultivariateStats](https://github.com/JuliaStats/MultivariateStats.jl).\n→ do `@load FactorAnalysis pkg=\"MultivariateStats\"` to use the model.\n→ do `?FactorAnalysis` for documentation."
 ":name" = "FactorAnalysis"
@@ -2613,7 +2396,6 @@
 ":hyperparameters" = "`(:method, :maxoutdim, :maxiter, :tol, :eta, :mean)`"
 ":hyperparameter_types" = "`(\"Symbol\", \"Int64\", \"Int64\", \"Real\", \"Real\", \"Union{Nothing, Array{Float64,1}, Real}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [MultivariateStats.LinearRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -2627,7 +2409,6 @@
 ":package_url" = "https://github.com/JuliaStats/MultivariateStats.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Linear Regression. Learns a linear combination of given\nvariables to fit the response by minimizing the squared error between.\n\n→ based on [MultivariateStats](https://github.com/JuliaStats/MultivariateStats.jl).\n→ do `@load LinearRegressor pkg=\"MultivariateStats\"` to use the model.\n→ do `?LinearRegressor` for documentation."
 ":name" = "LinearRegressor"
@@ -2637,7 +2418,6 @@
 ":hyperparameters" = "`(:bias,)`"
 ":hyperparameter_types" = "`(\"Bool\",)`"
 ":hyperparameter_ranges" = "`(nothing,)`"
-":iteration_parameter" = "`nothing`"
 
 [MultivariateStats.ICA]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -2651,7 +2431,6 @@
 ":package_url" = "https://github.com/JuliaStats/MultivariateStats.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Independent component analysis.\n→ based on [MultivariateStats](https://github.com/JuliaStats/MultivariateStats.jl).\n→ do `@load ICA pkg=\"MultivariateStats\"` to use the model.\n→ do `?ICA` for documentation."
 ":name" = "ICA"
@@ -2661,7 +2440,6 @@
 ":hyperparameters" = "`(:k, :alg, :fun, :do_whiten, :maxiter, :tol, :winit, :mean)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Symbol\", \"Symbol\", \"Bool\", \"Int64\", \"Real\", \"Union{Nothing, Array{_s41,2} where _s41<:Real}\", \"Union{Nothing, Array{Float64,1}, Real}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [MultivariateStats.PPCA]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -2675,7 +2453,6 @@
 ":package_url" = "https://github.com/JuliaStats/MultivariateStats.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Probabilistic principal component analysis\n→ based on [MultivariateStats](https://github.com/JuliaStats/MultivariateStats.jl).\n→ do `@load PPCA pkg=\"MultivariateStats\"` to use the model.\n→ do `?PPCA` for documentation."
 ":name" = "PPCA"
@@ -2685,7 +2462,6 @@
 ":hyperparameters" = "`(:maxoutdim, :method, :maxiter, :tol, :mean)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Symbol\", \"Int64\", \"Real\", \"Union{Nothing, Array{Float64,1}, Real}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [MultivariateStats.RidgeRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -2699,7 +2475,6 @@
 ":package_url" = "https://github.com/JuliaStats/MultivariateStats.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Ridge regressor with regularization parameter lambda. Learns a\nlinear regression with a penalty on the l2 norm of the coefficients.\n\n→ based on [MultivariateStats](https://github.com/JuliaStats/MultivariateStats.jl).\n→ do `@load RidgeRegressor pkg=\"MultivariateStats\"` to use the model.\n→ do `?RidgeRegressor` for documentation."
 ":name" = "RidgeRegressor"
@@ -2709,7 +2484,6 @@
 ":hyperparameters" = "`(:lambda, :bias)`"
 ":hyperparameter_types" = "`(\"Union{Real, Union{AbstractArray{T,1}, AbstractArray{T,2}} where T}\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [MultivariateStats.KernelPCA]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -2723,7 +2497,6 @@
 ":package_url" = "https://github.com/JuliaStats/MultivariateStats.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Kernel principal component analysis.\n→ based on [MultivariateStats](https://github.com/JuliaStats/MultivariateStats.jl).\n→ do `@load KernelPCA pkg=\"MultivariateStats\"` to use the model.\n→ do `?KernelPCA` for documentation."
 ":name" = "KernelPCA"
@@ -2733,7 +2506,6 @@
 ":hyperparameters" = "`(:maxoutdim, :kernel, :solver, :inverse, :beta, :tol, :maxiter)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Union{Nothing, Function}\", \"Symbol\", \"Bool\", \"Real\", \"Real\", \"Int64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [MultivariateStats.MultitargetRidgeRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -2747,7 +2519,6 @@
 ":package_url" = "https://github.com/JuliaStats/MultivariateStats.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Multitarget Ridge regressor with regularization parameter lambda. Learns a\nMultitarget linear regression with a penalty on the l2 norm of the coefficients.\n\n→ based on [MultivariateStats](https://github.com/JuliaStats/MultivariateStats.jl).\n→ do `@load MultitargetRidgeRegressor pkg=\"MultivariateStats\"` to use the model.\n→ do `?MultitargetRidgeRegressor` for documentation."
 ":name" = "MultitargetRidgeRegressor"
@@ -2757,7 +2528,6 @@
 ":hyperparameters" = "`(:lambda, :bias)`"
 ":hyperparameter_types" = "`(\"Union{Real, Union{AbstractArray{T,1}, AbstractArray{T,2}} where T}\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [MultivariateStats.SubspaceLDA]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -2771,7 +2541,6 @@
 ":package_url" = "https://github.com/JuliaStats/MultivariateStats.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Multiclass linear discriminant analysis. Suitable for high\ndimensional data (Avoids computing scatter matrices `Sw` ,`Sb`). The algorithm learns a\nprojection matrix `P = W*L` that projects a feature matrix `Xtrain` onto a lower\ndimensional space of dimension `nc - 1` such that the trace of the transformed\nbetween-class scatter matrix(`Pᵀ*Sb*P`) is maximized relative to the trace of the\ntransformed within-class scatter matrix (`Pᵀ*Sw*P`). The projection matrix is scaled \nsuch that `Pᵀ*Sw*P = mult*I` or `Pᵀ*Σw*P=mult/(n-nc)*I` (where `n` is the number of \ntraining samples, mult` is  one of `n` or `1` depending on whether `Sb` is normalized, \n`Σw` is the within-class covariance matrix, and `nc` is the number of unique classes \nin `y`) and also obeys `Wᵀ*Sb*p = λ*Wᵀ*Sw*p`, for every column `p` in `P`.\nPredicted class posterior probability for feature matrix `Xtest` are derived by \napplying a softmax transformation to a matrix `Pr`, such that  rowᵢ of `Pr` contains \ncomputed distances(based on a distance metric) in the transformed space of rowᵢ in \n`Xtest` to the centroid of each class.\n\n→ based on [MultivariateStats](https://github.com/JuliaStats/MultivariateStats.jl).\n→ do `@load SubspaceLDA pkg=\"MultivariateStats\"` to use the model.\n→ do `?SubspaceLDA` for documentation."
 ":name" = "SubspaceLDA"
@@ -2781,7 +2550,6 @@
 ":hyperparameters" = "`(:normalize, :out_dim, :dist)`"
 ":hyperparameter_types" = "`(\"Bool\", \"Int64\", \"Distances.SemiMetric\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [MultivariateStats.BayesianLDA]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -2795,7 +2563,6 @@
 ":package_url" = "https://github.com/JuliaStats/MultivariateStats.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "  Bayesian Multiclass linear discriminant analysis. The algorithm\nlearns a projection matrix `P` that projects a feature matrix `Xtrain` onto a lower\ndimensional space of dimension `out_dim` such that the trace of the transformed\nbetween-class scatter matrix(`Pᵀ*Sb*P`) is maximized relative to the trace of the\ntransformed within-class scatter matrix (`Pᵀ*Sw*P`). The projection matrix is scaled \nsuch that `Pᵀ*Sw*P = n` or `Pᵀ*Σw*P=I` (Where `n` is the number of training samples \nand `Σw` is the within-class covariance matrix).\nPredicted class posterior probability distibution are derived by applying Bayes rule \nwith a multivariate Gaussian class-conditional distribution.\n\n→ based on [MultivariateStats](https://github.com/JuliaStats/MultivariateStats.jl).\n→ do `@load BayesianLDA pkg=\"MultivariateStats\"` to use the model.\n→ do `?BayesianLDA` for documentation."
 ":name" = "BayesianLDA"
@@ -2805,7 +2572,6 @@
 ":hyperparameters" = "`(:method, :cov_w, :cov_b, :out_dim, :regcoef, :priors)`"
 ":hyperparameter_types" = "`(\"Symbol\", \"StatsBase.CovarianceEstimator\", \"StatsBase.CovarianceEstimator\", \"Int64\", \"Float64\", \"Union{Nothing, Array{Float64,1}}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [MultivariateStats.PCA]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -2819,7 +2585,6 @@
 ":package_url" = "https://github.com/JuliaStats/MultivariateStats.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "  Principal component analysis. Learns a linear transformation to\nproject the data  on a lower dimensional space while preserving most of the initial\nvariance.\n\n→ based on [MultivariateStats](https://github.com/JuliaStats/MultivariateStats.jl).\n→ do `@load PCA pkg=\"MultivariateStats\"` to use the model.\n→ do `?PCA` for documentation."
 ":name" = "PCA"
@@ -2829,7 +2594,6 @@
 ":hyperparameters" = "`(:maxoutdim, :method, :pratio, :mean)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Symbol\", \"Float64\", \"Union{Nothing, Array{Float64,1}, Real}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [DecisionTree.AdaBoostStumpClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:Union{AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous, AbstractArray{_s23,1} where _s23<:ScientificTypes.Count, AbstractArray{_s23,1} where _s23<:ScientificTypes.OrderedFactor}`"
@@ -2843,7 +2607,6 @@
 ":package_url" = "https://github.com/bensadeghi/DecisionTree.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Ada-boosted stump classifier.\n→ based on [DecisionTree](https://github.com/bensadeghi/DecisionTree.jl).\n→ do `@load AdaBoostStumpClassifier pkg=\"DecisionTree\"` to use the model.\n→ do `?AdaBoostStumpClassifier` for documentation."
 ":name" = "AdaBoostStumpClassifier"
@@ -2853,7 +2616,6 @@
 ":hyperparameters" = "`(:n_iter, :pdf_smoothing)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [DecisionTree.DecisionTreeRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:Union{AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous, AbstractArray{_s23,1} where _s23<:ScientificTypes.Count, AbstractArray{_s23,1} where _s23<:ScientificTypes.OrderedFactor}`"
@@ -2867,7 +2629,6 @@
 ":package_url" = "https://github.com/bensadeghi/DecisionTree.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "CART decision tree regressor.\n→ based on [DecisionTree](https://github.com/bensadeghi/DecisionTree.jl).\n→ do `@load DecisionTreeRegressor pkg=\"DecisionTree\"` to use the model.\n→ do `?DecisionTreeRegressor` for documentation."
 ":name" = "DecisionTreeRegressor"
@@ -2877,7 +2638,6 @@
 ":hyperparameters" = "`(:max_depth, :min_samples_leaf, :min_samples_split, :min_purity_increase, :n_subfeatures, :post_prune, :merge_purity_threshold)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Int64\", \"Int64\", \"Float64\", \"Int64\", \"Bool\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [DecisionTree.DecisionTreeClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:Union{AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous, AbstractArray{_s23,1} where _s23<:ScientificTypes.Count, AbstractArray{_s23,1} where _s23<:ScientificTypes.OrderedFactor}`"
@@ -2891,7 +2651,6 @@
 ":package_url" = "https://github.com/bensadeghi/DecisionTree.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "CART decision tree classifier.\n→ based on [DecisionTree](https://github.com/bensadeghi/DecisionTree.jl).\n→ do `@load DecisionTreeClassifier pkg=\"DecisionTree\"` to use the model.\n→ do `?DecisionTreeClassifier` for documentation."
 ":name" = "DecisionTreeClassifier"
@@ -2901,7 +2660,6 @@
 ":hyperparameters" = "`(:max_depth, :min_samples_leaf, :min_samples_split, :min_purity_increase, :n_subfeatures, :post_prune, :merge_purity_threshold, :pdf_smoothing, :display_depth)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Int64\", \"Int64\", \"Float64\", \"Int64\", \"Bool\", \"Float64\", \"Float64\", \"Int64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [DecisionTree.RandomForestRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:Union{AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous, AbstractArray{_s23,1} where _s23<:ScientificTypes.Count, AbstractArray{_s23,1} where _s23<:ScientificTypes.OrderedFactor}`"
@@ -2915,7 +2673,6 @@
 ":package_url" = "https://github.com/bensadeghi/DecisionTree.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Random forest regressor.\n→ based on [DecisionTree](https://github.com/bensadeghi/DecisionTree.jl).\n→ do `@load RandomForestRegressor pkg=\"DecisionTree\"` to use the model.\n→ do `?RandomForestRegressor` for documentation."
 ":name" = "RandomForestRegressor"
@@ -2925,7 +2682,6 @@
 ":hyperparameters" = "`(:max_depth, :min_samples_leaf, :min_samples_split, :min_purity_increase, :n_subfeatures, :n_trees, :sampling_fraction, :pdf_smoothing)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Int64\", \"Int64\", \"Float64\", \"Int64\", \"Int64\", \"Float64\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [DecisionTree.RandomForestClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:Union{AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous, AbstractArray{_s23,1} where _s23<:ScientificTypes.Count, AbstractArray{_s23,1} where _s23<:ScientificTypes.OrderedFactor}`"
@@ -2939,7 +2695,6 @@
 ":package_url" = "https://github.com/bensadeghi/DecisionTree.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Random forest classifier.\n→ based on [DecisionTree](https://github.com/bensadeghi/DecisionTree.jl).\n→ do `@load RandomForestClassifier pkg=\"DecisionTree\"` to use the model.\n→ do `?RandomForestClassifier` for documentation."
 ":name" = "RandomForestClassifier"
@@ -2949,7 +2704,6 @@
 ":hyperparameters" = "`(:max_depth, :min_samples_leaf, :min_samples_split, :min_purity_increase, :n_subfeatures, :n_trees, :sampling_fraction, :pdf_smoothing)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Int64\", \"Int64\", \"Float64\", \"Int64\", \"Int64\", \"Float64\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [Clustering.KMeans]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -2963,7 +2717,6 @@
 ":package_url" = "https://github.com/JuliaStats/Clustering.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "K-Means algorithm: find K centroids corresponding to K clusters in the data.   \n\n→ based on [Clustering](https://github.com/JuliaStats/Clustering.jl).\n→ do `@load KMeans pkg=\"Clustering\"` to use the model.\n→ do `?KMeans` for documentation."
 ":name" = "KMeans"
@@ -2973,7 +2726,6 @@
 ":hyperparameters" = "`(:k, :metric)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Distances.SemiMetric\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [Clustering.KMedoids]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -2987,7 +2739,6 @@
 ":package_url" = "https://github.com/JuliaStats/Clustering.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "K-Medoids algorithm: find K centroids corresponding to K clusters in the data.\nUnlike K-Means, the centroids are found among data points themselves.\n\n→ based on [Clustering](https://github.com/JuliaStats/Clustering.jl).\n→ do `@load KMedoids pkg=\"Clustering\"` to use the model.\n→ do `?KMedoids` for documentation."
 ":name" = "KMedoids"
@@ -2997,7 +2748,6 @@
 ":hyperparameters" = "`(:k, :metric)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Distances.SemiMetric\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [XGBoost.XGBoostCount]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -3011,7 +2761,6 @@
 ":package_url" = "https://github.com/dmlc/XGBoost.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "The XGBoost gradient boosting method, for use with `Count` univariate targets, using a Poisson objective function. "
 ":name" = "XGBoostCount"
@@ -3021,7 +2770,6 @@
 ":hyperparameters" = "`(:num_round, :booster, :disable_default_eval_metric, :eta, :gamma, :max_depth, :min_child_weight, :max_delta_step, :subsample, :colsample_bytree, :colsample_bylevel, :lambda, :alpha, :tree_method, :sketch_eps, :scale_pos_weight, :updater, :refresh_leaf, :process_type, :grow_policy, :max_leaves, :max_bin, :predictor, :sample_type, :normalize_type, :rate_drop, :one_drop, :skip_drop, :feature_selector, :top_k, :tweedie_variance_power, :objective, :base_score, :eval_metric, :seed)`"
 ":hyperparameter_types" = "`(\"Int64\", \"String\", \"Int64\", \"Float64\", \"Float64\", \"Int64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"String\", \"Float64\", \"Float64\", \"String\", \"Union{Bool, Int64}\", \"String\", \"String\", \"Int64\", \"Int64\", \"String\", \"String\", \"String\", \"Float64\", \"Any\", \"Float64\", \"String\", \"Int64\", \"Float64\", \"Any\", \"Float64\", \"Any\", \"Int64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [XGBoost.XGBoostRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -3035,7 +2783,6 @@
 ":package_url" = "https://github.com/dmlc/XGBoost.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "The XGBoost gradient boosting method, for use with `Continuous` univariate targets. "
 ":name" = "XGBoostRegressor"
@@ -3045,7 +2792,6 @@
 ":hyperparameters" = "`(:num_round, :booster, :disable_default_eval_metric, :eta, :gamma, :max_depth, :min_child_weight, :max_delta_step, :subsample, :colsample_bytree, :colsample_bylevel, :lambda, :alpha, :tree_method, :sketch_eps, :scale_pos_weight, :updater, :refresh_leaf, :process_type, :grow_policy, :max_leaves, :max_bin, :predictor, :sample_type, :normalize_type, :rate_drop, :one_drop, :skip_drop, :feature_selector, :top_k, :tweedie_variance_power, :objective, :base_score, :eval_metric, :seed)`"
 ":hyperparameter_types" = "`(\"Int64\", \"String\", \"Int64\", \"Float64\", \"Float64\", \"Int64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"String\", \"Float64\", \"Float64\", \"String\", \"Union{Bool, Int64}\", \"String\", \"String\", \"Int64\", \"Int64\", \"String\", \"String\", \"String\", \"Float64\", \"Any\", \"Float64\", \"String\", \"Int64\", \"Float64\", \"Any\", \"Float64\", \"Any\", \"Int64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [XGBoost.XGBoostClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -3059,7 +2805,6 @@
 ":package_url" = "https://github.com/dmlc/XGBoost.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "The XGBoost gradient boosting method, for use with `Finite` univariate targets (`Multiclass`, `OrderedFactor` and `Binary=Finite{2}`)."
 ":name" = "XGBoostClassifier"
@@ -3069,12 +2814,11 @@
 ":hyperparameters" = "`(:num_round, :booster, :disable_default_eval_metric, :eta, :gamma, :max_depth, :min_child_weight, :max_delta_step, :subsample, :colsample_bytree, :colsample_bylevel, :lambda, :alpha, :tree_method, :sketch_eps, :scale_pos_weight, :updater, :refresh_leaf, :process_type, :grow_policy, :max_leaves, :max_bin, :predictor, :sample_type, :normalize_type, :rate_drop, :one_drop, :skip_drop, :feature_selector, :top_k, :tweedie_variance_power, :objective, :base_score, :eval_metric, :seed)`"
 ":hyperparameter_types" = "`(\"Int64\", \"String\", \"Int64\", \"Float64\", \"Float64\", \"Int64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"String\", \"Float64\", \"Float64\", \"String\", \"Union{Bool, Int64}\", \"String\", \"String\", \"Int64\", \"Int64\", \"String\", \"String\", \"String\", \"Float64\", \"Any\", \"Float64\", \"String\", \"Int64\", \"Float64\", \"Any\", \"Float64\", \"Any\", \"Int64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [LightGBM.LGBMClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{_s194,1} where _s194<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s218,1} where _s218<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "LightGBM"
 ":package_license" = "MIT Expat"
@@ -3083,17 +2827,15 @@
 ":package_url" = "https://github.com/IQVIA-ML/LightGBM.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`true`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Microsoft LightGBM FFI wrapper: Classifier\n→ based on [LightGBM](https://github.com/IQVIA-ML/LightGBM.jl).\n→ do `@load LGBMClassifier pkg=\"LightGBM\"` to use the model.\n→ do `?LGBMClassifier` for documentation."
 ":name" = "LGBMClassifier"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
 ":implemented_methods" = [":predict", ":clean!", ":fit", ":update"]
-":hyperparameters" = "`(:boosting, :num_iterations, :learning_rate, :num_leaves, :max_depth, :tree_learner, :histogram_pool_size, :min_data_in_leaf, :min_sum_hessian_in_leaf, :max_delta_step, :lambda_l1, :lambda_l2, :min_gain_to_split, :feature_fraction, :feature_fraction_bynode, :feature_fraction_seed, :bagging_fraction, :pos_bagging_fraction, :neg_bagging_fraction, :bagging_freq, :bagging_seed, :early_stopping_round, :extra_trees, :extra_seed, :max_bin, :bin_construct_sample_cnt, :init_score, :drop_rate, :max_drop, :skip_drop, :xgboost_dart_mode, :uniform_drop, :drop_seed, :top_rate, :other_rate, :min_data_per_group, :max_cat_threshold, :cat_l2, :cat_smooth, :objective, :categorical_feature, :data_random_seed, :is_sparse, :is_unbalance, :boost_from_average, :scale_pos_weight, :use_missing, :metric, :metric_freq, :is_training_metric, :ndcg_at, :num_machines, :num_threads, :local_listen_port, :time_out, :machine_list_file, :save_binary, :device_type, :force_col_wise, :force_row_wise)`"
-":hyperparameter_types" = "`(\"String\", \"Int64\", \"Float64\", \"Int64\", \"Int64\", \"String\", \"Float64\", \"Int64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Int64\", \"Float64\", \"Float64\", \"Float64\", \"Int64\", \"Int64\", \"Int64\", \"Bool\", \"Int64\", \"Int64\", \"Any\", \"String\", \"Float64\", \"Int64\", \"Float64\", \"Bool\", \"Bool\", \"Int64\", \"Float64\", \"Float64\", \"Int64\", \"Int64\", \"Float64\", \"Float64\", \"String\", \"Array{Int64,1}\", \"Int64\", \"Bool\", \"Bool\", \"Bool\", \"Any\", \"Bool\", \"Array{String,1}\", \"Int64\", \"Bool\", \"Array{Int64,1}\", \"Int64\", \"Int64\", \"Int64\", \"Int64\", \"String\", \"Bool\", \"String\", \"Bool\", \"Bool\")`"
-":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
+":hyperparameters" = "`(:boosting, :num_iterations, :learning_rate, :num_leaves, :max_depth, :tree_learner, :histogram_pool_size, :min_data_in_leaf, :min_sum_hessian_in_leaf, :max_delta_step, :lambda_l1, :lambda_l2, :min_gain_to_split, :feature_fraction, :feature_fraction_bynode, :feature_fraction_seed, :bagging_fraction, :pos_bagging_fraction, :neg_bagging_fraction, :bagging_freq, :bagging_seed, :early_stopping_round, :extra_trees, :extra_seed, :max_bin, :bin_construct_sample_cnt, :init_score, :drop_rate, :max_drop, :skip_drop, :xgboost_dart_mode, :uniform_drop, :drop_seed, :top_rate, :other_rate, :min_data_per_group, :max_cat_threshold, :cat_l2, :cat_smooth, :objective, :categorical_feature, :data_random_seed, :is_sparse, :is_unbalance, :boost_from_average, :scale_pos_weight, :use_missing, :feature_pre_filter, :metric, :metric_freq, :is_training_metric, :ndcg_at, :num_machines, :num_threads, :local_listen_port, :time_out, :machine_list_file, :save_binary, :device_type, :force_col_wise, :force_row_wise, :truncate_booster)`"
+":hyperparameter_types" = "`(\"String\", \"Int64\", \"Float64\", \"Int64\", \"Int64\", \"String\", \"Float64\", \"Int64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Int64\", \"Float64\", \"Float64\", \"Float64\", \"Int64\", \"Int64\", \"Int64\", \"Bool\", \"Int64\", \"Int64\", \"Any\", \"String\", \"Float64\", \"Int64\", \"Float64\", \"Bool\", \"Bool\", \"Int64\", \"Float64\", \"Float64\", \"Int64\", \"Int64\", \"Float64\", \"Float64\", \"String\", \"Array{Int64,1}\", \"Int64\", \"Bool\", \"Bool\", \"Bool\", \"Any\", \"Bool\", \"Bool\", \"Array{String,1}\", \"Int64\", \"Bool\", \"Array{Int64,1}\", \"Int64\", \"Int64\", \"Int64\", \"Int64\", \"String\", \"Bool\", \"String\", \"Bool\", \"Bool\", \"Bool\")`"
+":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [LightGBM.LGBMRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -3107,17 +2849,15 @@
 ":package_url" = "https://github.com/IQVIA-ML/LightGBM.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`true`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Microsoft LightGBM FFI wrapper: Regressor\n→ based on [LightGBM](https://github.com/IQVIA-ML/LightGBM.jl).\n→ do `@load LGBMRegressor pkg=\"LightGBM\"` to use the model.\n→ do `?LGBMRegressor` for documentation."
 ":name" = "LGBMRegressor"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
 ":implemented_methods" = [":predict", ":clean!", ":fit", ":update"]
-":hyperparameters" = "`(:boosting, :num_iterations, :learning_rate, :num_leaves, :max_depth, :tree_learner, :histogram_pool_size, :min_data_in_leaf, :min_sum_hessian_in_leaf, :max_delta_step, :lambda_l1, :lambda_l2, :min_gain_to_split, :feature_fraction, :feature_fraction_bynode, :feature_fraction_seed, :bagging_fraction, :bagging_freq, :bagging_seed, :early_stopping_round, :extra_trees, :extra_seed, :max_bin, :bin_construct_sample_cnt, :init_score, :drop_rate, :max_drop, :skip_drop, :xgboost_dart_mode, :uniform_drop, :drop_seed, :top_rate, :other_rate, :min_data_per_group, :max_cat_threshold, :cat_l2, :cat_smooth, :objective, :categorical_feature, :data_random_seed, :is_sparse, :is_unbalance, :boost_from_average, :use_missing, :alpha, :metric, :metric_freq, :is_training_metric, :ndcg_at, :num_machines, :num_threads, :local_listen_port, :time_out, :machine_list_file, :save_binary, :device_type, :force_col_wise, :force_row_wise)`"
-":hyperparameter_types" = "`(\"String\", \"Int64\", \"Float64\", \"Int64\", \"Int64\", \"String\", \"Float64\", \"Int64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Int64\", \"Float64\", \"Int64\", \"Int64\", \"Int64\", \"Bool\", \"Int64\", \"Int64\", \"Any\", \"String\", \"Float64\", \"Int64\", \"Float64\", \"Bool\", \"Bool\", \"Int64\", \"Float64\", \"Float64\", \"Int64\", \"Int64\", \"Float64\", \"Float64\", \"String\", \"Array{Int64,1}\", \"Int64\", \"Bool\", \"Bool\", \"Bool\", \"Bool\", \"Float64\", \"Array{String,1}\", \"Int64\", \"Bool\", \"Array{Int64,1}\", \"Int64\", \"Int64\", \"Int64\", \"Int64\", \"String\", \"Bool\", \"String\", \"Bool\", \"Bool\")`"
-":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
+":hyperparameters" = "`(:boosting, :num_iterations, :learning_rate, :num_leaves, :max_depth, :tree_learner, :histogram_pool_size, :min_data_in_leaf, :min_sum_hessian_in_leaf, :max_delta_step, :lambda_l1, :lambda_l2, :min_gain_to_split, :feature_fraction, :feature_fraction_bynode, :feature_fraction_seed, :bagging_fraction, :bagging_freq, :bagging_seed, :early_stopping_round, :extra_trees, :extra_seed, :max_bin, :bin_construct_sample_cnt, :init_score, :drop_rate, :max_drop, :skip_drop, :xgboost_dart_mode, :uniform_drop, :drop_seed, :top_rate, :other_rate, :min_data_per_group, :max_cat_threshold, :cat_l2, :cat_smooth, :objective, :categorical_feature, :data_random_seed, :is_sparse, :is_unbalance, :boost_from_average, :use_missing, :feature_pre_filter, :alpha, :metric, :metric_freq, :is_training_metric, :ndcg_at, :num_machines, :num_threads, :local_listen_port, :time_out, :machine_list_file, :save_binary, :device_type, :force_col_wise, :force_row_wise, :truncate_booster)`"
+":hyperparameter_types" = "`(\"String\", \"Int64\", \"Float64\", \"Int64\", \"Int64\", \"String\", \"Float64\", \"Int64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Int64\", \"Float64\", \"Int64\", \"Int64\", \"Int64\", \"Bool\", \"Int64\", \"Int64\", \"Any\", \"String\", \"Float64\", \"Int64\", \"Float64\", \"Bool\", \"Bool\", \"Int64\", \"Float64\", \"Float64\", \"Int64\", \"Int64\", \"Float64\", \"Float64\", \"String\", \"Array{Int64,1}\", \"Int64\", \"Bool\", \"Bool\", \"Bool\", \"Bool\", \"Bool\", \"Float64\", \"Array{String,1}\", \"Int64\", \"Bool\", \"Array{Int64,1}\", \"Int64\", \"Int64\", \"Int64\", \"Int64\", \"String\", \"Bool\", \"String\", \"Bool\", \"Bool\", \"Bool\")`"
+":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 
 [EvoTrees.EvoTreeClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -3131,7 +2871,6 @@
 ":package_url" = "https://github.com/Evovest/EvoTrees.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Multi-classification with softmax and cross-entropy loss.\n→ based on [EvoTrees](https://github.com/Evovest/EvoTrees.jl).\n→ do `@load EvoTreeClassifier pkg=\"EvoTrees\"` to use the model.\n→ do `?EvoTreeClassifier` for documentation."
 ":name" = "EvoTreeClassifier"
@@ -3141,7 +2880,6 @@
 ":hyperparameters" = "`(:loss, :nrounds, :λ, :γ, :η, :max_depth, :min_weight, :rowsample, :colsample, :nbins, :α, :metric, :seed)`"
 ":hyperparameter_types" = "`(\"EvoTrees.ModelType\", \"Int64\", \"AbstractFloat\", \"AbstractFloat\", \"AbstractFloat\", \"Int64\", \"AbstractFloat\", \"AbstractFloat\", \"AbstractFloat\", \"Int64\", \"AbstractFloat\", \"Symbol\", \"Int64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [EvoTrees.EvoTreeGaussian]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -3155,7 +2893,6 @@
 ":package_url" = "https://github.com/Evovest/EvoTrees.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Gaussian maximum likelihood of μ and σ².\n→ based on [EvoTrees](https://github.com/Evovest/EvoTrees.jl).\n→ do `@load EvoTreeGaussian pkg=\"EvoTrees\"` to use the model.\n→ do `?EvoTreeGaussian` for documentation."
 ":name" = "EvoTreeGaussian"
@@ -3165,7 +2902,6 @@
 ":hyperparameters" = "`(:loss, :nrounds, :λ, :γ, :η, :max_depth, :min_weight, :rowsample, :colsample, :nbins, :α, :metric, :seed)`"
 ":hyperparameter_types" = "`(\"EvoTrees.ModelType\", \"Int64\", \"AbstractFloat\", \"AbstractFloat\", \"AbstractFloat\", \"Int64\", \"AbstractFloat\", \"AbstractFloat\", \"AbstractFloat\", \"Int64\", \"AbstractFloat\", \"Symbol\", \"Int64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [EvoTrees.EvoTreeRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -3179,7 +2915,6 @@
 ":package_url" = "https://github.com/Evovest/EvoTrees.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Regression models with various underlying methods: least square, quantile, logistic.\n→ based on [EvoTrees](https://github.com/Evovest/EvoTrees.jl).\n→ do `@load EvoTreeRegressor pkg=\"EvoTrees\"` to use the model.\n→ do `?EvoTreeRegressor` for documentation."
 ":name" = "EvoTreeRegressor"
@@ -3189,7 +2924,6 @@
 ":hyperparameters" = "`(:loss, :nrounds, :λ, :γ, :η, :max_depth, :min_weight, :rowsample, :colsample, :nbins, :α, :metric, :seed)`"
 ":hyperparameter_types" = "`(\"EvoTrees.ModelType\", \"Int64\", \"AbstractFloat\", \"AbstractFloat\", \"AbstractFloat\", \"Int64\", \"AbstractFloat\", \"AbstractFloat\", \"AbstractFloat\", \"Int64\", \"AbstractFloat\", \"Symbol\", \"Int64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [EvoTrees.EvoTreeCount]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -3203,7 +2937,6 @@
 ":package_url" = "https://github.com/Evovest/EvoTrees.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Poisson regression fitting λ with max likelihood.\n→ based on [EvoTrees](https://github.com/Evovest/EvoTrees.jl).\n→ do `@load EvoTreeCount pkg=\"EvoTrees\"` to use the model.\n→ do `?EvoTreeCount` for documentation."
 ":name" = "EvoTreeCount"
@@ -3213,12 +2946,11 @@
 ":hyperparameters" = "`(:loss, :nrounds, :λ, :γ, :η, :max_depth, :min_weight, :rowsample, :colsample, :nbins, :α, :metric, :seed)`"
 ":hyperparameter_types" = "`(\"EvoTrees.ModelType\", \"Int64\", \"AbstractFloat\", \"AbstractFloat\", \"AbstractFloat\", \"Int64\", \"AbstractFloat\", \"AbstractFloat\", \"AbstractFloat\", \"Int64\", \"AbstractFloat\", \"Symbol\", \"Int64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [MLJModels.ConstantClassifier]
 ":input_scitype" = "`ScientificTypes.Table`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{_s53,1} where _s53<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s57,1} where _s57<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "MLJModels"
 ":package_license" = "MIT"
@@ -3227,7 +2959,6 @@
 ":package_url" = "https://github.com/alan-turing-institute/MLJModels.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`true`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Constant classifier (Probabilistic).\n→ based on [MLJModels](https://github.com/alan-turing-institute/MLJModels.jl).\n→ do `@load ConstantClassifier pkg=\"MLJModels\"` to use the model.\n→ do `?ConstantClassifier` for documentation."
 ":name" = "ConstantClassifier"
@@ -3237,11 +2968,10 @@
 ":hyperparameters" = "`()`"
 ":hyperparameter_types" = "`()`"
 ":hyperparameter_ranges" = "`()`"
-":iteration_parameter" = "`nothing`"
 
 [MLJModels.Standardizer]
-":input_scitype" = "`Union{AbstractArray{_s78,1} where _s78<:ScientificTypes.Continuous, ScientificTypes.Table}`"
-":output_scitype" = "`Union{AbstractArray{_s77,1} where _s77<:ScientificTypes.Continuous, ScientificTypes.Table}`"
+":input_scitype" = "`Union{AbstractArray{_s82,1} where _s82<:ScientificTypes.Continuous, ScientificTypes.Table}`"
+":output_scitype" = "`Union{AbstractArray{_s81,1} where _s81<:ScientificTypes.Continuous, ScientificTypes.Table}`"
 ":target_scitype" = "`ScientificTypes.Unknown`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "MLJModels"
@@ -3251,7 +2981,6 @@
 ":package_url" = "https://github.com/alan-turing-institute/MLJModels.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Standardize (whiten) features (columns) of a table.\n→ based on [MLJModels](https://github.com/alan-turing-institute/MLJModels.jl).\n→ do `@load Standardizer pkg=\"MLJModels\"` to use the model.\n→ do `?Standardizer` for documentation."
 ":name" = "Standardizer"
@@ -3261,12 +2990,11 @@
 ":hyperparameters" = "`(:features, :ignore, :ordered_factor, :count)`"
 ":hyperparameter_types" = "`(\"Union{AbstractArray{Symbol,1}, Function}\", \"Bool\", \"Bool\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [MLJModels.DeterministicConstantClassifier]
 ":input_scitype" = "`ScientificTypes.Table`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{_s53,1} where _s53<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s57,1} where _s57<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "MLJModels"
 ":package_license" = "MIT"
@@ -3275,7 +3003,6 @@
 ":package_url" = "https://github.com/alan-turing-institute/MLJModels.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Constant classifier (Deterministic).\n→ based on [MLJModels](https://github.com/alan-turing-institute/MLJModels.jl).\n→ do `@load DeterministicConstantClassifier pkg=\"MLJModels\"` to use the model.\n→ do `?DeterministicConstantClassifier` for documentation."
 ":name" = "DeterministicConstantClassifier"
@@ -3285,10 +3012,9 @@
 ":hyperparameters" = "`()`"
 ":hyperparameter_types" = "`()`"
 ":hyperparameter_ranges" = "`()`"
-":iteration_parameter" = "`nothing`"
 
 [MLJModels.UnivariateTimeTypeToContinuous]
-":input_scitype" = "`AbstractArray{_s78,1} where _s78<:ScientificTypes.ScientificTimeType`"
+":input_scitype" = "`AbstractArray{_s82,1} where _s82<:ScientificTypes.ScientificTimeType`"
 ":output_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":target_scitype" = "`ScientificTypes.Unknown`"
 ":is_pure_julia" = "`true`"
@@ -3299,7 +3025,6 @@
 ":package_url" = "https://github.com/alan-turing-institute/MLJModels.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Transform univariate data with element scitype `ScientificDateTime` so that it has `Continuous` element scitype, according to a learned scale. \n→ based on [MLJModels](https://github.com/alan-turing-institute/MLJModels.jl).\n→ do `@load UnivariateTimeTypeToContinuous pkg=\"MLJModels\"` to use the model.\n→ do `?UnivariateTimeTypeToContinuous` for documentation."
 ":name" = "UnivariateTimeTypeToContinuous"
@@ -3309,7 +3034,6 @@
 ":hyperparameters" = "`(:zero_time, :step)`"
 ":hyperparameter_types" = "`(\"Union{Nothing, Dates.TimeType}\", \"Dates.Period\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [MLJModels.OneHotEncoder]
 ":input_scitype" = "`ScientificTypes.Table`"
@@ -3323,7 +3047,6 @@
 ":package_url" = "https://github.com/alan-turing-institute/MLJModels.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "One-hot encode `Finite` (categorical) features (columns) of a table.\n→ based on [MLJModels](https://github.com/alan-turing-institute/MLJModels.jl).\n→ do `@load OneHotEncoder pkg=\"MLJModels\"` to use the model.\n→ do `?OneHotEncoder` for documentation."
 ":name" = "OneHotEncoder"
@@ -3333,7 +3056,6 @@
 ":hyperparameters" = "`(:features, :drop_last, :ordered_factor, :ignore)`"
 ":hyperparameter_types" = "`(\"Array{Symbol,1}\", \"Bool\", \"Bool\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [MLJModels.ContinuousEncoder]
 ":input_scitype" = "`ScientificTypes.Table`"
@@ -3347,7 +3069,6 @@
 ":package_url" = "https://github.com/alan-turing-institute/MLJModels.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Convert all `Finite` (categorical) and `Count` features (columns) of a table to `Continuous` and drop all  remaining non-`Continuous` features. \n→ based on [MLJModels](https://github.com/alan-turing-institute/MLJModels.jl).\n→ do `@load ContinuousEncoder pkg=\"MLJModels\"` to use the model.\n→ do `?ContinuousEncoder` for documentation."
 ":name" = "ContinuousEncoder"
@@ -3357,7 +3078,6 @@
 ":hyperparameters" = "`(:drop_last, :one_hot_ordered_factors)`"
 ":hyperparameter_types" = "`(\"Bool\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [MLJModels.UnivariateBoxCoxTransformer]
 ":input_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
@@ -3371,7 +3091,6 @@
 ":package_url" = "https://github.com/alan-turing-institute/MLJModels.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Box-Cox transform univariate data.\n→ based on [MLJModels](https://github.com/alan-turing-institute/MLJModels.jl).\n→ do `@load UnivariateBoxCoxTransformer pkg=\"MLJModels\"` to use the model.\n→ do `?UnivariateBoxCoxTransformer` for documentation."
 ":name" = "UnivariateBoxCoxTransformer"
@@ -3381,7 +3100,6 @@
 ":hyperparameters" = "`(:n, :shift)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [MLJModels.ConstantRegressor]
 ":input_scitype" = "`ScientificTypes.Table`"
@@ -3395,7 +3113,6 @@
 ":package_url" = "https://github.com/alan-turing-institute/MLJModels.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Constant regressor (Probabilistic).\n→ based on [MLJModels](https://github.com/alan-turing-institute/MLJModels.jl).\n→ do `@load ConstantRegressor pkg=\"MLJModels\"` to use the model.\n→ do `?ConstantRegressor` for documentation."
 ":name" = "ConstantRegressor"
@@ -3405,7 +3122,6 @@
 ":hyperparameters" = "`(:distribution_type,)`"
 ":hyperparameter_types" = "`(\"Type{D} where D<:Distributions.Sampleable\",)`"
 ":hyperparameter_ranges" = "`(nothing,)`"
-":iteration_parameter" = "`nothing`"
 
 [MLJModels.FeatureSelector]
 ":input_scitype" = "`ScientificTypes.Table`"
@@ -3419,7 +3135,6 @@
 ":package_url" = "https://github.com/alan-turing-institute/MLJModels.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Filter features (columns) of a table by name.\n→ based on [MLJModels](https://github.com/alan-turing-institute/MLJModels.jl).\n→ do `@load FeatureSelector pkg=\"MLJModels\"` to use the model.\n→ do `?FeatureSelector` for documentation."
 ":name" = "FeatureSelector"
@@ -3429,11 +3144,10 @@
 ":hyperparameters" = "`(:features, :ignore)`"
 ":hyperparameter_types" = "`(\"Union{Array{Symbol,1}, Function}\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [MLJModels.UnivariateDiscretizer]
-":input_scitype" = "`AbstractArray{_s78,1} where _s78<:ScientificTypes.Continuous`"
-":output_scitype" = "`AbstractArray{_s77,1} where _s77<:ScientificTypes.OrderedFactor`"
+":input_scitype" = "`AbstractArray{_s82,1} where _s82<:ScientificTypes.Continuous`"
+":output_scitype" = "`AbstractArray{_s81,1} where _s81<:ScientificTypes.OrderedFactor`"
 ":target_scitype" = "`ScientificTypes.Unknown`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "MLJModels"
@@ -3443,7 +3157,6 @@
 ":package_url" = "https://github.com/alan-turing-institute/MLJModels.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Discretize a continuous variable via quantiles.\n→ based on [MLJModels](https://github.com/alan-turing-institute/MLJModels.jl).\n→ do `@load UnivariateDiscretizer pkg=\"MLJModels\"` to use the model.\n→ do `?UnivariateDiscretizer` for documentation."
 ":name" = "UnivariateDiscretizer"
@@ -3453,12 +3166,11 @@
 ":hyperparameters" = "`(:n_classes,)`"
 ":hyperparameter_types" = "`(\"Int64\",)`"
 ":hyperparameter_ranges" = "`(nothing,)`"
-":iteration_parameter" = "`nothing`"
 
 [MLJModels.BinaryThresholdPredictor]
 ":input_scitype" = "`ScientificTypes.Unknown`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{_s77,1} where _s77<:ScientificTypes.Finite{2}`"
+":target_scitype" = "`AbstractArray{_s81,1} where _s81<:ScientificTypes.Finite{2}`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "MLJModels"
 ":package_license" = "unknown"
@@ -3467,7 +3179,6 @@
 ":package_url" = "https://github.com/alan-turing-institute/MLJModels.jl"
 ":is_wrapper" = "`true`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "BinaryThresholdPredictor from MLJModels.jl.\n[Documentation](https://github.com/alan-turing-institute/MLJModels.jl)."
 ":name" = "BinaryThresholdPredictor"
@@ -3477,7 +3188,6 @@
 ":hyperparameters" = "`(:wrapped_model, :threshold)`"
 ":hyperparameter_types" = "`(\"MLJModelInterface.Probabilistic\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [MLJModels.FillImputer]
 ":input_scitype" = "`ScientificTypes.Table`"
@@ -3491,7 +3201,6 @@
 ":package_url" = "https://github.com/alan-turing-institute/MLJModels.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Imputes missing data with a fixed value computed on the non-missing values. A different imputing function can be specified for `Continuous`, `Count` and `Finite` data. \n→ based on [MLJModels](https://github.com/alan-turing-institute/MLJModels.jl).\n→ do `@load FillImputer pkg=\"MLJModels\"` to use the model.\n→ do `?FillImputer` for documentation."
 ":name" = "FillImputer"
@@ -3501,7 +3210,6 @@
 ":hyperparameters" = "`(:features, :continuous_fill, :count_fill, :finite_fill)`"
 ":hyperparameter_types" = "`(\"Array{Symbol,1}\", \"Function\", \"Function\", \"Function\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [MLJModels.DeterministicConstantRegressor]
 ":input_scitype" = "`ScientificTypes.Table`"
@@ -3515,7 +3223,6 @@
 ":package_url" = "https://github.com/alan-turing-institute/MLJModels.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Constant regressor (Deterministic).\n→ based on [MLJModels](https://github.com/alan-turing-institute/MLJModels.jl).\n→ do `@load DeterministicConstantRegressor pkg=\"MLJModels\"` to use the model.\n→ do `?DeterministicConstantRegressor` for documentation."
 ":name" = "DeterministicConstantRegressor"
@@ -3525,10 +3232,9 @@
 ":hyperparameters" = "`()`"
 ":hyperparameter_types" = "`()`"
 ":hyperparameter_ranges" = "`()`"
-":iteration_parameter" = "`nothing`"
 
 [MLJModels.UnivariateStandardizer]
-":input_scitype" = "`AbstractArray{_s78,1} where _s78<:ScientificTypes.Infinite`"
+":input_scitype" = "`AbstractArray{_s82,1} where _s82<:ScientificTypes.Infinite`"
 ":output_scitype" = "`AbstractArray{ScientificTypes.Continuous,1}`"
 ":target_scitype" = "`ScientificTypes.Unknown`"
 ":is_pure_julia" = "`true`"
@@ -3539,7 +3245,6 @@
 ":package_url" = "https://github.com/alan-turing-institute/MLJModels.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Standardize (whiten) univariate data.\n→ based on [MLJModels](https://github.com/alan-turing-institute/MLJModels.jl).\n→ do `@load UnivariateStandardizer pkg=\"MLJModels\"` to use the model.\n→ do `?UnivariateStandardizer` for documentation."
 ":name" = "UnivariateStandardizer"
@@ -3549,10 +3254,9 @@
 ":hyperparameters" = "`()`"
 ":hyperparameter_types" = "`()`"
 ":hyperparameter_ranges" = "`()`"
-":iteration_parameter" = "`nothing`"
 
 [MLJModels.UnivariateFillImputer]
-":input_scitype" = "`Union{AbstractArray{_s78,1} where _s78<:Union{Missing, ScientificTypes.Continuous}, AbstractArray{_s77,1} where _s77<:Union{Missing, ScientificTypes.Count}, AbstractArray{_s53,1} where _s53<:Union{Missing, ScientificTypes.Finite}}`"
+":input_scitype" = "`Union{AbstractArray{_s82,1} where _s82<:Union{Missing, ScientificTypes.Continuous}, AbstractArray{_s81,1} where _s81<:Union{Missing, ScientificTypes.Count}, AbstractArray{_s57,1} where _s57<:Union{Missing, ScientificTypes.Finite}}`"
 ":output_scitype" = "`Union{AbstractArray{_s16,1} where _s16<:ScientificTypes.Continuous, AbstractArray{_s15,1} where _s15<:ScientificTypes.Count, AbstractArray{_s14,1} where _s14<:ScientificTypes.Finite}`"
 ":target_scitype" = "`ScientificTypes.Unknown`"
 ":is_pure_julia" = "`true`"
@@ -3563,7 +3267,6 @@
 ":package_url" = "https://github.com/alan-turing-institute/MLJModels.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Univariate form of FillImpututer. Imputes missing data with a fixed value computed on the non-missing values. A different imputing function can be specified for `Continuous`, `Count` and `Finite` data. \n→ based on [MLJModels](https://github.com/alan-turing-institute/MLJModels.jl).\n→ do `@load UnivariateFillImputer pkg=\"MLJModels\"` to use the model.\n→ do `?UnivariateFillImputer` for documentation."
 ":name" = "UnivariateFillImputer"
@@ -3573,7 +3276,6 @@
 ":hyperparameters" = "`(:continuous_fill, :count_fill, :finite_fill)`"
 ":hyperparameter_types" = "`(\"Function\", \"Function\", \"Function\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [LIBSVM.EpsilonSVR]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -3587,7 +3289,6 @@
 ":package_url" = "https://github.com/mpastell/LIBSVM.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "EpsilonSVR from LIBSVM.jl.\n[Documentation](https://github.com/mpastell/LIBSVM.jl)."
 ":name" = "EpsilonSVR"
@@ -3597,7 +3298,6 @@
 ":hyperparameters" = "`(:kernel, :gamma, :epsilon, :cost, :cachesize, :degree, :coef0, :tolerance, :shrinking)`"
 ":hyperparameter_types" = "`(\"LIBSVM.Kernel.KERNEL\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Int32\", \"Float64\", \"Float64\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [LIBSVM.LinearSVC]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -3611,7 +3311,6 @@
 ":package_url" = "https://github.com/mpastell/LIBSVM.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "LinearSVC from LIBSVM.jl.\n[Documentation](https://github.com/mpastell/LIBSVM.jl)."
 ":name" = "LinearSVC"
@@ -3621,7 +3320,6 @@
 ":hyperparameters" = "`(:solver, :weights, :tolerance, :cost, :p, :bias)`"
 ":hyperparameter_types" = "`(\"LIBSVM.Linearsolver.LINEARSOLVER\", \"Union{Nothing, Dict}\", \"Float64\", \"Float64\", \"Float64\", \"Float64\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [LIBSVM.NuSVR]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -3635,7 +3333,6 @@
 ":package_url" = "https://github.com/mpastell/LIBSVM.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "NuSVR from LIBSVM.jl.\n[Documentation](https://github.com/mpastell/LIBSVM.jl)."
 ":name" = "NuSVR"
@@ -3645,7 +3342,6 @@
 ":hyperparameters" = "`(:kernel, :gamma, :nu, :cost, :cachesize, :degree, :coef0, :tolerance, :shrinking)`"
 ":hyperparameter_types" = "`(\"LIBSVM.Kernel.KERNEL\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Int32\", \"Float64\", \"Float64\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [LIBSVM.NuSVC]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -3659,7 +3355,6 @@
 ":package_url" = "https://github.com/mpastell/LIBSVM.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "NuSVC from LIBSVM.jl.\n[Documentation](https://github.com/mpastell/LIBSVM.jl)."
 ":name" = "NuSVC"
@@ -3669,7 +3364,6 @@
 ":hyperparameters" = "`(:kernel, :gamma, :weights, :nu, :cost, :cachesize, :degree, :coef0, :tolerance, :shrinking)`"
 ":hyperparameter_types" = "`(\"LIBSVM.Kernel.KERNEL\", \"Float64\", \"Union{Nothing, Dict}\", \"Float64\", \"Float64\", \"Float64\", \"Int32\", \"Float64\", \"Float64\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [LIBSVM.SVC]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -3683,7 +3377,6 @@
 ":package_url" = "https://github.com/mpastell/LIBSVM.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "SVC from LIBSVM.jl.\n[Documentation](https://github.com/mpastell/LIBSVM.jl)."
 ":name" = "SVC"
@@ -3693,7 +3386,6 @@
 ":hyperparameters" = "`(:kernel, :gamma, :weights, :cost, :cachesize, :degree, :coef0, :tolerance, :shrinking, :probability)`"
 ":hyperparameter_types" = "`(\"LIBSVM.Kernel.KERNEL\", \"Float64\", \"Union{Nothing, Dict}\", \"Float64\", \"Float64\", \"Int32\", \"Float64\", \"Float64\", \"Bool\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [LIBSVM.OneClassSVM]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -3707,7 +3399,6 @@
 ":package_url" = "https://github.com/mpastell/LIBSVM.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "OneClassSVM from LIBSVM.jl.\n[Documentation](https://github.com/mpastell/LIBSVM.jl)."
 ":name" = "OneClassSVM"
@@ -3717,7 +3408,6 @@
 ":hyperparameters" = "`(:kernel, :gamma, :nu, :cost, :cachesize, :degree, :coef0, :tolerance, :shrinking)`"
 ":hyperparameter_types" = "`(\"LIBSVM.Kernel.KERNEL\", \"Float64\", \"Float64\", \"Float64\", \"Float64\", \"Int32\", \"Float64\", \"Float64\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [GLM.LinearBinaryClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -3731,7 +3421,6 @@
 ":package_url" = "https://github.com/JuliaStats/GLM.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Linear binary classifier with specified link (e.g. logistic).\n→ based on [GLM](https://github.com/JuliaStats/GLM.jl).\n→ do `@load LinearBinaryClassifier pkg=\"GLM\"` to use the model.\n→ do `?LinearBinaryClassifier` for documentation."
 ":name" = "LinearBinaryClassifier"
@@ -3741,7 +3430,6 @@
 ":hyperparameters" = "`(:fit_intercept, :link)`"
 ":hyperparameter_types" = "`(\"Bool\", \"GLM.Link01\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [GLM.LinearCountRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -3755,7 +3443,6 @@
 ":package_url" = "https://github.com/JuliaStats/GLM.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Linear count regressor with specified link and distribution (e.g. log link and poisson).\n→ based on [GLM](https://github.com/JuliaStats/GLM.jl).\n→ do `@load LinearCountRegressor pkg=\"GLM\"` to use the model.\n→ do `?LinearCountRegressor` for documentation."
 ":name" = "LinearCountRegressor"
@@ -3765,7 +3452,6 @@
 ":hyperparameters" = "`(:fit_intercept, :distribution, :link)`"
 ":hyperparameter_types" = "`(\"Bool\", \"Distributions.Distribution\", \"GLM.Link\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [GLM.LinearRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -3779,7 +3465,6 @@
 ":package_url" = "https://github.com/JuliaStats/GLM.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "Linear regressor (OLS) with a Normal model.\n→ based on [GLM](https://github.com/JuliaStats/GLM.jl).\n→ do `@load LinearRegressor pkg=\"GLM\"` to use the model.\n→ do `?LinearRegressor` for documentation."
 ":name" = "LinearRegressor"
@@ -3789,7 +3474,6 @@
 ":hyperparameters" = "`(:fit_intercept, :allowrankdeficient)`"
 ":hyperparameter_types" = "`(\"Bool\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [MLJFlux.MultitargetNeuralNetworkRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
@@ -3803,7 +3487,6 @@
 ":package_url" = "https://github.com/alan-turing-institute/MLJFlux.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "A neural network model for making deterministic predictions of a `Continuous` multi-target, presented as a table, given a table of `Continuous` features. \n→ based on [MLJFlux](https://github.com/alan-turing-institute/MLJFlux.jl).\n→ do `@load MultitargetNeuralNetworkRegressor pkg=\"MLJFlux\"` to use the model.\n→ do `?MultitargetNeuralNetworkRegressor` for documentation."
 ":name" = "MultitargetNeuralNetworkRegressor"
@@ -3813,12 +3496,11 @@
 ":hyperparameters" = "`(:builder, :optimiser, :loss, :epochs, :batch_size, :lambda, :alpha, :optimiser_changes_trigger_retraining, :acceleration)`"
 ":hyperparameter_types" = "`(\"Any\", \"Any\", \"Any\", \"Int64\", \"Int64\", \"Float64\", \"Float64\", \"Bool\", \"ComputationalResources.AbstractResource\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [MLJFlux.NeuralNetworkClassifier]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{_s86,1} where _s86<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractArray{_s89,1} where _s89<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "MLJFlux"
 ":package_license" = "MIT"
@@ -3827,7 +3509,6 @@
 ":package_url" = "https://github.com/alan-turing-institute/MLJFlux.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "A neural network model for making probabilistic predictions of a `Multiclass` or `OrderedFactor` target, given a table of `Continuous` features. \n→ based on [MLJFlux](https://github.com/alan-turing-institute/MLJFlux.jl).\n→ do `@load NeuralNetworkClassifier pkg=\"MLJFlux\"` to use the model.\n→ do `?NeuralNetworkClassifier` for documentation."
 ":name" = "NeuralNetworkClassifier"
@@ -3837,12 +3518,11 @@
 ":hyperparameters" = "`(:builder, :finaliser, :optimiser, :loss, :epochs, :batch_size, :lambda, :alpha, :optimiser_changes_trigger_retraining, :acceleration)`"
 ":hyperparameter_types" = "`(\"Any\", \"Any\", \"Any\", \"Any\", \"Int64\", \"Int64\", \"Float64\", \"Float64\", \"Bool\", \"ComputationalResources.AbstractResource\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [MLJFlux.ImageClassifier]
-":input_scitype" = "`AbstractArray{_s86,1} where _s86<:ScientificTypes.GrayImage`"
+":input_scitype" = "`AbstractArray{_s89,1} where _s89<:ScientificTypes.GrayImage`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{_s57,1} where _s57<:ScientificTypes.Multiclass`"
+":target_scitype" = "`AbstractArray{_s60,1} where _s60<:ScientificTypes.Multiclass`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "MLJFlux"
 ":package_license" = "MIT"
@@ -3851,7 +3531,6 @@
 ":package_url" = "https://github.com/alan-turing-institute/MLJFlux.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "A neural network model for making probabilistic predictions of a `GrayImage` target,\n                given a table of `Continuous` features. \n→ based on [MLJFlux](https://github.com/alan-turing-institute/MLJFlux.jl).\n→ do `@load ImageClassifier pkg=\"MLJFlux\"` to use the model.\n→ do `?ImageClassifier` for documentation."
 ":name" = "ImageClassifier"
@@ -3861,12 +3540,11 @@
 ":hyperparameters" = "`(:builder, :finaliser, :optimiser, :loss, :epochs, :batch_size, :lambda, :alpha, :optimiser_changes_trigger_retraining, :acceleration)`"
 ":hyperparameter_types" = "`(\"Any\", \"Any\", \"Any\", \"Any\", \"Int64\", \"Int64\", \"Float64\", \"Float64\", \"Bool\", \"ComputationalResources.AbstractResource\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
 
 [MLJFlux.NeuralNetworkRegressor]
 ":input_scitype" = "`ScientificTypes.Table{_s24} where _s24<:(AbstractArray{_s23,1} where _s23<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractArray{_s57,1} where _s57<:ScientificTypes.Continuous`"
+":target_scitype" = "`AbstractArray{_s60,1} where _s60<:ScientificTypes.Continuous`"
 ":is_pure_julia" = "`true`"
 ":package_name" = "MLJFlux"
 ":package_license" = "MIT"
@@ -3875,7 +3553,6 @@
 ":package_url" = "https://github.com/alan-turing-institute/MLJFlux.jl"
 ":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
-":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
 ":docstring" = "A neural network model for making deterministic predictions of a `Continuous` target, given a table of `Continuous` features. \n→ based on [MLJFlux](https://github.com/alan-turing-institute/MLJFlux.jl).\n→ do `@load NeuralNetworkRegressor pkg=\"MLJFlux\"` to use the model.\n→ do `?NeuralNetworkRegressor` for documentation."
 ":name" = "NeuralNetworkRegressor"
@@ -3885,4 +3562,3 @@
 ":hyperparameters" = "`(:builder, :optimiser, :loss, :epochs, :batch_size, :lambda, :alpha, :optimiser_changes_trigger_retraining, :acceleration)`"
 ":hyperparameter_types" = "`(\"Any\", \"Any\", \"Any\", \"Int64\", \"Int64\", \"Float64\", \"Float64\", \"Bool\", \"ComputationalResources.AbstractResource\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"

@@ -299,7 +299,8 @@ end
 List all models whole `name` or `docstring` matches a given `needle`.
 """
 function models(needle::Union{AbstractString,Regex})
-    f = model -> occursin(needle, model.name) || occursin(needle, model.docstring)
+    f = model ->
+        occursin(needle, model.name) || occursin(needle, model.docstring)
     return models(f)
 end
 
@@ -307,7 +308,6 @@ end
     localmodels(; modl=Main)
     localmodels(filters...; modl=Main)
     localmodels(needle::Union{AbstractString,Regex}; modl=Main)
-
 
 List all models currently available to the user from the module `modl`
 without importing a package, and which additional pass through the

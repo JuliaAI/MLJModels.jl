@@ -7,6 +7,7 @@ using MLJScientificTypes
 
 pca = info("PCA", pkg="MultivariateStats")
 cnst = info("ConstantRegressor", pkg="MLJModels")
+tree = info("DecisionTreeRegressor", pkg="DecisionTree")
 
 @test_throws ArgumentError info("Julia")
 
@@ -14,7 +15,6 @@ cnst = info("ConstantRegressor", pkg="MLJModels")
 @test info(Standardizer()) == info("Standardizer", pkg="MLJModels")
 
 @testset "localmodels" begin
-    tree = info("DecisionTreeRegressor")
     @test cnst in localmodels(modl=TestModelSearch)
     @test !(tree in localmodels(modl=TestModelSearch))
     import MLJDecisionTreeInterface.DecisionTreeRegressor
@@ -86,16 +86,11 @@ end
     @test ms == ms2
 end
 
-@testset "models(needle) and localmodels(needle)" begin
+@testset "models(needle)" begin
     @test pca in models("PCA")
     @test pca ∉ models("PCA′")
-
     @test pca in models(r"PCA")
-    @test pca in models(r"pca"i)
     @test pca ∉ models(r"PCA′")
-
-    info("DecisionTreeRegressor") in localmodels("Decision"; modl = TestModelSearch)
-    info("DecisionTreeRegressor") in localmodels(r"Decision"; modl = TestModelSearch)
 end
 
 end
