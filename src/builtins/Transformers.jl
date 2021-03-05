@@ -1,4 +1,4 @@
-## CONSTANTS 
+## CONSTANTS
 
 const N_VALUES_THRESH = 16 # for BoxCoxTransformation
 
@@ -67,24 +67,24 @@ function MMI.fit(transformer::UnivariateFillImputer,
 end
 
 function replace_missing(::Type{<:Finite}, vnew, filler)
-   all(in(levels(filler)), levels(vnew)) || 
-   	error(ArgumentError("The `column::AbstractVector{<:Finite}`"* 
-   			    " to be transformed must contain the same levels"*
-   			    " as the categorical value to be imputed"))
+   all(in(levels(filler)), levels(vnew)) ||
+        error(ArgumentError("The `column::AbstractVector{<:Finite}`"*
+                            " to be transformed must contain the same levels"*
+                            " as the categorical value to be imputed"))
    replace(vnew, missing => filler)
-   
+
 end
 
 function replace_missing(::Type, vnew, filler)
    T = promote_type(nonmissing(eltype(vnew)), typeof(filler))
    w_tight = similar(vnew, T)
    @inbounds for i in eachindex(vnew)
-   	if ismissing(vnew[i])
-   	   w_tight[i] = filler
-   	else
-   	   w_tight[i] = vnew[i]
-   	end
-   end	
+        if ismissing(vnew[i])
+           w_tight[i] = filler
+        else
+           w_tight[i] = vnew[i]
+        end
+   end
    return w_tight
 end
 
@@ -93,13 +93,13 @@ function MMI.transform(transformer::UnivariateFillImputer,
                            vnew)
 
     filler = fitresult.filler
-    
-    scitype(filler) <: elscitype(vnew) || 
+
+    scitype(filler) <: elscitype(vnew) ||
     error("Attempting to impute a value of scitype $(scitype(filler)) "*
     "into a vector of incompatible elscitype, namely $(elscitype(vnew)). ")
 
     if elscitype(vnew) >: Missing
-    	w_tight = replace_missing(nonmissing(elscitype(vnew)), vnew, filler)
+        w_tight = replace_missing(nonmissing(elscitype(vnew)), vnew, filler)
     else
         w_tight = vnew
     end
@@ -169,7 +169,7 @@ function MMI.fit(transformer::FillImputer, verbosity::Int, X)
     isimputable(ftr, ::Type{<:Union{Continuous,Missing}}) = true
     isimputable(ftr, ::Type{<:Union{Count,Missing}}) = true
     isimputable(ftr, ::Type{<:Union{Finite,Missing}}) = true
-    
+
     mask = map(features_and_scitypes) do tup
         isimputable(tup...)
     end
@@ -249,12 +249,12 @@ Alternatively, if a non-empty `features` is specified, then only the
 specified features encountered during fitting are used (`ignore=false`) or all features
 encountered during fitting which are not named in `features` are used (`ignore=true`).
 
-Throws an error if a recorded or specified feature is not present in the transformation 
+Throws an error if a recorded or specified feature is not present in the transformation
 input.
 
-Instead of supplying a features vector, a Bool-valued callable with one argument 
+Instead of supplying a features vector, a Bool-valued callable with one argument
 can be also be specified. For example, specifying `FeatureSelector(features =
-name -> name in [:x1, :x3], ignore = true)` has the same effect as 
+name -> name in [:x1, :x3], ignore = true)` has the same effect as
 `FeatureSelector(features = [:x1, :x3], ignore = true)`, namely to select
  all features, with the exception of `:x1` and `:x3`.
 
@@ -320,16 +320,16 @@ end
 
 function MMI.fit(transformer::FeatureSelector, verbosity::Int, X)
     all_features = Tables.schema(X).names
-    
+
     if transformer.features isa AbstractVector{Symbol}
         if isempty(transformer.features)
-           features = collect(all_features) 
+           features = collect(all_features)
         else
             features = if transformer.ignore
                 !issubset(transformer.features, all_features) && verbosity > -1 &&
                 @warn("Excluding non-existent feature(s).")
                 filter!(all_features |> collect) do ftr
-                   !(ftr in transformer.features) 
+                   !(ftr in transformer.features)
                 end
             else
                 issubset(transformer.features, all_features) ||
@@ -351,9 +351,9 @@ function MMI.fit(transformer::FeatureSelector, verbosity::Int, X)
             ArgumentError("No feature(s) selected.\n The specified Bool-valued"*
               " callable with the `ignore` option set to `$(transformer.ignore)` "*
               "resulted in an empty feature set for selection")
-         )      
+         )
     end
-    
+
     fitresult = features
     report = NamedTuple()
     return fitresult, nothing, report
@@ -468,7 +468,7 @@ end
 # inverse transforming a categorical value:
 function MMI.inverse_transform(
     transformer::UnivariateDiscretizer, result, e::CategoricalValue)
-    k = get(e)
+    k = CategoricalArrays.DataAPI.unwrap(e)
     return inverse_transform(transformer, result, k)
 end
 
@@ -685,11 +685,11 @@ features standardized are the `Continuous` features named in
 `features` (`ignore=true`). To allow standarization of `Count` or
 `OrderedFactor` features as well, set the appropriate flag to true.
 
-Instead of supplying a features vector, a Bool-valued callable with one 
-argument can be also be specified. For example, specifying 
-`Standardizer(features = name -> name in [:x1, :x3], ignore = true, count=true)`  
+Instead of supplying a features vector, a Bool-valued callable with one
+argument can be also be specified. For example, specifying
+`Standardizer(features = name -> name in [:x1, :x3], ignore = true, count=true)`
 has the same effect as `Standardizer(features = [:x1, :x3], ignore = true,
-count=true)`, namely to standardise all `Continuous` and `Count` features, 
+count=true)`, namely to standardise all `Continuous` and `Count` features,
 with the exception of `:x1` and `:x3`.
 
 The `inverse_tranform` method is supported provided `count=false` and
