@@ -11,6 +11,8 @@ using Dates: DateTime, Date, Time, Day, Hour
 
 import MLJBase
 
+_get(x) = CategoricalArrays.DataAPI.unwrap(x)
+
 
 #### FEATURE SELECTOR ####
 
@@ -107,8 +109,8 @@ end
     @test MLJBase.inverse_transform(t, result, w[43]) ≈ r
 
     # test of permitted abuses of argument:
-    @test MLJBase.inverse_transform(t, result, get(w[43])) ≈ r
-    @test MLJBase.inverse_transform(t, result, map(get, w)) ≈
+    @test MLJBase.inverse_transform(t, result, _get(w[43])) ≈ r
+    @test MLJBase.inverse_transform(t, result, map(_get, w)) ≈
         MLJBase.inverse_transform(t, result, w)
 
     # all transformed vectors should have an identical pool (determined in

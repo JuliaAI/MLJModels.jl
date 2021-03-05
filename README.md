@@ -88,19 +88,17 @@ GreatNewPackage with MLJ:
 - Add `GreatNewPackage` to the environment.
 
 - In some environment to which your MLJModels clone has been added
-  (using `Pkg.dev`) execute `using MLJModels; @update`. This updates
+  (using `Pkg.dev`) execute `using MLJModels; MLJModels.@update`. This updates
   `src/registry/Metadata.toml` and `src/registry/Models.toml` (the
-  latter is generated for convenience and not used by MLJ). If the new
-  package does not appear in the list of packages generated, you may
-  have to force precompilation of MLJModels.
+  latter is generated for convenience and not used by MLJ). 
   
-- Test that interfaces load with `MLJModels.check_registry()`
+- Quit your REPL session and make a trivial commit to your MLJModels
+  branch to force pre-compilation in a new julia session when you run
+  `using MLJModels`. (For technical reasons the registry is not loaded
+  in `__init__`()`, so without pre-compiliation the registry is not
+  available.)
 
-- Quit your REPL session, whose namespace is now polluted.
-
-- *Note.* that your local MLJModels will not immediately adopt the
-  updated registry because that requires pre-compilation; for
-  technical reasons the registry is not loaded in `__init__`()`.
+- Test that interfaces load with `MLJModels.check_registry()`.
 
 - Push your changes to an appropriate branch of MLJModels to make
   the updated metadata available to users of the next MLJModels tagged
