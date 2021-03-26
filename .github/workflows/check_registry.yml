@@ -35,4 +35,5 @@ jobs:
             ${{ runner.os }}-test-
             ${{ runner.os }}-
       - uses: julia-actions/julia-buildpkg@v1
-      - run: julia --project -e 'using MLJModels; MLJModels.check_registry()'
+      - run: julia -e 'using Pkg; Pkg.activate(pwd()); Pkg.add("Test")'
+      - run: julia --project -e 'using MLJModels; using Test; @test(!isempty(MLJModels.check_registry()))'
