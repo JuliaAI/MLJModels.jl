@@ -6,7 +6,7 @@ function check_registry()
     # Read Metadata.toml
     dict = TOML.parsefile(joinpath(basedir, "Metadata.toml"))
 
-    # There will be warnings for ambiguous things, ignore them
+    problems = []
     for (package, model_dict) in dict
         for (model, meta) in model_dict
             # check if new entry or changed entry, otherwise don't test
@@ -19,8 +19,10 @@ function check_registry()
                 # add/refresh entry
                 print(rpad("Entry for $key was loaded properly ✓", 79)*"\r")
             catch
+                push!(problems, string(key))
                 @error "⚠ there was an issue trying to load $key"
             end
         end
     end
+    return problems
 end
