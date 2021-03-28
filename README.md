@@ -98,7 +98,9 @@ GreatNewPackage with MLJ:
   in `__init__`()`, so without pre-compiliation the registry is not
   available.)
 
-- Test that interfaces load with `MLJModels.check_registry()`.
+- Test that the interfaces load properly with
+  `MLJModels.check_registry()`. (CI will now fail on dev -> master if
+  this test fails.)
 
 - Push your changes to an appropriate branch of MLJModels to make
   the updated metadata available to users of the next MLJModels tagged
