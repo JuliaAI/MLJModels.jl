@@ -68,6 +68,16 @@ MMI.package_url(::Type{DummyUnsup}) = "https://mickey.mouse.org"
 MMI.package_license(::Type{DummyUnsup}) = "MIT"
 MMI.transform(::DummyUnsup, fr, X) = nothing
 
+# method to check that dictionary `d1` agrees on the key of `d2`,
+# which must be subset of those of `d1`:
+function _issubset(d1, d2)
+    k1 = keys(d1)
+    issubset(k1, keys(d2)) || return false
+    return all(k1) do k
+        d1[k] == d2[k]
+    end
+end
+
 @testset "info on probabilistic models" begin
     d = LittleDict{Symbol,Any}(
             :name             => "DummyProb",
@@ -96,8 +106,8 @@ MMI.transform(::DummyUnsup, fr, X) = nothing
                  range(Float64, :a_float, lower=1, upper=2),
                  range(Vector{Float64}, :a_vector, values=[[1.0], [2.0]]),
                  nothing))
-    @test MLJModels.info_dict(DummyProb) == d
-    @test MLJModels.info_dict(DummyProb(42, 3.14, [1.0, 2.0], :cow)) == d
+    @test _issubset(d, MLJModels.info_dict(DummyProb))
+    @test _issubset(d, MLJModels.info_dict(DummyProb(42, 3.14, [1.0, 2.0], :cow)))
 end
 
 @testset "info on deterministic models" begin
@@ -124,8 +134,8 @@ end
             :hyperparameters       => (),
             :hyperparameter_ranges => ())
 
-    @test MLJModels.info_dict(DummyDeterm)   == d
-    @test MLJModels.info_dict(DummyDeterm()) == d
+    @test _issubset(d, MLJModels.info_dict(DummyDeterm))
+    @test _issubset(d, MLJModels.info_dict(DummyDeterm()))
 end
 
 @testset "info on interval models" begin
@@ -152,8 +162,8 @@ end
             :hyperparameters => (),
             :hyperparameter_ranges => ())
 
-    @test MLJModels.info_dict(DummyInt)   == d
-    @test MLJModels.info_dict(DummyInt()) == d
+    @test _issubset(d, MLJModels.info_dict(DummyInt))
+    @test _issubset(d, MLJModels.info_dict(DummyInt()))
 end
 
 @testset "info on unsupervised models" begin
@@ -180,8 +190,8 @@ end
             :hyperparameters       => (),
             :hyperparameter_ranges => ())
 
-    @test MLJModels.info_dict(DummyUnsup)   == d
-    @test MLJModels.info_dict(DummyUnsup()) == d
+    @test _issubset(d, MLJModels.info_dict(DummyUnsup))
+    @test _issubset(d, MLJModels.info_dict(DummyUnsup()))
 end
 
 end
