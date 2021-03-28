@@ -68,7 +68,7 @@ MMI.package_url(::Type{DummyUnsup}) = "https://mickey.mouse.org"
 MMI.package_license(::Type{DummyUnsup}) = "MIT"
 MMI.transform(::DummyUnsup, fr, X) = nothing
 
-# method to check that dictionary `d1` agrees on the key of `d2`,
+# helper to check that dictionary `d1` agrees on the key of `d2`,
 # which must be subset of those of `d1`:
 function _issubset(d1, d2)
     k1 = keys(d1)
@@ -77,6 +77,11 @@ function _issubset(d1, d2)
         d1[k] == d2[k]
     end
 end
+d1 = Dict('a'=> 1, 'b' => 2)
+d2 = Dict('a' => 1, 'b' => 2, 'c' => 3)
+@test _issubset(d1, d2)
+d2['b'] = 4
+@test !_issubset(d1, d2)
 
 @testset "info on probabilistic models" begin
     d = LittleDict{Symbol,Any}(
@@ -98,8 +103,6 @@ end
             :is_wrapper       => false,
             :docstring        => "DummyProb from GreatPackage.jl.\n[Documentation](https://mickey.mouse.org).",
             :implemented_methods  => [:predict, ],
-            :hyperparameter_types => ("Int64", "Float64",
-                                 "Array{Float64,1}", "Any"),
             :hyperparameters  => (:an_int, :a_float, :a_vector, :untyped),
             :hyperparameter_ranges =>
                 (range(Int, :an_int, values=[1,2]),
