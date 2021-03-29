@@ -34,6 +34,10 @@ jobs:
             ${{ runner.os }}-test-${{ env.cache-name }}-
             ${{ runner.os }}-test-
             ${{ runner.os }}-
-      - uses: julia-actions/julia-buildpkg@v1
-      - run: julia -e 'using Pkg; Pkg.activate(pwd()); Pkg.add("Test")'
-      - run: julia --project -e 'using MLJModels; using Test; @test(!isempty(MLJModels.check_registry()))'
+      - run: julia -e 'using Pkg; Pkg.Registry.update()'
+      - run: julia -e 'using Pkg; Pkg.develop(Pkg.PackageSpec(path = pwd()))'
+      - run: julia -e 'using Pkg; Pkg.add("Test")'
+      - run: julia -e 'using Pkg; Pkg.update()'
+      - run: julia -e 'using Pkg; Pkg.precompile()'
+      - run: julia -e 'using Pkg; Pkg.status()'
+      - run: julia -e 'using MLJModels; using Test; foo = MLJModels.check_registry(); @info("", foo); @test(!isempty(foo))'
