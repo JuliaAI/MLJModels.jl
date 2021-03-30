@@ -2,6 +2,8 @@ function check_registry()
 
     basedir = Registry.environment_path
     Pkg.activate(basedir)
+    Pkg.instantiate()
+    Pkg.precompile()
 
     # Read Metadata.toml
     dict = TOML.parsefile(joinpath(basedir, "Metadata.toml"))
