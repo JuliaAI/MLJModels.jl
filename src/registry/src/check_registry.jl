@@ -2,11 +2,13 @@ function check_registry()
 
     basedir = Registry.environment_path
     Pkg.activate(basedir)
+    Pkg.instantiate()
+    Pkg.precompile()
 
     # Read Metadata.toml
     dict = TOML.parsefile(joinpath(basedir, "Metadata.toml"))
 
-    # There will be warnings for ambiguous things, ignore them
+    problems = String[]
     for (package, model_dict) in dict
         for (model, meta) in model_dict
             # check if new entry or changed entry, otherwise don't test
@@ -18,9 +20,11 @@ function check_registry()
                 eval(program)
                 # add/refresh entry
                 print(rpad("Entry for $key was loaded properly ✓", 79)*"\r")
-            catch
-                @error "⚠ there was an issue trying to load $key"
+            catch ex
+                push!(problems, string(key))
+                @error "⚠ there was an issue trying to load $key" exception=ex
             end
         end
     end
+    return problems
 end
