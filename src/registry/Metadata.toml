@@ -6,7 +6,7 @@
 ":is_pure_julia" = "`true`"
 ":package_name" = "BetaML"
 ":package_license" = "MIT"
-":load_path" = "MickeyMouse.Perceptron.PerceptronClassifier"
+":load_path" = "BetaML.Perceptron.PerceptronClassifier"
 ":package_uuid" = "024491cd-cc6b-443e-8034-08ea7eb7db2b"
 ":package_url" = "https://github.com/sylvaticus/BetaML.jl"
 ":is_wrapper" = "`false`"
