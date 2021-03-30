@@ -8,7 +8,7 @@ function check_registry()
     # Read Metadata.toml
     dict = TOML.parsefile(joinpath(basedir, "Metadata.toml"))
 
-    problems = []
+    problems = String[]
     for (package, model_dict) in dict
         for (model, meta) in model_dict
             # check if new entry or changed entry, otherwise don't test
