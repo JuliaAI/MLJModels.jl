@@ -1,4 +1,4 @@
-BetaML = ["PerceptronClassifier", "DecisionTreeRegressor", "DecisionTreeClassifier", "RandomForestRegressor", "PegasosClassifier", "KernelPerceptronClassifier", "RandomForestClassifier"]
+BetaML = ["RandomForestRegressor", "RandomForestClassifier", "PerceptronClassifier", "DecisionTreeRegressor", "PegasosClassifier", "KMedoids", "KMeans", "DecisionTreeClassifier", "GMMClusterer", "MissingImputator", "KernelPerceptronClassifier"]
 NearestNeighborModels = ["KNNClassifier", "MultitargetKNNClassifier", "MultitargetKNNRegressor", "KNNRegressor"]
 PartialLeastSquaresRegressor = ["KPLSRegressor", "PLSRegressor"]
 MLJLinearModels = ["QuantileRegressor", "LogisticClassifier", "MultinomialClassifier", "LADRegressor", "RidgeRegressor", "RobustRegressor", "ElasticNetRegressor", "LinearRegressor", "LassoRegressor", "HuberRegressor"]
