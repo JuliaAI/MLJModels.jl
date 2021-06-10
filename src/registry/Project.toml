@@ -22,7 +22,7 @@ PartialLeastSquaresRegressor = "f4b1acfe-f311-436c-bb79-8483f53c17d5"
 Pkg = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
 
 [compat]
-MLJModelInterface = "^0.3,^0.4"
+MLJModelInterface = "0.3,0.4,1.1"
 
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
