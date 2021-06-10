@@ -23,6 +23,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [BetaML.RandomForestClassifier]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:Union{AbstractVector{var\"_s9\"} where var\"_s9\"<:Missing, AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Known}`"
@@ -48,6 +49,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [BetaML.PerceptronClassifier]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Infinite)`"
@@ -73,6 +75,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [BetaML.DecisionTreeRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:Union{AbstractVector{var\"_s9\"} where var\"_s9\"<:Missing, AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Known}`"
@@ -98,6 +101,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [BetaML.PegasosClassifier]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Infinite)`"
@@ -123,6 +127,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [BetaML.KMedoids]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -148,6 +153,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [BetaML.KMeans]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -173,6 +179,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [BetaML.DecisionTreeClassifier]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:Union{AbstractVector{var\"_s9\"} where var\"_s9\"<:Missing, AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Known}`"
@@ -198,6 +205,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [BetaML.GMMClusterer]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:Union{Missing, ScientificTypes.Continuous})`"
@@ -223,6 +231,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [BetaML.MissingImputator]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:Union{Missing, ScientificTypes.Continuous})`"
@@ -248,6 +257,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [BetaML.KernelPerceptronClassifier]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Infinite)`"
@@ -273,6 +283,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [NearestNeighborModels.KNNClassifier]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -298,6 +309,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [NearestNeighborModels.MultitargetKNNClassifier]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -323,6 +335,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [NearestNeighborModels.MultitargetKNNRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -348,6 +361,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [NearestNeighborModels.KNNRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -373,6 +387,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [PartialLeastSquaresRegressor.KPLSRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -398,6 +413,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [PartialLeastSquaresRegressor.PLSRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -423,6 +439,7 @@
 ":hyperparameter_ranges" = "`(nothing,)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [MLJLinearModels.QuantileRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -448,6 +465,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [MLJLinearModels.LogisticClassifier]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -473,6 +491,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [MLJLinearModels.MultinomialClassifier]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -498,6 +517,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [MLJLinearModels.LADRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -523,6 +543,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [MLJLinearModels.RidgeRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -548,6 +569,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [MLJLinearModels.RobustRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -573,6 +595,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [MLJLinearModels.ElasticNetRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -598,6 +621,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [MLJLinearModels.LinearRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -623,6 +647,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [MLJLinearModels.LassoRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -648,6 +673,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [MLJLinearModels.HuberRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -673,6 +699,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.ProbabilisticSGDClassifier]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -698,6 +725,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.RidgeCVClassifier]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -723,6 +751,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.LogisticClassifier]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -748,6 +777,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.RandomForestRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:Union{AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Count, AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous}`"
@@ -773,6 +803,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.ElasticNetCVRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -798,6 +829,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.PerceptronClassifier]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -823,6 +855,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.MultiTaskLassoRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -848,6 +881,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.LinearRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -873,6 +907,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.DBSCAN]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -898,6 +933,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.RidgeRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -923,6 +959,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.LassoLarsICRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -948,6 +985,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.ARDRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -973,6 +1011,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.SVMNuRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -998,6 +1037,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.RidgeClassifier]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -1023,6 +1063,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.SGDRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -1048,6 +1089,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.ComplementNBClassifier]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Count)`"
@@ -1073,6 +1115,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.HuberRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -1098,6 +1141,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.SVMNuClassifier]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -1123,6 +1167,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.GradientBoostingClassifier]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -1148,6 +1193,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.GaussianProcessRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -1173,6 +1219,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.SVMLinearRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -1198,6 +1245,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.LarsRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -1223,6 +1271,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.MeanShift]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -1248,6 +1297,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.AdaBoostRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -1273,6 +1323,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.AffinityPropagation]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -1298,6 +1349,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.MultiTaskLassoCVRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -1323,6 +1375,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.OrthogonalMatchingPursuitRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -1348,6 +1401,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.RidgeCVRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -1373,6 +1427,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.PassiveAggressiveClassifier]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -1398,6 +1453,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.SVMRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -1423,6 +1479,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.BernoulliNBClassifier]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Count)`"
@@ -1448,6 +1505,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.GaussianNBClassifier]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -1473,6 +1531,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.ExtraTreesClassifier]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -1498,6 +1557,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.KMeans]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -1523,6 +1583,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.MultiTaskElasticNetCVRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -1548,6 +1609,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.LassoLarsCVRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -1573,6 +1635,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.OrthogonalMatchingPursuitCVRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -1598,6 +1661,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.AdaBoostClassifier]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -1623,6 +1687,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.PassiveAggressiveRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -1648,6 +1713,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.BayesianRidgeRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -1673,6 +1739,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.RANSACRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -1698,6 +1765,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.BaggingClassifier]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -1723,6 +1791,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.GaussianProcessClassifier]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -1748,6 +1817,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.OPTICS]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -1773,6 +1843,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.KNeighborsRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -1798,6 +1869,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.MiniBatchKMeans]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -1823,6 +1895,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.LassoCVRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -1848,6 +1921,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.DummyRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -1873,6 +1947,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.LassoLarsRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -1898,6 +1973,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.LarsCVRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -1923,6 +1999,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.KNeighborsClassifier]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -1948,6 +2025,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.SVMLinearClassifier]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -1973,6 +2051,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.FeatureAgglomeration]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -1998,6 +2077,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.DummyClassifier]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -2023,6 +2103,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.BaggingRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -2048,6 +2129,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.BayesianQDA]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -2073,6 +2155,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.BayesianLDA]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -2098,6 +2181,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.SGDClassifier]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -2123,6 +2207,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.TheilSenRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -2148,6 +2233,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.SpectralClustering]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -2173,6 +2259,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.Birch]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -2198,6 +2285,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.AgglomerativeClustering]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -2223,6 +2311,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.ElasticNetRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -2248,6 +2337,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.RandomForestClassifier]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:Union{AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Count, AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous}`"
@@ -2273,6 +2363,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.LogisticCVClassifier]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -2298,6 +2389,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.MultiTaskElasticNetRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -2323,6 +2415,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.ExtraTreesRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -2348,6 +2441,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.LassoRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -2373,6 +2467,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.MultinomialNBClassifier]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Count)`"
@@ -2398,6 +2493,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.GradientBoostingRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -2423,6 +2519,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ScikitLearn.SVMClassifier]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -2448,6 +2545,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [ParallelKMeans.KMeans]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -2473,6 +2571,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [NaiveBayes.GaussianNBClassifier]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -2498,6 +2597,7 @@
 ":hyperparameter_ranges" = "`()`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [NaiveBayes.MultinomialNBClassifier]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Count)`"
@@ -2523,6 +2623,7 @@
 ":hyperparameter_ranges" = "`(nothing,)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [MLJBase.DeterministicSurrogate]
 ":input_scitype" = "`ScientificTypes.Unknown`"
@@ -2548,6 +2649,33 @@
 ":hyperparameter_ranges" = "`()`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
+
+[MLJBase.DeterministicStack]
+":input_scitype" = "`ScientificTypes.Unknown`"
+":output_scitype" = "`ScientificTypes.Unknown`"
+":target_scitype" = "`ScientificTypes.Unknown`"
+":is_pure_julia" = "`false`"
+":package_name" = "MLJBase"
+":package_license" = "MIT"
+":load_path" = "MLJBase.DeterministicStack"
+":package_uuid" = "a7f614a8-145f-11e9-1d2a-a57a1082229d"
+":package_url" = "https://github.com/alan-turing-institute/MLJBase.jl"
+":is_wrapper" = "`false`"
+":supports_weights" = "`false`"
+":supports_class_weights" = "`false`"
+":supports_online" = "`false`"
+":docstring" = "DeterministicStack from MLJBase.jl.\n[Documentation](https://github.com/alan-turing-institute/MLJBase.jl)."
+":name" = "DeterministicStack"
+":is_supervised" = "`true`"
+":prediction_type" = ":deterministic"
+":implemented_methods" = []
+":hyperparameters" = "`(:models, :metalearner, :resampling)`"
+":hyperparameter_types" = "`(\"Vector{MLJModelInterface.Supervised}\", \"MLJModelInterface.Deterministic\", \"Any\")`"
+":hyperparameter_ranges" = "`(nothing, nothing, nothing)`"
+":iteration_parameter" = "`nothing`"
+":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [MLJBase.WrappedFunction]
 ":input_scitype" = "`ScientificTypes.Unknown`"
@@ -2573,6 +2701,7 @@
 ":hyperparameter_ranges" = "`(nothing,)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [MLJBase.IntervalSurrogate]
 ":input_scitype" = "`ScientificTypes.Unknown`"
@@ -2598,31 +2727,33 @@
 ":hyperparameter_ranges" = "`()`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
-[MLJBase.UnsupervisedSurrogate]
+[MLJBase.ProbabilisticStack]
 ":input_scitype" = "`ScientificTypes.Unknown`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`ScientificTypes.Unknown`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "MLJBase"
-":package_license" = "unknown"
-":load_path" = "MLJBase.UnsupervisedSurrogate"
-":package_uuid" = "unknown"
-":package_url" = "unknown"
-":is_wrapper" = "`true`"
+":package_license" = "MIT"
+":load_path" = "MLJBase.ProbabilisticStack"
+":package_uuid" = "a7f614a8-145f-11e9-1d2a-a57a1082229d"
+":package_url" = "https://github.com/alan-turing-institute/MLJBase.jl"
+":is_wrapper" = "`false`"
 ":supports_weights" = "`false`"
 ":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
-":docstring" = "UnsupervisedSurrogate from MLJBase.jl.\n[Documentation](unknown)."
-":name" = "UnsupervisedSurrogate"
-":is_supervised" = "`false`"
-":prediction_type" = ":unknown"
-":implemented_methods" = [":fitted_params", ":inverse_transform", ":machine", ":predict", ":predict_joint", ":transform"]
-":hyperparameters" = "`()`"
-":hyperparameter_types" = "`()`"
-":hyperparameter_ranges" = "`()`"
+":docstring" = "ProbabilisticStack from MLJBase.jl.\n[Documentation](https://github.com/alan-turing-institute/MLJBase.jl)."
+":name" = "ProbabilisticStack"
+":is_supervised" = "`true`"
+":prediction_type" = ":probabilistic"
+":implemented_methods" = []
+":hyperparameters" = "`(:models, :metalearner, :resampling)`"
+":hyperparameter_types" = "`(\"Vector{MLJModelInterface.Supervised}\", \"MLJModelInterface.Probabilistic\", \"Any\")`"
+":hyperparameter_ranges" = "`(nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [MLJBase.JointProbabilisticSurrogate]
 ":input_scitype" = "`ScientificTypes.Unknown`"
@@ -2648,6 +2779,33 @@
 ":hyperparameter_ranges" = "`()`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
+
+[MLJBase.UnsupervisedSurrogate]
+":input_scitype" = "`ScientificTypes.Unknown`"
+":output_scitype" = "`ScientificTypes.Unknown`"
+":target_scitype" = "`ScientificTypes.Unknown`"
+":is_pure_julia" = "`false`"
+":package_name" = "MLJBase"
+":package_license" = "unknown"
+":load_path" = "MLJBase.UnsupervisedSurrogate"
+":package_uuid" = "unknown"
+":package_url" = "unknown"
+":is_wrapper" = "`true`"
+":supports_weights" = "`false`"
+":supports_class_weights" = "`false`"
+":supports_online" = "`false`"
+":docstring" = "UnsupervisedSurrogate from MLJBase.jl.\n[Documentation](unknown)."
+":name" = "UnsupervisedSurrogate"
+":is_supervised" = "`false`"
+":prediction_type" = ":unknown"
+":implemented_methods" = [":fitted_params", ":inverse_transform", ":machine", ":predict", ":predict_joint", ":transform"]
+":hyperparameters" = "`()`"
+":hyperparameter_types" = "`()`"
+":hyperparameter_ranges" = "`()`"
+":iteration_parameter" = "`nothing`"
+":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [MLJBase.Resampler]
 ":input_scitype" = "`ScientificTypes.Unknown`"
@@ -2667,12 +2825,13 @@
 ":name" = "Resampler"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":unknown"
-":implemented_methods" = [":clean!", ":evaluate", ":fit", ":fitted_params"]
+":implemented_methods" = [":clean!", ":evaluate", ":fit", ":fitted_params", ":update"]
 ":hyperparameters" = "`(:model, :resampling, :measure, :weights, :class_weights, :operation, :acceleration, :check_measure, :repeats, :cache)`"
-":hyperparameter_types" = "`(\"Union{Nothing, MLJModelInterface.Supervised}\", \"Any\", \"Any\", \"Union{Nothing, AbstractVector{var\\\"_s449\\\"} where var\\\"_s449\\\"<:Real}\", \"Union{Nothing, AbstractDict{var\\\"_s448\\\", var\\\"_s447\\\"} where {var\\\"_s448\\\", var\\\"_s447\\\"<:Real}}\", \"Any\", \"ComputationalResources.AbstractResource\", \"Bool\", \"Int64\", \"Bool\")`"
+":hyperparameter_types" = "`(\"Union{Nothing, MLJModelInterface.Supervised}\", \"Any\", \"Any\", \"Union{Nothing, AbstractVector{var\\\"_s450\\\"} where var\\\"_s450\\\"<:Real}\", \"Union{Nothing, AbstractDict{var\\\"_s449\\\", var\\\"_s448\\\"} where {var\\\"_s449\\\", var\\\"_s448\\\"<:Real}}\", \"Any\", \"ComputationalResources.AbstractResource\", \"Bool\", \"Int64\", \"Bool\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [MLJBase.StaticSurrogate]
 ":input_scitype" = "`ScientificTypes.Unknown`"
@@ -2698,6 +2857,7 @@
 ":hyperparameter_ranges" = "`()`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [MLJBase.ProbabilisticSurrogate]
 ":input_scitype" = "`ScientificTypes.Unknown`"
@@ -2723,6 +2883,7 @@
 ":hyperparameter_ranges" = "`()`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [MultivariateStats.LDA]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -2748,6 +2909,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [MultivariateStats.MultitargetLinearRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -2773,6 +2935,7 @@
 ":hyperparameter_ranges" = "`(nothing,)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [MultivariateStats.BayesianSubspaceLDA]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -2798,6 +2961,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [MultivariateStats.FactorAnalysis]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -2823,6 +2987,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [MultivariateStats.LinearRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -2848,6 +3013,7 @@
 ":hyperparameter_ranges" = "`(nothing,)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [MultivariateStats.ICA]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -2873,6 +3039,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [MultivariateStats.PPCA]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -2898,6 +3065,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [MultivariateStats.RidgeRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -2923,6 +3091,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [MultivariateStats.KernelPCA]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -2948,6 +3117,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [MultivariateStats.MultitargetRidgeRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -2973,6 +3143,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [MultivariateStats.SubspaceLDA]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -2998,6 +3169,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [MultivariateStats.BayesianLDA]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -3023,6 +3195,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [MultivariateStats.PCA]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -3048,6 +3221,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [DecisionTree.AdaBoostStumpClassifier]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:Union{AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous, AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Count, AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.OrderedFactor}`"
@@ -3073,6 +3247,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [DecisionTree.DecisionTreeRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:Union{AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous, AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Count, AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.OrderedFactor}`"
@@ -3098,6 +3273,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [DecisionTree.DecisionTreeClassifier]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:Union{AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous, AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Count, AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.OrderedFactor}`"
@@ -3123,6 +3299,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [DecisionTree.RandomForestRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:Union{AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous, AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Count, AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.OrderedFactor}`"
@@ -3148,6 +3325,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [DecisionTree.RandomForestClassifier]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:Union{AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous, AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Count, AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.OrderedFactor}`"
@@ -3173,6 +3351,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [Clustering.KMeans]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -3198,6 +3377,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [Clustering.KMedoids]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -3223,6 +3403,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [XGBoost.XGBoostCount]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -3248,6 +3429,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [XGBoost.XGBoostRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -3273,6 +3455,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [XGBoost.XGBoostClassifier]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -3298,11 +3481,12 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [LightGBM.LGBMClassifier]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
-":target_scitype" = "`AbstractVector{var\"_s270\"} where var\"_s270\"<:ScientificTypes.Finite`"
+":target_scitype" = "`AbstractVector{var\"_s348\"} where var\"_s348\"<:ScientificTypes.Finite`"
 ":is_pure_julia" = "`false`"
 ":package_name" = "LightGBM"
 ":package_license" = "MIT Expat"
@@ -3323,6 +3507,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [LightGBM.LGBMRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -3348,6 +3533,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [EvoTrees.EvoTreeClassifier]
 ":input_scitype" = "`Union{ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous), AbstractMatrix{ScientificTypes.Continuous}}`"
@@ -3371,8 +3557,9 @@
 ":hyperparameters" = "`(:loss, :nrounds, :λ, :γ, :η, :max_depth, :min_weight, :rowsample, :colsample, :nbins, :α, :metric, :rng, :device)`"
 ":hyperparameter_types" = "`(\"EvoTrees.ModelType\", \"Int64\", \"AbstractFloat\", \"AbstractFloat\", \"AbstractFloat\", \"Int64\", \"AbstractFloat\", \"AbstractFloat\", \"AbstractFloat\", \"Int64\", \"AbstractFloat\", \"Symbol\", \"Any\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
+":iteration_parameter" = ":nrounds"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [EvoTrees.EvoTreeGaussian]
 ":input_scitype" = "`Union{ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous), AbstractMatrix{ScientificTypes.Continuous}}`"
@@ -3388,7 +3575,7 @@
 ":supports_weights" = "`false`"
 ":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
-":docstring" = "Gaussian maximum likelihood of μ and σ².\n→ based on [EvoTrees](https://github.com/Evovest/EvoTrees.jl).\n→ do `@load EvoTreeGaussian pkg=\"EvoTrees\"` to use the model.\n→ do `?EvoTreeGaussian` for documentation."
+":docstring" = "Gaussian maximum likelihood of μ and σ.\n→ based on [EvoTrees](https://github.com/Evovest/EvoTrees.jl).\n→ do `@load EvoTreeGaussian pkg=\"EvoTrees\"` to use the model.\n→ do `?EvoTreeGaussian` for documentation."
 ":name" = "EvoTreeGaussian"
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
@@ -3396,8 +3583,9 @@
 ":hyperparameters" = "`(:loss, :nrounds, :λ, :γ, :η, :max_depth, :min_weight, :rowsample, :colsample, :nbins, :α, :metric, :rng, :device)`"
 ":hyperparameter_types" = "`(\"EvoTrees.ModelType\", \"Int64\", \"AbstractFloat\", \"AbstractFloat\", \"AbstractFloat\", \"Int64\", \"AbstractFloat\", \"AbstractFloat\", \"AbstractFloat\", \"Int64\", \"AbstractFloat\", \"Symbol\", \"Any\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
+":iteration_parameter" = ":nrounds"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [EvoTrees.EvoTreeRegressor]
 ":input_scitype" = "`Union{ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous), AbstractMatrix{ScientificTypes.Continuous}}`"
@@ -3421,8 +3609,9 @@
 ":hyperparameters" = "`(:loss, :nrounds, :λ, :γ, :η, :max_depth, :min_weight, :rowsample, :colsample, :nbins, :α, :metric, :rng, :device)`"
 ":hyperparameter_types" = "`(\"EvoTrees.ModelType\", \"Int64\", \"AbstractFloat\", \"AbstractFloat\", \"AbstractFloat\", \"Int64\", \"AbstractFloat\", \"AbstractFloat\", \"AbstractFloat\", \"Int64\", \"AbstractFloat\", \"Symbol\", \"Any\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
+":iteration_parameter" = ":nrounds"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [EvoTrees.EvoTreeCount]
 ":input_scitype" = "`Union{ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous), AbstractMatrix{ScientificTypes.Continuous}}`"
@@ -3446,8 +3635,9 @@
 ":hyperparameters" = "`(:loss, :nrounds, :λ, :γ, :η, :max_depth, :min_weight, :rowsample, :colsample, :nbins, :α, :metric, :rng, :device)`"
 ":hyperparameter_types" = "`(\"EvoTrees.ModelType\", \"Int64\", \"AbstractFloat\", \"AbstractFloat\", \"AbstractFloat\", \"Int64\", \"AbstractFloat\", \"AbstractFloat\", \"AbstractFloat\", \"Int64\", \"AbstractFloat\", \"Symbol\", \"Any\", \"Any\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
+":iteration_parameter" = ":nrounds"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [MLJModels.ConstantClassifier]
 ":input_scitype" = "`ScientificTypes.Table`"
@@ -3473,6 +3663,7 @@
 ":hyperparameter_ranges" = "`()`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [MLJModels.Standardizer]
 ":input_scitype" = "`Union{ScientificTypes.Table, AbstractVector{var\"_s315\"} where var\"_s315\"<:ScientificTypes.Continuous}`"
@@ -3498,6 +3689,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [MLJModels.DeterministicConstantClassifier]
 ":input_scitype" = "`ScientificTypes.Table`"
@@ -3523,6 +3715,7 @@
 ":hyperparameter_ranges" = "`()`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [MLJModels.UnivariateTimeTypeToContinuous]
 ":input_scitype" = "`AbstractVector{var\"_s315\"} where var\"_s315\"<:ScientificTypes.ScientificTimeType`"
@@ -3548,6 +3741,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [MLJModels.OneHotEncoder]
 ":input_scitype" = "`ScientificTypes.Table`"
@@ -3573,6 +3767,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [MLJModels.ContinuousEncoder]
 ":input_scitype" = "`ScientificTypes.Table`"
@@ -3598,6 +3793,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [MLJModels.UnivariateBoxCoxTransformer]
 ":input_scitype" = "`AbstractVector{ScientificTypes.Continuous}`"
@@ -3623,6 +3819,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [MLJModels.ConstantRegressor]
 ":input_scitype" = "`ScientificTypes.Table`"
@@ -3648,6 +3845,7 @@
 ":hyperparameter_ranges" = "`(nothing,)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [MLJModels.FeatureSelector]
 ":input_scitype" = "`ScientificTypes.Table`"
@@ -3673,6 +3871,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [MLJModels.UnivariateDiscretizer]
 ":input_scitype" = "`AbstractVector{var\"_s315\"} where var\"_s315\"<:ScientificTypes.Continuous`"
@@ -3698,6 +3897,7 @@
 ":hyperparameter_ranges" = "`(nothing,)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [MLJModels.BinaryThresholdPredictor]
 ":input_scitype" = "`ScientificTypes.Unknown`"
@@ -3723,6 +3923,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [MLJModels.FillImputer]
 ":input_scitype" = "`ScientificTypes.Table`"
@@ -3748,6 +3949,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [MLJModels.DeterministicConstantRegressor]
 ":input_scitype" = "`ScientificTypes.Table`"
@@ -3773,6 +3975,7 @@
 ":hyperparameter_ranges" = "`()`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [MLJModels.UnivariateStandardizer]
 ":input_scitype" = "`AbstractVector{var\"_s315\"} where var\"_s315\"<:ScientificTypes.Infinite`"
@@ -3798,6 +4001,7 @@
 ":hyperparameter_ranges" = "`()`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [MLJModels.UnivariateFillImputer]
 ":input_scitype" = "`Union{AbstractVector{var\"_s315\"} where var\"_s315\"<:Union{Missing, ScientificTypes.Continuous}, AbstractVector{var\"_s108\"} where var\"_s108\"<:Union{Missing, ScientificTypes.Count}, AbstractVector{var\"_s107\"} where var\"_s107\"<:Union{Missing, ScientificTypes.Finite}}`"
@@ -3823,6 +4027,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [LIBSVM.EpsilonSVR]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -3848,6 +4053,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [LIBSVM.LinearSVC]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -3873,6 +4079,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [LIBSVM.NuSVR]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -3898,6 +4105,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [LIBSVM.NuSVC]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -3923,6 +4131,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [LIBSVM.SVC]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -3948,6 +4157,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [LIBSVM.OneClassSVM]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -3973,6 +4183,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [GLM.LinearBinaryClassifier]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -3998,6 +4209,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [GLM.LinearCountRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -4023,6 +4235,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [GLM.LinearRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -4048,6 +4261,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
+":deep_properties" = "`()`"
 
 [MLJFlux.MultitargetNeuralNetworkRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -4056,7 +4270,7 @@
 ":is_pure_julia" = "`true`"
 ":package_name" = "MLJFlux"
 ":package_license" = "MIT"
-":load_path" = "MLJFlux.NeuralNetworkRegressor"
+":load_path" = "MLJFlux.MultitargetNeuralNetworkRegressor"
 ":package_uuid" = "094fc8d1-fd35-5302-93ea-dabda2abf845"
 ":package_url" = "https://github.com/alan-turing-institute/MLJFlux.jl"
 ":is_wrapper" = "`false`"
@@ -4073,6 +4287,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = ":epochs"
 ":supports_training_losses" = "`true`"
+":deep_properties" = "`(:optimiser, :builder)`"
 
 [MLJFlux.NeuralNetworkClassifier]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -4098,9 +4313,10 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = ":epochs"
 ":supports_training_losses" = "`true`"
+":deep_properties" = "`(:optimiser, :builder)`"
 
 [MLJFlux.ImageClassifier]
-":input_scitype" = "`AbstractVector{var\"_s122\"} where var\"_s122\"<:ScientificTypes.GrayImage`"
+":input_scitype" = "`AbstractVector{var\"_s122\"} where var\"_s122\"<:ScientificTypes.Image`"
 ":output_scitype" = "`ScientificTypes.Unknown`"
 ":target_scitype" = "`AbstractVector{var\"_s68\"} where var\"_s68\"<:ScientificTypes.Multiclass`"
 ":is_pure_julia" = "`true`"
@@ -4123,6 +4339,7 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = ":epochs"
 ":supports_training_losses" = "`true`"
+":deep_properties" = "`(:optimiser, :builder)`"
 
 [MLJFlux.NeuralNetworkRegressor]
 ":input_scitype" = "`ScientificTypes.Table{var\"_s46\"} where var\"_s46\"<:(AbstractVector{var\"_s9\"} where var\"_s9\"<:ScientificTypes.Continuous)`"
@@ -4148,3 +4365,4 @@
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = ":epochs"
 ":supports_training_losses" = "`true`"
+":deep_properties" = "`(:optimiser, :builder)`"
