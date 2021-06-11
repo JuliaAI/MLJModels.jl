@@ -80,7 +80,7 @@ GreatNewPackage with MLJ:
   to the `/src/registry/` directory and, in the latest version of julia, activate the
   environment specified by the Project.toml there, after checking the
   [compat] conditions there are up to date. **Do not use**
-  `Revise`.
+  `Revise`. 
   
 - Add `GreatNewPackage` to the environment.
 
@@ -92,7 +92,7 @@ GreatNewPackage with MLJ:
 - Quit your REPL session and make a trivial commit to your MLJModels
   branch to force pre-compilation in a new julia session when you run
   `using MLJModels`. (For technical reasons the registry is not loaded
-  in `__init__`()`, so without pre-compiliation the registry is not
+  in `__init__`()`, so without pre-compiliation the new ]registry is not
   available.)
 
 - Test that the interfaces load properly with
