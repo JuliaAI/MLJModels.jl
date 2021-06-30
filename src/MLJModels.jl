@@ -2,8 +2,8 @@ module MLJModels
 
 import MLJModelInterface
 
-using MLJScientificTypes
-const ScientificTypes = MLJScientificTypes.ScientificTypes
+using ScientificTypes
+const ScientificTypesBase = ScientificTypes.ScientificTypesBase
 
 # still needed b/s UnivariateFinite type used in ThresholdPredictor:
 using MLJBase
@@ -36,7 +36,7 @@ const srcdir = dirname(@__FILE__) # the directory containing this file
 const MMI = MLJModelInterface
 
 if VERSION < v"1.3"
-    nonmissingtype = MLJScientificTypes.ScientificTypes.nonmissing
+    nonmissingtype = ScientificTypes.ScientificTypesBase.nonmissing
 end
 
 nonmissing = nonmissingtype
