@@ -4,7 +4,7 @@ using MLJModels
 using MLJModelInterface
 using Test
 using OrderedCollections
-using MLJScientificTypes
+using ScientificTypes
 
 const MMI = MLJModelInterface
 
