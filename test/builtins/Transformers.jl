@@ -2,13 +2,12 @@ module TestTransformer
 
 using Test, MLJModels
 using Tables, CategoricalArrays, Random
-using ScientificTypesBase
+using ScientificTypes
 using StatsBase
 using Statistics
 using StableRNGs
 stable_rng = StableRNGs.StableRNG(123)
 using Dates: DateTime, Date, Time, Day, Hour
-
 import MLJBase
 
 _get(x) = CategoricalArrays.DataAPI.unwrap(x)
