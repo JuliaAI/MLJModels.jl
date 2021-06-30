@@ -1,7 +1,9 @@
 function check_registry()
 
     basedir = Registry.environment_path
+    mljmodelsdir = joinpath(basedir, "..", "..", ".")
     Pkg.activate(basedir)
+    Pkg.develop(PackageSpec(path=mljmodelsdir))
     Pkg.instantiate()
     Pkg.precompile()
 
