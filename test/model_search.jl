@@ -3,7 +3,7 @@ module TestModelSearch
 using Test
 using MLJModels
 import MLJBase
-using MLJScientificTypes
+using ScientificTypes
 
 pca = info("PCA", pkg="MultivariateStats")
 cnst = info("ConstantRegressor", pkg="MLJModels")

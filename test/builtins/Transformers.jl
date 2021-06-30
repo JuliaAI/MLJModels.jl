@@ -2,7 +2,7 @@ module TestTransformer
 
 using Test, MLJModels
 using Tables, CategoricalArrays, Random
-using ScientificTypes
+using ScientificTypesBase
 using StatsBase
 using Statistics
 using StableRNGs
