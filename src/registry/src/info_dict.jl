@@ -7,12 +7,17 @@
 
 info_dict(model::Model) = info_dict(typeof(model))
 
+ismissing_or_isa(x, T) = ismissing(x) || x isa T
+
 function info_dict(M::Type{<:Model})
     message = "$M has a bad trait declaration.\n"
-    is_pure_julia(M) isa Bool ||
+    ismissing_or_isa(is_pure_julia(M), Bool) ||
         error(message * "`is_pure_julia($M)` must return true or false")
-    supports_weights(M) isa Bool ||
+    ismissing_or_isa(supports_weights(M), Bool) ||
         error(message * "`supports_weights($M)` must return true, "*
+              "false or missing. ")
+    ismissing_or_isa(supports_class_weights(M), Bool) ||
+        error(message * "`supports_class_weights($M)` must return true, "*
               "false or missing. ")
     is_wrapper(M) isa Bool ||
         error(message * "`is_wrapper($M)` must return true, false. ")

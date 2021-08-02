@@ -193,6 +193,8 @@ end
 #     show(io, MIME("text/plain"), _as_named_tuple(S))
 # end
 
+not_missing_and_true(x) = !ismissing(x) && x
+
 matching(X)       = Checker{false,missing,missing,scitype(X),missing}()
 matching(X, y)    = Checker{true,missing,missing,scitype(X),scitype(y)}()
 matching(X, y, w) = Checker{true,true,false,scitype(X),scitype(y)}()
@@ -222,7 +224,7 @@ matching(X, y, w::AbstractDict) =
             XS,
             yS})(model::MLJModels.ModelProxy) where {XS,yS} =
     model.is_supervised &&
-    model.supports_weights &&
+    not_missing_and_true(model.supports_weights) &&
     XS <: model.input_scitype &&
     yS <: model.target_scitype
 
@@ -232,7 +234,7 @@ matching(X, y, w::AbstractDict) =
             XS,
             yS})(model::MLJModels.ModelProxy) where {XS,yS} =
     model.is_supervised &&
-    model.supports_class_weights &&
+    not_missing_and_true(model.supports_class_weights) &&
     XS <: model.input_scitype &&
     yS <: model.target_scitype
 
