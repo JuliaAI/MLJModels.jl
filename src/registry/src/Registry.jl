@@ -77,7 +77,7 @@ function _update(mod, test_env_only)
 
         modeltypes = MLJModels.Registry.finaltypes(MLJBase.Model)
         filter!(modeltypes) do T
-            !isabstracttype(T)
+            !isabstracttype(T) && !MLJBase.is_wrapper(T)
         end
 
         # generate and write to file the model metadata:

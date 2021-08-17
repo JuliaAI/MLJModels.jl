@@ -2,10 +2,9 @@
 
 [![Build Status](https://github.com/alan-turing-institute/MLJModels.jl/workflows/CI/badge.svg)](https://github.com/alan-turing-institute/MLJModels.jl/actions)
 
-Repository of selected models for use in the
+Repository of the "built-in" models available for use in the
 [MLJ](https://github.com/alan-turing-institute/MLJ.jl) MLJ machine
-learning framework, without the need to import third party packages; and the
-home of the MLJ model registry.
+learning framework; and the home of the MLJ model registry.
 
 For instructions on integrating a new model with MLJ visit
 [here](https://alan-turing-institute.github.io/MLJ.jl/dev/adding_models_for_general_use/)
