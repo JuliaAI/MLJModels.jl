@@ -10,8 +10,11 @@ import MLJBase
     y1 = categorical(yraw) # scitype `AbstractArray{Multiclass{2}, 1}
     y2 = categorical(yraw[2:end], ordered=true)
 
-    model = BinaryThresholdPredictor()
-
+    atom = ConstantClassifier()
+    
+    @test_throws MLJModels.ERR_MODEL_UNSPECIFIED BinaryThresholdPredictor()
+    model = BinaryThresholdPredictor(atom)
+    
     # Check if warning shows up when target (y) is of
     # scitype `AbstractArray{Multiclass{2},1}`
     @test_logs((:warn, r"Taking positive class as"),
@@ -25,35 +28,37 @@ import MLJBase
     f, _, _ = MLJBase.fit(model, 1, MLJBase.selectrows(X, 2:4), y2)
     @test @test_logs((:warn, r"Predicted `AbstractVector{<:UnivariateFinite}`"),
                MLJBase.predict(model, f, X) ==
-                   MLJBase.predict_mode(model.wrapped_model, f[1], X))
+                   MLJBase.predict_mode(model.model, f[1], X))
 
     # Check predictions containing two classes
-    @test_throws ArgumentError BinaryThresholdPredictor(wrapped_model=ConstantRegressor())
-    @test_logs((:warn, r"`threshold` should be"), BinaryThresholdPredictor(threshold=-1))
-    @test_logs((:warn, r"`threshold` should be"), BinaryThresholdPredictor(threshold=1))
+    @test_throws ArgumentError BinaryThresholdPredictor(ConstantRegressor())
+    @test_logs((:warn, r"`threshold` should be"),
+               BinaryThresholdPredictor(atom, threshold=-1))
+    @test_logs((:warn, r"`threshold` should be"),
+               BinaryThresholdPredictor(atom, threshold=1))
 
-    # Compare fitresult and fitted_params with that of wrapped_model
+    # Compare fitresult and fitted_params with that of model
     model_fr, model_cache, model_report = MLJBase.fit(model, 1, X, y)
-    wrapped_model_fr, wrapped_model_cache, wrapped_model_report =
-        MLJBase.fit(model.wrapped_model, 1, X, y)
-    @test model_fr[1] == wrapped_model_fr
+    atom_fr, atom_cache, atom_report =
+        MLJBase.fit(model.model, 1, X, y)
+    @test model_fr[1] == atom_fr
 
     # Check model update
     model_up, model_cache_up, model_report_up =
         MLJBase.update(model, 1, model_fr, model_cache, X, y)
-    wrapped_model_up, wrapped_model_cache_up, wrapped_model_report_up =
-        MLJBase.update(model.wrapped_model, 1, wrapped_model_fr, wrapped_model_cache, X, y)
-    @test model_up[1] == wrapped_model_up
-    @test model_cache_up[1] == wrapped_model_cache_up
-    @test model_report_up[1] == wrapped_model_report_up
+    atom_up, atom_cache_up, atom_report_up =
+        MLJBase.update(model.model, 1, atom_fr, atom_cache, X, y)
+    @test model_up[1] == atom_up
+    @test model_cache_up[1] == atom_cache_up
+    @test model_report_up[1] == atom_report_up
 
     # Check fitted_params
-    @test MLJBase.fitted_params(model, model_fr).wrapped_model_fitted_params ==
-         MLJBase.fitted_params(model.wrapped_model, wrapped_model_fr)
+    @test MLJBase.fitted_params(model, model_fr).model_fitted_params ==
+         MLJBase.fitted_params(model.model, atom_fr)
 
     # Check deterministic predictions
     @test MLJBase.predict(model, model_fr, X) ==
-        MLJBase.predict_mode(model.wrapped_model, wrapped_model_fr, X)
+        MLJBase.predict_mode(model.model, atom_fr, X)
 
     model.threshold = 0.8
     model_fr, cache, report = MLJBase.fit(model, 1, X, y)
@@ -61,10 +66,10 @@ import MLJBase
         [y[1] for i in 1:MLJBase.nrows(X)]
 
     d = MLJModels.info_dict(model)
-    @test d[:supports_weights] == MLJBase.supports_weights(model.wrapped_model)
-    @test d[:input_scitype] == MLJBase.input_scitype(model.wrapped_model)
+    @test d[:supports_weights] == MLJBase.supports_weights(model.model)
+    @test d[:input_scitype] == MLJBase.input_scitype(model.model)
     @test d[:target_scitype] == AbstractVector{<:MLJBase.Finite{2}}
-    @test d[:is_pure_julia] == MLJBase.is_pure_julia(model.wrapped_model)
+    @test d[:is_pure_julia] == MLJBase.is_pure_julia(model.model)
     @test d[:name] == "BinaryThresholdPredictor"
     @test d[:load_path] == "MLJModels.BinaryThresholdPredictor"
 end

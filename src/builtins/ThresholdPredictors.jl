@@ -1,33 +1,108 @@
 ##
 ###  BinaryThresholdPredictor
 ##
-"""
-    BinaryThresholdPredictor(wrapped_model=ConstantClassifier(), threshold=0.5)
 
-Wraps a `Probabilistic` model(`wrapped_model`) supporting binary
-classification in a `BinaryThresholdPredictor` model. Training the
-`BinaryThresholdPredictor` model results in training the underlying
-`wrapped_model`.
+const THRESHOLD_SUPPORTED_ATOMS = (
+    :Probabilistic,
+    :AbstractProbabilisticUnsupervisedDetector,
+    :AbstractProbabilisticSupervisedDetector)
 
-`BinaryThresholdPredictor` model predictions are deterministic and
-depend on the specified probability `threshold`(which lies in [0, 1)
-). The positive class is predicted if the probability value exceeds
-the threshold, where by convention the positive class is the second
-class returned by `levels(y)`, where `y` is the target.
+# Each supported atomic type gets its own wrapper:
 
-Note:
-- The default `threshold`(0.5) predicts the modal class.
-"""
-mutable struct BinaryThresholdPredictor{M <: Probabilistic} <: Deterministic
-    wrapped_model::M
-    threshold::Float64
+const type_given_atom = Dict(
+    :Probabilistic =>
+    :BinaryThresholdPredictor,
+    :AbstractProbabilisticUnsupervisedDetector =>
+    :ThresholdUnsupervisedDetector,
+    :AbstractProbabilisticSupervisedDetector =>
+    :ThresholdSupervisedDetector)
+
+# ...which must have appropriate supertype:
+
+const super_given_atom = Dict(
+    :Probabilistic =>
+    :Deterministic,
+    :AbstractProbabilisticUnsupervisedDetector =>
+    :AbstractDeterministicUnsupervisedDetector,
+    :AbstractProbabilisticSupervisedDetector =>
+    :AbstractDeterministicSupervisedDetector)
+
+# the type definitions:
+
+for From in THRESHOLD_SUPPORTED_ATOMS
+    New = type_given_atom[From]
+    To  = super_given_atom[From]
+    ex = quote
+        mutable struct $New{M <: $From} <: $To
+            model::M
+            threshold::Float64
+        end
+    end
+    eval(ex)
 end
 
-function clean!(model::BinaryThresholdPredictor)
-    if !(AbstractVector{Multiclass{2}} <: target_scitype(model.wrapped_model) ||
-        AbstractVector{OrderedFactor{2}} <: target_scitype(model.wrapped_model))
+# dict whose keys and values are now types instead of symbols:
+const _type_given_atom = Dict()
+for atom in THRESHOLD_SUPPORTED_ATOMS
+    atom_str = string(atom)
+    type = type_given_atom[atom]
+    @eval(_type_given_atom[$atom] = $type)
+end
+
+const THRESHOLD_TYPES = values(_type_given_atom)
+const THRESHOLD_TYPE_EXS = values(type_given_atom)
+const ThresholdUnion = Union{THRESHOLD_TYPES...}
+const ThresholdSupported = Union{keys(_type_given_atom)...}
+
+const ERR_MODEL_UNSPECIFIED = ArgumentError(
+    "Expecting atomic model as argument. None specified. ")
+
+
+"""
+    BinaryThresholdPredictor(model; threshold=0.5)
+
+Wrap the `Probabilistic` model, `model`, assumed to support binary
+classification, as a `Deterministic` model, by applying the specified
+`threshold` to the positive class probability. Can also be applied to
+outlier detection models that predict normalized scores - in the form
+of appropriate `UnivariateFinite` distributions - that is, models that
+subtype `AbstractProbabilisticUnsupervisedDetector` or
+`AbstractProbabilisticSupervisedDetector`.
+
+By convention the positive class is the second class returned by
+`levels(y)`, where `y` is the target (the
+$(MLJModelInterface.OUTLIER)) class in the case of detection).
+
+If `threshold=0.5` then calling `predict` on the wrapped model is
+equivalent to calling `predict_mode` on the atomic model.
+
+"""
+function BinaryThresholdPredictor(args...;
+                                  model=nothing,
+                                  threshold=0.5)
+    length(args) < 2 || throw(ArgumentError(
+        "At most one non-keyword argument allowed. "))
+    if length(args) === 1
+        atom = only(args)
+        model === nothing ||
+            @warn "Using `model=$atom`. Ignoring specification `model=$model`. "
+    else
+        model === nothing && throw(ERR_MODEL_UNSPECIFIED)
+        atom = model
+    end
+
+    metamodel =
+        _type_given_atom[MMI.abstract_type(atom)](atom, Float64(threshold))
+    message = clean!(metamodel)
+    isempty(message) || @warn message
+    return metamodel
+end
+
+function clean!(model::ThresholdUnion)
+    if !(AbstractVector{Multiclass{2}} <: target_scitype(model.model) ||
+        AbstractVector{OrderedFactor{2}} <: target_scitype(model.model))
         throw(ArgumentError("`model` has unsupported target_scitype "*
-              "`$(target_scitype(model.wrapped_model))`. "))
+              "`$(target_scitype(model.model))`. "))
     end
     message = ""
     if model.threshold >= 1 || model.threshold < 0
@@ -38,59 +113,54 @@ function clean!(model::BinaryThresholdPredictor)
     return message
 end
 
-function BinaryThresholdPredictor(;wrapped_model=ConstantClassifier(), threshold=0.5)
-    model = BinaryThresholdPredictor(wrapped_model, Float64(threshold))
-    message = clean!(model)
-    isempty(message) || @warn message
-    return model
-end
-
-function MMI.fit(model::BinaryThresholdPredictor, verbosity::Int, args...)
-    scitype(args[2]) <: AbstractVector{Multiclass{2}} && begin
-        first_class, second_class = levels(args[2])
-        @warn "Taking positive class as `$(second_class)` and negative class as
-        `$(first_class)`.
-        Coerce target to `OrderedFactor{2}` to suppress this warning."
+function MMI.fit(model::ThresholdUnion, verbosity::Int, args...)
+    if model isa Probabilistic
+        scitype(args[2]) <: AbstractVector{Multiclass{2}} && begin
+            first_class, second_class = levels(args[2])
+            @warn "Taking positive class as `$(second_class)` and negative class as
+            `$(first_class)`.
+            Coerce target to `OrderedFactor{2}` to suppress this warning."
+        end
     end
     model_fitresult, model_cache, model_report = MMI.fit(
-        model.wrapped_model, verbosity-1, args...
+        model.model, verbosity-1, args...
     )
-    cache = (wrapped_model_cache = model_cache,)
-    report = (wrapped_model_report = model_report,)
+    cache = (model_cache = model_cache,)
+    report = (model_report = model_report,)
     fitresult = (model_fitresult, model.threshold)
     return fitresult, cache, report
 end
 
 function MMI.update(
-    model::BinaryThresholdPredictor, verbosity::Int, old_fitresult, old_cache, args...
+    model::ThresholdUnion, verbosity::Int, old_fitresult, old_cache, args...
 )
     model_fitresult, model_cache, model_report = MMI.update(
-        model.wrapped_model, verbosity-1, old_fitresult[1], old_cache[1], args...
+        model.model, verbosity-1, old_fitresult[1], old_cache[1], args...
     )
-    cache = (wrapped_model_cache = model_cache,)
-    report = (wrapped_model_report = model_report,)
+    cache = (model_cache = model_cache,)
+    report = (model_report = model_report,)
     fitresult = (model_fitresult, model.threshold)
     return fitresult, cache, report
 end
 
-function MMI.fitted_params(model::BinaryThresholdPredictor, fitresult)
+function MMI.fitted_params(model::ThresholdUnion, fitresult)
     return (
-        threshold= fitresult[2],
-        wrapped_model_fitted_params = MMI.fitted_params(
-            model.wrapped_model, fitresult[1]
+        model_fitted_params = MMI.fitted_params(
+            model.model, fitresult[1]),
         )
-    )
 end
 
-function MMI.predict(model::BinaryThresholdPredictor, fitresult, X)
-   yhat = MMI.predict(model.wrapped_model, fitresult[1], X)
-   length(yhat.prob_given_ref) == 2 || begin
-   # Due to resampling it's possible for Predicted `AbstractVector{<:UnivariateFinite}`
-   # to contain one class. Hence the need for the following warning
-   @warn "Predicted `AbstractVector{<:UnivariateFinite}`"*
-       " contains only 1 class. Hence predictions will only contain this class "*
-       "irrrespective of the set `threshold` "
-   return mode.(yhat)
+function MMI.predict(model::ThresholdUnion, fitresult, X)
+   yhat = MMI.predict(model.model, fitresult[1], X)
+   length(classes(yhat)) == 2 || begin
+       # Due to resampling it's possible for Predicted
+       #`AbstractVector{<:UnivariateFinite}`
+       # to contain one class. Hence the need for the following warning
+       @warn "Predicted `AbstractVector{<:UnivariateFinite}`"*
+           " contains only 1 class. Hence predictions will only "*
+           "contain this class "*
+           "irrrespective of the set `threshold` "
+       return mode.(yhat)
    end
    threshold = (1 - fitresult[2], fitresult[2])
    return _predict_threshold(yhat, threshold)
@@ -151,18 +221,36 @@ end
 
 # Note: input traits are inherited from the wrapped model
 
-MMI.supports_weights(::Type{<:BinaryThresholdPredictor{M}}) where M =
-    MMI.supports_weights(M)
-MMI.load_path(::Type{<:BinaryThresholdPredictor}) =
-    "MLJModels.BinaryThresholdPredictor"
-MMI.package_name(::Type{<:BinaryThresholdPredictor}) = "MLJModels"
-MMI.package_uuid(::Type{<:BinaryThresholdPredictor}) = ""
-MMI.is_wrapper(::Type{<:BinaryThresholdPredictor}) = true
-MMI.package_url(::Type{<:BinaryThresholdPredictor}) =
+
+MMI.package_name(::Type{<:ThresholdUnion}) = "MLJModels"
+MMI.package_uuid(::Type{<:ThresholdUnion}) = ""
+MMI.is_wrapper(::Type{<:ThresholdUnion}) = true
+MMI.package_url(::Type{<:ThresholdUnion}) =
     "https://github.com/alan-turing-institute/MLJModels.jl"
-MMI.is_pure_julia(::Type{<:BinaryThresholdPredictor{M}}) where M =
-    MMI.is_pure_julia(M)
-MMI.input_scitype(::Type{<:BinaryThresholdPredictor{M}}) where M =
-    MMI.input_scitype(M)
-MMI.target_scitype(::Type{<:BinaryThresholdPredictor}) =
-    AbstractVector{<:Binary}
+
+for New in THRESHOLD_TYPE_EXS
+    New_str = string(New)
+    quote
+        MMI.is_pure_julia(::Type{<:$New{M}}) where M =
+            MMI.is_pure_julia(M)
+        MMI.supports_weights(::Type{<:$New{M}}) where M =
+            MMI.supports_weights(M)
+        MMI.supports_class_weights(::Type{<:$New{M}}) where M =
+            MMI.supports_weights(M)
+        MMI.load_path(::Type{<:$New}) =
+            "MLJModels.$($New_str)"
+        MMI.input_scitype(::Type{<:$New{M}}) where M =
+            MMI.input_scitype(M)
+        function MMI.target_scitype(::Type{<:$New{M}}) where M
+            T = MMI.target_scitype(M)
+            if T <: AbstractVector{<:OrderedFactor}
+                return AbstractVector{<:OrderedFactor{2}}
+            elseif T <: AbstractVector{<:Multiclass}
+                return AbstractVector{<:Multiclass{2}}
+            elseif T <: AbstractVector{<:Finite}
+                return AbstractVector{<:Finite{2}}
+            end
+            return T
+        end
+    end |> eval
+end
