@@ -4,17 +4,17 @@
 
 const THRESHOLD_SUPPORTED_ATOMS = (
     :Probabilistic,
-    :AbstractProbabilisticUnsupervisedDetector,
-    :AbstractProbabilisticSupervisedDetector)
+    :ProbabilisticUnsupervisedDetector,
+    :ProbabilisticSupervisedDetector)
 
 # Each supported atomic type gets its own wrapper:
 
 const type_given_atom = Dict(
     :Probabilistic =>
     :BinaryThresholdPredictor,
-    :AbstractProbabilisticUnsupervisedDetector =>
+    :ProbabilisticUnsupervisedDetector =>
     :ThresholdUnsupervisedDetector,
-    :AbstractProbabilisticSupervisedDetector =>
+    :ProbabilisticSupervisedDetector =>
     :ThresholdSupervisedDetector)
 
 # ...which must have appropriate supertype:
@@ -22,10 +22,10 @@ const type_given_atom = Dict(
 const super_given_atom = Dict(
     :Probabilistic =>
     :Deterministic,
-    :AbstractProbabilisticUnsupervisedDetector =>
-    :AbstractDeterministicUnsupervisedDetector,
-    :AbstractProbabilisticSupervisedDetector =>
-    :AbstractDeterministicSupervisedDetector)
+    :ProbabilisticUnsupervisedDetector =>
+    :DeterministicUnsupervisedDetector,
+    :ProbabilisticSupervisedDetector =>
+    :DeterministicSupervisedDetector)
 
 # the type definitions:
 
