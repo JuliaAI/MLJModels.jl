@@ -70,8 +70,7 @@ subtype `AbstractProbabilisticUnsupervisedDetector` or
 `AbstractProbabilisticSupervisedDetector`.
 
 By convention the positive class is the second class returned by
-`levels(y)`, where `y` is the target (the
-$(MLJModelInterface.OUTLIER)) class in the case of detection).
+`levels(y)`, where `y` is the target.
 
 If `threshold=0.5` then calling `predict` on the wrapped model is
 equivalent to calling `predict_mode` on the atomic model.
