@@ -56,7 +56,17 @@ const ThresholdSupported = Union{keys(_type_given_atom)...}
 
 const ERR_MODEL_UNSPECIFIED = ArgumentError(
     "Expecting atomic model as argument. None specified. ")
-
+warn_classes(first_class, second_class) =
+    "Taking positive class as `$(second_class)` and negative class as"*
+    "`$(first_class)`."*
+    "Coerce target to `OrderedFactor{2}` to suppress this warning, "*
+    "ensuring that positive class > negative class. "
+const ERR_CLASSES_DETECTOR = ArgumentError(
+    "Targets for detector models must be ordered. Consider coercing to "*
+    "`OrderedFactor`, ensuring that outlier class > inlier class. ")
+const ERR_TARGET_NOT_BINARY = ArgumentError(
+    "Target `y` must have two classes in its  pool, even if only one "*
+    "class is manifest. ")
 
 """
     BinaryThresholdPredictor(model; threshold=0.5)
@@ -113,12 +123,16 @@ function clean!(model::ThresholdUnion)
 end
 
 function MMI.fit(model::ThresholdUnion, verbosity::Int, args...)
-    if model isa Probabilistic
-        scitype(args[2]) <: AbstractVector{Multiclass{2}} && begin
-            first_class, second_class = levels(args[2])
-            @warn "Taking positive class as `$(second_class)` and negative class as
-            `$(first_class)`.
-            Coerce target to `OrderedFactor{2}` to suppress this warning."
+
+    if length(args) > 1 &&
+        !(scitype(args[2]) <: AbstractVector{<:Union{Missing,OrderedFactor}})
+        L = levels(args[2])
+        length(L) == 2 || throw(ERR_TARGET_NOT_BINARY)
+        first_class, second_class = L
+        if model.model isa Probabilistic
+            @warn warn_classes(first_class, second_class)
+        else
+            throw(ERR_CLASSES_DETECTOR)
         end
     end
     model_fitresult, model_cache, model_report = MMI.fit(
@@ -150,19 +164,9 @@ function MMI.fitted_params(model::ThresholdUnion, fitresult)
 end
 
 function MMI.predict(model::ThresholdUnion, fitresult, X)
-   yhat = MMI.predict(model.model, fitresult[1], X)
-   length(classes(yhat)) == 2 || begin
-       # Due to resampling it's possible for Predicted
-       #`AbstractVector{<:UnivariateFinite}`
-       # to contain one class. Hence the need for the following warning
-       @warn "Predicted `AbstractVector{<:UnivariateFinite}`"*
-           " contains only 1 class. Hence predictions will only "*
-           "contain this class "*
-           "irrrespective of the set `threshold` "
-       return mode.(yhat)
-   end
-   threshold = (1 - fitresult[2], fitresult[2])
-   return _predict_threshold(yhat, threshold)
+    yhat = MMI.predict(model.model, fitresult[1], X)
+    threshold = (1 - fitresult[2], fitresult[2])
+    return _predict_threshold(yhat, threshold)
 end
 
 # `_div` and `_predict_threshold` methods are defined to help generalize to
@@ -177,7 +181,8 @@ function _predict_threshold(yhat::UnivariateFinite, threshold)
         "`UnivariateFinite` distribution."
         )
     )
-    max_prob, max_class = findmax([_div(dict[ref], threshold[ref]) for ref in keys(dict)])
+    max_prob, max_class =
+        findmax([_div(dict[ref], threshold[ref]) for ref in keys(dict)])
     return yhat.decoder(max_class)
 end
 
@@ -185,7 +190,8 @@ function _predict_threshold(yhat::AbstractArray{<:UnivariateFinite}, threshold)
     return _predict_threshold.(yhat, (threshold,))
 end
 
-function _predict_threshold(yhat::UnivariateFiniteArray{S,V,R,P,N}, threshold) where{S,V,R,P,N}
+function _predict_threshold(yhat::UnivariateFiniteArray{S,V,R,P,N},
+                            threshold) where{S,V,R,P,N}
     dict = yhat.prob_given_ref
     length(threshold) == length(dict) || throw(
         ArgumentError(
