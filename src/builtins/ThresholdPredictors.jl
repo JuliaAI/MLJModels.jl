@@ -126,7 +126,7 @@ end
 
 function Base.setproperty!(model::ThresholdUnion, name::Symbol, value)
     name === :model && return setfield!(model, :model, value)
-    name === :threshold && return setfield!(model, :threshold)
+    name === :threshold && return setfield!(model, :threshold, value)
     if name === :wrapped_model
         Base.depwarn("Use `model` instead of `wrapped_model` to access "*
                 "the model wrapped by a `BinaryThresholdPredictor`. ",
