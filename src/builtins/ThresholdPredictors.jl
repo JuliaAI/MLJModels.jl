@@ -87,7 +87,8 @@ equivalent to calling `predict_mode` on the atomic model.
 
 """
 function BinaryThresholdPredictor(args...;
-                                  model=nothing,
+                                  wrapped_model=nothing,
+                                  model=wrapped_model,
                                   threshold=0.5)
     length(args) < 2 || throw(ArgumentError(
         "At most one non-keyword argument allowed. "))
@@ -106,6 +107,37 @@ function BinaryThresholdPredictor(args...;
     isempty(message) || @warn message
     return metamodel
 end
+
+######################################
+# Begin code to be removed in 0.15.0 #
+######################################
+
+function Base.getproperty(model::ThresholdUnion, name::Symbol)
+    name === :model && return getfield(model, :model)
+    name === :threshold && return getfield(model, :threshold)
+    if name === :wrapped_model
+        Base.depwarn("Use `model` instead of `wrapped_model` to access "*
+                "the model wrapped by a `BinaryThresholdPredictor`. ",
+                :getproperty, force=true)
+        return getfield(model, :model)
+    end
+    error("type BinaryThresholdPredictor has no field $name")
+end
+
+function Base.setproperty!(model::ThresholdUnion, name::Symbol, value)
+    name === :model && return setfield!(model, :model, value)
+    name === :threshold && return setfield!(model, :threshold)
+    if name === :wrapped_model
+        Base.depwarn("Use `model` instead of `wrapped_model` to access "*
+                "the model wrapped by a `BinaryThresholdPredictor`. ",
+                :getproperty, force=true)
+        return setfield!(model, :model, value)
+    end
+    error("type BinaryThresholdPredictor has no field $name")
+end
+####################################
+# End code to be removed in 0.15.0 #
+####################################
 
 function clean!(model::ThresholdUnion)
     if !(AbstractVector{Multiclass{2}} <: target_scitype(model.model) ||
