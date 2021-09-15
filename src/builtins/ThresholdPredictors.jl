@@ -93,7 +93,7 @@ function BinaryThresholdPredictor(args...;
     length(args) < 2 || throw(ArgumentError(
         "At most one non-keyword argument allowed. "))
     if length(args) === 1
-        atom = only(args)
+        atom = first(args)
         model === nothing ||
             @warn "Using `model=$atom`. Ignoring specification `model=$model`. "
     else
