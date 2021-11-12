@@ -27,7 +27,7 @@ MMI.package_license(::Type{DummyProb}) = "MIT"
 MMI.hyperparameter_ranges(::Type{DummyProb}) =
           (range(Int, :an_int, values=[1,2]),
            range(Float64, :a_float, lower=1, upper=2),
-           range(Vector{Float64}, :a_vector, values=[[1.0], [2.0]]),
+           nothing,
            nothing)
 MMI.predict(::DummyProb, fr, X) = nothing
 
@@ -107,7 +107,7 @@ d2['b'] = 4
             :hyperparameter_ranges =>
                 (range(Int, :an_int, values=[1,2]),
                  range(Float64, :a_float, lower=1, upper=2),
-                 range(Vector{Float64}, :a_vector, values=[[1.0], [2.0]]),
+                 nothing,
                  nothing))
     @test _issubset(d, MLJModels.info_dict(DummyProb))
     @test _issubset(d, MLJModels.info_dict(DummyProb(42, 3.14, [1.0, 2.0], :cow)))
