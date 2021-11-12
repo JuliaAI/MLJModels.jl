@@ -822,7 +822,7 @@ function MMI.fit(transformer::Standardizer, verbosity::Int, X)
         @warn "No features to standarize."
 
     # fit each feature and add result to above dict
-    verbosity < 2 || @info "Features standarized: "
+    verbosity > 1 && @info "Features standarized: "
     for j in cols_to_fit
         col_data = if (feature_scitypes[j] <: OrderedFactor)
             coerce(selectcols(X, j), Continuous)
@@ -832,7 +832,7 @@ function MMI.fit(transformer::Standardizer, verbosity::Int, X)
         col_fitresult, cache, report =
             MMI.fit(UnivariateStandardizer(), verbosity - 1, col_data)
         fitresult_given_feature[all_features[j]] = col_fitresult
-        verbosity < 2 ||
+        verbosity > 1 &&
             @info "  :$(all_features[j])    mu=$(col_fitresult[1])  sigma=$(col_fitresult[2])"
     end
 
