@@ -305,6 +305,16 @@ function models(needle::Union{AbstractString,Regex})
     return models(f)
 end
 
+# get the model types in top-level of given module's namespace:
+function localmodeltypes(modl; toplevel=false)
+    ft = finaltypes(Model)
+    return filter!(ft) do M
+        name = MLJModelInterface.name(M)
+        test1 = !toplevel || isdefined(modl, Symbol(name))
+        !MLJModelInterface.is_wrapper(M) && test1
+    end
+end
+
 """
     localmodels(; modl=Main)
     localmodels(filters...; modl=Main)

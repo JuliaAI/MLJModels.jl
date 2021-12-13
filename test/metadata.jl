@@ -2,8 +2,7 @@ module TestMetadata
 
 using Test
 using MLJModels
-import MLJBase
-import MLJBase: Table, Continuous, Count, Finite, OrderedFactor, Multiclass
+using MLJBase
 
 @testset "(de)serialization for TOML" begin
     d = Dict()
@@ -54,18 +53,6 @@ i = MLJModels.info_given_handle(metadata_file)[pca]
 end
 
 @testset "building INFO_GIVEN_HANDLE" begin
-    @test MLJModels.localmodeltypes(MLJBase) ==
-        MLJModels.localmodeltypes(MLJModels)
-    @test issubset(Set([DeterministicConstantClassifier,
-                        DeterministicConstantRegressor,
-                        ConstantClassifier,
-                        ConstantRegressor,
-                        FeatureSelector,
-                        OneHotEncoder,
-                        Standardizer,
-                        UnivariateBoxCoxTransformer,
-                        UnivariateStandardizer]),
-                   MLJModels.localmodeltypes(MLJModels))
     @test MLJModels.info_given_handle(metadata_file)[pca][:name] == "PCA"
     d1 = MLJModels.info_given_handle(metadata_file)[cnst]
     d2 = MLJModels.info_dict(ConstantRegressor)

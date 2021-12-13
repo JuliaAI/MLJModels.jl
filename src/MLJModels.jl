@@ -1,18 +1,18 @@
 module MLJModels
 
-import MLJModelInterface
+using MLJModelInterface
 
 using ScientificTypes
 const ScientificTypesBase = ScientificTypes.ScientificTypesBase
 
-# still needed b/s UnivariateFinite type used in ThresholdPredictor:
-using MLJBase
-
 using Pkg, Pkg.TOML, OrderedCollections, Parameters
 using Tables, CategoricalArrays, StatsBase, Statistics, Dates
+using InteractiveUtils
 import Distributions
 import REPL # stdlib, needed for Term
 import PrettyPrinting
+import CategoricalDistributions: UnivariateFinite, UnivariateFiniteArray,
+    classes
 
 # from loading.jl:
 export load, @load, @iload, @loadcode, info
