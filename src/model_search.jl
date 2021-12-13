@@ -43,10 +43,9 @@ Base.show(stream::IO, p::ModelProxy) =
           "... )")
 
 function Base.show(stream::IO, ::MIME"text/plain", p::ModelProxy)
-    printstyled(IOContext(stream, :color=> MLJBase.SHOW_COLOR),
-                    p.docstring, bold=false, color=:magenta)
+    printstyled(p.docstring, bold=false, color=:magenta)
     println(stream)
-    MLJBase.fancy_nt(stream, p)
+    PrettyPrinting.pprint(stream, p)
 end
 
 # returns named tuple version of the dictionary i=info_dict(SomeModelType):

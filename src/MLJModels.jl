@@ -1,4 +1,4 @@
-module MLJModels 
+module MLJModels
 
 import MLJModelInterface
 
@@ -12,6 +12,7 @@ using Pkg, Pkg.TOML, OrderedCollections, Parameters
 using Tables, CategoricalArrays, StatsBase, Statistics, Dates
 import Distributions
 import REPL # stdlib, needed for Term
+import PrettyPrinting
 
 # from loading.jl:
 export load, @load, @iload, @loadcode, info
