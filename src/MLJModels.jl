@@ -9,16 +9,20 @@ using Pkg, Pkg.TOML, OrderedCollections, Parameters
 using Tables, CategoricalArrays, StatsBase, Statistics, Dates
 using InteractiveUtils
 import Distributions
-import REPL # stdlib, needed for Term
+import REPL # stdlib, needed for `Term`
 import PrettyPrinting
 import CategoricalDistributions: UnivariateFinite, UnivariateFiniteArray,
     classes
+import StatisticalTraits # for `info`
 
 # from loading.jl:
-export load, @load, @iload, @loadcode, info
+export load, @load, @iload, @loadcode
 
 # from model_search:
 export models, localmodels, matching
+
+# extended in model_search.jl:
+export info
 
 # from model/Constant
 export ConstantRegressor, ConstantClassifier,
