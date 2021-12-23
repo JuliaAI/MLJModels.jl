@@ -5,9 +5,10 @@ import Pkg
 import Pkg.TOML
 using InteractiveUtils
 
-# for testings decoding of metadata:
-import MLJBase: Found, Continuous, Finite, Infinite
-import MLJBase: OrderedFactor, Count, Multiclass, Binary
+# TODO: is this import really needed??
+# for testing decoding of metadata:
+import ScientificTypes: Found, Continuous, Finite, Infinite
+import ScientificTypes: OrderedFactor, Count, Multiclass, Binary
 
 const srcdir = dirname(@__FILE__) # the directory containing this file
 const environment_path = joinpath(srcdir, "..")
@@ -66,7 +67,6 @@ function _update(mod, test_env_only)
         Pkg.instantiate()
 
         @info "Loading registered packages..."
-        import MLJBase
         import MLJModels
         using Pkg.TOML
 
@@ -75,9 +75,10 @@ function _update(mod, test_env_only)
 
         @info "Generating model metadata..."
 
-        modeltypes = MLJModels.Registry.finaltypes(MLJBase.Model)
+        modeltypes =
+            MLJModels.Registry.finaltypes(MLJModels.Model)
         filter!(modeltypes) do T
-            !isabstracttype(T) && !MLJBase.is_wrapper(T)
+            !isabstracttype(T) && !MLJModels.MLJModelInterface.is_wrapper(T)
         end
 
         # generate and write to file the model metadata:

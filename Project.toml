@@ -5,39 +5,44 @@ version = "0.14.14"
 
 [deps]
 CategoricalArrays = "324d7699-5711-5eae-9e2f-1d82baa6b597"
+CategoricalDistributions = "af321ab8-2d2e-40a6-b165-3d674595d28e"
 Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
 Distances = "b4f34e82-e78d-54a5-968a-f98e89d6e8f7"
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
 InteractiveUtils = "b77e0a4c-d291-57a0-90e8-8db25a27a240"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
-MLJBase = "a7f614a8-145f-11e9-1d2a-a57a1082229d"
 MLJModelInterface = "e80e1ace-859a-464e-9ed9-23947d8ae3ea"
 OrderedCollections = "bac558e1-5e72-5ebc-8fee-abe8a469f55d"
 Parameters = "d96e819e-fc66-5662-9728-84c9c7592b0a"
 Pkg = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
+PrettyPrinting = "54e16d92-306c-5ea0-a30b-337be88ac337"
 REPL = "3fa0cd96-eef1-5676-8a61-b3b8758bbffb"
 Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 Requires = "ae029012-a4dd-5104-9daa-d747884805df"
 ScientificTypes = "321657f4-b219-11e9-178b-2701a2544e81"
+StatisticalTraits = "64bff920-2084-43da-a3e6-9bb72801c0c9"
 Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
 StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
 Tables = "bd369af6-aec1-5ad0-b16a-f7cc5008161c"
 
 [compat]
 CategoricalArrays = "0.9, 0.10"
+CategoricalDistributions = "0.1"
 Distances = "0.9,0.10"
 Distributions = "0.25"
-MLJBase = "0.17.1, 0.18"
 MLJModelInterface = "1.3"
 OrderedCollections = "1.1"
 Parameters = "0.12"
+PrettyPrinting = "0.3"
 Requires = "0.5, 1"
-ScientificTypes = "2.1.2"
+ScientificTypes = "3"
+StatisticalTraits = "3"
 StatsBase = "0.32,0.33"
 Tables = "0.2,1.0"
 julia = "1.3"
 
 [extras]
+MLJBase = "a7f614a8-145f-11e9-1d2a-a57a1082229d"
 MLJDecisionTreeInterface = "c6f25543-311c-4c74-83dc-3ea6d1015661"
 MLJMultivariateStatsInterface = "1b6a4a23-ba22-4f51-9698-8599985d3728"
 Pkg = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
@@ -45,4 +50,4 @@ StableRNGs = "860ef19b-820b-49d6-a774-d7a799459cd3"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]
-test = ["MLJDecisionTreeInterface", "MLJMultivariateStatsInterface", "Pkg", "StableRNGs", "Test"]
+test = ["MLJBase", "MLJDecisionTreeInterface", "MLJMultivariateStatsInterface", "Pkg", "StableRNGs", "Test"]

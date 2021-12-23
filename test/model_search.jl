@@ -2,7 +2,7 @@ module TestModelSearch
 
 using Test
 using MLJModels
-import MLJBase
+using MLJBase
 using ScientificTypes
 
 pca = info("PCA", pkg="MultivariateStats")
@@ -15,6 +15,16 @@ tree = info("DecisionTreeRegressor", pkg="DecisionTree")
 @test info(Standardizer()) == info("Standardizer", pkg="MLJModels")
 
 @testset "localmodels" begin
+    @test issubset(Set([DeterministicConstantClassifier,
+                        DeterministicConstantRegressor,
+                        ConstantClassifier,
+                        ConstantRegressor,
+                        FeatureSelector,
+                        OneHotEncoder,
+                        Standardizer,
+                        UnivariateBoxCoxTransformer,
+                        UnivariateStandardizer]),
+                   MLJModels.localmodeltypes(MLJModels))
     @test cnst in localmodels(modl=TestModelSearch)
     @test !(tree in localmodels(modl=TestModelSearch))
     import MLJDecisionTreeInterface.DecisionTreeRegressor

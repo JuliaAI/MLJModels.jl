@@ -70,11 +70,9 @@ function MLJModelInterface.fit(::ConstantClassifier,
                                X,
                                y,
                                w=nothing)
-    # We need MLJBase and not MMI here, because we need the *type* not
-    # a method:
-    d = Distributions.fit(MLJBase.UnivariateFinite, y, w)
+    d = Distributions.fit(UnivariateFinite, y, w)
     C = classes(d)
-    fitresult = (C, pdf([d, ], C))
+    fitresult = (C, Distributions.pdf([d, ], C))
     cache     = nothing
     report    = NamedTuple()
     return fitresult, cache, report

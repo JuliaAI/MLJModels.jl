@@ -43,10 +43,9 @@ Base.show(stream::IO, p::ModelProxy) =
           "... )")
 
 function Base.show(stream::IO, ::MIME"text/plain", p::ModelProxy)
-    printstyled(IOContext(stream, :color=> MLJBase.SHOW_COLOR),
-                    p.docstring, bold=false, color=:magenta)
+    printstyled(p.docstring, bold=false, color=:magenta)
     println(stream)
-    MLJBase.fancy_nt(stream, p)
+    PrettyPrinting.pprint(stream, p)
 end
 
 # returns named tuple version of the dictionary i=info_dict(SomeModelType):
@@ -58,7 +57,7 @@ end
 
 ## INFO
 
-ScientificTypes.info(handle::Handle) =
+StatisticalTraits.info(handle::Handle) =
     info_as_named_tuple(INFO_GIVEN_HANDLE[handle])
 
 """
@@ -69,7 +68,7 @@ Returns the metadata for the registered model type with specified
 duplicate names.
 
 """
-function ScientificTypes.info(name::String; pkg=nothing, interactive=false)
+function StatisticalTraits.info(name::String; pkg=nothing, interactive=false)
     name in NAMES ||
         throw(ArgumentError("There is no model named \"$name\" in "*
                             "the registry. \n Run `models()` to view all "*
@@ -109,13 +108,13 @@ Return the traits associated with the specified `model`. Equivalent to
 `pkg::String` the name of the package containing it.
 
 """
-function ScientificTypes.info(M::Type{<:MMI.Model})
+function StatisticalTraits.info(M::Type{<:MMI.Model})
     values =
         tuple([eval(:($trait($M))) for trait in PROPERTY_NAMES]...)
     info_as_named_tuple(info_dict(M))
     return NamedTuple{PROPERTY_NAMES}(values)
 end
-ScientificTypes.info(model::MMI.Model) = info(typeof(model))
+StatisticalTraits.info(model::MMI.Model) = info(typeof(model))
 
 
 ## MATCHING
@@ -304,6 +303,16 @@ function models(needle::Union{AbstractString,Regex})
     f = model ->
         occursin(needle, model.name) || occursin(needle, model.docstring)
     return models(f)
+end
+
+# get the model types in top-level of given module's namespace:
+function localmodeltypes(modl; toplevel=false)
+    ft = finaltypes(Model)
+    return filter!(ft) do M
+        name = MLJModelInterface.name(M)
+        test1 = !toplevel || isdefined(modl, Symbol(name))
+        !MLJModelInterface.is_wrapper(M) && test1
+    end
 end
 
 """

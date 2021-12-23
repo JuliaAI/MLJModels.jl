@@ -87,23 +87,7 @@ end
 ## FUNCTIONS TO BUILD GLOBAL METADATA CONSTANTS IN MLJMODELS
 ## INITIALIZATION
 
-# get the model types in top-level of given module's namespace:
-function localmodeltypes(modl; toplevel=false)
-    ft = MLJBase.finaltypes(Model)
-    return filter!(ft) do M
-        if M in (Supervised, Unsupervised, Deterministic,
-                 Probabilistic, DeterministicNetwork, Interval,
-                 ProbabilisticNetwork, UnsupervisedNetwork, Static)
-            return false
-        else
-            name = MLJBase.name(M)
-            test1 = !toplevel || isdefined(modl, Symbol(name))
-            !MLJBase.is_wrapper(M) && test1
-        end
-    end
-end
-
-# for use in __init__ to define INFO_GIVEN_HANDLE
+# to define INFO_GIVEN_HANDLE
 function info_given_handle(metadata_file)
     metadata = LittleDict(TOML.parsefile(metadata_file))
     metadata_given_pkg = decode_dic(metadata)
