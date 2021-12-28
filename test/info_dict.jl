@@ -2,6 +2,7 @@ module TestInfo
 
 using MLJModels
 using MLJModelInterface
+using MLJBase
 using Test
 using OrderedCollections
 using ScientificTypes

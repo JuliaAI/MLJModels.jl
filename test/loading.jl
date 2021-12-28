@@ -2,6 +2,7 @@ module TestLoading
 
 using Test
 using MLJModels
+using MLJBase
 
 function isloaded(name::String, pkg::String)
     (name, pkg) in map(localmodels()) do m

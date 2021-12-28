@@ -115,24 +115,12 @@ end
 function Base.getproperty(model::ThresholdUnion, name::Symbol)
     name === :model && return getfield(model, :model)
     name === :threshold && return getfield(model, :threshold)
-    if name === :wrapped_model
-        Base.depwarn("Use `model` instead of `wrapped_model` to access "*
-                "the model wrapped by a `BinaryThresholdPredictor`. ",
-                :getproperty, force=true)
-        return getfield(model, :model)
-    end
     error("type BinaryThresholdPredictor has no field $name")
 end
 
 function Base.setproperty!(model::ThresholdUnion, name::Symbol, value)
     name === :model && return setfield!(model, :model, value)
     name === :threshold && return setfield!(model, :threshold, value)
-    if name === :wrapped_model
-        Base.depwarn("Use `model` instead of `wrapped_model` to access "*
-                "the model wrapped by a `BinaryThresholdPredictor`. ",
-                :getproperty, force=true)
-        return setfield!(model, :model, value)
-    end
     error("type BinaryThresholdPredictor has no field $name")
 end
 ####################################

@@ -1,3 +1,12 @@
+function finaltypes(T::Type)
+    s = InteractiveUtils.subtypes(T)
+    if isempty(s)
+        return [T, ]
+    else
+        return reduce(vcat, [finaltypes(S) for S in s])
+    end
+end
+
 """
     request(query, options...)
 

@@ -5,7 +5,7 @@ using Test, MLJModels
         @test include("info_dict.jl")
     end
 
-    @testset "reading and extracting model metadata" begin
+    @testset "metadata.jl" begin
         @test include("metadata.jl")
     end
     @testset "model search" begin
@@ -17,10 +17,10 @@ using Test, MLJModels
 end
 
 @testset "built-in models" begin
-    @testset "Constant" begin
+    @testset "Constant.jl" begin
         @test include("builtins/Constant.jl")
     end
-    @testset "Transformers" begin
+    @testset "Transformers.jl" begin
         @test include("builtins/Transformers.jl")
     end
     @testset "ThresholdPredictors" begin
