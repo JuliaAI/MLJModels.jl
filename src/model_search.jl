@@ -43,7 +43,7 @@ Base.show(stream::IO, p::ModelProxy) =
           "... )")
 
 function Base.show(stream::IO, ::MIME"text/plain", p::ModelProxy)
-    printstyled(p.docstring, bold=false, color=:magenta)
+    printstyled(stream, p.docstring, bold=false, color=:magenta)
     println(stream)
     PrettyPrinting.pprint(stream, p)
 end
