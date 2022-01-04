@@ -1,9 +1,19 @@
-module MLJModels 
+module MLJModels
 
-using MLJModelInterface
+import MLJModelInterface
+import MLJModelInterface: Model, metadata_pkg, metadata_model, @mlj_model, info,
+    nrows, selectcols, transform, inverse_transform, fitted_params
+for T in MLJModelInterface.ABSTRACT_MODEL_SUBTYPES
+    @eval(import MLJModelInterface.$T)
+end
+for T in MLJModelInterface.MODEL_TRAITS
+    @eval(import MLJModelInterface.$T)
+end
 
 using ScientificTypes
 const ScientificTypesBase = ScientificTypes.ScientificTypesBase
+
+const MMI = MLJModelInterface
 
 using Pkg, Pkg.TOML, OrderedCollections, Parameters
 using Tables, CategoricalArrays, StatsBase, Statistics, Dates
