@@ -11,7 +11,6 @@ for T in MLJModelInterface.MODEL_TRAITS
 end
 
 using ScientificTypes
-const ScientificTypesBase = ScientificTypes.ScientificTypesBase
 
 const MMI = MLJModelInterface
 
@@ -51,7 +50,7 @@ const srcdir = dirname(@__FILE__) # the directory containing this file
 const MMI = MLJModelInterface
 
 if VERSION < v"1.3"
-    nonmissingtype = ScientificTypes.ScientificTypesBase.nonmissing
+    const nonmissingtype = ScientificTypes.ScientificTypesBase.nonmissing
 end
 
 nonmissing = nonmissingtype
