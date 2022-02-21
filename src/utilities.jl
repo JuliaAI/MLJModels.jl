@@ -50,3 +50,25 @@ function request(query, options...)
     end
     return choice
 end
+
+
+"""
+    MLJModels.prepend(::Symbol, ::Union{Symbol,Expr,Nothing})
+
+For prepending symbols in expressions like `:(y.w)` and `:(x1.x2.x3)`.
+
+julia> prepend(:x, :y)
+:(x.y)
+
+julia> prepend(:x, :(y.z))
+:(x.y.z)
+
+julia> prepend(:w, ans)
+:(w.x.y.z)
+
+If the second argument is `nothing`, then `nothing` is returned.
+
+"""
+prepend(s::Symbol, ::Nothing) = nothing
+prepend(s::Symbol, t::Symbol) = Expr(:(.), s, QuoteNode(t))
+prepend(s::Symbol, ex::Expr) = Expr(:(.), prepend(s, ex.args[1]), ex.args[2])
