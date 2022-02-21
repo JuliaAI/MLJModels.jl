@@ -128,8 +128,9 @@ end
 ####################################
 
 function clean!(model::ThresholdUnion)
-    if !(AbstractVector{Multiclass{2}} <: target_scitype(model.model) ||
-        AbstractVector{OrderedFactor{2}} <: target_scitype(model.model))
+    T = target_scitype(model.model)
+    if !(AbstractVector{Multiclass{2}} <: T ||
+        AbstractVector{OrderedFactor{2}} <: T || Unknown <: T)
         throw(ArgumentError("`model` has unsupported target_scitype "*
               "`$(target_scitype(model.model))`. "))
     end
