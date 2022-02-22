@@ -162,6 +162,28 @@ end
         AbstractVector{<:Union{Missing,Finite{2}}}
 end
 
+struct DummyIterativeClassifier <: MMI.Probabilistic end
+
+MMI.fit(::DummyIterativeClassifier, verbosity, data...) =
+    42, nothing, (; losses = [1.0, 2.0])
+MMI.training_losses(::DummyIterativeClassifier, report) = report.losses
+
+MMI.iteration_parameter(::Type{<:DummyIterativeClassifier}) = :n
+MMI.supports_training_losses(::Type{<:DummyIterativeClassifier}) = true
+MMI.target_scitype(::Type{<:DummyIterativeClassifier}) =
+    AbstractVector{Multiclass{2}}
+
+@testset "training losses support" begin
+    X = ones(3, 2)
+    y = ScientificTypes.coerce(["Y", "Y", "N"], OrderedFactor)
+
+    thresholder = BinaryThresholdPredictor(DummyIterativeClassifier())
+    __, __, re = MMI.fit(thresholder, 0, X, y)
+
+    @test MMI.supports_training_losses(thresholder)
+    @test MMI.training_losses(thresholder, re) == [1.0, 2.0]
+end
+
 end # module
 
 true

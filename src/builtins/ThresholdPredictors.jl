@@ -326,3 +326,8 @@ end
 MMI.iteration_parameter(model::ThresholdUnion) =
     MLJModels.prepend(:model, MMI.iteration_parameter(model.model))
 
+
+# ## TRAINING LOSSES SUPPORT
+
+MMI.training_losses(thresholder::ThresholdUnion, thresholder_report) =
+    MMI.training_losses(thresholder.model, thresholder_report.model_report)
