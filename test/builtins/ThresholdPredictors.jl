@@ -2,6 +2,7 @@ module TestThresholdPredictors
 using Test, MLJModels, CategoricalArrays
 import MLJBase
 using CategoricalDistributions
+using ScientificTypes
 
 const MMI = MLJModels.MLJModelInterface
 
@@ -57,13 +58,12 @@ y2 = categorical(yraw[2:end], ordered=true)
     @test MMI.predict(model, model_fr, X) ==
         [y[1] for i in 1:MMI.nrows(X)]
 
-    d = MLJModels.info_dict(model)
-    @test d[:supports_weights] == MMI.supports_weights(model.model)
-    @test d[:input_scitype] == MMI.input_scitype(model.model)
-    @test d[:target_scitype] == AbstractVector{<:MMI.Finite{2}}
-    @test d[:is_pure_julia] == MMI.is_pure_julia(model.model)
-    @test d[:name] == "BinaryThresholdPredictor"
-    @test d[:load_path] == "MLJModels.BinaryThresholdPredictor"
+    @test MMI.supports_weights(model) == MMI.supports_weights(model.model)
+    @test MMI.input_scitype(model) == MMI.input_scitype(model.model)
+    @test MMI.target_scitype(model) == AbstractVector{<:MMI.Finite{2}}
+    @test MMI.is_pure_julia(model) == MMI.is_pure_julia(model.model)
+    @test MMI.name(model) == "BinaryThresholdPredictor"
+    @test MMI.load_path(model) == "MLJModels.BinaryThresholdPredictor"
 end
 
 @testset "_predict_threshold" begin
@@ -147,5 +147,43 @@ MMI.input_scitype(::Type{<:DummyDetector}) = MMI.Table
     @test e.measurement[1] ≈ 0
 end
 
+@testset "_make_binary" begin
+    @test MLJModels._make_binary(AbstractVector{<:Multiclass}) ==
+        AbstractVector{<:Multiclass{2}}
+    @test MLJModels._make_binary(AbstractVector{<:Union{Missing,Multiclass}}) ==
+        AbstractVector{<:Union{Missing,Multiclass{2}}}
+    @test MLJModels._make_binary(AbstractVector{<:OrderedFactor}) ==
+        AbstractVector{<:OrderedFactor{2}}
+    @test MLJModels._make_binary(AbstractVector{<:Union{Missing,OrderedFactor}}) ==
+        AbstractVector{<:Union{Missing,OrderedFactor{2}}}
+    @test MLJModels._make_binary(AbstractVector{<:Finite}) ==
+        AbstractVector{<:Finite{2}}
+    @test MLJModels._make_binary(AbstractVector{<:Union{Missing,Finite}}) ==
+        AbstractVector{<:Union{Missing,Finite{2}}}
 end
+
+struct DummyIterativeClassifier <: MMI.Probabilistic end
+
+MMI.fit(::DummyIterativeClassifier, verbosity, data...) =
+    42, nothing, (; losses = [1.0, 2.0])
+MMI.training_losses(::DummyIterativeClassifier, report) = report.losses
+
+MMI.iteration_parameter(::Type{<:DummyIterativeClassifier}) = :n
+MMI.supports_training_losses(::Type{<:DummyIterativeClassifier}) = true
+MMI.target_scitype(::Type{<:DummyIterativeClassifier}) =
+    AbstractVector{Multiclass{2}}
+
+@testset "training losses support" begin
+    X = ones(3, 2)
+    y = ScientificTypes.coerce(["Y", "Y", "N"], OrderedFactor)
+
+    thresholder = BinaryThresholdPredictor(DummyIterativeClassifier())
+    __, __, re = MMI.fit(thresholder, 0, X, y)
+
+    @test MMI.supports_training_losses(thresholder)
+    @test MMI.training_losses(thresholder, re) == [1.0, 2.0]
+end
+
+end # module
+
 true
