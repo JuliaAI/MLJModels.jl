@@ -128,8 +128,9 @@ end
 ####################################
 
 function clean!(model::ThresholdUnion)
-    if !(AbstractVector{Multiclass{2}} <: target_scitype(model.model) ||
-        AbstractVector{OrderedFactor{2}} <: target_scitype(model.model))
+    T = target_scitype(model.model)
+    if !(AbstractVector{Multiclass{2}} <: T ||
+        AbstractVector{OrderedFactor{2}} <: T || Unknown <: T)
         throw(ArgumentError("`model` has unsupported target_scitype "*
               "`$(target_scitype(model.model))`. "))
     end
@@ -242,10 +243,10 @@ function _predict_threshold(yhat::UnivariateFiniteArray{S,V,R,P,N},
     return ret
 end
 
-## METADATA
+
+## TRAITS
 
 # Note: input traits are inherited from the wrapped model
-
 
 MMI.package_name(::Type{<:ThresholdUnion}) = "MLJModels"
 MMI.package_uuid(::Type{<:ThresholdUnion}) = ""
@@ -256,26 +257,78 @@ MMI.package_url(::Type{<:ThresholdUnion}) =
 for New in THRESHOLD_TYPE_EXS
     New_str = string(New)
     quote
-        MMI.is_pure_julia(::Type{<:$New{M}}) where M =
-            MMI.is_pure_julia(M)
-        MMI.supports_weights(::Type{<:$New{M}}) where M =
-            MMI.supports_weights(M)
-        MMI.supports_class_weights(::Type{<:$New{M}}) where M =
-            MMI.supports_weights(M)
-        MMI.load_path(::Type{<:$New}) =
-            "MLJModels.$($New_str)"
-        MMI.input_scitype(::Type{<:$New{M}}) where M =
-            MMI.input_scitype(M)
-        function MMI.target_scitype(::Type{<:$New{M}}) where M
-            T = MMI.target_scitype(M)
-            if T <: AbstractVector{<:OrderedFactor}
-                return AbstractVector{<:OrderedFactor{2}}
-            elseif T <: AbstractVector{<:Multiclass}
-                return AbstractVector{<:Multiclass{2}}
-            elseif T <: AbstractVector{<:Finite}
-                return AbstractVector{<:Finite{2}}
-            end
-            return T
-        end
+        MMI.load_path(::Type{<:$New{M}}) where M = "MLJModels."*$New_str
     end |> eval
 end
+
+
+for trait in [:supports_weights,
+              :supports_class_weights,
+              :is_pure_julia,
+              :input_scitype,
+              :output_scitype,
+              :supports_training_losses,
+              ]
+
+    # try to get trait at level of types ("failure" here just
+    # means falling back to `Unknown`):
+    for New in THRESHOLD_TYPE_EXS
+        quote
+            MMI.$trait(::Type{<:$New{M}}) where M = MMI.$trait(M)
+        end |> eval
+    end
+
+    # needed because traits are not always deducable from
+    # the type (eg, `target_scitype` and `Pipeline` models):
+    eval(:(MMI.$trait(model::ThresholdUnion) = MMI.$trait(model.model)))
+end
+
+
+# ## Target scitype
+
+_make_binary(::Type) = Unknown
+_make_binary(::Type{<:AbstractVector{<:OrderedFactor}}) =
+    AbstractVector{<:OrderedFactor{2}}
+_make_binary(::Type{<:AbstractVector{<:Multiclass}}) =
+    AbstractVector{<:Multiclass{2}}
+_make_binary(::Type{<:AbstractVector{<:Finite}}) =
+    AbstractVector{<:Finite{2}}
+_make_binary(::Type{<:AbstractVector{<:Union{Missing,OrderedFactor}}}) =
+    AbstractVector{<:Union{Missing,OrderedFactor{2}}}
+_make_binary(::Type{<:AbstractVector{<:Union{Missing,Multiclass}}}) =
+    AbstractVector{<:Union{Missing,Multiclass{2}}}
+_make_binary(::Type{<:AbstractVector{<:Union{Missing,Finite}}}) =
+    AbstractVector{<:Union{Missing,Finite{2}}}
+
+# at level of types:
+for New in THRESHOLD_TYPE_EXS
+    quote
+        MMI.target_scitype(::Type{<:$New{M}}) where M =
+            _make_binary(MMI.target_scitype(M))
+    end |> eval
+end
+
+# at level of instances:
+MMI.target_scitype(model::ThresholdUnion) =
+    _make_binary(MMI.target_scitype(model.model))
+
+
+# ## Iteration parameter
+
+# at level of types:
+for New in THRESHOLD_TYPE_EXS
+    quote
+        MMI.iteration_parameter(::Type{<:$New{M}}) where M =
+            MLJModels.prepend(:model, MMI.iteration_parameter(M))
+    end |> eval
+end
+
+# at level of instances:
+MMI.iteration_parameter(model::ThresholdUnion) =
+    MLJModels.prepend(:model, MMI.iteration_parameter(model.model))
+
+
+# ## TRAINING LOSSES SUPPORT
+
+MMI.training_losses(thresholder::ThresholdUnion, thresholder_report) =
+    MMI.training_losses(thresholder.model, thresholder_report.model_report)

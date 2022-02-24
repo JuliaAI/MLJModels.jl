@@ -111,7 +111,6 @@ Return the traits associated with the specified `model`. Equivalent to
 function StatisticalTraits.info(M::Type{<:MMI.Model})
     values =
         tuple([eval(:($trait($M))) for trait in PROPERTY_NAMES]...)
-    info_as_named_tuple(info_dict(M))
     return NamedTuple{PROPERTY_NAMES}(values)
 end
 StatisticalTraits.info(model::MMI.Model) = info(typeof(model))
