@@ -54,15 +54,8 @@ end
 
 @testset "building INFO_GIVEN_HANDLE" begin
     @test MLJModels.info_given_handle(metadata_file)[pca][:name] == "PCA"
-    d1 = MLJModels.info_given_handle(metadata_file)[cnst]
-    d2 = MLJModels.info_dict(ConstantRegressor)
-    for (k, v) in d1
-        if v isa Vector
-            @test Set(v) == Set(d2[k])
-        else
-            @test v == d2[k]
-        end
-    end
+    d1 = MLJModels.info_given_handle(metadata_file)[cnst][:prediction_type] ==
+        :probabilistic
 end
 
 h = Vector{Any}(undef, 7)
