@@ -19,7 +19,7 @@ using Markdown
         if exception in [MLJModels.err_handle_ambiguous_name("DecisionTreeClassifier",
                                                              ["DecisionTree", "BetaML"]),
                          MLJModels.err_handle_ambiguous_name("DecisionTreeClassifier",
-                                                             ["BetaML", "DecisionTreee"])]
+                                                             ["BetaML", "DecisionTree"])]
             success = true
         end
     end
