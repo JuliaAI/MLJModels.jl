@@ -13,6 +13,20 @@ using Markdown
                  MLJModels.handle("DecisionTreeClassifier"))
     @test_throws(MLJModels.err_handle_name_not_in_pkg("PCA", "MLJModels"),
                  MLJModels.handle("PCA", pkg="MLJModels"))
+
+    # can't use @test_throws because there are 2 possible correct throws:
+    success = false
+    try
+        MLJModels.handle("DecisionTreeClassifier")
+    catch exception
+        if exception in [MLJModels.err_handle_ambiguous_name("DecisionTreeClassifier",
+                                                             ["DecisionTree", "BetaML"]),
+                         MLJModels.err_handle_ambiguous_name("DecisionTreeClassifier",
+                                                             ["BetaML", "DecisionTreee"])]
+            success = true
+        end
+    end
+    @test success
 end
 
 pca = info("PCA", pkg="MultivariateStats")
