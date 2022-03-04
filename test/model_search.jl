@@ -8,9 +8,6 @@ using Markdown
 
 @testset "user interface to get handle" begin
     @test_throws MLJModels.err_handle_missing_name("julia") MLJModels.handle("julia")
-    @test_throws(MLJModels.err_handle_ambiguous_name("DecisionTreeClassifier",
-                                                     ["DecisionTree", "BetaML"]),
-                 MLJModels.handle("DecisionTreeClassifier"))
     @test_throws(MLJModels.err_handle_name_not_in_pkg("PCA", "MLJModels"),
                  MLJModels.handle("PCA", pkg="MLJModels"))
 
