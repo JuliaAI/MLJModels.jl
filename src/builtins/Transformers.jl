@@ -1363,82 +1363,62 @@ metadata_pkg.(
      UnivariateBoxCoxTransformer, UnivariateFillImputer,
      OneHotEncoder, FillImputer, ContinuousEncoder,
      UnivariateTimeTypeToContinuous),
-    name       = "MLJModels",
-    uuid       = "d491faf4-2d78-11e9-2867-c94bc002c0b7",
-    url        = "https://github.com/alan-turing-institute/MLJModels.jl",
-    julia      = true,
-    license    = "MIT",
-    is_wrapper = false)
+    package_name       = "MLJModels",
+    package_uuid       = "d491faf4-2d78-11e9-2867-c94bc002c0b7",
+    package_url        = "https://github.com/alan-turing-institute/MLJModels.jl",
+    is_pure_julia      = true,
+    package_license    = "MIT")
 
 metadata_model(UnivariateFillImputer,
-    input = Union{AbstractVector{<:Union{Continuous,Missing}},
+    input_scitype = Union{AbstractVector{<:Union{Continuous,Missing}},
                   AbstractVector{<:Union{Count,Missing}},
                   AbstractVector{<:Union{Finite,Missing}}},
-    output = Union{AbstractVector{<:Continuous},
+    output_scitype= Union{AbstractVector{<:Continuous},
                   AbstractVector{<:Count},
                   AbstractVector{<:Finite}},
-    descr = UNIVARIATE_FILL_IMPUTER_DESCR,
-    path  = "MLJModels.UnivariateFillImputer")
+    load_path  = "MLJModels.UnivariateFillImputer")
 
 metadata_model(FillImputer,
-    input   = Table,
-    output  = Table,
-    weights = false,
-    descr   = FILL_IMPUTER_DESCR,
-    path    = "MLJModels.FillImputer")
+    input_scitype   = Table,
+    output_scitype = Table,
+    load_path    = "MLJModels.FillImputer")
 
 metadata_model(FeatureSelector,
-    input   = Table,
-    output  = Table,
-    weights = false,
-    descr   = FEATURE_SELECTOR_DESCR,
-    path    = "MLJModels.FeatureSelector")
+    input_scitype   = Table,
+    output_scitype = Table,
+    load_path    = "MLJModels.FeatureSelector")
 
 metadata_model(UnivariateDiscretizer,
-    input   = AbstractVector{<:Continuous},
-    output  = AbstractVector{<:OrderedFactor},
-    weights = false,
-    descr   = UNIVARIATE_DISCR_DESCR,
-    path    = "MLJModels.UnivariateDiscretizer")
+    input_scitype   = AbstractVector{<:Continuous},
+    output_scitype = AbstractVector{<:OrderedFactor},
+    load_path    = "MLJModels.UnivariateDiscretizer")
 
 metadata_model(UnivariateStandardizer,
-    input   = AbstractVector{<:Infinite},
-    output  = AbstractVector{Continuous},
-    weights = false,
-    descr   = UNIVARIATE_STD_DESCR,
-    path    = "MLJModels.UnivariateStandardizer")
+    input_scitype   = AbstractVector{<:Infinite},
+    output_scitype = AbstractVector{Continuous},
+    load_path    = "MLJModels.UnivariateStandardizer")
 
 metadata_model(Standardizer,
-    input   = Union{Table, AbstractVector{<:Continuous}},
-    output  = Union{Table, AbstractVector{<:Continuous}},
-    weights = false,
-    descr   = STANDARDIZER_DESCR,
-    path    = "MLJModels.Standardizer")
+    input_scitype   = Union{Table, AbstractVector{<:Continuous}},
+    output_scitype = Union{Table, AbstractVector{<:Continuous}},
+    load_path    = "MLJModels.Standardizer")
 
 metadata_model(UnivariateBoxCoxTransformer,
-    input   = AbstractVector{Continuous},
-    output  = AbstractVector{Continuous},
-    weights = false,
-    descr   = UNIVARIATE_BOX_COX_DESCR,
-    path    = "MLJModels.UnivariateBoxCoxTransformer")
+    input_scitype   = AbstractVector{Continuous},
+    output_scitype = AbstractVector{Continuous},
+    load_path    = "MLJModels.UnivariateBoxCoxTransformer")
 
 metadata_model(OneHotEncoder,
-    input   = Table,
-    output  = Table,
-    weights = false,
-    descr   = ONE_HOT_DESCR,
-    path    = "MLJModels.OneHotEncoder")
+    input_scitype   = Table,
+    output_scitype = Table,
+    load_path    = "MLJModels.OneHotEncoder")
 
 metadata_model(ContinuousEncoder,
-    input   = Table,
-    output  = Table(Continuous),
-    weights = false,
-    descr   = CONTINUOUS_ENCODER_DESCR,
-    path    = "MLJModels.ContinuousEncoder")
+    input_scitype   = Table,
+    output_scitype = Table(Continuous),
+    load_path    = "MLJModels.ContinuousEncoder")
 
 metadata_model(UnivariateTimeTypeToContinuous,
-    input   = AbstractVector{<:ScientificTimeType},
-    output  = AbstractVector{Continuous},
-    weights = false,
-    descr   = UNIVARIATE_TIME_TYPE_TO_CONTINUOUS,
-    path    = "MLJModels.UnivariateTimeTypeToContinuous")
+    input_scitype   = AbstractVector{<:ScientificTimeType},
+    output_scitype = AbstractVector{Continuous},
+    load_path    = "MLJModels.UnivariateTimeTypeToContinuous")
