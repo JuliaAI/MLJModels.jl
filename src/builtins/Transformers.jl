@@ -28,9 +28,7 @@ const UNIVARIATE_TIME_TYPE_TO_CONTINUOUS = "Transform univariate "*
 "`Continuous` element scitype, according to a learned scale. "
 
 
-##
-## IMPUTER
-##
+# # IMPUTER
 
 round_median(v::AbstractVector) = v -> round(eltype(v), median(v))
 
@@ -235,9 +233,7 @@ function MMI.fitted_params(::FillImputer, fr)
 end
 
 
-##
-## FOR FEATURE (COLUMN) SELECTION
-##
+# # FOR FEATURE (COLUMN) SELECTION
 
 """
     FeatureSelector(features=Symbol[], ignore=false)
@@ -367,9 +363,8 @@ function MMI.transform(::FeatureSelector, features, X)
     return MMI.selectcols(X, features)
 end
 
-##
-## UNIVARIATE Discretizer
-##
+
+# # UNIVARIATE Discretizer
 
 # helper function:
 reftype(::CategoricalArray{<:Any,<:Any,R}) where R = R
@@ -485,7 +480,7 @@ function MMI.inverse_transform(transformer::UnivariateDiscretizer, result,
 end
 
 
-## UNIVARIATE STANDARDIZATION
+# # UNIVARIATE STANDARDIZATION
 
 """
     UnivariateStandardizer()
@@ -530,7 +525,7 @@ MMI.inverse_transform(transformer::UnivariateStandardizer, fitresult, w) =
     [inverse_transform(transformer, fitresult, y) for y in w]
 
 
-## CONTINUOUS TRANSFORM OF TIME TYPE FEATURES
+# # CONTINUOUS TRANSFORM OF TIME TYPE FEATURES
 
 """
     UnivariateTimeTypeToContinuous(zero_time=nothing, step=Hour(24))
@@ -669,7 +664,7 @@ function MMI.transform(model::UnivariateTimeTypeToContinuous, fitresult, X)
 end
 
 
-## STANDARDIZATION OF ORDINAL FEATURES OF TABULAR DATA
+# # STANDARDIZATION OF ORDINAL FEATURES OF TABULAR DATA
 
 """
     Standardizer(; features=Symbol[],
@@ -898,10 +893,7 @@ function _standardize(operation, fitresult, X)
 end
 
 
-
-##
-## UNIVARIATE BOX-COX TRANSFORMATIONS
-##
+# # UNIVARIATE BOX-COX TRANSFORMATIONS
 
 function standardize(v)
     map(v) do x
@@ -1011,7 +1003,7 @@ function MMI.inverse_transform(transformer::UnivariateBoxCoxTransformer,
 end
 
 
-## ONE HOT ENCODING
+# # ONE HOT ENCODING
 
 """
     OneHotEncoder(; features=Symbol[],
@@ -1218,7 +1210,7 @@ function MMI.transform(transformer::OneHotEncoder, fitresult, X)
 end
 
 
-## CONTINUOUS_ENCODING
+# # CONTINUOUS_ENCODING
 
 """
     ContinuousEncoder(one_hot_ordered_factors=false, drop_last=false)
@@ -1353,9 +1345,8 @@ function MMI.transform(transformer::ContinuousEncoder, fitresult, X)
 
 end
 
-##
-## Metadata for all built-in transformers
-##
+
+# # METADATA FOR ALL BUILT-IN TRANSFORMERS
 
 metadata_pkg.(
     (FeatureSelector, UnivariateStandardizer,
@@ -1422,3 +1413,6 @@ metadata_model(UnivariateTimeTypeToContinuous,
     input_scitype   = AbstractVector{<:ScientificTimeType},
     output_scitype = AbstractVector{Continuous},
     load_path    = "MLJModels.UnivariateTimeTypeToContinuous")
+
+
+# # DOC STRINGS
