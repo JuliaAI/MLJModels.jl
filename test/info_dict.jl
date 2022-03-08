@@ -32,8 +32,10 @@ MMI.hyperparameter_ranges(::Type{DummyProb}) =
            nothing)
 MMI.predict(::DummyProb, fr, X) = nothing
 
+"""
+dummy determ
+"""
 mutable struct DummyDeterm <: Deterministic end
-
 MMI.load_path(::Type{DummyDeterm})        = "GreatPackage.MLJ.DummyDeterm"
 MMI.input_scitype(::Type{DummyDeterm})    = Table(Finite)
 MMI.target_scitype(::Type{DummyDeterm})   = AbstractVector{<:Continuous}
@@ -45,6 +47,9 @@ MMI.package_url(::Type{DummyDeterm}) = "https://mickey.mouse.org"
 MMI.package_license(::Type{DummyDeterm}) = "MIT"
 MMI.predict(::DummyDeterm, fr, X) = nothing
 
+"""
+dummy int
+"""
 mutable struct DummyInt <: Interval end
 MMI.load_path(::Type{DummyInt}) = "GreatPackage.MLJ.DummyInt"
 MMI.input_scitype(::Type{DummyInt}) = Table(Finite)
@@ -57,6 +62,9 @@ MMI.package_url(::Type{DummyInt}) = "https://mickey.mouse.org"
 MMI.package_license(::Type{DummyInt}) = "MIT"
 MMI.predict(::DummyInt, fr, X) = nothing
 
+"""
+dummy unsup
+"""
 mutable struct DummyUnsup <: Unsupervised end
 MMI.load_path(::Type{DummyUnsup}) = "GreatPackage.MLJ.DummyUnsup"
 MMI.input_scitype(::Type{DummyUnsup}) = Table(Finite)
@@ -102,7 +110,7 @@ d2['b'] = 4
             :package_url      => "https://mickey.mouse.org",
             :is_supervised    => true,
             :is_wrapper       => false,
-            :docstring        => "DummyProb from GreatPackage.jl.\n[Documentation](https://mickey.mouse.org).",
+            :docstring        => "",
             :implemented_methods  => [:predict, ],
             :hyperparameters  => (:an_int, :a_float, :a_vector, :untyped),
             :hyperparameter_ranges =>
@@ -132,7 +140,7 @@ end
             :package_url      => "https://mickey.mouse.org",
             :is_supervised    => true,
             :is_wrapper       => false,
-            :docstring        => "DummyDeterm from GreatPackage.jl.\n[Documentation](https://mickey.mouse.org).",
+            :docstring        => "dummy determ\n",
             :implemented_methods   => [:predict, ],
             :hyperparameter_types  => (),
             :hyperparameters       => (),
@@ -160,7 +168,7 @@ end
             :package_url   => "https://mickey.mouse.org",
             :is_supervised => true,
             :is_wrapper => false,
-            :docstring => "DummyInt from GreatPackage.jl.\n[Documentation](https://mickey.mouse.org).",
+            :docstring => "dummy int\n",
             :implemented_methods => [:predict, ],
             :hyperparameter_types  => (),
             :hyperparameters => (),
@@ -188,7 +196,7 @@ end
             :is_supervised   => false,
             :supports_online => false,
             :is_wrapper      => false,
-            :docstring       => "DummyUnsup from GreatPackage.jl.\n[Documentation](https://mickey.mouse.org).",
+            :docstring       => "dummy unsup\n",
             :implemented_methods   => [:transform, ],
             :hyperparameter_types  => (),
             :hyperparameters       => (),
