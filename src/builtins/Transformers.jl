@@ -355,54 +355,6 @@ function MMI.inverse_transform(transformer::UnivariateDiscretizer, result,
 end
 
 
-# # UNIVARIATE STANDARDIZATION
-
-"""
-    UnivariateStandardizer()
-
-Transformer type for standardizing (whitening) single variable data.
-
-This model may be deprecated in the future. Consider using
-[`Standardizer`](@ref), which handles both tabular *and* univariate data.
-
-"""
-mutable struct UnivariateStandardizer <: Unsupervised end
-
-function MMI.fit(transformer::UnivariateStandardizer, verbosity::Int,
-             v::AbstractVector{T}) where T<:Real
-    std(v) > eps(Float64) ||
-        @warn "Extremely small standard deviation encountered in standardization."
-    fitresult = (mean(v), std(v))
-    cache = nothing
-    report = NamedTuple()
-    return fitresult, cache, report
-end
-
-MMI.fitted_params(::UnivariateStandardizer, fitresult) =
-    (mean_and_std = fitresult, )
-
-
-# for transforming single value:
-function MMI.transform(transformer::UnivariateStandardizer, fitresult, x::Real)
-    mu, sigma = fitresult
-    return (x - mu)/sigma
-end
-
-# for transforming vector:
-MMI.transform(transformer::UnivariateStandardizer, fitresult, v) =
-              [transform(transformer, fitresult, x) for x in v]
-
-# for single values:
-function MMI.inverse_transform(transformer::UnivariateStandardizer, fitresult, y::Real)
-    mu, sigma = fitresult
-    return mu + y*sigma
-end
-
-# for vectors:
-MMI.inverse_transform(transformer::UnivariateStandardizer, fitresult, w) =
-    [inverse_transform(transformer, fitresult, y) for y in w]
-
-
 # # CONTINUOUS TRANSFORM OF TIME TYPE FEATURES
 
 mutable struct UnivariateTimeTypeToContinuous <: Unsupervised
@@ -529,6 +481,54 @@ function MMI.transform(model::UnivariateTimeTypeToContinuous, fitresult, X)
     end
     return @. Float64(Dates.value(X - min_dt)) / delta
 end
+
+
+# # UNIVARIATE STANDARDIZATION
+
+"""
+    UnivariateStandardizer()
+
+Transformer type for standardizing (whitening) single variable data.
+
+This model may be deprecated in the future. Consider using
+[`Standardizer`](@ref), which handles both tabular *and* univariate data.
+
+"""
+mutable struct UnivariateStandardizer <: Unsupervised end
+
+function MMI.fit(transformer::UnivariateStandardizer, verbosity::Int,
+             v::AbstractVector{T}) where T<:Real
+    std(v) > eps(Float64) ||
+        @warn "Extremely small standard deviation encountered in standardization."
+    fitresult = (mean(v), std(v))
+    cache = nothing
+    report = NamedTuple()
+    return fitresult, cache, report
+end
+
+MMI.fitted_params(::UnivariateStandardizer, fitresult) =
+    (mean_and_std = fitresult, )
+
+
+# for transforming single value:
+function MMI.transform(transformer::UnivariateStandardizer, fitresult, x::Real)
+    mu, sigma = fitresult
+    return (x - mu)/sigma
+end
+
+# for transforming vector:
+MMI.transform(transformer::UnivariateStandardizer, fitresult, v) =
+              [transform(transformer, fitresult, x) for x in v]
+
+# for single values:
+function MMI.inverse_transform(transformer::UnivariateStandardizer, fitresult, y::Real)
+    mu, sigma = fitresult
+    return mu + y*sigma
+end
+
+# for vectors:
+MMI.inverse_transform(transformer::UnivariateStandardizer, fitresult, w) =
+    [inverse_transform(transformer, fitresult, y) for y in w]
 
 
 # # STANDARDIZATION OF ORDINAL FEATURES OF TABULAR DATA
@@ -1734,7 +1734,7 @@ features (columns) of some table, leaving other columns unchanged.
 New data to be transformed may lack features present in the fit data,
 but no *new* features can be present.
 
-*Warning:* This transformer assumes that `levels(col)` for any
+**Warning:** This transformer assumes that `levels(col)` for any
 `Multiclass` or `OrderedFactor` column, `col`, is the same for
 training data and new data to be transformed.
 
@@ -1868,7 +1868,7 @@ each feature `ftr`:
 - If `ftr` has some other element scitype, or was not observed in
   fitting the encoder, drop it from the table.
 
-*Warning:* This transformer assumes that `levels(col)` for any
+**Warning:** This transformer assumes that `levels(col)` for any
 `Multiclass` or `OrderedFactor` column, `col`, is the same for
 training data and new data to be transformed.
 
