@@ -4,15 +4,43 @@ using Test
 using MLJModels
 using MLJBase
 using ScientificTypes
+using Markdown
+
+@testset "user interface to get handle" begin
+    @test_throws MLJModels.err_handle_missing_name("julia") MLJModels.handle("julia")
+    @test_throws(MLJModels.err_handle_name_not_in_pkg("PCA", "MLJModels"),
+                 MLJModels.handle("PCA", pkg="MLJModels"))
+
+    # can't use @test_throws because there are 2 possible correct throws:
+    success = false
+    try
+        MLJModels.handle("DecisionTreeClassifier")
+    catch exception
+        if exception in [MLJModels.err_handle_ambiguous_name("DecisionTreeClassifier",
+                                                             ["DecisionTree", "BetaML"]),
+                         MLJModels.err_handle_ambiguous_name("DecisionTreeClassifier",
+                                                             ["BetaML", "DecisionTree"])]
+            success = true
+        end
+    end
+    @test success
+end
 
 pca = info("PCA", pkg="MultivariateStats")
 cnst = info("ConstantRegressor", pkg="MLJModels")
 tree = info("DecisionTreeRegressor", pkg="DecisionTree")
 
-@test_throws ArgumentError info("Julia")
+@testset "info and doc" begin
+    @test_throws ArgumentError info("Julia")
 
-@test info(ConstantRegressor) == cnst
-@test info(Standardizer()) == info("Standardizer", pkg="MLJModels")
+    # Note that these tests assume model registry metadata is up to date
+    # with the latest trait values in `src/builtins/`:
+    @test info(ConstantRegressor) == cnst
+    @test info(Standardizer()) == info("Standardizer", pkg="MLJModels")
+    @test doc("ConstantRegressor", pkg="MLJModels") == cnst.docstring |> Markdown.parse
+    @test_throws MLJModels.ERR_DOC_EXPECTS_STRING doc(ConstantRegressor)
+    @test_throws MLJModels.ERR_DOC_EXPECTS_STRING doc(ConstantRegressor())
+end
 
 @testset "localmodels" begin
     @test issubset(Set([DeterministicConstantClassifier,

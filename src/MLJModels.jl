@@ -1,4 +1,4 @@
-module MLJModels
+module MLJModels 
 
 import MLJModelInterface
 import MLJModelInterface: Model, metadata_pkg, metadata_model, @mlj_model, info,
@@ -16,7 +16,7 @@ const MMI = MLJModelInterface
 
 using Pkg, Pkg.TOML, OrderedCollections, Parameters
 using Tables, CategoricalArrays, StatsBase, Statistics, Dates
-using InteractiveUtils
+using InteractiveUtils, Markdown
 import Distributions
 import REPL # stdlib, needed for `Term`
 import PrettyPrinting
@@ -28,7 +28,7 @@ import StatisticalTraits # for `info`
 export load, @load, @iload, @loadcode
 
 # from model_search:
-export models, localmodels, matching
+export models, localmodels, matching, doc
 
 # extended in model_search.jl:
 export info
@@ -41,7 +41,7 @@ export ConstantRegressor, ConstantClassifier,
 export BinaryThresholdPredictor
 
 # from model/Transformers
-export FeatureSelector, StaticTransformer, UnivariateDiscretizer,
+export FeatureSelector, UnivariateDiscretizer,
     UnivariateStandardizer, Standardizer, UnivariateBoxCoxTransformer,
     OneHotEncoder, ContinuousEncoder, FillImputer, UnivariateFillImputer,
     UnivariateTimeTypeToContinuous

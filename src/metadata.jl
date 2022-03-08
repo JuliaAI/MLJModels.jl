@@ -25,7 +25,7 @@ function decode_dic(s::String)
     if !isempty(s)
         if  s[1] == ':'
             return Symbol(s[2:end])
-        elseif s[1] == '`'
+        elseif s[1] == '`' && s[2] != '`' # to exclude strings starting with ```
             return eval(Meta.parse(s[2:end-1]))
         else
             return s

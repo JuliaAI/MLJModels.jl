@@ -1,36 +1,7 @@
-## CONSTANTS
-
-const N_VALUES_THRESH = 16 # for BoxCoxTransformation
+# Note that doc-strings appear at the end
 
 
-## DESCRIPTIONS (see also metadata at the bottom)
-
-const FILL_IMPUTER_DESCR = "Imputes missing data with a fixed value "*
-"computed on the non-missing values. A different imputing function "*
-"can be specified for `Continuous`, `Count` and `Finite` data. "
-const UNIVARIATE_FILL_IMPUTER_DESCR = "Univariate form of FillImpututer. "*
-FILL_IMPUTER_DESCR
-const FEATURE_SELECTOR_DESCR = "Filter features (columns) of a table by name."
-const UNIVARIATE_STD_DESCR = "Standardize (whiten) univariate data."
-const UNIVARIATE_DISCR_DESCR = "Discretize a continuous variable via "*
-"quantiles."
-const STANDARDIZER_DESCR = "Standardize (whiten) features (columns) "*
-"of a table."
-const UNIVARIATE_BOX_COX_DESCR = "Box-Cox transform univariate data."
-const ONE_HOT_DESCR = "One-hot encode `Finite` (categorical) features "*
-"(columns) of a table."
-const CONTINUOUS_ENCODER_DESCR = "Convert all `Finite` (categorical) and "*
-"`Count` features (columns) of a table to `Continuous` and drop all "*
-" remaining non-`Continuous` features. "
-"features. "
-const UNIVARIATE_TIME_TYPE_TO_CONTINUOUS = "Transform univariate "*
-"data with element scitype `ScientificDateTime` so that it has "*
-"`Continuous` element scitype, according to a learned scale. "
-
-
-##
-## IMPUTER
-##
+# # IMPUTER
 
 round_median(v::AbstractVector) = v -> round(eltype(v), median(v))
 
@@ -60,7 +31,7 @@ function MMI.fit(transformer::UnivariateFillImputer,
 
     fitresult = (filler=filler(v, elscitype(v)),)
     cache = nothing
-    report = nothing
+    report = NamedTuple()
 
     return fitresult, cache, report
 
@@ -109,28 +80,6 @@ end
 
 MMI.fitted_params(::UnivariateFillImputer, fitresult) = fitresult
 
-
-"""
-    FillImputer(
-     features        = [],
-     continuous_fill = e -> skipmissing(e) |> median
-     count_fill      = e -> skipmissing(e) |> (f -> round(eltype(f), median(f)))
-     finite_fill     = e -> skipmissing(e) |> mode
-
-$FILL_IMPUTER_DESCR
-
-## Fields
-
-* `continuous_fill`: function to use on `Continuous` data, by default
-  the median
-
-* `count_fill`: function to use on `Count` data, by default the
-  rounded median
-
-* `finite_fill`: function to use on `Multiclass` and `OrderedFactor`
-  data (including binary data), by default the mode
-
-"""
 @with_kw_noshow mutable struct FillImputer <: Unsupervised
     features::Vector{Symbol}  = Symbol[]
     continuous_fill::Function = _median
@@ -189,7 +138,7 @@ function MMI.fit(transformer::FillImputer, verbosity::Int, X)
     fitresult = (features_seen=features_seen,
                  univariate_transformer=univariate_transformer,
                  fitresult_given_feature=fitresult_given_feature)
-    report    = nothing
+    report    = NamedTuple()
     cache     = nothing
 
     return fitresult, cache, report
@@ -235,59 +184,8 @@ function MMI.fitted_params(::FillImputer, fr)
 end
 
 
-##
-## FOR FEATURE (COLUMN) SELECTION
-##
+# # FOR FEATURE (COLUMN) SELECTION
 
-"""
-    FeatureSelector(features=Symbol[], ignore=false)
-
-An unsupervised model for filtering features (columns) of a table.
-Only those features encountered during fitting will appear in
-transformed tables if `features` is empty (the default).
-Alternatively, if a non-empty `features` is specified, then only the
-specified features encountered during fitting are used (`ignore=false`) or all features
-encountered during fitting which are not named in `features` are used (`ignore=true`).
-
-Throws an error if a recorded or specified feature is not present in the transformation
-input.
-
-Instead of supplying a features vector, a Bool-valued callable with one argument
-can be also be specified. For example, specifying `FeatureSelector(features =
-name -> name in [:x1, :x3], ignore = true)` has the same effect as
-`FeatureSelector(features = [:x1, :x3], ignore = true)`, namely to select
- all features, with the exception of `:x1` and `:x3`.
-
-# Example
-
-```
-julia> X = (ordinal1 = [1, 2, 3],
-            ordinal2 = coerce([:x, :y, :x], OrderedFactor),
-            ordinal3 = [10.0, 20.0, 30.0],
-            ordinal4 = [-20.0, -30.0, -40.0],
-            nominal = coerce(["Your father", "he", "is"], Multiclass));
-
-julia> select1 = FeatureSelector();
-
-julia> transform(fit!(machine(select1, X)), X)
-[ Info: Training Machine{FeatureSelector} @811.
-(ordinal1 = [1, 2, 3],
- ordinal2 = CategoricalValue{Symbol,UInt32}[:x, :y, :x],
- ordinal3 = [-1.0, 0.0, 1.0],
- ordinal4 = [1.0, 0.0, -1.0],
- nominal = CategoricalVale{String,UInt32}["Your father", "he", "is"],)
-
-julia> select2 = FeatureSelector(features=[:ordinal3, ], ignore=true);
-
-julia> transform(fit!(machine(select2, X)), X)
-[ Info: Training Machine{FeatureSelector} @721.
-(ordinal1 = [1, 2, 3],
- ordinal2 = CategoricalValue{Symbol,UInt32}[:x, :y, :x],
- ordinal4 = [-20.0, -30.0, -40.0],
- nominal = CategoricalValue{String,UInt32}["Your father", "he", "is"],)
-
-```
-"""
 mutable struct FeatureSelector <: Unsupervised
     # features to be selected; empty means all
     features::Union{Vector{Symbol}, Function}
@@ -367,40 +265,12 @@ function MMI.transform(::FeatureSelector, features, X)
     return MMI.selectcols(X, features)
 end
 
-##
-## UNIVARIATE Discretizer
-##
+
+# # UNIVARIATE DISCRETIZER
 
 # helper function:
 reftype(::CategoricalArray{<:Any,<:Any,R}) where R = R
 
-"""
-    UnivariateDiscretizer(n_classes=512)
-
-Returns an `MLJModel` for for discretizing any continuous vector `v`
- (`scitype(v) <: AbstractVector{Continuous}`), where `n_classes`
- describes the resolution of the discretization.
-
-Transformed output `w` is a vector of ordered factors (`scitype(w) <:
- AbstractVector{<:OrderedFactor}`). Specifically, `w` is a
- `CategoricalVector`, with element type
- `CategoricalValue{R,R}`, where `R<Unsigned` is optimized.
-
-The transformation is chosen so that the vector on which the
- transformer is fit has, in transformed form, an approximately uniform
- distribution of values.
-
-### Example
-
-    using MLJ
-    t = UnivariateDiscretizer(n_classes=10)
-    discretizer = machine(t, randn(1000))
-    fit!(discretizer)
-    v = rand(10)
-    w = transform(discretizer, v)
-    v_approx = inverse_transform(discretizer, w) # reconstruction of v from w
-
-"""
 @with_kw_noshow mutable struct UnivariateDiscretizer <:Unsupervised
     n_classes::Int = 512
 end
@@ -485,64 +355,8 @@ function MMI.inverse_transform(transformer::UnivariateDiscretizer, result,
 end
 
 
-## UNIVARIATE STANDARDIZATION
+# # CONTINUOUS TRANSFORM OF TIME TYPE FEATURES
 
-"""
-    UnivariateStandardizer()
-
-Unsupervised model for standardizing (whitening) univariate data.
-"""
-mutable struct UnivariateStandardizer <: Unsupervised end
-
-function MMI.fit(transformer::UnivariateStandardizer, verbosity::Int,
-             v::AbstractVector{T}) where T<:Real
-    std(v) > eps(Float64) ||
-        @warn "Extremely small standard deviation encountered in standardization."
-    fitresult = (mean(v), std(v))
-    cache = nothing
-    report = NamedTuple()
-    return fitresult, cache, report
-end
-
-
-MMI.fitted_params(::UnivariateStandardizer, fitresult) =
-    (mean_and_std = fitresult, )
-
-
-# for transforming single value:
-function MMI.transform(transformer::UnivariateStandardizer, fitresult, x::Real)
-    mu, sigma = fitresult
-    return (x - mu)/sigma
-end
-
-# for transforming vector:
-MMI.transform(transformer::UnivariateStandardizer, fitresult, v) =
-              [transform(transformer, fitresult, x) for x in v]
-
-# for single values:
-function MMI.inverse_transform(transformer::UnivariateStandardizer, fitresult, y::Real)
-    mu, sigma = fitresult
-    return mu + y*sigma
-end
-
-# for vectors:
-MMI.inverse_transform(transformer::UnivariateStandardizer, fitresult, w) =
-    [inverse_transform(transformer, fitresult, y) for y in w]
-
-
-## CONTINUOUS TRANSFORM OF TIME TYPE FEATURES
-
-"""
-    UnivariateTimeTypeToContinuous(zero_time=nothing, step=Hour(24))
-
-Convert a `Date`, `DateTime`, and `Time` vector to `Float64` by
-assuming `0.0` corresponds to the `zero_time` parameter and the time
-increment to reach `1.0` is given by the `step` parameter. The type of
-`zero_time` should match the type of the column if provided. If not
-provided, then `zero_time` is inferred as the minimum time found in
-the data when `fit` is called.
-
-"""
 mutable struct UnivariateTimeTypeToContinuous <: Unsupervised
     zero_time::Union{Nothing, TimeType}
     step::Period
@@ -643,7 +457,7 @@ function MMI.fit(model::UnivariateTimeTypeToContinuous, verbosity::Int, X)
         isempty(message) || @warn message
     end
     cache = nothing
-    report = nothing
+    report = NamedTuple()
     fitresult = (min_dt, step)
     return fitresult, cache, report
 end
@@ -669,60 +483,56 @@ function MMI.transform(model::UnivariateTimeTypeToContinuous, fitresult, X)
 end
 
 
-## STANDARDIZATION OF ORDINAL FEATURES OF TABULAR DATA
+# # UNIVARIATE STANDARDIZATION
 
 """
-    Standardizer(; features=Symbol[],
-                   ignore=false,
-                   ordered_factor=false,
-                   count=false)
+    UnivariateStandardizer()
 
-Unsupervised model for standardizing (whitening) the columns of
-tabular data.  If `features` is unspecified then all columns
-having `Continuous` element scitype are standardized. Otherwise, the
-features standardized are the `Continuous` features named in
-`features` (`ignore=false`) or `Continuous` features not named in
-`features` (`ignore=true`). To allow standarization of `Count` or
-`OrderedFactor` features as well, set the appropriate flag to true.
+Transformer type for standardizing (whitening) single variable data.
 
-Instead of supplying a features vector, a Bool-valued callable with one
-argument can be also be specified. For example, specifying
-`Standardizer(features = name -> name in [:x1, :x3], ignore = true, count=true)`
-has the same effect as `Standardizer(features = [:x1, :x3], ignore = true,
-count=true)`, namely to standardise all `Continuous` and `Count` features,
-with the exception of `:x1` and `:x3`.
-
-The `inverse_tranform` method is supported provided `count=false` and
-`ordered_factor=false` at time of fit.
-
-# Example
-
-```
-X = (ordinal1 = [1, 2, 3],
-     ordinal2 = coerce([:x, :y, :x], OrderedFactor),
-     ordinal3 = [10.0, 20.0, 30.0],
-     ordinal4 = [-20.0, -30.0, -40.0],
-     nominal = coerce(["Your father", "he", "is"], Multiclass));
-stand1 = Standardizer();
-julia> transform(fit!(machine(stand1, X)), X)
-[ Info: Training Machine{Standardizer} @ 7…97.
-(ordinal1 = [1, 2, 3],
- ordinal2 = CategoricalValue{Symbol,UInt32}[:x, :y, :x],
- ordinal3 = [-1.0, 0.0, 1.0],
- ordinal4 = [1.0, 0.0, -1.0],
- nominal = CategoricalVale{String,UInt32}["Your father", "he", "is"],)
-
-stand2 = Standardizer(features=[:ordinal3, ], ignore=true, count=true);
-julia> transform(fit!(machine(stand2, X)), X)
-[ Info: Training Machine{Standardizer} @ 1…87.
-(ordinal1 = [-1.0, 0.0, 1.0],
- ordinal2 = CategoricalValue{Symbol,UInt32}[:x, :y, :x],
- ordinal3 = [10.0, 20.0, 30.0],
- ordinal4 = [1.0, 0.0, -1.0],
- nominal = CategoricalValue{String,UInt32}["Your father", "he", "is"],)
-```
+This model may be deprecated in the future. Consider using
+[`Standardizer`](@ref), which handles both tabular *and* univariate data.
 
 """
+mutable struct UnivariateStandardizer <: Unsupervised end
+
+function MMI.fit(transformer::UnivariateStandardizer, verbosity::Int,
+             v::AbstractVector{T}) where T<:Real
+    std(v) > eps(Float64) ||
+        @warn "Extremely small standard deviation encountered in standardization."
+    fitresult = (mean(v), std(v))
+    cache = nothing
+    report = NamedTuple()
+    return fitresult, cache, report
+end
+
+MMI.fitted_params(::UnivariateStandardizer, fitresult) =
+    (mean_and_std = fitresult, )
+
+
+# for transforming single value:
+function MMI.transform(transformer::UnivariateStandardizer, fitresult, x::Real)
+    mu, sigma = fitresult
+    return (x - mu)/sigma
+end
+
+# for transforming vector:
+MMI.transform(transformer::UnivariateStandardizer, fitresult, v) =
+              [transform(transformer, fitresult, x) for x in v]
+
+# for single values:
+function MMI.inverse_transform(transformer::UnivariateStandardizer, fitresult, y::Real)
+    mu, sigma = fitresult
+    return mu + y*sigma
+end
+
+# for vectors:
+MMI.inverse_transform(transformer::UnivariateStandardizer, fitresult, w) =
+    [inverse_transform(transformer, fitresult, y) for y in w]
+
+
+# # STANDARDIZATION OF ORDINAL FEATURES OF TABULAR DATA
+
 mutable struct Standardizer <: Unsupervised
     # features to be standardized; empty means all
     features::Union{AbstractVector{Symbol}, Function}
@@ -829,11 +639,12 @@ function MMI.fit(transformer::Standardizer, verbosity::Int, X)
         else
             selectcols(X, j)
         end
-        col_fitresult, cache, report =
+        col_fitresult, _, _ =
             MMI.fit(UnivariateStandardizer(), verbosity - 1, col_data)
         fitresult_given_feature[all_features[j]] = col_fitresult
         verbosity > 1 &&
-            @info "  :$(all_features[j])    mu=$(col_fitresult[1])  sigma=$(col_fitresult[2])"
+            @info "  :$(all_features[j])    mu=$(col_fitresult[1])  "*
+            "sigma=$(col_fitresult[2])"
     end
 
     fitresult = (is_univariate=false, is_invertible=is_invertible,
@@ -898,10 +709,7 @@ function _standardize(operation, fitresult, X)
 end
 
 
-
-##
-## UNIVARIATE BOX-COX TRANSFORMATIONS
-##
+# # UNIVARIATE BOX-COX TRANSFORMATIONS
 
 function standardize(v)
     map(v) do x
@@ -939,25 +747,6 @@ end
 boxcox(lambda, c, v::AbstractVector{T}) where T <: Real =
     [boxcox(lambda, c, x) for x in v]
 
-
-"""
-    UnivariateBoxCoxTransformer(; n=171, shift=false)
-
-Unsupervised model specifying a univariate Box-Cox
-transformation of a single variable taking non-negative values, with a
-possible preliminary shift. Such a transformation is of the form
-
-    x -> ((x + c)^λ - 1)/λ for λ not 0
-    x -> log(x + c) for λ = 0
-
-On fitting to data `n` different values of the Box-Cox
-exponent λ (between `-0.4` and `3`) are searched to fix the value
-maximizing normality. If `shift=true` and zero values are encountered
-in the data then the transformation sought includes a preliminary
-positive shift `c` of `0.2` times the data mean. If there are no zero
-values, then no shift is applied.
-
-"""
 @with_kw_noshow mutable struct UnivariateBoxCoxTransformer <: Unsupervised
     n::Int      = 171   # nbr values tried in optimizing exponent lambda
     shift::Bool = false # whether to shift data away from zero
@@ -1011,73 +800,8 @@ function MMI.inverse_transform(transformer::UnivariateBoxCoxTransformer,
 end
 
 
-## ONE HOT ENCODING
+# # ONE HOT ENCODING
 
-"""
-    OneHotEncoder(; features=Symbol[],
-                    ignore=false,
-                    ordered_factor=true,
-                    drop_last=false)
-
-Unsupervised model for one-hot encoding the `Finite` features
-(columns) of some table. If `features` is unspecified all features
-with `Finite` element scitype are encoded. Otherwise, encoding is
-applied to all `Finite` features named in `features` (`ignore=false`)
-or all `Finite` features not named in features (`ignore=true`).
-
-If `ordered_factor=false` then the above holds with `Finite` replaced
-with `Multiclass`, ie `OrderedFactor` features are not transformed.
-
-Specify `drop_last=true` if the column for the last level of each
-categorical feature is to be dropped.
-
-New data to be transformed may lack features present in the fit data,
-but no *new* features can be present.
-
-*Warning:* This transformer assumes that `levels(col)` for any
-`Multiclass` or `OrderedFactor` column is the same in new data being
-transformed as it is in the data used to fit the transformer.
-
-### Example
-
-```julia
-X = (name=categorical(["Danesh", "Lee", "Mary", "John"]),
-     grade=categorical([:A, :B, :A, :C], ordered=true),
-     height=[1.85, 1.67, 1.5, 1.67],
-     n_devices=[3, 2, 4, 3])
-schema(X)
-
-┌───────────┬─────────────────────────────────┬──────────────────┐
-│ _.names   │ _.types                         │ _.scitypes       │
-├───────────┼─────────────────────────────────┼──────────────────┤
-│ name      │ CategoricalValue{String,UInt32} │ Multiclass{4}    │
-│ grade     │ CategoricalValue{Symbol,UInt32} │ OrderedFactor{3} │
-│ height    │ Float64                         │ Continuous       │
-│ n_devices │ Int64                           │ Count            │
-└───────────┴─────────────────────────────────┴──────────────────┘
-_.nrows = 4
-
-hot = OneHotEncoder(ordered_factor=true);
-mach = fit!(machine(hot, X))
-transform(mach, X) |> schema
-
-┌──────────────┬─────────┬────────────┐
-│ _.names      │ _.types │ _.scitypes │
-├──────────────┼─────────┼────────────┤
-│ name__Danesh │ Float64 │ Continuous │
-│ name__John   │ Float64 │ Continuous │
-│ name__Lee    │ Float64 │ Continuous │
-│ name__Mary   │ Float64 │ Continuous │
-│ grade__A     │ Float64 │ Continuous │
-│ grade__B     │ Float64 │ Continuous │
-│ grade__C     │ Float64 │ Continuous │
-│ height       │ Float64 │ Continuous │
-│ n_devices    │ Int64   │ Count      │
-└──────────────┴─────────┴────────────┘
-_.nrows = 4
-```
-
-"""
 @with_kw_noshow mutable struct OneHotEncoder <: Unsupervised
     features::Vector{Symbol}   = Symbol[]
     drop_last::Bool            = false
@@ -1218,75 +942,8 @@ function MMI.transform(transformer::OneHotEncoder, fitresult, X)
 end
 
 
-## CONTINUOUS_ENCODING
+# # CONTINUOUS_ENCODING
 
-"""
-    ContinuousEncoder(one_hot_ordered_factors=false, drop_last=false)
-
-Unsupervised model for arranging all features (columns) of a table to
-have `Continuous` element scitype, by applying the following protocol
-to each feature `ftr`:
-
-- If `ftr` is already `Continuous` retain it.
-
-- If `ftr` is `Multiclass`, one-hot encode it.
-
-- If `ftr` is `OrderedFactor`, replace it with `coerce(ftr,
-  Continuous)` (vector of floating point integers), unless
-  `ordered_factors=false` is specified, in which case one-hot encode
-  it.
-
-- If `ftr` is `Count`, replace it with `coerce(ftr, Continuous)`.
-
-- If `ftr` is of some other element scitype, or was not observed in
-  fitting the encoder, drop it from the table.
-
-If `drop_last=true` is specified, then one-hot encoding always drops
-the last class indicator column.
-
-*Warning:* This transformer assumes that `levels(col)` for any
-`Multiclass` or `OrderedFactor` column is the same in new data being
-transformed as it is in the data used to fit the transformer.
-
-### Example
-
-```julia
-X = (name=categorical(["Danesh", "Lee", "Mary", "John"]),
-     grade=categorical([:A, :B, :A, :C], ordered=true),
-     height=[1.85, 1.67, 1.5, 1.67],
-     n_devices=[3, 2, 4, 3],
-     comments=["the force", "be", "with you", "too"])
-schema(X)
-
-┌───────────┬─────────────────────────────────┬──────────────────┐
-│ _.names   │ _.types                         │ _.scitypes       │
-├───────────┼─────────────────────────────────┼──────────────────┤
-│ name      │ CategoricalValue{String,UInt32} │ Multiclass{4}    │
-│ grade     │ CategoricalValue{Symbol,UInt32} │ OrderedFactor{3} │
-│ height    │ Float64                         │ Continuous       │
-│ n_devices │ Int64                           │ Count            │
-│ comments  │ String                          │ Textual          │
-└───────────┴─────────────────────────────────┴──────────────────┘
-_.nrows = 4
-
-cont = ContinuousEncoder(drop_last=true);
-mach = fit!(machine(cont, X))
-transform(mach, X) |> schema
-
-┌──────────────┬─────────┬────────────┐
-│ _.names      │ _.types │ _.scitypes │
-├──────────────┼─────────┼────────────┤
-│ name__Danesh │ Float64 │ Continuous │
-│ name__John   │ Float64 │ Continuous │
-│ name__Lee    │ Float64 │ Continuous │
-│ grade        │ Float64 │ Continuous │
-│ height       │ Float64 │ Continuous │
-│ n_devices    │ Float64 │ Continuous │
-└──────────────┴─────────┴────────────┘
-_.nrows = 4
-```
-
-"""
 @with_kw_noshow mutable struct ContinuousEncoder <: Unsupervised
     drop_last::Bool                = false
     one_hot_ordered_factors::Bool  = false
@@ -1353,9 +1010,8 @@ function MMI.transform(transformer::ContinuousEncoder, fitresult, X)
 
 end
 
-##
-## Metadata for all built-in transformers
-##
+
+# # METADATA FOR ALL BUILT-IN TRANSFORMERS
 
 metadata_pkg.(
     (FeatureSelector, UnivariateStandardizer,
@@ -1363,82 +1019,1024 @@ metadata_pkg.(
      UnivariateBoxCoxTransformer, UnivariateFillImputer,
      OneHotEncoder, FillImputer, ContinuousEncoder,
      UnivariateTimeTypeToContinuous),
-    name       = "MLJModels",
-    uuid       = "d491faf4-2d78-11e9-2867-c94bc002c0b7",
-    url        = "https://github.com/alan-turing-institute/MLJModels.jl",
-    julia      = true,
-    license    = "MIT",
-    is_wrapper = false)
+    package_name       = "MLJModels",
+    package_uuid       = "d491faf4-2d78-11e9-2867-c94bc002c0b7",
+    package_url        = "https://github.com/alan-turing-institute/MLJModels.jl",
+    is_pure_julia      = true,
+    package_license    = "MIT")
 
 metadata_model(UnivariateFillImputer,
-    input = Union{AbstractVector{<:Union{Continuous,Missing}},
+    input_scitype = Union{AbstractVector{<:Union{Continuous,Missing}},
                   AbstractVector{<:Union{Count,Missing}},
                   AbstractVector{<:Union{Finite,Missing}}},
-    output = Union{AbstractVector{<:Continuous},
+    output_scitype= Union{AbstractVector{<:Continuous},
                   AbstractVector{<:Count},
                   AbstractVector{<:Finite}},
-    descr = UNIVARIATE_FILL_IMPUTER_DESCR,
-    path  = "MLJModels.UnivariateFillImputer")
+    human_name = "single variable fill imputer",
+    load_path  = "MLJModels.UnivariateFillImputer")
 
 metadata_model(FillImputer,
-    input   = Table,
-    output  = Table,
-    weights = false,
-    descr   = FILL_IMPUTER_DESCR,
-    path    = "MLJModels.FillImputer")
+    input_scitype   = Table,
+    output_scitype = Table,
+    load_path    = "MLJModels.FillImputer")
 
 metadata_model(FeatureSelector,
-    input   = Table,
-    output  = Table,
-    weights = false,
-    descr   = FEATURE_SELECTOR_DESCR,
-    path    = "MLJModels.FeatureSelector")
+    input_scitype   = Table,
+    output_scitype = Table,
+    load_path    = "MLJModels.FeatureSelector")
 
 metadata_model(UnivariateDiscretizer,
-    input   = AbstractVector{<:Continuous},
-    output  = AbstractVector{<:OrderedFactor},
-    weights = false,
-    descr   = UNIVARIATE_DISCR_DESCR,
-    path    = "MLJModels.UnivariateDiscretizer")
+    input_scitype   = AbstractVector{<:Continuous},
+    output_scitype = AbstractVector{<:OrderedFactor},
+    human_name = "single variable discretizer",
+    load_path    = "MLJModels.UnivariateDiscretizer")
 
 metadata_model(UnivariateStandardizer,
-    input   = AbstractVector{<:Infinite},
-    output  = AbstractVector{Continuous},
-    weights = false,
-    descr   = UNIVARIATE_STD_DESCR,
-    path    = "MLJModels.UnivariateStandardizer")
+    input_scitype   = AbstractVector{<:Infinite},
+    output_scitype = AbstractVector{Continuous},
+    human_name = "single variable discretizer",
+    load_path    = "MLJModels.UnivariateStandardizer")
 
 metadata_model(Standardizer,
-    input   = Union{Table, AbstractVector{<:Continuous}},
-    output  = Union{Table, AbstractVector{<:Continuous}},
-    weights = false,
-    descr   = STANDARDIZER_DESCR,
-    path    = "MLJModels.Standardizer")
+    input_scitype   = Union{Table, AbstractVector{<:Continuous}},
+    output_scitype = Union{Table, AbstractVector{<:Continuous}},
+    load_path    = "MLJModels.Standardizer")
 
 metadata_model(UnivariateBoxCoxTransformer,
-    input   = AbstractVector{Continuous},
-    output  = AbstractVector{Continuous},
-    weights = false,
-    descr   = UNIVARIATE_BOX_COX_DESCR,
-    path    = "MLJModels.UnivariateBoxCoxTransformer")
+    input_scitype   = AbstractVector{Continuous},
+    output_scitype = AbstractVector{Continuous},
+    human_name = "single variable Box-Cox transformer",
+    load_path    = "MLJModels.UnivariateBoxCoxTransformer")
 
 metadata_model(OneHotEncoder,
-    input   = Table,
-    output  = Table,
-    weights = false,
-    descr   = ONE_HOT_DESCR,
-    path    = "MLJModels.OneHotEncoder")
+    input_scitype   = Table,
+    output_scitype = Table,
+    human_name = "one-hot encoder",
+    load_path    = "MLJModels.OneHotEncoder")
 
 metadata_model(ContinuousEncoder,
-    input   = Table,
-    output  = Table(Continuous),
-    weights = false,
-    descr   = CONTINUOUS_ENCODER_DESCR,
-    path    = "MLJModels.ContinuousEncoder")
+    input_scitype   = Table,
+    output_scitype = Table(Continuous),
+    load_path    = "MLJModels.ContinuousEncoder")
 
 metadata_model(UnivariateTimeTypeToContinuous,
-    input   = AbstractVector{<:ScientificTimeType},
-    output  = AbstractVector{Continuous},
-    weights = false,
-    descr   = UNIVARIATE_TIME_TYPE_TO_CONTINUOUS,
-    path    = "MLJModels.UnivariateTimeTypeToContinuous")
+    input_scitype   = AbstractVector{<:ScientificTimeType},
+    output_scitype = AbstractVector{Continuous},
+    human_name ="single variable transformer that creates "*
+         "continuous representations of temporally typed data",
+    load_path    = "MLJModels.UnivariateTimeTypeToContinuous")
+
+
+# # DOC STRINGS
+
+# The following document strings comply with the MLJ standard.
+
+"""
+$(MLJModelInterface.doc_header(UnivariateFillImputer))
+
+Use this model to imputing `missing` values in a vector with a fixed
+value learned from the non-missing values of training vector.
+
+For imputing missing values in tabular data, use [`FillImputer`](@ref)
+instead.
+
+
+# Training data
+
+In MLJ or MLJBase, bind an instance `model` to data with
+
+    mach = machine(model, x)
+
+where
+
+- `x`: any abstract vector with element scitype `Union{Missing, T}`
+  where `T` is a subtype of `Continuous`, `Multiclass`,
+  `OrderedFactor` or `Count`; check scitype using `scitype(x)`
+
+Train the machine using `fit!(mach, rows=...)`.
+
+
+# Hyper-parameters
+
+- `continuous_fill`: function or other callable to determine value to
+  be imputed in the case of `Continuous` (abstract float) data;
+  default is to apply `median` after skipping `missing` values
+
+- `count_fill`: function or other callable to determine value to be
+  imputed in the case of `Count` (integer) data; default is to apply
+  rounded `median` after skipping `missing` values
+
+- `finite_fill`: function or other callable to determine value to be
+  imputed in the case of `Multiclass` or `OrderedFactor` data
+  (categorical vectors); default is to apply `mode` after skipping
+  `missing` values
+
+
+# Operations
+
+- `transform(mach, xnew)`: return `xnew` with missing values imputed
+  with the fill values learned when fitting `mach`
+
+
+# Fitted parameters
+
+The fields of `fitted_params(mach)` are:
+
+- `filler`: the fill value to be imputed in all new data
+
+
+# Examples
+
+```
+using MLJ
+imputer = UnivariateFillImputer()
+
+x_continuous = [1.0, 2.0, missing, 3.0]
+x_multiclass = coerce(["y", "n", "y", missing, "y"], Multiclass)
+x_count = [1, 1, 1, 2, missing, 3, 3]
+
+mach = machine(imputer, x_continuous)
+fit!(mach)
+
+julia> fitted_params(mach)
+(filler = 2.0,)
+
+julia> transform(mach, [missing, missing, 101.0])
+3-element Vector{Float64}:
+ 2.0
+ 2.0
+ 101.0
+
+mach2 = machine(imputer, x_multiclass) |> fit!
+
+julia> transform(mach2, x_multiclass)
+5-element CategoricalArray{String,1,UInt32}:
+ "y"
+ "n"
+ "y"
+ "y"
+ "y"
+
+mach3 = machine(imputer, x_count) |> fit!
+
+julia> transform(mach3, [missing, missing, 5])
+3-element Vector{Int64}:
+ 2
+ 2
+ 5
+```
+
+For imputing tabular data, use [`FillImputer`](@ref).
+
+"""
+UnivariateFillImputer
+
+"""
+$(MLJModelInterface.doc_header(FillImputer))
+
+Use this model to impute `missing` values in tabular data. A fixed
+"filler" value is learned from the training data, one for each column
+of the table.
+
+For imputing missing values in a vector, use
+[`UnivariateFillImputer`](@ref) instead.
+
+
+# Training data
+
+In MLJ or MLJBase, bind an instance `model` to data with
+
+    mach = machine(model, X)
+
+where
+
+- `X`: any table of input features (eg, a `DataFrame`) whose columns
+  each have element scitypes `Union{Missing, T}`, where `T` is a
+  subtype of `Continuous`, `Multiclass`, `OrderedFactor` or
+  `Count`. Check scitypes with `schema(X)`.
+
+Train the machine using `fit!(mach, rows=...)`.
+
+
+# Hyper-parameters
+
+- `features`: a vector of names of features (symbols) for which
+  imputation is to be attempted; default is empty, which is
+  interpreted as "impute all".
+
+- `continuous_fill`: function or other callable to determine value to
+  be imputed in the case of `Continuous` (abstract float) data; default is to apply
+  `median` after skipping `missing` values
+
+- `count_fill`: function or other callable to determine value to
+  be imputed in the case of `Count` (integer) data; default is to apply
+  rounded `median` after skipping `missing` values
+
+- `finite_fill`: function or other callable to determine value to be
+  imputed in the case of `Multiclass` or `OrderedFactor` data
+  (categorical vectors); default is to apply `mode` after skipping `missing` values
+
+
+# Operations
+
+- `transform(mach, Xnew)`: return `Xnew` with missing values imputed with
+  the fill values learned when fitting `mach`
+
+
+# Fitted parameters
+
+The fields of `fitted_params(mach)` are:
+
+- `features_seen_in_fit`: the names of features (columns) encountered
+  during training
+
+- `univariate_transformer`: the univariate model applied to determine
+    the fillers (it's fields contain the functions defining the filler computations)
+
+- `filler_given_feature`: dictionary of filler values, keyed on
+  feature (column) names
+
+
+# Examples
+
+```
+using MLJ
+imputer = FillImputer()
+
+X = (a = [1.0, 2.0, missing, 3.0, missing],
+     b = coerce(["y", "n", "y", missing, "y"], Multiclass),
+     c = [1, 1, 2, missing, 3])
+
+schema(X)
+julia> schema(X)
+┌───────┬───────────────────────────────┐
+│ names │ scitypes                      │
+├───────┼───────────────────────────────┤
+│ a     │ Union{Missing, Continuous}    │
+│ b     │ Union{Missing, Multiclass{2}} │
+│ c     │ Union{Missing, Count}         │
+└───────┴───────────────────────────────┘
+
+mach = machine(imputer, X)
+fit!(mach)
+
+julia> fitted_params(mach).filler_given_feature
+(filler = 2.0,)
+
+julia> fitted_params(mach).filler_given_feature
+Dict{Symbol, Any} with 3 entries:
+  :a => 2.0
+  :b => "y"
+  :c => 2
+
+julia> transform(mach, X)
+(a = [1.0, 2.0, 2.0, 3.0, 2.0],
+ b = CategoricalValue{String, UInt32}["y", "n", "y", "y", "y"],
+ c = [1, 1, 2, 2, 3],)
+```
+
+See also [`UnivariateFillImputer`](@ref).
+
+"""
+FillImputer
+
+"""
+$(MLJModelInterface.doc_header(FeatureSelector))
+
+Use this model to select features (columns) of a table, usually as
+part of a model `Pipeline`.
+
+
+# Training data
+
+In MLJ or MLJBase, bind an instance `model` to data with
+
+    mach = machine(model, X)
+
+where
+
+- `X`: any table of input features, where "table" is in the sense of Tables.jl
+
+Train the machine using `fit!(mach, rows=...)`.
+
+
+# Hyper-parameters
+
+- `features`: one of the following, with the behavior indicated:
+
+  - `[]` (empty, the default): filter out all features (columns) which
+    were not encountered in training
+
+  - non-empty vector of feature names (symbols): keep only the
+    specified features (`ignore=false`) or keep only unspecified
+    features (`ignore=true`)
+
+  - function or other callable: keep a feature if the callable returns
+    `true` on its name. For example, specifying
+    `FeatureSelector(features = name -> name in [:x1, :x3], ignore =
+    true)` has the same effect as `FeatureSelector(features = [:x1,
+    :x3], ignore = true)`, namely to select all features, with the
+    exception of `:x1` and `:x3`.
+
+- `ignore`: whether to ignore or keep specified `features`, as
+  explained above
+
+
+# Operations
+
+- `transform(mach, Xnew)`: select features from the table `Xnew` as
+  specified by the model, taking features seen during training into
+  account, if relevant
+
+
+# Fitted parameters
+
+The fields of `fitted_params(mach)` are:
+
+- `features_to_keep`: the features that will be selected
+
+
+# Example
+
+```
+using MLJ
+
+X = (ordinal1 = [1, 2, 3],
+     ordinal2 = coerce(["x", "y", "x"], OrderedFactor),
+     ordinal3 = [10.0, 20.0, 30.0],
+     ordinal4 = [-20.0, -30.0, -40.0],
+     nominal = coerce(["Your father", "he", "is"], Multiclass));
+
+selector = FeatureSelector(features=[:ordinal3, ], ignore=true);
+
+julia> transform(fit!(machine(selector, X)), X)
+(ordinal1 = [1, 2, 3],
+ ordinal2 = CategoricalValue{Symbol,UInt32}["x", "y", "x"],
+ ordinal4 = [-20.0, -30.0, -40.0],
+ nominal = CategoricalValue{String,UInt32}["Your father", "he", "is"],)
+
+```
+"""
+FeatureSelector
+
+
+"""
+$(MLJModelInterface.doc_header(Standardizer))
+
+Use this model to standardize (whiten) a `Continuous` vector, or
+relevant columns of a table. The rescalings applied by this
+transformer to new data are always those learned during the training
+phase, which are generally different from what would actually
+standardize the new data.
+
+
+# Training data
+
+In MLJ or MLJBase, bind an instance `model` to data with
+
+    mach = machine(model, X)
+
+where
+
+- `X`: any Tables.jl compatible table or any abstract vector with
+  `Continuous` element scitype (any abstract float vector). Only
+  features in a table with `Continuous` scitype can be standardized;
+  check column scitypes with `schema(X)`.
+
+Train the machine using `fit!(mach, rows=...)`.
+
+
+# Hyper-parameters
+
+- `features`: one of the following, with the behavior indicated below:
+
+  - `[]` (empty, the default): standardize all features (columns)
+    having `Continuous` element scitype
+
+  - non-empty vector of feature names (symbols): standardize only the
+    `Continuous` features in the vector (if `ignore=false`) or
+    `Continuous` features *not* named in the vector (`ignore=true`).
+
+  - function or other callable: standardize a feature if the callable
+    returns `true` on its name. For example, `Standardizer(features =
+    name -> name in [:x1, :x3], ignore = true, count=true)` has the
+    same effect as `Standardizer(features = [:x1, :x3], ignore = true,
+    count=true)`, namely to standardize all `Continuous` and `Count`
+    features, with the exception of `:x1` and `:x3`.
+
+  Note this behavior is further modified if the `ordered_factor` or `count` flags
+  are set to `true`; see below
+
+- `ignore=false`: whether to ignore or standardize specified `features`, as
+  explained above
+
+- `ordered_factor=false`: if `true`, standardize any `OrderedFactor`
+  feature wherever a `Continuous` feature would be standardized, as
+  described above
+
+- `count=false`: if `true`, standardize any `Count` feature wherever a
+  `Continuous` feature would be standardized, as described above
+
+
+# Operations
+
+- `transform(mach, Xnew)`: return `Xnew` with relevant features
+  standardized according to the rescalings learned during fitting of
+  `mach`.
+
+- `inverse_transform(mach, Z)`: apply the inverse transformation to
+  `Z`, so that `inverse_transform(mach, transform(mach, Xnew))` is
+  approximately the same as `Xnew`; unavailable if `ordered_factor` or
+  `count` flags were set to `true`.
+
+
+# Fitted parameters
+
+`fitted_params(mach)` is a dictionary of the rescaling parameters,
+keyed on feature name. In each value the first component is the
+training data mean, the second the standard deviation.
+
+**Warning:** This format for `fitted_params(mach)` is not standard and
+may change in the future.
+
+
+# Report
+
+The fields of `report(mach)` are:
+
+- `features_fit`: the names of features that will be standardized
+
+
+# Examples
+
+```
+using MLJ
+
+X = (ordinal1 = [1, 2, 3],
+     ordinal2 = coerce([:x, :y, :x], OrderedFactor),
+     ordinal3 = [10.0, 20.0, 30.0],
+     ordinal4 = [-20.0, -30.0, -40.0],
+     nominal = coerce(["Your father", "he", "is"], Multiclass));
+
+julia> schema(X)
+┌──────────┬──────────────────┐
+│ names    │ scitypes         │
+├──────────┼──────────────────┤
+│ ordinal1 │ Count            │
+│ ordinal2 │ OrderedFactor{2} │
+│ ordinal3 │ Continuous       │
+│ ordinal4 │ Continuous       │
+│ nominal  │ Multiclass{3}    │
+└──────────┴──────────────────┘
+
+stand1 = Standardizer();
+
+julia> transform(fit!(machine(stand1, X)), X)
+(ordinal1 = [1, 2, 3],
+ ordinal2 = CategoricalValue{Symbol,UInt32}[:x, :y, :x],
+ ordinal3 = [-1.0, 0.0, 1.0],
+ ordinal4 = [1.0, 0.0, -1.0],
+ nominal = CategoricalValue{String,UInt32}["Your father", "he", "is"],)
+
+stand2 = Standardizer(features=[:ordinal3, ], ignore=true, count=true);
+
+julia> transform(fit!(machine(stand2, X)), X)
+(ordinal1 = [-1.0, 0.0, 1.0],
+ ordinal2 = CategoricalValue{Symbol,UInt32}[:x, :y, :x],
+ ordinal3 = [10.0, 20.0, 30.0],
+ ordinal4 = [1.0, 0.0, -1.0],
+ nominal = CategoricalValue{String,UInt32}["Your father", "he", "is"],)
+```
+
+See also [`OneHotEncoder`](@ref), [`ContinuousEncoder`](@ref).
+"""
+Standardizer
+
+
+"""
+$(MLJModelInterface.doc_header(UnivariateDiscretizer))
+
+Discretization converts a `Continuous` vector into an `OrderedFactor`
+vector. In particular, the output is a `CategoricalVector` (whose
+reference type is optimized).
+
+The transformation is chosen so that the vector on which the
+transformer is fit has, in transformed form, an approximately uniform
+distribution of values. Specifically, if `n_classes` is the level of
+discretization, then `2*n_classes - 1` ordered quantiles are computed,
+the odd quantiles being used for transforming (discretization) and the
+even quantiles for inverse transforming.
+
+
+# Training data
+
+In MLJ or MLJBase, bind an instance `model` to data with
+
+    mach = machine(model, x)
+
+where
+
+- `x`: any abstract vector with `Continuous` element scitype; check
+  scitype with `scitype(x)`.
+
+Train the machine using `fit!(mach, rows=...)`.
+
+
+# Hyper-parameters
+
+- `n_classes`: number of discrete classes in the output
+
+
+# Operations
+
+- `transform(mach, xnew)`: discretize `xnew` according to the
+  discretization learned when fitting `mach`
+
+- `inverse_transform(mach, z)`: attempt to reconstruct from `z` a
+  vector that transforms to give `z`
+
+
+# Fitted parameters
+
+The fields of `fitted_params(mach).fitesult` include:
+
+- `odd_quantiles`: quantiles used for transforming (length is `n_classes - 1`)
+
+- `even_quantiles`: quantiles used for inverse transforming (length is `n_classes`)
+
+**Warning.** `fitted_params(mach)` does not have a standard form and
+ may change in the future.
+
+
+# Example
+
+```
+using MLJ
+using Random
+Random.seed!(123)
+
+discretizer = UnivariateDiscretizer(n_classes=100)
+mach = machine(discretizer, randn(1000))
+fit!(mach)
+
+julia> x = rand(5)
+5-element Vector{Float64}:
+ 0.6342070799721164
+ 0.8681793651724181
+ 0.43780421808821424
+ 0.5740792503574783
+ 0.22444170437768007
+
+julia> z = transform(mach, x)
+5-element CategoricalArrays.CategoricalArray{UInt8,1,UInt8}:
+ 0x49
+ 0x50
+ 0x43
+ 0x47
+ 0x3a5
+
+julia> x_approx = inverse_transform(mach, z)
+5-element Vector{Float64}:
+ 0.6333797607904535
+ 0.855839325856769
+ 0.433203047224622
+ 0.5662624832429449
+ 0.222065923759177
+```
+
+"""
+UnivariateDiscretizer
+
+
+"""
+$(MLJModelInterface.doc_header(UnivariateBoxCoxTransformer))
+
+Box-Cox transformations attempt to make data look more normally
+distributed. This can improve performance and assist in the
+interpretation of models which suppose that data is
+generated by a normal distribution.
+
+A Box-Cox transformation (with shift) is of the form
+
+    x -> ((x + c)^λ - 1)/λ
+
+for some constant `c` and real `λ`, unless `λ = 0`, in which
+case the above is replaced with
+
+    x -> log(x + c)
+
+Given user-specified hyper-parameters `n::Integer` and `shift::Bool`,
+the present implementation learns the parameters `c` and `λ` from the
+training data as follows: If `shift=true` and zeros are encountered in
+the data, then `c` is set to `0.2` times the data mean.  If there are
+no zeros, then no shift is applied. Finally, `n` different values of `λ`
+between `-0.4` and `3` are considered, with `λ` fixed to the value
+maximizing normality of the transformed data.
+
+*Reference:* [Wikipedia entry for power
+ transform](https://en.wikipedia.org/wiki/Power_transform).
+
+
+# Training data
+
+In MLJ or MLJBase, bind an instance `model` to data with
+
+    mach = machine(model, x)
+
+where
+
+- `x`: any abstract vector with element scitype `Continuous`; check
+  the scitype with `scitype(x)`
+
+Train the machine using `fit!(mach, rows=...)`.
+
+
+# Hyper-parameters
+
+- `n=171`: number of values of the exponent `λ` to try
+
+- `shift=false`: whether to include a preliminary constant translation
+  in transformations, in the presence of zeros
+
+
+# Operations
+
+- `transform(mach, xnew)`: apply the Box-Cox transformation learned when fitting `mach`
+
+- `inverse_transform(mach, z)`: reconstruct the vector `z` whose
+  transformation learned by `mach` is `z`
+
+
+# Fitted parameters
+
+The fields of `fitted_params(mach)` are:
+
+- `λ`: the learned Box-Cox exponent
+
+- `c`: the learned shift
+
+
+# Examples
+
+```
+using MLJ
+using UnicodePlots
+using Random
+Random.seed!(123)
+
+transf = UnivariateBoxCoxTransformer()
+
+x = randn(1000).^2
+
+mach = machine(transf, x)
+fit!(mach)
+
+z = transform(mach, x)
+
+julia> histogram(x)
+                ┌                                        ┐
+   [ 0.0,  2.0) ┤███████████████████████████████████  848
+   [ 2.0,  4.0) ┤████▌ 109
+   [ 4.0,  6.0) ┤█▍ 33
+   [ 6.0,  8.0) ┤▍ 7
+   [ 8.0, 10.0) ┤▏ 2
+   [10.0, 12.0) ┤  0
+   [12.0, 14.0) ┤▏ 1
+                └                                        ┘
+                                 Frequency
+
+julia> histogram(z)
+                ┌                                        ┐
+   [-5.0, -4.0) ┤█▎ 8
+   [-4.0, -3.0) ┤████████▊ 64
+   [-3.0, -2.0) ┤█████████████████████▊ 159
+   [-2.0, -1.0) ┤█████████████████████████████▊ 216
+   [-1.0,  0.0) ┤███████████████████████████████████  254
+   [ 0.0,  1.0) ┤█████████████████████████▊ 188
+   [ 1.0,  2.0) ┤████████████▍ 90
+   [ 2.0,  3.0) ┤██▊ 20
+   [ 3.0,  4.0) ┤▎ 1
+                └                                        ┘
+                                 Frequency
+
+```
+
+"""
+UnivariateBoxCoxTransformer
+
+
+"""
+$(MLJModelInterface.doc_header(OneHotEncoder))
+
+Use this model to one-hot encode the `Multiclass` and `OrderedFactor`
+features (columns) of some table, leaving other columns unchanged.
+
+New data to be transformed may lack features present in the fit data,
+but no *new* features can be present.
+
+**Warning:** This transformer assumes that `levels(col)` for any
+`Multiclass` or `OrderedFactor` column, `col`, is the same for
+training data and new data to be transformed.
+
+To ensure *all* features are transformed into `Continuous` features, or
+dropped, use [`ContinuousEncoder`](@ref) instead.
+
+
+# Training data
+
+In MLJ or MLJBase, bind an instance `model` to data with
+
+    mach = machine(model, X)
+
+where
+
+- `X`: any Tables.jl compatible table. Columns can be of mixed type
+  but only those with element scitype `Multiclass` or `OrderedFactor`
+  can be encoded. Check column scitypes with `schema(X)`.
+
+Train the machine using `fit!(mach, rows=...)`.
+
+
+# Hyper-parameters
+
+- `features`: a vector of symbols (column names). If empty (default)
+  then all `Multiclass` and `OrderedFactor` features are
+  encoded. Otherwise, encoding is further restricted to the specified
+  features (`ignore=false`) or the unspecified features
+  (`ignore=true`). This default behavior can be modified by the
+  `ordered_factor` flag.
+
+- `ordered_factor=false`: when `true`, `OrderedFactor` features are
+  universally excluded
+
+- `drop_last=true`: whether to drop the column corresponding to the
+  final class of encoded features. For example, a three-class feature
+  is spawned into three new features if `drop_last=false`, but just
+  two features otherwise.
+
+
+# Fitted parameters
+
+The fields of `fitted_params(mach).fitresult` are:
+
+- `all_features`: names of all features encountered in training
+
+- `fitted_levels_given_feature`: dictionary of the levels associated
+  with each feature encoded, keyed on the feature name
+
+- `ref_name_pairs_given_feature`: dictionary of pairs `r => ftr` (such
+  as `0x00000001 => :grad__A`) where `r` is a CategoricalArrays.jl
+  reference integer representing a level, and `ftr` the corresponding
+  new feature name; the dictionary is keyed on the names of features that
+  are encoded
+
+**Warning:** `fitted_params(mach)` does not have a standard form and
+ may change in the future.
+
+
+# Report
+
+The fields of `report(mach)` are:
+
+- `features_to_be_encoded`: names of input features to be encoded
+
+- `new_features`: names of all output features
+
+
+# Example
+
+```
+using MLJ
+
+X = (name=categorical(["Danesh", "Lee", "Mary", "John"]),
+     grade=categorical(["A", "B", "A", "C"], ordered=true),
+     height=[1.85, 1.67, 1.5, 1.67],
+     n_devices=[3, 2, 4, 3])
+
+julia> schema(X)
+┌───────────┬──────────────────┐
+│ names     │ scitypes         │
+├───────────┼──────────────────┤
+│ name      │ Multiclass{4}    │
+│ grade     │ OrderedFactor{3} │
+│ height    │ Continuous       │
+│ n_devices │ Count            │
+└───────────┴──────────────────┘
+
+hot = OneHotEncoder(drop_last=true)
+mach = fit!(machine(hot, X))
+W = transform(mach, X)
+
+julia> schema(W)
+┌──────────────┬────────────┐
+│ names        │ scitypes   │
+├──────────────┼────────────┤
+│ name__Danesh │ Continuous │
+│ name__John   │ Continuous │
+│ name__Lee    │ Continuous │
+│ grade__A     │ Continuous │
+│ grade__B     │ Continuous │
+│ height       │ Continuous │
+│ n_devices    │ Count      │
+└──────────────┴────────────┘
+```
+
+See also [`ContinuousEncoder`](@ref).
+
+"""
+OneHotEncoder
+
+
+"""
+$(MLJModelInterface.doc_header(ContinuousEncoder))
+
+Use this model to arrange all features (columns) of a table to have
+`Continuous` element scitype, by applying the following protocol to
+each feature `ftr`:
+
+- If `ftr` is already `Continuous` retain it.
+
+- If `ftr` is `Multiclass`, one-hot encode it.
+
+- If `ftr` is `OrderedFactor`, replace it with `coerce(ftr,
+  Continuous)` (vector of floating point integers), unless
+  `ordered_factors=false` is specified, in which case one-hot encode
+  it.
+
+- If `ftr` is `Count`, replace it with `coerce(ftr, Continuous)`.
+
+- If `ftr` has some other element scitype, or was not observed in
+  fitting the encoder, drop it from the table.
+
+**Warning:** This transformer assumes that `levels(col)` for any
+`Multiclass` or `OrderedFactor` column, `col`, is the same for
+training data and new data to be transformed.
+
+To selectively one-hot-encode categorical features (without dropping
+columns) use [`OneHotEncoder`](@ref) instead.
+
+
+# Training data
+
+In MLJ or MLJBase, bind an instance `model` to data with
+
+    mach = machine(model, X)
+
+where
+
+- `X`: any Tables.jl compatible table. Columns can be of mixed type
+  but only those with element scitype `Multiclass` or `OrderedFactor`
+  can be encoded. Check column scitypes with `schema(X)`.
+
+Train the machine using `fit!(mach, rows=...)`.
+
+
+# Hyper-parameters
+
+- `drop_last=true`: whether to drop the column corresponding to the
+  final class of one-hot encoded features. For example, a three-class
+  feature is spawned into three new features if `drop_last=false`, but
+  two just features otherwise.
+
+- `one_hot_ordered_factors=false`: whether to one-hot any feature
+  with `OrderedFactor` element scitype, or to instead coerce it
+  directly to a (single) `Continuous` feature using the order
+
+
+# Fitted parameters
+
+The fields of `fitted_params(mach)` are:
+
+- `features_to_keep`: names of features that will not be dropped from
+  the table
+
+- `one_hot_encoder`: the `OneHotEncoder` model instance for handling
+  the one-hot encoding
+
+- `one_hot_encoder_fitresult`: the fitted parameters of the
+  `OneHotEncoder` model
+
+
+# Report
+
+- `features_to_keep`: names of input features that will not be dropped
+  from the table
+
+- `new_features`: names of all output features
+
+
+# Example
+
+```julia
+X = (name=categorical(["Danesh", "Lee", "Mary", "John"]),
+     grade=categorical(["A", "B", "A", "C"], ordered=true),
+     height=[1.85, 1.67, 1.5, 1.67],
+     n_devices=[3, 2, 4, 3],
+     comments=["the force", "be", "with you", "too"])
+
+julia> schema(X)
+┌───────────┬──────────────────┐
+│ names     │ scitypes         │
+├───────────┼──────────────────┤
+│ name      │ Multiclass{4}    │
+│ grade     │ OrderedFactor{3} │
+│ height    │ Continuous       │
+│ n_devices │ Count            │
+│ comments  │ Textual          │
+└───────────┴──────────────────┘
+
+encoder = ContinuousEncoder(drop_last=true)
+mach = fit!(machine(encoder, X))
+W = transform(mach, X)
+
+julia> schema(W)
+┌──────────────┬────────────┐
+│ names        │ scitypes   │
+├──────────────┼────────────┤
+│ name__Danesh │ Continuous │
+│ name__John   │ Continuous │
+│ name__Lee    │ Continuous │
+│ grade        │ Continuous │
+│ height       │ Continuous │
+│ n_devices    │ Continuous │
+└──────────────┴────────────┘
+
+julia> setdiff(schema(X).names, report(mach).features_to_keep) # dropped features
+1-element Vector{Symbol}:
+ :comments
+
+```
+
+See also [`OneHotEncoder`](@ref)
+"""
+ContinuousEncoder
+
+
+"""
+$(MLJModelInterface.doc_header(UnivariateTimeTypeToContinuous))
+
+Use this model to convert vectors with a `TimeType` element type to
+vectors of `Float64` type (`Continuous` element scitype).
+
+
+# Training data
+
+In MLJ or MLJBase, bind an instance `model` to data with
+
+    mach = machine(model, x)
+
+where
+
+- `x`: any abstract vector whose element type is a subtype of
+  `Dates.TimeType`
+
+Train the machine using `fit!(mach, rows=...)`.
+
+
+# Hyper-parameters
+
+- `zero_time`: the time that is to correspond to 0.0 under
+  transformations, with the type coinciding with the training data
+  element type. If unspecified, the earliest time encountered in
+  training is used.
+
+- `step::Period=Hour(24)`: time interval to correspond to one unit
+  under transformation
+
+
+# Operations
+
+- `transform(mach, xnew)`: apply the encoding inferred when `mach` was fit
+
+
+# Fitted parameters
+
+`fitted_params(mach).fitresult` is the tuple `(zero_time, step)`
+actually used in transformations, which may differ from the
+user-specified hyper-parameters.
+
+
+# Example
+
+```
+using MLJ
+using Dates
+
+x = [Date(2001, 1, 1) + Day(i) for i in 0:4]
+
+encoder = UnivariateTimeTypeToContinuous(zero_time=Date(2000, 1, 1),
+                                         step=Week(1))
+
+mach = machine(encoder, x)
+fit!(mach)
+julia> transform(mach, x)
+5-element Vector{Float64}:
+ 52.285714285714285
+ 52.42857142857143
+ 52.57142857142857
+ 52.714285714285715
+ 52.857142
+```
+
+"""
+UnivariateTimeTypeToContinuous

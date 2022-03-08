@@ -1,7 +1,7 @@
-## FUNCTIONS TO INSPECT METADATA OF REGISTERED MODELS AND TO
+# FUNCTIONS TO INSPECT METADATA OF REGISTERED MODELS AND TO
 ## FACILITATE MODEL SEARCH
 
-# sort and add to the model trait names:
+# sort the model trait names:
 const property_names = sort(MODEL_TRAITS_IN_REGISTRY)
 const alpha = [:name, :package_name, :is_supervised]
 const omega = [:input_scitype, :target_scitype, :output_scitype]
@@ -43,9 +43,12 @@ Base.show(stream::IO, p::ModelProxy) =
           "... )")
 
 function Base.show(stream::IO, ::MIME"text/plain", p::ModelProxy)
-    printstyled(stream, p.docstring, bold=false, color=:magenta)
-    println(stream)
-    PrettyPrinting.pprint(stream, p)
+    doc = p.docstring
+    L = min(length(doc), 50)
+    doc = doc[1:L]
+    L < 50 || (doc *= "...")
+    pcompact = merge(p, (; docstring=doc))
+    PrettyPrinting.pprint(stream, pcompact)
 end
 
 # returns named tuple version of the dictionary i=info_dict(SomeModelType):
@@ -55,24 +58,45 @@ function info_as_named_tuple(i)
 end
 
 
-## INFO
+## INFO AND DOC
 
-StatisticalTraits.info(handle::Handle) =
-    info_as_named_tuple(INFO_GIVEN_HANDLE[handle])
+const err_handle_missing_name(name) = ArgumentError(
+    "There is no model named \"$name\" in "*
+    "the registry. \n Run `models()` to view all "*
+    "registered models, or `models(needle)` to restrict search to "*
+    "models with string `needle` in their name or documentation. ")
+
+const err_handle_ambiguous_name(name, pkgs) = ArgumentError(
+    "Ambiguous model type name. Use pkg=... .\n"*
+    "The model $name is provided by these packages:\n $pkgs.\n")
+
+const err_handle_name_not_in_pkg(name, pkg) =
+    ArgumentError("The package \"$pkg\" does not appear to "*
+                  "provide the model \"$name\". \n"*
+                  "Use models() to list all models. ")
+
+const ERR_DOC_EXPECTS_STRING = ArgumentError(
+    "The `doc` function expects a string as its first argument. Use `@doc T` or `?T` "*
+    "to extract the document string for a type or function `T` in scope. ")
+
+doc_handle(thing::String) =
+    """
+    Return the $thing for the registered model type having the specified
+    `name`. The key-word argument `pkg` is required in the case of
+    duplicate names, unless `interactive=true` is specified instead.
+    """
 
 """
-    info(name::String; pkg=nothing, interactive=false)
+    handle(name; pkg=nothing, interactive=false)
 
-Returns the metadata for the registered model type with specified
-`name`. The key-word argument `pkg` is required in the case of
-duplicate names.
+Private method.
+
+$(doc_handle("handle"))
 
 """
-function StatisticalTraits.info(name::String; pkg=nothing, interactive=false)
+function handle(name; pkg=nothing, interactive=false)
     name in NAMES ||
-        throw(ArgumentError("There is no model named \"$name\" in "*
-                            "the registry. \n Run `models()` to view all "*
-                            "registered models."))
+        throw(err_handle_missing_name(name))
     # get the handle:
     if pkg == nothing
         handle  = Handle(name) # returns (name=..., pkg=missing) if ambiguous
@@ -84,28 +108,62 @@ function StatisticalTraits.info(name::String; pkg=nothing, interactive=false)
                     pkgs...)
                 handle = Handle(name, pkgs[choice])
             else
-                message = "Ambiguous model type name. Use pkg=... .\n"*
-                    "The model $name is provided by these packages:\n $pkgs.\n"
-                throw(ArgumentError(message))
+                throw(err_handle_ambiguous_name(name, pkgs))
             end
         end
     else
         handle = Handle(name, pkg)
         haskey(INFO_GIVEN_HANDLE, handle) ||
-            throw(ArgumentError("The package \"$pkg\" does not appear to "*
-                                "provide the model \"$name\". \n"*
-                                "Use models() to list all models. "))
+            throw(err_handle_name_not_in_pkg(name, pkg))
     end
-    return info(handle)
+    return handle
+end
 
+function doc(handle::Handle)
+    i = info_as_named_tuple(INFO_GIVEN_HANDLE[handle])
+    return Markdown.parse(i.docstring)
 end
 
 """
-   info(model::Model)
+    doc(name::String; pkg=nothing, interactive=false)
 
-Return the traits associated with the specified `model`. Equivalent to
-`info(name; pkg=pkg)` where `name::String` is the name of the model type, and
-`pkg::String` the name of the package containing it.
+$(doc_handle("documentation string"))
+
+"""
+doc(name::String; kwargs...) = doc(handle(name; kwargs...))
+
+# because user may try to apply `doc` to model instances or types:
+doc(::Any) = throw(ERR_DOC_EXPECTS_STRING)
+
+
+StatisticalTraits.info(handle::Handle) =
+    info_as_named_tuple(INFO_GIVEN_HANDLE[handle])
+
+
+"""
+    info(name::String; pkg=nothing, interactive=false)
+
+$(doc_handle("metadata"))
+
+To instead return the model document string (without importing
+defining code) do `doc(name; pkg=...)`
+
+See also [`doc`](@ref).
+
+"""
+StatisticalTraits.info(name::String; kwargs...) =
+    info(handle(name; kwargs...))
+
+"""
+    info(model::Model)
+
+Return the metadata (trait values) associated with the specified
+`model`.
+
+This is equivalent to `info(name; pkg=pkg)` where `name::String` is
+the name of the model type, and `pkg::String` the name of the core
+algorithm-providing package (assuming the model registry is
+up-to-date).
 
 """
 function StatisticalTraits.info(M::Type{<:MMI.Model})
