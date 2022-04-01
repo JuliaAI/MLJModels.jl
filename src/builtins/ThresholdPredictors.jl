@@ -108,25 +108,6 @@ function BinaryThresholdPredictor(args...;
     return metamodel
 end
 
-######################################
-# Begin code to be removed in 0.15.0 #
-######################################
-
-function Base.getproperty(model::ThresholdUnion, name::Symbol)
-    name === :model && return getfield(model, :model)
-    name === :threshold && return getfield(model, :threshold)
-    error("type BinaryThresholdPredictor has no field $name")
-end
-
-function Base.setproperty!(model::ThresholdUnion, name::Symbol, value)
-    name === :model && return setfield!(model, :model, value)
-    name === :threshold && return setfield!(model, :threshold, value)
-    error("type BinaryThresholdPredictor has no field $name")
-end
-####################################
-# End code to be removed in 0.15.0 #
-####################################
-
 function clean!(model::ThresholdUnion)
     T = target_scitype(model.model)
     if !(AbstractVector{Multiclass{2}} <: T ||
