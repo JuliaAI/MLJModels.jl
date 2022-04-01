@@ -1,4 +1,4 @@
-module Registry
+module Registry 
 
 # for this module
 import Pkg
