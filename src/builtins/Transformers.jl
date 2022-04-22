@@ -815,7 +815,7 @@ end
 # in new input data, causing potential name clashes.
 struct OneHotEncoderResult <: MMI.MLJType
     all_features::Vector{Symbol} # all feature labels
-    ref_name_pairs_given_feature::Dict{Symbol,Vector{Pair{<:Unsigned,Symbol}}}
+    ref_name_pairs_given_feature::Dict{Symbol,Vector{Union{Pair{<:Unsigned,Symbol}, Pair{Missing, Symbol}}}}
     fitted_levels_given_feature::Dict{Symbol, CategoricalArray}
 end
 
@@ -847,9 +847,9 @@ function MMI.fit(transformer::OneHotEncoder, verbosity::Int, X)
     end
 
     ref_name_pairs_given_feature =
-        Dict{Symbol,Vector{Pair{<:Unsigned,Symbol}}}()
+        Dict{Symbol,Vector{Union{Pair{<:Unsigned,Symbol}, Pair{Missing, Symbol}}}}()
 
-    allowed_scitypes = ifelse(transformer.ordered_factor, Finite, Multiclass)
+    allowed_scitypes = ifelse(transformer.ordered_factor, Union{Missing, Finite}, Union{Missing, Multiclass})
     fitted_levels_given_feature = Dict{Symbol, CategoricalArray}()
     col_scitypes = schema(X).scitypes
     # apply on each feature
@@ -900,9 +900,7 @@ end
 
 # If v=categorical('a', 'a', 'b', 'a', 'c') and MMI.int(v[1]) = ref
 # then `_hot(v, ref) = [true, true, false, true, false]`
-_hot(v::AbstractVector{<:CategoricalValue}, ref) = map(v) do c
-    MMI.int(c) == ref
-end
+function hot(col, ref) map(col) do c  if typeof(c) != Missing MMI.int(c) == ref else missing end end end
 
 function MMI.transform(transformer::OneHotEncoder, fitresult, X)
     features = Tables.schema(X).names     # tuple not vector
@@ -928,8 +926,10 @@ function MMI.transform(transformer::OneHotEncoder, fitresult, X)
             pairs = d[ftr]
             refs = first.(pairs)
             names = last.(pairs)
-            cols_to_add = map(refs) do ref
-                float.(_hot(col, ref))
+            cols_to_add = map(refs) do ref 
+                if typeof(ref) != Missing float.(hot(col, ref)) 
+                else missing # TODO - Make a Vector that contains length(refs) * missing so that it matches the remaining encoded features.
+                end
             end
             append!(new_cols, cols_to_add)
         else
