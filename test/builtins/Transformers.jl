@@ -465,6 +465,57 @@ end
     @test infos[:name] == "OneHotEncoder"
     @test infos[:input_scitype] == MLJBase.Table
     @test infos[:output_scitype] == MLJBase.Table
+
+    # test the work on missing values
+    X = (name   = categorical(["Ben", "John", "Mary", "John", missing], ordered=true),
+         height = [1.85, 1.67, 1.5, 1.67],
+         favourite_number = categorical([7, 5, 10, missing, 5]),
+         age    = [23, 23, 14, 23])
+
+    t  = OneHotEncoder()
+    f, _, report = @test_logs((:info, r"Spawning 3"),
+                         (:info, r"Spawning 3"), MLJBase.fit(t, 1, X))
+     
+    Xt = MLJBase.transform(t, f, X)
+
+    @test typeof(Xt.name__John == float.([false, true, false, true, missing])) == Missing
+    @test Xt.height == X.height
+    @test typeof(Xt.favourite_number__10 == float.([false, false, true, false, missing])) == Missing
+    @test Xt.age == X.age
+    @test MLJBase.schema(Xt).names == (:name__Ben, :name__John, :name__Mary,
+                               :height, :favourite_number__5,
+                               :favourite_number__7, :favourite_number__10,
+                               :age)
+
+    @test report.new_features == collect(MLJBase.schema(Xt).names)
+
+    # test the work on missing values with drop_last = true
+
+    X = (name   = categorical(["Ben", "John", "Mary", "John", missing], ordered=true),
+         height = [1.85, 1.67, 1.5, 1.67],
+         favourite_number = categorical([7, 5, 10, missing, 5]),
+         age    = [23, 23, 14, 23])
+
+    t  = OneHotEncoder(drop_last = true)
+    f, _, report = @test_logs((:info, r"Spawning 2"),
+                        (:info, r"Spawning 2"), MLJBase.fit(t, 1, X))
+
+    Xt = MLJBase.transform(t, f, X)
+
+    @test typeof(Xt.name__John == float.([false, true, false, true, missing])) == Missing
+    @test Xt.height == X.height
+    @test typeof(Xt.favourite_number__5 == float.([false, true, false, missing, true])) == Missing
+    @test Xt.age == X.age
+    @test MLJBase.schema(Xt).names == (:name__Ben, :name__John,
+                            :height, :favourite_number__5,
+                            :favourite_number__7,
+                            :age)
+
+    @test_throws Exception Xt.favourite_number__10
+    @test_throws Exception Xt.name__Mary
+
+    @test report.new_features == collect(MLJBase.schema(Xt).names)
+
 end
 
 

@@ -846,8 +846,8 @@ function MMI.fit(transformer::OneHotEncoder, verbosity::Int, X)
         end
     end
 
-    ref_name_pairs_given_feature =
-        Dict{Symbol,Vector{Union{Pair{<:Unsigned,Symbol}, Pair{Missing, Symbol}}}}()
+ 
+    ref_name_pairs_given_feature = Dict{Symbol,Vector{Pair{<:Unsigned,Symbol}}}()
 
     allowed_scitypes = ifelse(transformer.ordered_factor, Union{Missing, Finite}, Union{Missing, Multiclass})
     fitted_levels_given_feature = Dict{Symbol, CategoricalArray}()
@@ -900,7 +900,18 @@ end
 
 # If v=categorical('a', 'a', 'b', 'a', 'c') and MMI.int(v[1]) = ref
 # then `_hot(v, ref) = [true, true, false, true, false]`
-function hot(col, ref) map(col) do c  if typeof(c) != Missing MMI.int(c) == ref else missing end end end
+hot(v::AbstractVector{<:CategoricalValue}, ref) = map(v) do c
+    MMI.int(c) == ref
+end
+
+function hot(col::AbstractVector{<:Union{Missing, CategoricalValue}}, ref) map(col) do c  
+    if ismissing(ref)
+        missing 
+    else 
+        MMI.int(c) == ref 
+    end 
+end 
+end
 
 function MMI.transform(transformer::OneHotEncoder, fitresult, X)
     features = Tables.schema(X).names     # tuple not vector
@@ -927,8 +938,8 @@ function MMI.transform(transformer::OneHotEncoder, fitresult, X)
             refs = first.(pairs)
             names = last.(pairs)
             cols_to_add = map(refs) do ref 
-                if typeof(ref) != Missing float.(hot(col, ref)) 
-                else missing # TODO - Make a Vector that contains length(refs) * missing so that it matches the remaining encoded features.
+                if ismissing(ref) missing 
+                else float.(hot(col, ref))
                 end
             end
             append!(new_cols, cols_to_add)
