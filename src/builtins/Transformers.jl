@@ -846,7 +846,7 @@ function MMI.fit(transformer::OneHotEncoder, verbosity::Int, X)
         end
     end
 
- 
+
     ref_name_pairs_given_feature = Dict{Symbol,Vector{Pair{<:Unsigned,Symbol}}}()
 
     allowed_scitypes = ifelse(transformer.ordered_factor, Union{Missing, Finite}, Union{Missing, Multiclass})
@@ -904,13 +904,13 @@ hot(v::AbstractVector{<:CategoricalValue}, ref) = map(v) do c
     MMI.int(c) == ref
 end
 
-function hot(col::AbstractVector{<:Union{Missing, CategoricalValue}}, ref) map(col) do c  
+function hot(col::AbstractVector{<:Union{Missing, CategoricalValue}}, ref) map(col) do c
     if ismissing(ref)
-        missing 
-    else 
-        MMI.int(c) == ref 
-    end 
-end 
+        missing
+    else
+        MMI.int(c) == ref
+    end
+end
 end
 
 function MMI.transform(transformer::OneHotEncoder, fitresult, X)
@@ -937,8 +937,8 @@ function MMI.transform(transformer::OneHotEncoder, fitresult, X)
             pairs = d[ftr]
             refs = first.(pairs)
             names = last.(pairs)
-            cols_to_add = map(refs) do ref 
-                if ismissing(ref) missing 
+            cols_to_add = map(refs) do ref
+                if ismissing(ref) missing
                 else float.(hot(col, ref))
                 end
             end
