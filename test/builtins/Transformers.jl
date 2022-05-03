@@ -510,7 +510,7 @@ end
     @test collect(skipmissing(Xt.name__John)) == float.([false, true, false, true])
     @test ismissing(Xt.name__John[5])
     @test Xt.height == X.height
-    @test ismissing(Xt.favourite_number__5) == 5
+    @test ismissing(Xt.favourite_number__5[4])
     @test collect(skipmissing(Xt.favourite_number__5)) == float.([false, true, false, true])
     @test ismissing(Xt.favourite_number__5[4])
     @test Xt.age == X.age
