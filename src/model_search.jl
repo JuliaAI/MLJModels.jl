@@ -251,11 +251,32 @@ end
 
 not_missing_and_true(x) = !ismissing(x) && x
 
-matching(X)       = Checker{false,missing,missing,scitype(X),missing}()
-matching(X, y)    = Checker{true,missing,missing,scitype(X),scitype(y)}()
-matching(X, y, w) = Checker{true,true,false,scitype(X),scitype(y)}()
-matching(X, y, w::AbstractDict) =
-    Checker{true,false,true,scitype(X),scitype(y)}()
+function warn_if_single_column(y)
+    if Tables.istable(y) && (length(Tables.columnnames(y)) == 1)
+        msg = string(
+            "y is a table with only one column. ",
+            "If y is a table, we assume you want to do multi-target modeling.",
+            "If you actually want to do single-target modeling, ",
+            "you need to convert y to a Vector.",
+        )
+        @warn msg
+    end
+    return nothing
+end
+
+matching(X) = Checker{false,missing,missing,scitype(X),missing}()
+function matching(X, y)
+    warn_if_single_column(y)
+    return Checker{true,missing,missing,scitype(X),scitype(y)}()
+end
+function matching(X, y, w)
+    warn_if_single_column(y)
+    return Checker{true,true,false,scitype(X),scitype(y)}()
+end
+function matching(X, y, w::AbstractDict)
+    warn_if_single_column(y)
+    return Checker{true,false,true,scitype(X),scitype(y)}()
+end
 
 (f::Checker{false,
             missing,
