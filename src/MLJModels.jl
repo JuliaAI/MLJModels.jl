@@ -2,7 +2,7 @@ module MLJModels
 
 import MLJModelInterface
 import MLJModelInterface: Model, metadata_pkg, metadata_model, @mlj_model, info,
-    nrows, selectcols, transform, inverse_transform, fitted_params
+    nrows, selectrows, reformat, selectcols, transform, inverse_transform, fitted_params
 for T in MLJModelInterface.ABSTRACT_MODEL_SUBTYPES
     @eval(import MLJModelInterface.$T)
 end

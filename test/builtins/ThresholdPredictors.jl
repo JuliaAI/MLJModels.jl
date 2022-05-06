@@ -1,8 +1,11 @@
 module TestThresholdPredictors
 using Test, MLJModels, CategoricalArrays
-import MLJBase
-using CategoricalDistributions
 using ScientificTypes
+using CategoricalDistributions
+
+import Distributions
+import MLJBase
+
 
 const MMI = MLJModels.MLJModelInterface
 
@@ -184,6 +187,67 @@ MMI.target_scitype(::Type{<:DummyIterativeClassifier}) =
     @test MMI.training_losses(thresholder, re) == [1.0, 2.0]
 end
 
+## Data Front-end Tests
+struct NaiveClassifier <: MMI.Probabilistic end
+
+function MMI.fit(::NaiveClassifier, verbosity, reformatted_X, reformatted_target)
+    fitresult = Distributions.fit(MLJBase.UnivariateFinite, reformatted_target[1])
+    return fitresult, nothing, NamedTuple()
+end
+
+function MMI.predict(::NaiveClassifier, fitresult, reformatted_Xnew)
+    return fill(fitresult, size(reformatted_Xnew, 1))
+end
+
+MMI.reformat(::NaiveClassifier, X, target) = (MMI.matrix(X), (target,))
+MMI.reformat(::NaiveClassifier, X) = (MMI.matrix(X),)
+
+function MMI.selectrows(::NaiveClassifier, I, reformatted_X, reformatted_target)
+	return (reformatted_X[I, :], (reformatted_target[1][I],))
+end
+
+MMI.selectrows(::NaiveClassifier, I, reformatted_X) = (reformatted_X[I, :],)
+MMI.target_scitype(::Type{<:NaiveClassifier}) = AbstractVector{OrderedFactor{2}}
+MMI.input_scitype(::Type{<:NaiveClassifier}) = Table(Continuous)
+
+@testset "ThresholdUnion Data Front-End" begin
+    X = MMI.table(rand(10, 10))
+    y = categorical([2, 1, 1, 2, 1, 1, 2, 1, 1, 2], ordered=true)
+
+    naive_classifier = NaiveClassifier()
+    threshold_classifier = BinaryThresholdPredictor(naive_classifier)
+    reformatted_args = MMI.reformat(threshold_classifier, X) 
+    @test reformatted_args == (MMI.matrix(X),)
+    reformatted_args_ = MMI.reformat(threshold_classifier, X, y) 
+    @test reformatted_args_ == (
+        MMI.matrix(X),
+        MLJModels.ReformattedTarget(
+            (y,), levels(y), scitype(y)
+        )
+    )
+    I = 2:5
+    @test MMI.selectrows(
+        threshold_classifier,
+        I,
+        reformatted_args...
+    ) == (MMI.matrix(X)[I, :],)
+
+    r = MMI.selectrows(threshold_classifier, I, reformatted_args_...) 
+    @test r[1] == MMI.matrix(X)[I, :]
+    s = MLJModels.ReformattedTarget(
+        (y[I],), levels(y[I]), scitype(y[I])
+    )
+    @test r[2].y == s.y
+    @test r[2].levs == s.levs
+    @test r[2].sci_type == s.sci_type
+
+    # machine
+    mach = MLJBase.machine(threshold_classifier, X, y)
+    MLJBase.fit!(mach, rows=I)
+    @test MLJBase.predict(mach, X) == fill(
+        mode(Distributions.fit(MLJBase.UnivariateFinite, y[I])), MLJBase.nrows(X)
+    )
+end
 end # module
 
 true
