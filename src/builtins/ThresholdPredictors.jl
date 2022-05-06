@@ -347,7 +347,7 @@ function ScientificTypesBase.scitype(
     return getfield(x, :sci_type)
 end
 
-#faster acesss to sci_type
+# Faster acesss to sci_type for `ReformattedTarget`
 get_scitype(x::ReformattedTarget) = x.sci_type
 
 function MMI.reformat(model::ThresholdUnion, args...)
