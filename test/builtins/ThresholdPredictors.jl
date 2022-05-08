@@ -254,8 +254,8 @@ MMI.input_scitype(::Type{<:NaiveClassifier}) = Table(Continuous)
         (y[I],), levels(y[I]), scitype(y[I])
     )
     @test r[2].y == s.y
-    @test r[2].levs == s.levs
-    @test r[2].sci_type == s.sci_type
+    @test r[2].levels == s.levels
+    @test r[2].scitype == s.scitype
 
     # machine end-end test
     mach = MLJBase.machine(threshold_classifier, X, y)
