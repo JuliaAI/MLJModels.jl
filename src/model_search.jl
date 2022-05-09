@@ -251,10 +251,10 @@ end
 
 not_missing_and_true(x) = !ismissing(x) && x
 
-const WARN_MULTITARGET = "y is a table with only one column. " *
-                         "If y is a table, we assume you want to do multi-target modeling." *
+const WARN_MULTITARGET = "'y' is a table with only one column. " *
+                         "If 'y' is a table, we assume you want to do multi-target modeling." *
                          "If you actually want to do single-target modeling, " *
-                         "you need to convert y to a Vector."
+                         "you need to convert 'y' to a Vector."
 
 function warn_if_single_column(y)
     if Tables.istable(y) && (length(Tables.columnnames(y)) == 1)
