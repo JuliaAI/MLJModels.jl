@@ -127,7 +127,7 @@ end
 function MMI.fit(model::ThresholdUnion, verbosity::Int, args...)
 
     if length(args) > 1 &&
-        !(scitype(args[2]) <: AbstractVector{<:Union{Missing,OrderedFactor}})
+        !(get_scitype(args[2]) <: AbstractVector{<:Union{Missing, OrderedFactor{2}}})
         L = levels(args[2])
         length(L) == 2 || throw(ERR_TARGET_NOT_BINARY)
         first_class, second_class = L
@@ -138,7 +138,7 @@ function MMI.fit(model::ThresholdUnion, verbosity::Int, args...)
         end
     end
     model_fitresult, model_cache, model_report = MMI.fit(
-        model.model, verbosity-1, args...
+        model.model, verbosity-1, map(unwrap, args)...
     )
     cache = (model_cache = model_cache,)
     report = (model_report = model_report,)
@@ -150,7 +150,11 @@ function MMI.update(
     model::ThresholdUnion, verbosity::Int, old_fitresult, old_cache, args...
 )
     model_fitresult, model_cache, model_report = MMI.update(
-        model.model, verbosity-1, old_fitresult[1], old_cache[1], args...
+        model.model,
+        verbosity-1,
+        old_fitresult[1],
+        old_cache[1],
+        map(unwrap, args)...
     )
     cache = (model_cache = model_cache,)
     report = (model_report = model_report,)
@@ -313,3 +317,79 @@ MMI.iteration_parameter(model::ThresholdUnion) =
 
 MMI.training_losses(thresholder::ThresholdUnion, thresholder_report) =
     MMI.training_losses(thresholder.model, thresholder_report.model_report)
+
+## Data Front-end
+"""
+    ReformattedTarget(y, levels, scitype)
+
+Intenal Use Only.
+Wrapper containing a **model specific** target, `y`, its scientific type, 
+`scitype`(the scientific representation of the **user supplied** target), 
+and associated levels (the levels of the **user supplied** target), `levels`.
+"""
+struct ReformattedTarget{T, L, S<:Type}
+    y::T
+    levels::L
+    scitype::S
+end
+
+function Base.:(==)(x1::ReformattedTarget, x2::ReformattedTarget)
+    return x1.y == x2.y && x1.levels == x2.levels && x1.scitype == x2.scitype
+end
+
+unwrap(x) = x
+unwrap(x::ReformattedTarget) = getfield(x, :y)
+CategoricalArrays.levels(x::ReformattedTarget) = getfield(x, :levels) 
+
+function ScientificTypesBase.scitype(
+    x::ReformattedTarget, ::ScientificTypes.DefaultConvention
+)
+    return getfield(x, :scitype)
+end
+
+# Faster acesss to scitype for `ReformattedTarget`
+get_scitype(x::ReformattedTarget) = x.scitype
+
+function MMI.reformat(model::ThresholdUnion, args...)
+    atom = model.model
+    reformatted_args = reformat(atom, args...)
+    if length(args) > 1
+        reformatted_X, reformatted_target, other_reformatted_args... = reformatted_args
+        target = args[2]
+        wrapped_reformatted_target = ReformattedTarget(
+            reformatted_target, levels(target), scitype(target)
+        )
+        reformatted_args_with_wrapped_target = (
+            reformatted_X, wrapped_reformatted_target, other_reformatted_args...
+        )
+        return reformatted_args_with_wrapped_target
+    end
+    return reformatted_args
+end
+
+function MMI.selectrows(model::ThresholdUnion, I, reformatted_args_with_wrapped_target...)
+    atom = model.model
+    reformatted_args_rows = selectrows(
+        atom, I, map(unwrap, reformatted_args_with_wrapped_target)...
+    )
+
+    if length(reformatted_args_with_wrapped_target) > 1
+        reformatted_X_rows, reformatted_target_rows, other_reformatted_args_rows... = 
+            reformatted_args_rows
+        reformatted_target = reformatted_args_with_wrapped_target[2]
+        wrapped_reformatted_target_rows = ReformattedTarget(
+            reformatted_target_rows, 
+            levels(reformatted_target),
+            get_scitype(reformatted_target)
+        )
+
+        reformatted_args_rows_with_wrapped_target = (
+            reformatted_X_rows, 
+            wrapped_reformatted_target_rows, 
+            other_reformatted_args_rows...
+        )
+        return reformatted_args_rows_with_wrapped_target
+    end
+
+    return reformatted_args_rows
+end
