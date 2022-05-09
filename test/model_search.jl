@@ -92,6 +92,27 @@ end
     @test task.supports_class_weights
     @test task.input_scitype == scitype(X)
     @test task.target_scitype == scitype(y)
+
+    @testset "matching(X, y) where y is a table with a single column" begin
+        @testset begin
+            X = (; x1 = [1., 2., 3.])
+            y = [4., 5., 6.]
+            @test_nowarn matching(X, y)
+            @test_logs match_mode=:all matching(X, y)
+        end
+        @testset begin
+            X = (; x1 = [1., 2., 3.])
+            y = (; y1 = [4., 5., 6.])
+            @test_logs match_mode=:all (:warn, MLJModels.WARN_MULTITARGET) matching(X, y)
+        end
+        @testset begin
+            X = (; x1 = [1., 2., 3.])
+            y = (; y1 = [4., 5., 6.], y2 = [7., 8., 9.])
+            matching(X, y)
+            @test_nowarn matching(X, y)
+            @test_logs match_mode=:all matching(X, y)
+        end
+    end
 end
 
 @testset "models() and localmodels()" begin
