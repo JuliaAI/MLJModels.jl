@@ -24,6 +24,47 @@ macro update()
     _update(mod, false)
 end
 
+"""
+    MLJModels.@update
+
+Update the [MLJ Model
+Registry](https://github.com/JuliaAI/MLJModels.jl/tree/dev/src/registry)
+by loading all packages in the registry Project.toml file and
+searching for types implementing the MLJ model interface.
+
+*For MLJ administrators only.*
+
+To register all the models in GreatNewPackage with MLJ:
+
+- In the dev branch of a clone of the dev branch of MLJModels, change
+  to the `/src/registry/` directory and, in the latest version of
+  julia, activate the environment specified by the Project.toml there,
+  after checking the [compat] conditions there are up to date. It is
+  suggested you do not use `Revise`.
+
+- Add `GreatNewPackage` to the environment.
+
+- In some environment to which your MLJModels clone has been added
+  (using `Pkg.dev`) execute `using MLJModels; MLJModels.@update`. This updates
+  `src/registry/Metadata.toml` and `src/registry/Models.toml` (the
+  latter is generated for convenience and not used by MLJ).
+
+- Quit your REPL session and make a trivial commit to your MLJModels
+  branch to force pre-compilation in a new julia session when you run
+  `using MLJModels`. (For technical reasons the registry is not loaded
+  in `__init__`()`, so without pre-compiliation the new ]registry is not
+  available.)
+
+- Test that the interfaces load properly with
+  `MLJModels.check_registry()`. (CI will fail on dev -> master if
+  this test fails.)
+
+- Push your changes to an appropriate branch of MLJModels to make
+  the updated metadata available to users of the next MLJModels tagged
+  release.
+
+
+"""
 macro update(ex)
     mod = __module__
     test_env_only = eval(ex)
