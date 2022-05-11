@@ -84,4 +84,7 @@ include("builtins/Constant.jl")
 include("builtins/Transformers.jl")
 include("builtins/ThresholdPredictors.jl")
 
+# finalize:
+include("init.jl")
+
 end # module
