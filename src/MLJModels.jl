@@ -74,10 +74,8 @@ const MODEL_TRAITS_IN_REGISTRY = model_traits_in_registry(INFO_GIVEN_HANDLE)
 # model search and registry code:
 include("model_search.jl")
 include("loading.jl")
-include("registry/src/info_dict.jl")
 include("registry/src/Registry.jl")
-include("registry/src/check_registry.jl")
-import .Registry.@update
+using .Registry
 
 # load built-in models:
 include("builtins/Constant.jl")

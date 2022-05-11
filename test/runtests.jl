@@ -1,10 +1,10 @@
 using Test, MLJModels
 
-@testset "metadata" begin
-    @testset "info_dict" begin
-        @test include("info_dict.jl")
-    end
+@testset "registry" begin
+    @test include(joinpath("..", "src", "registry", "test", "runtests.jl"))
+end
 
+@testset "metadata" begin
     @testset "metadata.jl" begin
         @test include("metadata.jl")
     end

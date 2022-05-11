@@ -1,38 +1,12 @@
 """
-    registry_project()
+    MLJModels.check_registry()
 
-Return, as a `Vector{String}`, the lines of the Project.toml used to
-generate MLJ Model Registry (aka, model metadata). This Project.toml
-file lists as dependencies all packages that provide registered
-models.
-
-"""
-registry_project() = REGISTRY_PROJECT[]
+Check that every model in the [MLJ aodel
+Registry](https://github.com/JuliaAI/MLJModels.jl/tree/dev/src/registry)
+can be loaded using the `@load` macro. Returns a list of strings
+indicating models with issues.
 
 """
-    activate_registry_environment()
-
-Activate a temporary clone of the environment that is used to generate
-the MLJ Model Registry (aka, model metadata). This environment
-includes all packages providing registered models.
-
-To instantiate the environment (for which no Manifest.toml will exist)
-do `using Pkg; Pkg.instantiate()`.
-
-"""
-function activate_registry_environment()
-    projectdir = mktempdir()
-    filename, stream = mktemp(projectdir)
-    for line in registry_project()
-        write(stream, line*"\n")
-    end
-    close(stream)
-    project_filename = joinpath(first(splitdir(filename)), "Project.toml")
-    cp(filename, project_filename)
-    Pkg.activate(projectdir)
-    return nothing
-end
-
 function check_registry()
 
     basedir = Registry.environment_path
