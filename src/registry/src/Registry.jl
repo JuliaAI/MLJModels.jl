@@ -2,7 +2,7 @@ module Registry
 
 using Pkg
 import Pkg.TOML
-import MLJModels.@load
+using MLJModels
 import MLJModelInterface
 import MLJModelInterface.Model
 for T in MLJModelInterface.MODEL_TRAITS
