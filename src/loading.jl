@@ -15,25 +15,9 @@ function _append!(program, ex, doprint::Bool, tick_early::Bool)
 end
 
 function _import(modl, api_pkg, pkg, doprint)
-    # can be removed once MLJModel #331 is resolved:
-    if pkg == :NearestNeighbors
-        doprint && print("import NearestNeighbors")
-        try
-            modl.eval(:(import MLJModels))
-        catch
-            try
-                modl.eval(:(import MLJ.MLJModels))
-            catch
-                error("Problem putting MLJModels into scope. ")
-            end
-        end
-        modl.eval(:(import NearestNeighbors))
-        doprint && println(" \u2714")
-    else
-        doprint && print("import $api_pkg")
-        modl.eval(:(import $api_pkg))
-        doprint && println(" \u2714")
-    end
+    doprint && print("import $api_pkg")
+    modl.eval(:(import $api_pkg))
+    doprint && println(" \u2714")
 end
 
 function _eval(modl, path::Union{Expr,Symbol})
