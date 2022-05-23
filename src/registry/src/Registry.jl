@@ -17,7 +17,7 @@ using InteractiveUtils
 import ScientificTypes: Found, Continuous, Finite, Infinite
 import ScientificTypes: OrderedFactor, Count, Multiclass, Binary
 
-export @update, check_registry, activate_registry_environment, info_dict
+export @update, check_registry, activate_registry_project, info_dict
 
 const srcdir = dirname(@__FILE__) # the directory containing this file
 const environment_path = joinpath(srcdir, "..")
@@ -32,7 +32,7 @@ include("update.jl")
 include("check_registry.jl")
 
 # for activating a clone of the registry environment:
-include("activate_registry_environment.jl")
+include("activate_registry_project.jl")
 
 
 end # module
