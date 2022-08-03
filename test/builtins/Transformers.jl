@@ -522,6 +522,16 @@ end
     @test_throws Exception Xt.favourite_number__10
     @test_throws Exception Xt.name__Mary
     @test report.new_features == collect(MLJBase.schema(Xt).names)
+
+    # Test when the first value is missing
+    X = (name=categorical([missing, "John", "Mary", "John"]),)
+    t  = OneHotEncoder()
+    f, _, _ = MLJBase.fit(t, 0, X)
+    Xt = MLJBase.transform(t, f, X)
+    @test Xt.name__John[1] === Xt.name__Mary[1] === missing
+    @test Xt.name__John[2:end] == Union{Missing, Float64}[1.0, 0.0, 1.0]
+    @test Xt.name__Mary[2:end] == Union{Missing, Float64}[0.0, 1.0, 0.0]
+
 end
 
 

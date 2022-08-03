@@ -860,7 +860,7 @@ function MMI.fit(transformer::OneHotEncoder, verbosity::Int, X)
         if T <: allowed_scitypes && ftr in specified_features
             ref_name_pairs_given_feature[ftr] = Pair{<:Unsigned,Symbol}[]
             shift = transformer.drop_last ? 1 : 0
-            levels = classes(first(col))
+            levels = classes(col)
             fitted_levels_given_feature[ftr] = levels
             if verbosity > 0
                 @info "Spawning $(length(levels)-shift) sub-features "*
