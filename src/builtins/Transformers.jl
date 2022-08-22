@@ -1895,9 +1895,10 @@ In MLJ or MLJBase, bind an instance `model` to data with
 
 where
 
-- `X`: any Tables.jl compatible table. Columns can be of mixed type
-  but only those with element scitype `Multiclass` or `OrderedFactor`
-  can be encoded. Check column scitypes with `schema(X)`.
+- `X`: any Tables.jl compatible table. Columns can be of mixed type but only those with
+  element scitype `Multiclass` or `OrderedFactor` can be encoded; `missing` values in
+  these columns are allowed (and are propagated by default). Check column scitypes with
+  `schema(X)`.
 
 Train the machine using `fit!(mach, rows=...)`.
 
