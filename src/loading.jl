@@ -15,25 +15,9 @@ function _append!(program, ex, doprint::Bool, tick_early::Bool)
 end
 
 function _import(modl, api_pkg, pkg, doprint)
-    # can be removed once MLJModel #331 is resolved:
-    if pkg == :NearestNeighbors
-        doprint && print("import NearestNeighbors")
-        try
-            modl.eval(:(import MLJModels))
-        catch
-            try
-                modl.eval(:(import MLJ.MLJModels))
-            catch
-                error("Problem putting MLJModels into scope. ")
-            end
-        end
-        modl.eval(:(import NearestNeighbors))
-        doprint && println(" \u2714")
-    else
-        doprint && print("import $api_pkg")
-        modl.eval(:(import $api_pkg))
-        doprint && println(" \u2714")
-    end
+    doprint && print("import $api_pkg")
+    modl.eval(:(import $api_pkg))
+    doprint && println(" \u2714")
 end
 
 function _eval(modl, path::Union{Expr,Symbol})
@@ -44,19 +28,26 @@ end
 ## OVERLOADING load_path
 
 """
-    load_path(model::String, pkg=nothing)
+    load_path(model_name::String, pkg=nothing)
 
-Return the load path for model type with name `model`, specifying the
-package name `pkg` to resolve name conflicts if necessary.
+Return the load path for model type with name `model_name`, specifying
+the algorithm=providing package name `pkg` to resolve name conflicts,
+if necessary.
+
+    load_path(proxy::NamedTuple)
+
+Return the load path for the model whose name is `proxy.name` and whose
+algorithm-providing package has name `proxy.package_name`. For example,
+`proxy` could be any element of the vector returned by `models()`.
 
     load_path(model)
 
 Return the load path of a `model` instance or type. Usually requires
-necessary model code to have been separately loaded. Supply a string
+necessary model code to have been separately loaded. Supply strings
 as above if code is not loaded.
 
 """
-function MLJModelInterface.load_path(proxy::ModelProxy)
+function MLJModelInterface.load_path(proxy::NamedTuple)
     handle = (name=proxy.name, pkg=proxy.package_name)
     return INFO_GIVEN_HANDLE[handle][:load_path]
 end
@@ -213,15 +204,30 @@ function _load(modl, name_ex, kw_exs...; interactive=false)
 end
 
 
-## NO LONGER SUPPORTED
+"""
+    MLJModels.load(name; pkg=nothing, add=false, verbosity=0, mod=Main)
 
-_deperror() = error(
-    "The `load` function is no longer supported. "*
-    "Use the `@load` macro instead, as in "*
-    "`@load RandomForestRegressor pkg = DecisionTree`.\n"*
-    "For explicit importing, you can discover a model's "*
-    "full load path with the `load_path` function, as in "*
-    "`load_path(\"RandomForestRegressor\", pkg=\"DecisionTree\")`. )")
+Experimental method.
+Currently private.
 
-load(proxy::ModelProxy; kwargs...) = _deperror()
-load(name::String; kwargs...) = _deperror()
+Loads model code into specified module `mod` at run time, as opposed
+to `@load` which loads coad into calling module at time of invokation.
+
+"""
+function load(
+    name::String;
+    pkg::Union{String,Nothing}=nothing,
+    add::Bool=false,
+    verbosity::Integer=0,
+    mod=Main
+)
+    ex = if isnothing(pkg)
+        :(@load $name add=$add verbosity=$verbosity)
+    else
+        :(@load $name pkg=$pkg add=$add verbosity=$verbosity)
+    end
+    mod.eval(ex)
+end
+
+
+#load(proxy, ...) = ...
