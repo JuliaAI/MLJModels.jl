@@ -45,10 +45,10 @@ jobs:
       # remove next six lines (and one other marked above) when 
       # JuliaAI/MLJScikitLearnInterface.jl#42 gets properly resolved
       - name: "Install Conda"
-        run: julia -e 'using Pkg; Pkg.add("Conda");'
+        run: julia -e 'using Pkg; Pkg.add("Conda");Pkg.build("Conda")'
       - name: "Install Scikit-learn"
         run: |
-          julia -e 'using Conda; Conda.add("sklearn", "scikit-learn");'\
+          #julia -e 'using Conda; Conda.add("sklearn", "scikit-learn");'\
           cd $LD_LIBRARY_PATH
       
       - run: julia -e 'using Pkg; Pkg.Registry.update()'
