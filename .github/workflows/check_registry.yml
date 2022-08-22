@@ -19,8 +19,7 @@ jobs:
         arch:
           - x64
     env:
-      PYTHON: "Conda"
-      
+      PYTHON: Conda
       # remove next line (and others marked below) when 
       # JuliaAI/MLJScikitLearnInterface.jl#42 properly resolved
       LD_LIBRARY_PATH: /home/runner/.julia/conda/3/lib
@@ -43,12 +42,14 @@ jobs:
             ${{ runner.os }}-
       - uses: julia-actions/julia-buildpkg@v1
 
-      # remove next four lines (and one other marked above) when 
+      # remove next six lines (and one other marked above) when 
       # JuliaAI/MLJScikitLearnInterface.jl#42 gets properly resolved
       - name: "Install Conda"
         run: julia -e 'using Pkg; Pkg.add("Conda");'
       - name: "Install Scikit-learn"
-        run: cd $LD_LIBRARY_PATH
+        run: |
+          julia -e 'using Conda; Conda.add("sklearn", "scikit-learn");'\
+          cd $LD_LIBRARY_PATH
       
       - run: julia -e 'using Pkg; Pkg.Registry.update()'
       - run: julia -e 'using Pkg; Pkg.develop(Pkg.PackageSpec(path = pwd()))'
