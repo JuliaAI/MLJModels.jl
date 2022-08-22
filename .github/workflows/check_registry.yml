@@ -22,7 +22,7 @@ jobs:
       PYTHON: Conda
       # remove next line (and others marked below) when 
       # JuliaAI/MLJScikitLearnInterface.jl#42 properly resolved
-      LD_LIBRARY_PATH: /home/runner/.julia/conda/3/lib
+      LD_LIBRARY_PATH: /home/runner/.julia/conda/3/
 
     steps:
       - uses: actions/checkout@v2
