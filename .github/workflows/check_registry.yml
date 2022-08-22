@@ -19,7 +19,7 @@ jobs:
         arch:
           - x64
     env:
-      PYTHON: ""
+      PYTHON: "Conda"
       
       # remove next line (and others marked below) when 
       # JuliaAI/MLJScikitLearnInterface.jl#42 properly resolved
