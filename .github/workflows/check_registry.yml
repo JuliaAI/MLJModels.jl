@@ -41,20 +41,19 @@ jobs:
             ${{ runner.os }}-test-
             ${{ runner.os }}-
       - uses: julia-actions/julia-buildpkg@v1
-
-      # remove next eight lines (and one other marked above) when 
-      # JuliaAI/MLJScikitLearnInterface.jl#42 gets properly resolved
+      - run: julia -e 'using Pkg; Pkg.Registry.update()'
+      - run: julia -e 'using Pkg; Pkg.develop(Pkg.PackageSpec(path = pwd()))'
+      - run: julia -e 'using Pkg; Pkg.add("Test")'
+       
+       # remove next eight lines (and one other marked above) when 
+       # JuliaAI/MLJScikitLearnInterface.jl#42 gets properly resolved
       - name: "Install Conda"
         run: julia -e 'using Pkg; Pkg.add("Conda");'
       - name: "Install Scikit-learn"
         run: |
           julia -e 'using Conda; Conda.add("scikit-learn");'\
-          cd $LD_LIBRARY_PATH
+          cd $LD_LIBRARY_PATH #just to check that the path is valid
         
-      - run: julia -e 'using Pkg; Pkg.Registry.update()'
-      - run: pwd
-      - run: julia -e 'using Pkg; Pkg.develop(Pkg.PackageSpec(path = pwd()))'
-      - run: julia -e 'using Pkg; Pkg.add("Test")'
       - run: julia -e 'using Pkg; Pkg.update()'
       - run: julia -e 'using Pkg; Pkg.precompile()'
       - run: julia -e 'using Pkg; Pkg.status()'
