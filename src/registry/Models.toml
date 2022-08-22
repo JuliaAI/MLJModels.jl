@@ -1,4 +1,4 @@
-BetaML = ["RandomForestRegressor", "RandomForestClassifier", "PerceptronClassifier", "DecisionTreeRegressor", "PegasosClassifier", "KMedoids", "KMeans", "DecisionTreeClassifier", "GMMClusterer", "MissingImputator", "KernelPerceptronClassifier"]
+BetaML = ["BetaMLGenericImputer", "RandomForestRegressor", "RandomForestClassifier", "PerceptronClassifier", "DecisionTreeRegressor", "BetaMLGMMImputer", "PegasosClassifier", "KMedoids", "BetaMLGMMRegressor", "KMeans", "DecisionTreeClassifier", "GMMClusterer", "MissingImputator", "BetaMLMeanImputer", "BetaMLRFImputer", "KernelPerceptronClassifier"]
 NearestNeighborModels = ["KNNClassifier", "MultitargetKNNClassifier", "MultitargetKNNRegressor", "KNNRegressor"]
 OutlierDetectionNeighbors = ["ABODDetector", "DNNDetector", "LOFDetector", "KNNDetector", "COFDetector"]
 PartialLeastSquaresRegressor = ["KPLSRegressor", "PLSRegressor"]
