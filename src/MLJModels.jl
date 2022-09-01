@@ -11,6 +11,7 @@ for T in MLJModelInterface.MODEL_TRAITS
 end
 
 using ScientificTypes
+using RelocatableFolders
 
 const MMI = MLJModelInterface
 
