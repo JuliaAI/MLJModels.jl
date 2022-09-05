@@ -1,64 +1,5 @@
 ## THE CONSTANT REGRESSOR
 
-"""
-$(MMI.doc_header(ConstantRegressor))
-`ConstantRegressor`: A regressor that, for any new input pattern, predicts the
-univariate probability distribution best fitting the training target data. Use
-`predict_mean` to predict the mean value instead.
-
-# Training data
-
-In MLJ or MLJBase, bind an instance `model` to data with
-
-    mach = machine(model, X)
-
-Where
-- `X`: is any table of input features (eg, a `DataFrame`); check the scitype
-  with `schema(X)`
-- `y`: is the target, which can be any `AbstractVector` whose element
-  scitype is `Continuous`; check the scitype with `schema(y)`
-
-Train the machine using `fit!(mach, rows=...)`.
-
-# Hyper-parameters
-
-- `distribution_type=Distributions.Normal`: The distribution from which to sample. Must be a subtype of `Distributions.Sampleable`.
-
-# Operations
-
-- `predict(mach, Xnew)`: Return predictions of the target given
-  features `Xnew` having the same scitype as `X` above. Predictions
-  are probabilistic but uncalibrated.
-- `predict_mean(mach, Xnew)`: Return the means of the probabilistic predictions
-  returned above.
-
-# Fitted parameters
-
-The fields of `fitted_params(mach)` are:
-
-- `target_distribution`: The distribution of the supplied target data.
-
-# Examples
-
-```julia
-using MLJ
-
-ConstantRegressor = @load ConstantRegressor pkg=MLJModels
-
-X, y = make_regression(100, 60) # synthetic data
-regressor = ConstantRegressor()
-mach = machine(regressor, X, y) |> fit!
-
-fitted_params(mach)
-
-Xnew, _ = make_regression(3, 60)
-predict(mach, Xnew)
-predict_mean(mach, Xnew)
-
-```
-See also
-[`ConstantClassifier`](@ref)
-"""
 struct ConstantRegressor{D<:Distributions.Sampleable} <: Probabilistic
     distribution_type::Type{D}
 end
@@ -105,71 +46,6 @@ MLJModelInterface.predict(::DeterministicConstantRegressor, fitresult, Xnew) =
 ## THE CONSTANT CLASSIFIER
 ##
 
-"""
-$(MMI.doc_header(ConstantClassifier))
-`ConstantClassifier`: A classifier that, for any new input pattern, `predict`s
-the `UnivariateFinite` probability distribution `d` best fitting the training
-target data. So, `pdf(d, level)` is the proportion of levels in the training
-data coinciding with `level`. Use `predict_mode` to obtain the training target
-mode instead.
-
-# Training data
-
-In MLJ or MLJBase, bind an instance `model` to data with
-
-    mach = machine(model, X)
-
-Where
-
-- `X`: is any table of input features (eg, a `DataFrame`); check the scitype
-  with `schema(X)`
-- `y`: is the target, which can be any `AbstractVector` whose element
-  scitype is `Finite`; check the scitype with `schema(y)`
-
-Train the machine using `fit!(mach, rows=...)`.
-
-# Hyper-parameters
-
-- `distribution_type=Distributions.Normal`: The distribution from which to sample. Must be a subtype of `Distributions.Sampleable`.
-
-# Operations
-
-- `predict(mach, Xnew)`: Return predictions of the target given
-  features `Xnew` having the same scitype as `X` above. Predictions
-  are probabilistic but uncalibrated.
-- `predict_mode(mach, Xnew)`: Return the means of the probabilistic predictions
-  returned above.
-
-# Fitted parameters
-
-The fields of `fitted_params(mach)` are:
-
-- `target_distribution`: The distribution of the supplied target data.
-
-# Examples
-
-```julia
-using MLJ
-
-ConstantClassifier = @load ConstantClassifier pkg=MLJModels
-clf = ConstantClassifier()
-
-X, y = @load_crabs
-mach = machine(clf, X, y) |> fit!
-
-fitted_params(mach)
-
-Xnew = (;FL = [8.1, 24.8, 7.2],
-        RW = [5.1, 25.7, 6.4],
-        CL = [15.9, 46.7, 14.3],
-        CW = [18.7, 59.7, 12.2],
-        BD = [6.2, 23.6, 8.4],)
-
-predict(mach, Xnew)
-predict_mode(mach, Xnew)
-```
-See also [`ConstantRegressor`](@ref)
-"""
 struct ConstantClassifier <: Probabilistic end
 
 # here `args` is `y` or `y, w`:
@@ -255,3 +131,134 @@ metadata_model(DeterministicConstantClassifier,
     weights = false,
     descr   = "Constant classifier (Deterministic).",
     path    = "MLJModels.DeterministicConstantClassifier")
+
+
+# # DOCUMENT STRINGS
+
+"""
+$(MMI.doc_header(ConstantRegressor))
+`ConstantRegressor`: A regressor that, for any new input pattern, predicts the
+univariate probability distribution best fitting the training target data. Use
+`predict_mean` to predict the mean value instead.
+
+# Training data
+
+In MLJ or MLJBase, bind an instance `model` to data with
+
+    mach = machine(model, X)
+
+Where
+- `X`: is any table of input features (eg, a `DataFrame`); check the scitype
+  with `schema(X)`
+- `y`: is the target, which can be any `AbstractVector` whose element
+  scitype is `Continuous`; check the scitype with `schema(y)`
+
+Train the machine using `fit!(mach, rows=...)`.
+
+# Hyper-parameters
+
+- `distribution_type=Distributions.Normal`: The distribution from which to sample. Must be a subtype of `Distributions.Sampleable`.
+
+# Operations
+
+- `predict(mach, Xnew)`: Return predictions of the target given
+  features `Xnew` having the same scitype as `X` above. Predictions
+  are probabilistic but uncalibrated.
+- `predict_mean(mach, Xnew)`: Return the means of the probabilistic predictions
+  returned above.
+
+# Fitted parameters
+
+The fields of `fitted_params(mach)` are:
+
+- `target_distribution`: The distribution of the supplied target data.
+
+# Examples
+
+```julia
+using MLJ
+
+ConstantRegressor = @load ConstantRegressor pkg=MLJModels
+
+X, y = make_regression(100, 60) # synthetic data
+regressor = ConstantRegressor()
+mach = machine(regressor, X, y) |> fit!
+
+fitted_params(mach)
+
+Xnew, _ = make_regression(3, 60)
+predict(mach, Xnew)
+predict_mean(mach, Xnew)
+
+```
+See also
+[`ConstantClassifier`](@ref)
+"""
+ConstantRegressor
+
+"""
+$(MMI.doc_header(ConstantClassifier))
+`ConstantClassifier`: A classifier that, for any new input pattern, `predict`s
+the `UnivariateFinite` probability distribution `d` best fitting the training
+target data. So, `pdf(d, level)` is the proportion of levels in the training
+data coinciding with `level`. Use `predict_mode` to obtain the training target
+mode instead.
+
+# Training data
+
+In MLJ or MLJBase, bind an instance `model` to data with
+
+    mach = machine(model, X)
+
+Where
+
+- `X`: is any table of input features (eg, a `DataFrame`); check the scitype
+  with `schema(X)`
+- `y`: is the target, which can be any `AbstractVector` whose element
+  scitype is `Finite`; check the scitype with `schema(y)`
+
+Train the machine using `fit!(mach, rows=...)`.
+
+# Hyper-parameters
+
+- `distribution_type=Distributions.Normal`: The distribution from which to sample. Must be a subtype of `Distributions.Sampleable`.
+
+# Operations
+
+- `predict(mach, Xnew)`: Return predictions of the target given
+  features `Xnew` having the same scitype as `X` above. Predictions
+  are probabilistic but uncalibrated.
+- `predict_mode(mach, Xnew)`: Return the means of the probabilistic predictions
+  returned above.
+
+# Fitted parameters
+
+The fields of `fitted_params(mach)` are:
+
+- `target_distribution`: The distribution of the supplied target data.
+
+# Examples
+
+```julia
+using MLJ
+
+ConstantClassifier = @load ConstantClassifier pkg=MLJModels
+clf = ConstantClassifier()
+
+X, y = @load_crabs
+mach = machine(clf, X, y) |> fit!
+
+fitted_params(mach)
+
+Xnew = (;FL = [8.1, 24.8, 7.2],
+        RW = [5.1, 25.7, 6.4],
+        CL = [15.9, 46.7, 14.3],
+        CW = [18.7, 59.7, 12.2],
+        BD = [6.2, 23.6, 8.4],)
+
+predict(mach, Xnew)
+predict_mode(mach, Xnew)
+```
+See also [`ConstantRegressor`](@ref)
+"""
+ConstantClassifier
