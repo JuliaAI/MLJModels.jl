@@ -1,4 +1,4 @@
-module MLJModels
+module MLJModels 
 
 import MLJModelInterface
 import MLJModelInterface: Model, metadata_pkg, metadata_model, @mlj_model, info,
@@ -11,6 +11,7 @@ for T in MLJModelInterface.MODEL_TRAITS
 end
 
 using ScientificTypes
+using RelocatableFolders
 
 const MMI = MLJModelInterface
 
