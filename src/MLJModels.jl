@@ -17,6 +17,7 @@ const MMI = MLJModelInterface
 using Pkg, Pkg.TOML, OrderedCollections, Parameters
 using Tables, CategoricalArrays, StatsBase, Statistics, Dates
 using InteractiveUtils, Markdown
+using Combinatorics
 import Distributions
 import REPL # stdlib, needed for `Term`
 import PrettyPrinting
@@ -44,7 +45,7 @@ export BinaryThresholdPredictor
 export FeatureSelector, UnivariateDiscretizer,
     UnivariateStandardizer, Standardizer, UnivariateBoxCoxTransformer,
     OneHotEncoder, ContinuousEncoder, FillImputer, UnivariateFillImputer,
-    UnivariateTimeTypeToContinuous
+    UnivariateTimeTypeToContinuous, InteractionTransformer
 
 const srcdir = dirname(@__FILE__) # the directory containing this file
 const MMI = MLJModelInterface

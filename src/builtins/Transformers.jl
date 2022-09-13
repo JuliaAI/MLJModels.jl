@@ -1022,6 +1022,50 @@ function MMI.transform(transformer::ContinuousEncoder, fitresult, X)
 end
 
 
+# # INTERACTION TRANSFORMER
+
+@with_kw_noshow mutable struct InteractionTransformer <: Static
+    order::Int                                          = 2
+    colnames::Union{Nothing, Vector{Symbol}}            = nothing
+    function InteractionTransformer(order, colnames)
+        order >= 2 || throw(ArgumentError("The order of interactions should be at least 2."))
+        if colnames !== nothing
+            length(colnames) > 1 || throw(ArgumentError("At least 2 columns are required to compute interactions."))
+        end
+        return new(order, colnames)
+    end
+end
+
+infinite_scitype(col) = eltype(scitype(col)) <: Infinite
+
+actualcolumns(colnames::Nothing, table) =
+    filter(colname -> infinite_scitype(Tables.getcolumn(table, colname)), Tables.columnnames(table))
+
+function actualcolumns(colnames::Vector{Symbol}, table)
+    diff = setdiff(colnames, Tables.columnnames(table))
+    diff != [] && throw(ArgumentError(string("Column(s) ", join([x for x in diff], ", "), " are not in the dataset.")))
+
+    for colname in colnames
+        infinite_scitype(Tables.getcolumn(table, colname)) || throw(ArgumentError("Column $colname's scitype is not Infinite."))
+    end
+    return Tuple(colnames)
+end
+
+interactions(columns, order::Int) = 
+    collect(Iterators.flatten(combinations(columns, i) for i in 2:order))
+
+interactions(columns, variables...) =
+    .*((Tables.getcolumn(columns, var) for var in variables)...)
+
+function MMI.transform(model::InteractionTransformer, _, X)
+    colnames = actualcolumns(model.colnames, X)
+    interactions_ = interactions(colnames, model.order)
+    interaction_colnames = Tuple(Symbol(join(inter, "_")) for inter in interactions_)
+    columns = Tables.Columns(X)
+    interaction_table = NamedTuple{interaction_colnames}([interactions(columns, inter...) for inter in interactions_])
+    return merge(Tables.columntable(X), interaction_table)
+end
+
 # # METADATA FOR ALL BUILT-IN TRANSFORMERS
 
 metadata_pkg.(
@@ -1029,7 +1073,7 @@ metadata_pkg.(
      UnivariateDiscretizer, Standardizer,
      UnivariateBoxCoxTransformer, UnivariateFillImputer,
      OneHotEncoder, FillImputer, ContinuousEncoder,
-     UnivariateTimeTypeToContinuous),
+     UnivariateTimeTypeToContinuous, InteractionTransformer),
     package_name       = "MLJModels",
     package_uuid       = "d491faf4-2d78-11e9-2867-c94bc002c0b7",
     package_url        = "https://github.com/alan-turing-institute/MLJModels.jl",
@@ -1097,6 +1141,11 @@ metadata_model(UnivariateTimeTypeToContinuous,
          "continuous representations of temporally typed data",
     load_path    = "MLJModels.UnivariateTimeTypeToContinuous")
 
+metadata_model(InteractionTransformer,
+    input_scitype   = Table,
+    output_scitype = Table,
+    human_name = "interaction transformer",
+    load_path    = "MLJModels.InteractionTransformer")
 
 # # DOC STRINGS
 
@@ -2051,3 +2100,59 @@ julia> transform(mach, x)
 
 """
 UnivariateTimeTypeToContinuous
+
+"""
+$(MLJModelInterface.doc_header(InteractionTransformer))
+
+Generates all polynomial interaction terms up to the given order for the subset of chosen columns. 
+Any column that contains elements with scitype `<:Infinite` is a valid basis to generate interactions. 
+If `colnames` is not specified, all such columns with scitype `<:Infinite` in the table are used as a basis.
+
+
+# Hyper-parameters
+
+- `order`: Maximum order of interactions to be generated.
+- `colnames`: Restricts interations generation to those columns
+
+# Operations
+
+- `transform(mach, xnew)`: Generates polynomial interaction terms.
+
+# Example
+
+```
+using MLJ
+
+X = (
+    A = [1, 2, 3], 
+    B = [4, 5, 6], 
+    C = [7, 8, 9], 
+    D = ["x₁", "x₂", "x₃"]
+)
+it = InteractionTransformer(order=3)
+mach = machine(it)
+
+julia> transform(mach, X)
+(A = [1, 2, 3],
+ B = [4, 5, 6],
+ C = [7, 8, 9],
+ D = ["x₁", "x₂", "x₃"],
+ A_B = [4, 10, 18],
+ A_C = [7, 16, 27],
+ B_C = [28, 40, 54],
+ A_B_C = [28, 80, 162],)
+
+it = InteractionTransformer(order=2, colnames=[:A, :B])
+mach = machine(it)
+
+julia> transform(mach, X)
+(A = [1, 2, 3],
+ B = [4, 5, 6],
+ C = [7, 8, 9],
+ D = ["x₁", "x₂", "x₃"],
+ A_B = [4, 10, 18],)
+
+```
+
+"""
+InteractionTransformer
