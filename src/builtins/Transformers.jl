@@ -1026,22 +1026,22 @@ end
 
 @mlj_model mutable struct InteractionTransformer <: Static
     order::Int                                          = 2::(_ > 1)
-    colnames::Union{Nothing, Vector{Symbol}}            = nothing::(_ !== nothing ? length(_) > 1 : true)
+    features::Union{Nothing, Vector{Symbol}}            = nothing::(_ !== nothing ? length(_) > 1 : true)
 end
 
 infinite_scitype(col) = eltype(scitype(col)) <: Infinite
 
-actualcolumns(colnames::Nothing, table) =
-    filter(colname -> infinite_scitype(Tables.getcolumn(table, colname)), Tables.columnnames(table))
+actualfeatures(features::Nothing, table) =
+    filter(feature -> infinite_scitype(Tables.getcolumn(table, feature)), Tables.columnnames(table))
 
-function actualcolumns(colnames::Vector{Symbol}, table)
-    diff = setdiff(colnames, Tables.columnnames(table))
+function actualfeatures(features::Vector{Symbol}, table)
+    diff = setdiff(features, Tables.columnnames(table))
     diff != [] && throw(ArgumentError(string("Column(s) ", join([x for x in diff], ", "), " are not in the dataset.")))
 
-    for colname in colnames
-        infinite_scitype(Tables.getcolumn(table, colname)) || throw(ArgumentError("Column $colname's scitype is not Infinite."))
+    for feature in features
+        infinite_scitype(Tables.getcolumn(table, feature)) || throw(ArgumentError("Column $feature's scitype is not Infinite."))
     end
-    return Tuple(colnames)
+    return Tuple(features)
 end
 
 interactions(columns, order::Int) = 
@@ -1051,11 +1051,11 @@ interactions(columns, variables...) =
     .*((Tables.getcolumn(columns, var) for var in variables)...)
 
 function MMI.transform(model::InteractionTransformer, _, X)
-    colnames = actualcolumns(model.colnames, X)
-    interactions_ = interactions(colnames, model.order)
-    interaction_colnames = Tuple(Symbol(join(inter, "_")) for inter in interactions_)
+    features = actualfeatures(model.features, X)
+    interactions_ = interactions(features, model.order)
+    interaction_features = Tuple(Symbol(join(inter, "_")) for inter in interactions_)
     columns = Tables.Columns(X)
-    interaction_table = NamedTuple{interaction_colnames}([interactions(columns, inter...) for inter in interactions_])
+    interaction_table = NamedTuple{interaction_features}([interactions(columns, inter...) for inter in interactions_])
     return merge(Tables.columntable(X), interaction_table)
 end
 
@@ -2099,13 +2099,13 @@ $(MLJModelInterface.doc_header(InteractionTransformer))
 
 Generates all polynomial interaction terms up to the given order for the subset of chosen columns. 
 Any column that contains elements with scitype `<:Infinite` is a valid basis to generate interactions. 
-If `colnames` is not specified, all such columns with scitype `<:Infinite` in the table are used as a basis.
+If `features` is not specified, all such columns with scitype `<:Infinite` in the table are used as a basis.
 
 
 # Hyper-parameters
 
 - `order`: Maximum order of interactions to be generated.
-- `colnames`: Restricts interations generation to those columns
+- `features`: Restricts interations generation to those columns
 
 # Operations
 
@@ -2135,7 +2135,7 @@ julia> transform(mach, X)
  B_C = [28, 40, 54],
  A_B_C = [28, 80, 162],)
 
-it = InteractionTransformer(order=2, colnames=[:A, :B])
+it = InteractionTransformer(order=2, features=[:A, :B])
 mach = machine(it)
 
 julia> transform(mach, X)
