@@ -1024,16 +1024,9 @@ end
 
 # # INTERACTION TRANSFORMER
 
-@with_kw_noshow mutable struct InteractionTransformer <: Static
-    order::Int                                          = 2
-    colnames::Union{Nothing, Vector{Symbol}}            = nothing
-    function InteractionTransformer(order, colnames)
-        order >= 2 || throw(ArgumentError("The order of interactions should be at least 2."))
-        if colnames !== nothing
-            length(colnames) > 1 || throw(ArgumentError("At least 2 columns are required to compute interactions."))
-        end
-        return new(order, colnames)
-    end
+@mlj_model mutable struct InteractionTransformer <: Static
+    order::Int                                          = 2::(_ > 1)
+    colnames::Union{Nothing, Vector{Symbol}}            = nothing::(_ !== nothing ? length(_) > 1 : true)
 end
 
 infinite_scitype(col) = eltype(scitype(col)) <: Infinite
