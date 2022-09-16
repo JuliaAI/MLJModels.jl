@@ -679,8 +679,10 @@ end
 
 @testset "Interaction Transformer" begin
     # Check constructor sanity checks: order > 1, length(colnames) > 1
-    @test_throws ArgumentError("The order of interactions should be at least 2.") InteractionTransformer(order = 1)
-    @test_throws ArgumentError("At least 2 columns are required to compute interactions.") InteractionTransformer(colnames = [:A])
+    @test_logs (:warn, "Constraint `model.order > 1` failed; using default: order=2.") InteractionTransformer(order = 1)
+    @test_logs (:warn, "Constraint `if model.colnames !== nothing\n"*
+                       "    length(model.colnames) > 1\nelse\n    true\nend` failed; "*
+                       "using default: colnames=nothing.") InteractionTransformer(colnames = [:A])
 
     X = (A = [1, 2, 3], B = [4, 5, 6], C = [7, 8, 9])
     # Default order=2, colnames=nothing, ie all columns
