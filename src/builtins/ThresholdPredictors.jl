@@ -323,8 +323,8 @@ MMI.training_losses(thresholder::ThresholdUnion, thresholder_report) =
     ReformattedTarget(y, levels, scitype)
 
 Intenal Use Only.
-Wrapper containing a **model specific** target, `y`, its scientific type, 
-`scitype`(the scientific representation of the **user supplied** target), 
+Wrapper containing a **model specific** target, `y`, its scientific type,
+`scitype`(the scientific representation of the **user supplied** target),
 and associated levels (the levels of the **user supplied** target), `levels`.
 """
 struct ReformattedTarget{T, L, S<:Type}
@@ -339,7 +339,7 @@ end
 
 unwrap(x) = x
 unwrap(x::ReformattedTarget) = getfield(x, :y)
-CategoricalArrays.levels(x::ReformattedTarget) = getfield(x, :levels) 
+CategoricalArrays.levels(x::ReformattedTarget) = getfield(x, :levels)
 
 function ScientificTypesBase.scitype(
     x::ReformattedTarget, ::ScientificTypes.DefaultConvention
@@ -374,18 +374,18 @@ function MMI.selectrows(model::ThresholdUnion, I, reformatted_args_with_wrapped_
     )
 
     if length(reformatted_args_with_wrapped_target) > 1
-        reformatted_X_rows, reformatted_target_rows, other_reformatted_args_rows... = 
+        reformatted_X_rows, reformatted_target_rows, other_reformatted_args_rows... =
             reformatted_args_rows
         reformatted_target = reformatted_args_with_wrapped_target[2]
         wrapped_reformatted_target_rows = ReformattedTarget(
-            reformatted_target_rows, 
+            reformatted_target_rows,
             levels(reformatted_target),
             get_scitype(reformatted_target)
         )
 
         reformatted_args_rows_with_wrapped_target = (
-            reformatted_X_rows, 
-            wrapped_reformatted_target_rows, 
+            reformatted_X_rows,
+            wrapped_reformatted_target_rows,
             other_reformatted_args_rows...
         )
         return reformatted_args_rows_with_wrapped_target
@@ -393,3 +393,4 @@ function MMI.selectrows(model::ThresholdUnion, I, reformatted_args_with_wrapped_
 
     return reformatted_args_rows
 end
+
