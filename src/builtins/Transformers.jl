@@ -1044,7 +1044,7 @@ function actualfeatures(features::Vector{Symbol}, table)
     return Tuple(features)
 end
 
-interactions(columns, order::Int) = 
+interactions(columns, order::Int) =
     collect(Iterators.flatten(combinations(columns, i) for i in 2:order))
 
 interactions(columns, variables...) =
@@ -2097,9 +2097,16 @@ UnivariateTimeTypeToContinuous
 """
 $(MLJModelInterface.doc_header(InteractionTransformer))
 
-Generates all polynomial interaction terms up to the given order for the subset of chosen columns. 
-Any column that contains elements with scitype `<:Infinite` is a valid basis to generate interactions. 
-If `features` is not specified, all such columns with scitype `<:Infinite` in the table are used as a basis.
+Generates all polynomial interaction terms up to the given order for the subset of chosen
+columns.  Any column that contains elements with scitype `<:Infinite` is a valid basis to
+generate interactions.  If `features` is not specified, all such columns with scitype
+`<:Infinite` in the table are used as a basis.
+
+In MLJ or MLJBase, you can transform features `X` with the single call
+
+    transform(machine(model), X)
+
+See also the example below.
 
 
 # Hyper-parameters
@@ -2109,7 +2116,8 @@ If `features` is not specified, all such columns with scitype `<:Infinite` in th
 
 # Operations
 
-- `transform(mach, xnew)`: Generates polynomial interaction terms.
+- `transform(machine(model), X)`: Generates polynomial interaction terms out of table `X`
+  using the hyper-parameters specified in `model`.
 
 # Example
 
@@ -2117,9 +2125,9 @@ If `features` is not specified, all such columns with scitype `<:Infinite` in th
 using MLJ
 
 X = (
-    A = [1, 2, 3], 
-    B = [4, 5, 6], 
-    C = [7, 8, 9], 
+    A = [1, 2, 3],
+    B = [4, 5, 6],
+    C = [7, 8, 9],
     D = ["x₁", "x₂", "x₃"]
 )
 it = InteractionTransformer(order=3)
