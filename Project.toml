@@ -1,7 +1,7 @@
 name = "MLJModels"
 uuid = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
 authors = ["Anthony D. Blaom <anthony.blaom@gmail.com>"]
-version = "0.15.12"
+version = "0.15.13"
 
 [deps]
 CategoricalArrays = "324d7699-5711-5eae-9e2f-1d82baa6b597"
@@ -36,7 +36,7 @@ MLJModelInterface = "1.4"
 OrderedCollections = "1.1"
 Parameters = "0.12"
 PrettyPrinting = "0.3, 0.4"
-RelocatableFolders = "0.3"
+RelocatableFolders = "0.3, 1"
 ScientificTypes = "3"
 StatisticalTraits = "3"
 StatsBase = "0.32,0.33"
