@@ -69,7 +69,7 @@ const ERR_TARGET_NOT_BINARY = ArgumentError(
     "class is manifest. ")
 const err_unsupported_model_type(T) = ArgumentError(
     "`BinaryThresholdPredictor` does not support atomic models with supertype `$T`. "*
-    "Supported supertypes are: `$(keys(_type_given_atom)`. "
+    "Supported supertypes are: `$(keys(_type_given_atom))`. "
 )
 
 """
