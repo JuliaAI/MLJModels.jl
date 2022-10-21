@@ -22,7 +22,11 @@ y2_ = categorical(yraw[2:end], ordered=true)
     @test_throws MLJModels.ERR_MODEL_UNSPECIFIED BinaryThresholdPredictor()
     model = BinaryThresholdPredictor(atom)
 
-   
+    @test_throws(
+        MLJModels.err_unsupported_model_type(MLJBase.Unsupervised),
+        BinaryThresholdPredictor(Standardizer()),
+    )
+
     # Check warning when `y` is not ordered:
     @test_logs((:warn, MLJModels.warn_classes(levels(y_)...)),
                 MMI.fit(model, 1, MMI.reformat(model, X_, y1_)...))
@@ -145,7 +149,7 @@ MMI.input_scitype(::Type{<:DummyDetector}) = MMI.Table
         detector, 1, MMI.reformat(detector, X_, y1_)...
     )
 
-    X, y = MMI.reformat(detector, X_, y_)  
+    X, y = MMI.reformat(detector, X_, y_)
     fr, _, _ = MMI.fit(detector, 0, X, y)
     @test MMI.predict(detector, fr, X) == fill("out", length(y_))
     fr, _, _ = MMI.fit(detector, 0, X)
@@ -219,7 +223,7 @@ MMI.reformat(::NaiveClassifier, X, target) = (MMI.matrix(X), (target,))
 MMI.reformat(::NaiveClassifier, X) = (MMI.matrix(X),)
 
 function MMI.selectrows(::NaiveClassifier, I, reformatted_X, reformatted_target)
-	return (reformatted_X[I, :], (reformatted_target[1][I],))
+        return (reformatted_X[I, :], (reformatted_target[1][I],))
 end
 
 MMI.selectrows(::NaiveClassifier, I, reformatted_X) = (reformatted_X[I, :],)
@@ -232,9 +236,9 @@ MMI.input_scitype(::Type{<:NaiveClassifier}) = Table(Continuous)
 
     naive_classifier = NaiveClassifier()
     threshold_classifier = BinaryThresholdPredictor(naive_classifier)
-    reformatted_args = MMI.reformat(threshold_classifier, X) 
+    reformatted_args = MMI.reformat(threshold_classifier, X)
     @test reformatted_args == (MMI.matrix(X),)
-    reformatted_args_ = MMI.reformat(threshold_classifier, X, y) 
+    reformatted_args_ = MMI.reformat(threshold_classifier, X, y)
     @test reformatted_args_ == (
         MMI.matrix(X),
         MLJModels.ReformattedTarget(
@@ -248,7 +252,7 @@ MMI.input_scitype(::Type{<:NaiveClassifier}) = Table(Continuous)
         reformatted_args...
     ) == (MMI.matrix(X)[I, :],)
 
-    r = MMI.selectrows(threshold_classifier, I, reformatted_args_...) 
+    r = MMI.selectrows(threshold_classifier, I, reformatted_args_...)
     @test r[1] == MMI.matrix(X)[I, :]
     s = MLJModels.ReformattedTarget(
         (y[I],), levels(y[I]), scitype(y[I])

@@ -67,6 +67,10 @@ const ERR_CLASSES_DETECTOR = ArgumentError(
 const ERR_TARGET_NOT_BINARY = ArgumentError(
     "Target `y` must have two classes in its  pool, even if only one "*
     "class is manifest. ")
+const err_unsupported_model_type(T) = ArgumentError(
+    "`BinaryThresholdPredictor` does not support atomic models with supertype `$T`. "*
+    "Supported supertypes are: `$(keys(_type_given_atom)`. "
+)
 
 """
     BinaryThresholdPredictor(model; threshold=0.5)
@@ -169,8 +173,10 @@ function BinaryThresholdPredictor(args...;
         atom = model
     end
 
-    metamodel =
-        _type_given_atom[MMI.abstract_type(atom)](atom, Float64(threshold))
+    A = MMI.abstract_type(atom)
+    T = get(_type_given_atom, A, nothing)
+    isnothing(T) && throw(err_unsupported_model_type(A))
+    metamodel = T(atom, Float64(threshold))
     message = clean!(metamodel)
     isempty(message) || @warn message
     return metamodel
