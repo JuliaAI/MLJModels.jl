@@ -71,19 +71,87 @@ const ERR_TARGET_NOT_BINARY = ArgumentError(
 """
     BinaryThresholdPredictor(model; threshold=0.5)
 
-Wrap the `Probabilistic` model, `model`, assumed to support binary
-classification, as a `Deterministic` model, by applying the specified
-`threshold` to the positive class probability. Can also be applied to
-outlier detection models that predict normalized scores - in the form
-of appropriate `UnivariateFinite` distributions - that is, models that
-subtype `AbstractProbabilisticUnsupervisedDetector` or
-`AbstractProbabilisticSupervisedDetector`.
+Wrap the `Probabilistic` model, `model`, assumed to support binary classification, as a
+`Deterministic` model, by applying the specified `threshold` to the positive class
+probability. In addition to conventional supervised classifiers, it can also be applied to
+outlier detection models that predict normalized scores - in the form of appropriate
+`UnivariateFinite` distributions - that is, models that subtype
+`AbstractProbabilisticUnsupervisedDetector` or `AbstractProbabilisticSupervisedDetector`.
 
 By convention the positive class is the second class returned by
 `levels(y)`, where `y` is the target.
 
 If `threshold=0.5` then calling `predict` on the wrapped model is
 equivalent to calling `predict_mode` on the atomic model.
+
+# Example
+
+Below is an application to unbalanced data, including optimization of the `threshold`
+parameter, with a low F1 score the objective.
+
+Synthesizing some unbalanced data (`y` has about ten times more 0's than 1's):
+
+```julia
+using MLJ, Random
+rng = Xoshiro(123)
+
+Xbalanced, ybalanced = make_moons(10000, xshift=0.5,noise=5.0, rng=rng)
+ybalanced = coerce(ybalanced, OrderedFactor)
+mask = map(ybalanced) do class
+    class == 0 || rand() < 0.1
+end
+rows = eachindex(ybalanced)[mask]
+X = selectrows(Xbalanced, rows) # a table
+y = selectrows(ybalanced, rows) # a categorical vector with ordered levels
+```
+
+Choosing a probabilistic classifier:
+
+```julia
+LogisticClassifier = @load LogisticClassifier pkg=MLJLinearModels
+prob_predictor = LogisticClassifier()
+```
+
+Wrapping in `TunedModel` to get a deterministic classifier with `threshold` as a new
+hyperparameter:
+
+```julia
+point_predictor = BinaryThresholdPredictor(prob_predictor, threshold=0.6)
+Xnew, _ = make_moons(3, rng=rng)
+mach = machine(point_predictor, X, y) |> fit!
+predict(mach, Xnew) # [0, 0, 0]
+```
+
+Estimating performance:
+
+```julia
+e = evaluate!(mach, resampling=CV(nfolds=6), measures=[f1score, accuracy])
+e.measurement[1] # 0.0
+```
+
+Wrapping in tuning strategy to learn `threshold` that maximizes F1 score:
+
+```julia
+r = range(point_predictor, :threshold, lower=0.1, upper=0.9)
+tuned_point_predictor = TunedModel(
+    point_predictor,
+    tuning=RandomSearch(rng=rng),
+    resampling=CV(nfolds=6),
+    range = r,
+    measure=f1score,
+    n=30,
+)
+mach = machine(tuned_point_predictor, X, y) |> fit!
+report(mach).best_model.threshold # 0.813
+predict(mach, Xnew) # [0, 0, 0]
+```
+
+Estimating the performance of the auto-thresholding model:
+
+```julia
+e = evaluate!(mach, resampling=CV(nfolds=6), measure=[f1score, accuracy])
+e.measurement[1] # 0.0576
+```
 
 """
 function BinaryThresholdPredictor(args...;
@@ -393,4 +461,3 @@ function MMI.selectrows(model::ThresholdUnion, I, reformatted_args_with_wrapped_
 
     return reformatted_args_rows
 end
-
