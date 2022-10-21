@@ -174,8 +174,7 @@ function BinaryThresholdPredictor(args...;
     end
 
     A = MMI.abstract_type(atom)
-    T = get(_type_given_atom, A, nothing)
-    isnothing(T) && throw(err_unsupported_model_type(A))
+    T = get(_type_given_atom, A, throw(err_unsupported_model_type(A)))
     metamodel = T(atom, Float64(threshold))
     message = clean!(metamodel)
     isempty(message) || @warn message
