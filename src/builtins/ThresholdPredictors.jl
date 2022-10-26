@@ -72,6 +72,11 @@ const err_unsupported_model_type(T) = ArgumentError(
     "Supported supertypes are: `$(keys(_type_given_atom))`. "
 )
 
+for (atom, type) in type_given_atom
+    @eval threshold_constructor(::Type{$atom}) = $type
+end
+threshold_constructor(A) = throw(err_unsupported_model_type(A))
+
 """
     BinaryThresholdPredictor(model; threshold=0.5)
 
@@ -90,30 +95,26 @@ equivalent to calling `predict_mode` on the atomic model.
 
 # Example
 
-Below is an application to unbalanced data, including optimization of the `threshold`
-parameter, with a low F1 score the objective.
+Below is an application to the well-known Pima Indian diabetes dataset, including
+optimization of the `threshold` parameter, with a high balanced accuracy the
+objective. The target class distribution is 500 positives to 268 negatives.
 
-Synthesizing some unbalanced data (`y` has about ten times more 0's than 1's):
+Loading the data:
 
 ```julia
 using MLJ, Random
 rng = Xoshiro(123)
 
-Xbalanced, ybalanced = make_moons(10000, xshift=0.5,noise=5.0, rng=rng)
-ybalanced = coerce(ybalanced, OrderedFactor)
-mask = map(ybalanced) do class
-    class == 0 || rand() < 0.1
-end
-rows = eachindex(ybalanced)[mask]
-X = selectrows(Xbalanced, rows) # a table
-y = selectrows(ybalanced, rows) # a categorical vector with ordered levels
+diabetes = OpenML.load(43582)
+outcome, X = unpack(diabetes, ==(:Outcome), rng=rng);
+y = coerce(Int.(outcome), OrderedFactor);
 ```
 
 Choosing a probabilistic classifier:
 
 ```julia
-LogisticClassifier = @load LogisticClassifier pkg=MLJLinearModels
-prob_predictor = LogisticClassifier()
+EvoTreesClassifier = @load EvoTreesClassifier
+prob_predictor = EvoTreesClassifier()
 ```
 
 Wrapping in `TunedModel` to get a deterministic classifier with `threshold` as a new
@@ -123,17 +124,18 @@ hyperparameter:
 point_predictor = BinaryThresholdPredictor(prob_predictor, threshold=0.6)
 Xnew, _ = make_moons(3, rng=rng)
 mach = machine(point_predictor, X, y) |> fit!
-predict(mach, Xnew) # [0, 0, 0]
+predict(mach, X)[1:3] # [0, 0, 0]
 ```
 
 Estimating performance:
 
 ```julia
-e = evaluate!(mach, resampling=CV(nfolds=6), measures=[f1score, accuracy])
-e.measurement[1] # 0.0
+balanced = BalancedAccuracy(adjusted=true)
+e = evaluate!(mach, resampling=CV(nfolds=6), measures=[balanced, accuracy])
+e.measurement[1] # 0.405 ± 0.089
 ```
 
-Wrapping in tuning strategy to learn `threshold` that maximizes F1 score:
+Wrapping in tuning strategy to learn `threshold` that maximizes balanced accuracy:
 
 ```julia
 r = range(point_predictor, :threshold, lower=0.1, upper=0.9)
@@ -142,19 +144,20 @@ tuned_point_predictor = TunedModel(
     tuning=RandomSearch(rng=rng),
     resampling=CV(nfolds=6),
     range = r,
-    measure=f1score,
+    measure=balanced,
     n=30,
 )
-mach = machine(tuned_point_predictor, X, y) |> fit!
-report(mach).best_model.threshold # 0.813
-predict(mach, Xnew) # [0, 0, 0]
+mach2 = machine(tuned_point_predictor, X, y) |> fit!
+optimized_point_predictor = report(mach2).best_model
+optimized_point_predictor.threshold # 0.260
+predict(mach2, X)[1:3] # [1, 1, 0]
 ```
 
-Estimating the performance of the auto-thresholding model:
+Estimating the performance of the auto-thresholding model (nested resampling here):
 
 ```julia
-e = evaluate!(mach, resampling=CV(nfolds=6), measure=[f1score, accuracy])
-e.measurement[1] # 0.0576
+e = evaluate!(mach2, resampling=CV(nfolds=6), measure=[balanced, accuracy])
+e.measurement[1] # 0.477 ± 0.110
 ```
 
 """
@@ -174,8 +177,7 @@ function BinaryThresholdPredictor(args...;
     end
 
     A = MMI.abstract_type(atom)
-    T = get(_type_given_atom, A, nothing)
-    isnothing(T) && throw(err_unsupported_model_type(A))
+    T = threshold_constructor(A)
     metamodel = T(atom, Float64(threshold))
     message = clean!(metamodel)
     isempty(message) || @warn message
