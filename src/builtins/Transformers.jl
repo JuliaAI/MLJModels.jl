@@ -354,6 +354,11 @@ function MMI.inverse_transform(transformer::UnivariateDiscretizer, result,
     return [inverse_transform(transformer, result, k) for k in w]
 end
 
+MMI.fitted_params(::UnivariateDiscretizer, fitresult) = (
+    odd_quantiles=fitresult.odd_quantiles,
+    even_quantiles=fitresult.even_quantiles
+)
+
 
 # # CONTINUOUS TRANSFORM OF TIME TYPE FEATURES
 
@@ -507,7 +512,7 @@ function MMI.fit(transformer::UnivariateStandardizer, verbosity::Int,
 end
 
 MMI.fitted_params(::UnivariateStandardizer, fitresult) =
-    (mean_and_std = fitresult, )
+    (mean=fitresult[1], std=fitresult[2])
 
 
 # for transforming single value:
@@ -576,7 +581,7 @@ function MMI.fit(transformer::Standardizer, verbosity::Int, X)
     is_invertible = !transformer.count && !transformer.ordered_factor
 
     # initialize fitresult:
-    fitresult_given_feature = Dict{Symbol,Tuple{Float64,Float64}}()
+    fitresult_given_feature = LittleDict{Symbol,Tuple{Float64,Float64}}()
 
     # special univariate case:
     if is_univariate
@@ -659,7 +664,10 @@ function MMI.fitted_params(::Standardizer, fitresult)
     is_univariate, _, dic = fitresult
     is_univariate &&
         return fitted_params(UnivariateStandardizer(), dic[:unnamed])
-    return (mean_and_std_given_feature=dic)
+    features_fit = keys(dic) |> collect
+    zipped = map(ftr->dic[ftr], features_fit)
+    means, stds = zip(zipped...) |> collect
+    return (; features_fit, means, stds)
 end
 
 MMI.transform(::Standardizer, fitresult, X) =
@@ -849,7 +857,11 @@ function MMI.fit(transformer::OneHotEncoder, verbosity::Int, X)
 
     ref_name_pairs_given_feature = Dict{Symbol,Vector{Pair{<:Unsigned,Symbol}}}()
 
-    allowed_scitypes = ifelse(transformer.ordered_factor, Union{Missing, Finite}, Union{Missing, Multiclass})
+    allowed_scitypes = ifelse(
+        transformer.ordered_factor,
+        Union{Missing, Finite},
+        Union{Missing, Multiclass}
+    )
     fitted_levels_given_feature = Dict{Symbol, CategoricalArray}()
     col_scitypes = schema(X).scitypes
     # apply on each feature
@@ -897,6 +909,12 @@ function MMI.fit(transformer::OneHotEncoder, verbosity::Int, X)
 
     return fitresult, cache, report
 end
+
+MMI.fitted_params(::OneHotEncoder, fitresult) = (
+    all_features = fitresult.all_features,
+    fitted_levels_given_feature = fitresult.fitted_levels_given_feature,
+    ref_name_pairs_given_feature = fitresult.ref_name_pairs_given_feature,
+)
 
 # If v=categorical('a', 'a', 'b', 'a', 'c') and MMI.int(v[1]) = ref
 # then `_hot(v, ref) = [true, true, false, true, false]`
@@ -1505,12 +1523,13 @@ Train the machine using `fit!(mach, rows=...)`.
 
 # Fitted parameters
 
-`fitted_params(mach)` is a dictionary of the rescaling parameters,
-keyed on feature name. In each value the first component is the
-training data mean, the second the standard deviation.
+The fields of `fitted_params(mach)` are:
 
-**Warning:** This format for `fitted_params(mach)` is not standard and
-may change in the future.
+- `features_fit` - the names of features that will be standardized
+
+- `means` - the corresponding untransformed mean values
+
+- `stds` - the corresponding untransformed standard deviations
 
 
 # Report
@@ -1617,9 +1636,6 @@ The fields of `fitted_params(mach).fitesult` include:
 
 - `even_quantiles`: quantiles used for inverse transforming (length is `n_classes`)
 
-**Warning.** `fitted_params(mach)` does not have a standard form and
- may change in the future.
-
 
 # Example
 
@@ -1634,27 +1650,28 @@ fit!(mach)
 
 julia> x = rand(5)
 5-element Vector{Float64}:
- 0.6342070799721164
- 0.8681793651724181
- 0.43780421808821424
- 0.5740792503574783
- 0.22444170437768007
+ 0.8585244609846809
+ 0.37541692370451396
+ 0.6767070590395461
+ 0.9208844241267105
+ 0.7064611415680901
 
 julia> z = transform(mach, x)
 5-element CategoricalArrays.CategoricalArray{UInt8,1,UInt8}:
- 0x49
- 0x50
- 0x43
- 0x47
- 0x3a5
+ 0x52
+ 0x42
+ 0x4d
+ 0x54
+ 0x4e
 
-julia> x_approx = inverse_transform(mach, z)
+x_approx = inverse_transform(mach, z)
+julia> x - x_approx
 5-element Vector{Float64}:
- 0.6333797607904535
- 0.855839325856769
- 0.433203047224622
- 0.5662624832429449
- 0.222065923759177
+ 0.008224506144777322
+ 0.012731354778359405
+ 0.0056265330571125816
+ 0.005738175684445124
+ 0.006835652575801987
 ```
 
 """
@@ -1830,7 +1847,7 @@ Train the machine using `fit!(mach, rows=...)`.
 
 # Fitted parameters
 
-The fields of `fitted_params(mach).fitresult` are:
+The fields of `fitted_params(mach)` are:
 
 - `all_features`: names of all features encountered in training
 
@@ -1842,9 +1859,6 @@ The fields of `fitted_params(mach).fitresult` are:
   reference integer representing a level, and `ftr` the corresponding
   new feature name; the dictionary is keyed on the names of features that
   are encoded
-
-**Warning:** `fitted_params(mach)` does not have a standard form and
- may change in the future.
 
 
 # Report
