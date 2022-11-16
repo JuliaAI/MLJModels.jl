@@ -10,14 +10,14 @@ function finaltypes(T::Type)
 end
 
 const project_toml = joinpath(srcdir, "../Project.toml")
-const packages = map(Symbol,
+const PACKAGES = map(Symbol,
                      keys(TOML.parsefile(project_toml)["deps"])|>collect)
-push!(packages, :MLJModels)
-filter!(packages) do pkg
+push!(PACKAGES, :MLJModels)
+filter!(PACKAGES) do pkg
     !(pkg in (:InteractiveUtils, :Pkg, :MLJModelInterface, :MLJTestIntegration))
 end
 
-const package_import_commands =  [:(import $pkg) for pkg in packages]
+const package_import_commands =  [:(import $pkg) for pkg in PACKAGES]
 
 macro update()
     mod = __module__
@@ -78,7 +78,7 @@ function _update(mod, test_env_only)
 
     program1 = quote
         @info "Packages to be searched for model implementations:"
-        for pkg in $packages
+        for pkg in $PACKAGES
             println(pkg)
         end
         using Pkg
@@ -108,7 +108,7 @@ function _update(mod, test_env_only)
         end
 
         # generate and write to file the model metadata:
-        api_packages = string.(MLJModels.Registry.packages)
+        api_packages = string.(MLJModels.Registry.PACKAGES)
         meta_given_package = Dict()
 
         for M in modeltypes

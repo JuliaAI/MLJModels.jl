@@ -19,12 +19,30 @@ function check_registry(; mod=Main, verbosity=1)
     Pkg.develop(PackageSpec(path=mljmodelsdir))
     Pkg.instantiate()
 
+    models = MLJModels.models()
+    pkgs = MLJModels.Registry.PACKAGES
+
+    # import packages
+    verbosity < 1 || @info "Loading model interface packages."
+    program = quote end
+    for pkg in pkgs
+        line = :(import $pkg)
+        push!(program.args, line)
+    end
+    mod.eval(program)
+
+    verbosity < 1 || @info "Checking model load paths."
     quote
-        using MLJTestIntegration
-        fails, _ = MLJTestIntegration.test(
-            MLJModels.models();
+        modeltypes = MLJModels.Registry.finaltypes(MLJModels.Model)
+        filter!(modeltypes) do T
+            !isabstracttype(T) && !MLJModels.MLJModelInterface.is_wrapper(T)
+        end
+        using MLJTestInterface
+        fails, _ = MLJTestInterface.test(
+            modeltypes;
             level=1,
             mod=$mod,
+            throw=false,
             verbosity=$verbosity
         )
         fails
