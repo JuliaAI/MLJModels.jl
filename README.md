@@ -73,4 +73,6 @@ have an interface you would like registered, open an issue
 [here](https://github.com/alan-turing-institute/MLJ.jl/issues). 
 
 **Administrator instructions.** These are given in the
-`MLJModels.@update` document string.
+`MLJModels.@update` document string. After registering the model, make a PR to MLJ 
+updating [this dictionary of model descriptors](https://github.com/alan-turing-institute/MLJ.jl/blob/dev/docs/ModelDescriptors.toml) 
+to ensure the new models appear in the right places in MLJ's [Model Browser](https://alan-turing-institute.github.io/MLJ.jl/dev/model_browser/#Model-Browser)
