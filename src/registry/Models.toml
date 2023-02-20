@@ -17,6 +17,7 @@ EvoTrees = ["EvoTreeClassifier", "EvoTreeGaussian", "EvoTreeMLE", "EvoTreeRegres
 MLJModels = ["ConstantClassifier", "Standardizer", "DeterministicConstantClassifier", "UnivariateTimeTypeToContinuous", "OneHotEncoder", "ContinuousEncoder", "UnivariateBoxCoxTransformer", "InteractionTransformer", "ConstantRegressor", "FeatureSelector", "UnivariateDiscretizer", "FillImputer", "DeterministicConstantRegressor", "UnivariateStandardizer", "UnivariateFillImputer"]
 OutlierDetectionPython = ["MCDDetector", "COPODDetector", "HBOSDetector", "IForestDetector", "SOSDetector", "ABODDetector", "LOFDetector", "PCADetector", "OCSVMDetector", "SODDetector", "LODADetector", "KNNDetector", "COFDetector", "CBLOFDetector", "LOCIDetector", "LMDDDetector", "RODDetector"]
 OneRule = ["OneRuleClassifier"]
+SelfOrganizingMaps = ["SelfOrganizingMap"]
 LIBSVM = ["ProbabilisticNuSVC", "EpsilonSVR", "LinearSVC", "ProbabilisticSVC", "NuSVR", "NuSVC", "SVC", "OneClassSVM"]
 TSVD = ["TSVDTransformer"]
 GLM = ["LinearBinaryClassifier", "LinearCountRegressor", "LinearRegressor"]

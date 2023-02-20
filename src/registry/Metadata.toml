@@ -4341,7 +4341,7 @@
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
 ":abstract_type" = "`MLJModelInterface.Probabilistic`"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict", ":feature_importances"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict", ":reformat", ":selectrows", ":feature_importances"]
 ":hyperparameters" = "`(:n_iter, :feature_importance, :rng)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Symbol\", \"Union{Integer, Random.AbstractRNG}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing)`"
@@ -4375,7 +4375,7 @@
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
 ":abstract_type" = "`MLJModelInterface.Deterministic`"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict", ":feature_importances"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict", ":reformat", ":selectrows", ":feature_importances"]
 ":hyperparameters" = "`(:max_depth, :min_samples_leaf, :min_samples_split, :min_purity_increase, :n_subfeatures, :post_prune, :merge_purity_threshold, :feature_importance, :rng)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Int64\", \"Int64\", \"Float64\", \"Int64\", \"Bool\", \"Float64\", \"Symbol\", \"Union{Integer, Random.AbstractRNG}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -4409,7 +4409,7 @@
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
 ":abstract_type" = "`MLJModelInterface.Probabilistic`"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict", ":feature_importances"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict", ":reformat", ":selectrows", ":feature_importances"]
 ":hyperparameters" = "`(:max_depth, :min_samples_leaf, :min_samples_split, :min_purity_increase, :n_subfeatures, :post_prune, :merge_purity_threshold, :display_depth, :feature_importance, :rng)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Int64\", \"Int64\", \"Float64\", \"Int64\", \"Bool\", \"Float64\", \"Int64\", \"Symbol\", \"Union{Integer, Random.AbstractRNG}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
@@ -4443,11 +4443,11 @@
 ":is_supervised" = "`true`"
 ":prediction_type" = ":deterministic"
 ":abstract_type" = "`MLJModelInterface.Deterministic`"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict", ":feature_importances"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict", ":reformat", ":selectrows", ":update", ":feature_importances"]
 ":hyperparameters" = "`(:max_depth, :min_samples_leaf, :min_samples_split, :min_purity_increase, :n_subfeatures, :n_trees, :sampling_fraction, :feature_importance, :rng)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Int64\", \"Int64\", \"Float64\", \"Int64\", \"Int64\", \"Float64\", \"Symbol\", \"Union{Integer, Random.AbstractRNG}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
+":iteration_parameter" = ":n_trees"
 ":supports_training_losses" = "`false`"
 ":reports_feature_importances" = "`true`"
 ":deep_properties" = "`()`"
@@ -4477,11 +4477,11 @@
 ":is_supervised" = "`true`"
 ":prediction_type" = ":probabilistic"
 ":abstract_type" = "`MLJModelInterface.Probabilistic`"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict", ":feature_importances"]
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict", ":reformat", ":selectrows", ":update", ":feature_importances"]
 ":hyperparameters" = "`(:max_depth, :min_samples_leaf, :min_samples_split, :min_purity_increase, :n_subfeatures, :n_trees, :sampling_fraction, :feature_importance, :rng)`"
 ":hyperparameter_types" = "`(\"Int64\", \"Int64\", \"Int64\", \"Float64\", \"Int64\", \"Int64\", \"Float64\", \"Symbol\", \"Union{Integer, Random.AbstractRNG}\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
-":iteration_parameter" = "`nothing`"
+":iteration_parameter" = ":n_trees"
 ":supports_training_losses" = "`false`"
 ":reports_feature_importances" = "`true`"
 ":deep_properties" = "`()`"
@@ -6249,6 +6249,40 @@
 ":hyperparameters" = "`()`"
 ":hyperparameter_types" = "`()`"
 ":hyperparameter_ranges" = "`()`"
+":iteration_parameter" = "`nothing`"
+":supports_training_losses" = "`false`"
+":reports_feature_importances" = "`false`"
+":deep_properties" = "`()`"
+":reporting_operations" = "`()`"
+
+[SelfOrganizingMaps.SelfOrganizingMap]
+":input_scitype" = "`Union{ScientificTypesBase.Table{<:AbstractVector{<:ScientificTypesBase.Continuous}}, AbstractMatrix{ScientificTypesBase.Continuous}}`"
+":output_scitype" = "`AbstractMatrix{ScientificTypesBase.Continuous}`"
+":target_scitype" = "`ScientificTypesBase.Unknown`"
+":fit_data_scitype" = "`Tuple{Union{ScientificTypesBase.Table{<:AbstractVector{<:ScientificTypesBase.Continuous}}, AbstractMatrix{ScientificTypesBase.Continuous}}}`"
+":predict_scitype" = "`ScientificTypesBase.Unknown`"
+":transform_scitype" = "`AbstractMatrix{ScientificTypesBase.Continuous}`"
+":inverse_transform_scitype" = "`Union{ScientificTypesBase.Table{<:AbstractVector{<:ScientificTypesBase.Continuous}}, AbstractMatrix{ScientificTypesBase.Continuous}}`"
+":is_pure_julia" = "`true`"
+":package_name" = "SelfOrganizingMaps"
+":package_license" = "MIT"
+":load_path" = "SelfOrganizingMaps.SelfOrganizingMap"
+":package_uuid" = "ba4b7379-301a-4be0-bee6-171e4e152787"
+":package_url" = "https://github.com/john-waczak/SelfOrganizingMaps.jl"
+":is_wrapper" = "`false`"
+":supports_weights" = "`false`"
+":supports_class_weights" = "`false`"
+":supports_online" = "`false`"
+":docstring" = "```\nSelfOrganizingMap\n```\n\nA model type for constructing a self organizing map, based on [SelfOrganizingMaps.jl](https://github.com/john-waczak/SelfOrganizingMaps.jl), and implementing the MLJ model interface.\n\nFrom MLJ, the type can be imported using\n\n```\nSelfOrganizingMap = @load SelfOrganizingMap pkg=SelfOrganizingMaps\n```\n\nDo `model = SelfOrganizingMap()` to construct an instance with default hyper-parameters. Provide keyword arguments to override hyper-parameter defaults, as in `SelfOrganizingMap(k=...)`.\n\nSelfOrganizingMaps implements [Kohonen's Self Organizing Map](https://ieeexplore.ieee.org/abstract/document/58325?casa_token=pGue0TD38nAAAAAA:kWFkvMJQKgYOTJjJx-_bRx8n_tnWEpau2QeoJ1gJt0IsywAuvkXYc0o5ezdc2mXfCzoEZUQXSQ), Proceedings of the IEEE; Kohonen, T.; (1990):\"The self-organizing map\"\n\n# Training data\n\nIn MLJ or MLJBase, bind an instance `model` to data with     mach = machine(model, X) where\n\n  * `X`: an `AbstractMatrix` or `Table` of input features whose columns are of scitype `Continuous.`\n\nTrain the machine with `fit!(mach, rows=...)`.\n\n# Hyper-parameters\n\n  * `k=10`: Number of nodes along once side of SOM grid. There are `k²` total nodes.\n  * `η=0.5`: Learning rate. Scales adjust made to winning node and its neighbors during each round of training.\n  * `σ²=0.05`: The (squared) neighbor radius. Used to determine scale for neighbor node adjustments.\n  * `grid_type=:rectangular`  Node grid geometry. One of `(:rectangular, :hexagonal, :spherical)`.\n  * `η_decay=:exponential` Learning rate schedule function. One of `(:exponential, :asymptotic)`\n  * `σ_decay=:exponential` Neighbor radius schedule function. One of `(:exponential, :asymptotic, :none)`\n  * `neighbor_function=:gaussian` Kernel function used to make adjustment to neighbor weights. Scale is set by `σ²`. One of `(:gaussian, :mexican_hat)`.\n  * `matching_distance=euclidean` Distance function from `Distances.jl` used to determine winning node.\n  * `Nepochs=1` Number of times to repeat training on the shuffled dataset.\n\n# Operations\n\n  * `transform(mach, Xnew)`: returns the coordinates of the winning SOM node for each instance of `Xnew`. For SOM of grid*type `:rectangular` and `:hexagonal`, these are cartesian coordinates. For grid*type `:spherical`, these are the latitude and longitude in radians.\n\n# Fitted parameters\n\nThe fields of `fitted_params(mach)` are:\n\n  * `coords`: The coordinates of each of the SOM nodes (points in the domain of the map) with shape (k², 2)\n  * `weights`: Array of weight vectors for the SOM nodes (corresponding points in the map's range) of shape (k², input dimension)\n\n# Report\n\nThe fields of `report(mach)` are:\n\n  * `classes`: the index of the winning node for each instance of the training data X interpreted as a class label\n\n# Examples\n\n```\nusing MLJ\nsom = @load SelfOrganizingMap pkg=SelfOrganizingMaps\nmodel = som()\nX, y = make_regression(50, 3) # synthetic data\nmach = machine(model, X) |> fit!\nX̃ = transform(mach, X)\n\nrpt = report(mach)\nclasses = rpt.classes\n```\n"
+":name" = "SelfOrganizingMap"
+":human_name" = "self organizing map"
+":is_supervised" = "`false`"
+":prediction_type" = ":unknown"
+":abstract_type" = "`MLJModelInterface.Unsupervised`"
+":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":transform"]
+":hyperparameters" = "`(:k, :η, :σ², :grid_type, :η_decay, :σ_decay, :neighbor_function, :matching_distance, :Nepochs)`"
+":hyperparameter_types" = "`(\"Int64\", \"Float64\", \"Float64\", \"Symbol\", \"Symbol\", \"Symbol\", \"Symbol\", \"Distances.PreMetric\", \"Int64\")`"
+":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing, nothing)`"
 ":iteration_parameter" = "`nothing`"
 ":supports_training_losses" = "`false`"
 ":reports_feature_importances" = "`false`"
