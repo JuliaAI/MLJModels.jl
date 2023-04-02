@@ -1,5 +1,6 @@
 [deps]
 BetaML = "024491cd-cc6b-443e-8034-08ea7eb7db2b"
+CatBoost = "e2e10f9a-a85d-4fa9-b6b2-639a32100a12"
 EvoLinear = "ab853011-1780-437f-b4b5-5de6f4777246"
 EvoTrees = "f6006082-12f8-11e9-0c9c-0d5d367ab1e5"
 InteractiveUtils = "b77e0a4c-d291-57a0-90e8-8db25a27a240"
