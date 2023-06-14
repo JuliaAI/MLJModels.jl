@@ -104,33 +104,37 @@ metadata_pkg.(
     license    = "MIT",
     is_wrapper = false)
 
-metadata_model(ConstantRegressor,
-    input   = Table,
-    target  = AbstractVector{Continuous},
-    weights = false,
-    descr   = "Constant regressor (Probabilistic).",
-    path    = "MLJModels.ConstantRegressor")
+metadata_model(
+    ConstantRegressor,
+    input_scitype = Table,
+    target_scitype = AbstractVector{Continuous},
+    supports_weights = false,
+    load_path = "MLJModels.ConstantRegressor"
+)
 
-metadata_model(DeterministicConstantRegressor,
-    input   = Table,
-    target  = AbstractVector{Continuous},
-    weights = false,
-    descr   = "Constant regressor (Deterministic).",
-    path    = "MLJModels.DeterministicConstantRegressor")
+metadata_model(
+    DeterministicConstantRegressor,
+    input_scitype = Table,
+    target_scitype = AbstractVector{Continuous},
+    supports_weights = false,
+    load_path    = "MLJModels.DeterministicConstantRegressor"
+)
 
-metadata_model(ConstantClassifier,
-    input   = Table,
-    target  = AbstractVector{<:Finite},
-    weights = true,
-    descr   = "Constant classifier (Probabilistic).",
-    path    = "MLJModels.ConstantClassifier")
+metadata_model(
+    ConstantClassifier,
+    input_scitype = Table,
+    target_scitype = AbstractVector{<:Finite},
+    supports_weights = true,
+    load_path = "MLJModels.ConstantClassifier"
+)
 
-metadata_model(DeterministicConstantClassifier,
-    input   = Table,
-    target  = AbstractVector{<:Finite},
-    weights = false,
-    descr   = "Constant classifier (Deterministic).",
-    path    = "MLJModels.DeterministicConstantClassifier")
+metadata_model(
+    DeterministicConstantClassifier,
+    input_scitype = Table,
+    target_scitpye = AbstractVector{<:Finite},
+    supports_weights = false,
+    load_path = "MLJModels.DeterministicConstantClassifier"
+)
 
 
 # # DOCUMENT STRINGS
