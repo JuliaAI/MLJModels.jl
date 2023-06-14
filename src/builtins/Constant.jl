@@ -131,7 +131,7 @@ metadata_model(
 metadata_model(
     DeterministicConstantClassifier,
     input_scitype = Table,
-    target_scitpye = AbstractVector{<:Finite},
+    target_scitype = AbstractVector{<:Finite},
     supports_weights = false,
     load_path = "MLJModels.DeterministicConstantClassifier"
 )
