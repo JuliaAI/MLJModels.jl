@@ -211,6 +211,7 @@ See also
 """
 ConstantRegressor
 
+
 """
     ConstantClassifier
 
