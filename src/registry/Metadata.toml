@@ -6801,6 +6801,7 @@
 
 [SIRUS.StableRulesClassifier]
 ":input_scitype" = "`ScientificTypesBase.Table{<:AbstractVector{<:ScientificTypesBase.Continuous}}`"
+":output_scitype" = "`ScientificTypesBase.Unknown`"
 ":target_scitype" = "`AbstractVector{<:ScientificTypesBase.Finite}`"
 ":fit_data_scitype" = "`Tuple{ScientificTypesBase.Table{<:AbstractVector{<:ScientificTypesBase.Continuous}}, AbstractVector{<:ScientificTypesBase.Finite}}`"
 ":predict_scitype" = "`AbstractVector{ScientificTypesBase.Density{_s25} where _s25<:ScientificTypesBase.Finite}`"
@@ -6834,6 +6835,7 @@
 
 [SIRUS.StableRulesRegressor]
 ":input_scitype" = "`ScientificTypesBase.Table{<:AbstractVector{<:ScientificTypesBase.Continuous}}`"
+":output_scitype" = "`AbstractVector{<:ScientificTypesBase.Binary}`"
 ":target_scitype" = "`AbstractVector{<:ScientificTypesBase.Continuous}`"
 ":fit_data_scitype" = "`Tuple{ScientificTypesBase.Table{<:AbstractVector{<:ScientificTypesBase.Continuous}}, AbstractVector{<:ScientificTypesBase.Finite}}`"
 ":predict_scitype" = "`AbstractVector{ScientificTypesBase.Density{_s25} where _s25<:ScientificTypesBase.Finite}`"
