@@ -28,6 +28,7 @@ ParallelKMeans = "42b8e9d4-006b-409a-8472-7f34b3fb58af"
 PartialLeastSquaresRegressor = "f4b1acfe-f311-436c-bb79-8483f53c17d5"
 Pkg = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
 SelfOrganizingMaps = "ba4b7379-301a-4be0-bee6-171e4e152787"
+SymbolicRegression = "8254be44-1295-4e6a-a16d-46603ac705cb"
 
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
