@@ -6855,8 +6855,8 @@
 ":name" = "StableRulesRegressor"
 ":human_name" = "stable rule-based regressor"
 ":is_supervised" = "`true`"
-":prediction_type" = ":probabilistic"
-":abstract_type" = "`MLJModelInterface.Probabilistic`"
+":prediction_type" = ":deterministic"
+":abstract_type" = "`MLJModelInterface.Deterministic`"
 ":implemented_methods" = [":fit", ":predict"]
 ":hyperparameters" = "`(:rng, :partial_sampling, :n_trees, :max_depth, :q, :min_data_in_leaf, :max_rules)`"
 ":hyperparameter_types" = "`(\"Random.AbstractRNG\", \"Real\", \"Int\", \"Int\", \"Int\", \"Int\", \"Int\")`"
