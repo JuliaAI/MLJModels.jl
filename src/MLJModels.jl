@@ -37,7 +37,7 @@ export info
 
 # from model/Constant
 export ConstantRegressor, ConstantClassifier,
-        DeterministicConstantRegressor, DeterministicConstantClassifier
+    DeterministicConstantRegressor, DeterministicConstantClassifier
 
 # from model/ThresholdPredictors
 export BinaryThresholdPredictor
