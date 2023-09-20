@@ -1,3 +1,8 @@
+# The next two lines added as a workaround to
+# https://github.com/JuliaLang/Pkg.jl/issues/3628 (Julia 1.6):
+import Pkg
+Pkg.add(name="Statistics", version=VERSION)
+
 using Test, MLJModels
 
 @testset "registry" begin
