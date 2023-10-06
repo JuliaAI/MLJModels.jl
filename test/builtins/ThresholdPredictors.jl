@@ -5,7 +5,6 @@ using CategoricalDistributions
 
 import Distributions
 import MLJBase
-import StatisticalMeasures
 
 const MMI = MLJModels.MLJModelInterface
 
@@ -163,9 +162,10 @@ MMI.input_scitype(::Type{<:DummyDetector}) = MMI.Table
     @test MMI.predict(detector, fr, X) == fill("in", length(y_))
 
     # integration (y == ["in", "out", "out", "out"]):
+    accuracy(yhat, y) = sum(yhat .== y)/length(y)
     e = MLJBase.evaluate(detector, X_, y_,
                          resampling=MLJBase.Holdout(fraction_train=0.5),
-                         measure=StatisticalMeasures.accuracy)
+                         measure=accuracy)
     @test e.measurement[1] ≈ 0
 end
 
