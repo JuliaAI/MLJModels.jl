@@ -6,7 +6,6 @@ using CategoricalDistributions
 import Distributions
 import MLJBase
 
-
 const MMI = MLJModels.MLJModelInterface
 
 X_ = NamedTuple{(:x1,:x2,:x3)}((rand(4), rand(4), rand(4)))
@@ -163,9 +162,10 @@ MMI.input_scitype(::Type{<:DummyDetector}) = MMI.Table
     @test MMI.predict(detector, fr, X) == fill("in", length(y_))
 
     # integration (y == ["in", "out", "out", "out"]):
+    accuracy(yhat, y) = sum(yhat .== y)/length(y)
     e = MLJBase.evaluate(detector, X_, y_,
                          resampling=MLJBase.Holdout(fraction_train=0.5),
-                         measure=MLJBase.accuracy)
+                         measure=accuracy)
     @test e.measurement[1] ≈ 0
 end
 
