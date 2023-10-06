@@ -52,7 +52,7 @@ To register all the models in GreatNewPackage with MLJ:
 - Quit your REPL session and make a trivial commit to your MLJModels
   branch to force pre-compilation in a new julia session when you run
   `using MLJModels`. (For technical reasons the registry is not loaded
-  in `__init__`()`, so without pre-compiliation the new ]registry is not
+  in `__init__()`, so without pre-compiliation the new ]registry is not
   available.)
 
 - Test that the interfaces load properly with
