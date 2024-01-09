@@ -5,7 +5,7 @@ on:
       - master
 jobs:
   check_registry:
-    # if: (${{ github.head_ref }} == "dev") && (${{ github.repository }} == ${{ github.event.pull_request.head.repo.full_name }})
+    if: (${{ github.head_ref }} == "dev") && (${{ github.repository }} == ${{ github.event.pull_request.head.repo.full_name }})
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -20,7 +20,7 @@ jobs:
       PYTHON: Conda
       # remove next line (and others marked below) when 
       # JuliaAI/MLJScikitLearnInterface.jl#42 properly resolved
-      # LD_LIBRARY_PATH: /home/runner/.julia/conda/3/lib
+      LD_LIBRARY_PATH: /home/runner/.julia/conda/3/lib
 
     steps:
       - uses: actions/checkout@v2
@@ -43,16 +43,16 @@ jobs:
       - run: julia -e 'using Pkg; Pkg.develop(Pkg.PackageSpec(path = pwd()))'
       - run: julia -e 'using Pkg; Pkg.add("Test")'
        
-      # remove next eight lines (and one other marked above) when 
-      # JuliaAI/MLJScikitLearnInterface.jl#42 gets properly resolved
-      #- name: "Install Conda"
-      #  run: julia -e 'using Pkg; Pkg.add("Conda");'
-      #- name: "Install Scikit-learn"
-      #  run: |
-      #    julia -e 'using Conda; Conda.add("scikit-learn");'\
-      #    cd $LD_LIBRARY_PATH #just to check that the path is valid
-      #  
-      -	 run: julia -e 'using Pkg; Pkg.update()'
+       # remove next eight lines (and one other marked above) when 
+       # JuliaAI/MLJScikitLearnInterface.jl#42 gets properly resolved
+      - name: "Install Conda"
+        run: julia -e 'using Pkg; Pkg.add("Conda");'
+      - name: "Install Scikit-learn"
+        run: |
+          julia -e 'using Conda; Conda.add("scikit-learn");'\
+          cd $LD_LIBRARY_PATH #just to check that the path is valid
+        
+      - run: julia -e 'using Pkg; Pkg.update()'
       - run: julia -e 'using Pkg; Pkg.precompile()'
       - run: julia -e 'using Pkg; Pkg.status()'
       - run: julia -e 'using MLJModels; using Test; problems = MLJModels.check_registry(); @info("", length(problems), problems); @test(isempty(problems))'
