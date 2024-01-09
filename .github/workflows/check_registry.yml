@@ -5,7 +5,7 @@ on:
       - master
 jobs:
   check_registry:
-    if: (${{ github.head_ref }} == "dev") #&& (${{ github.repository }} == ${{ github.event.pull_request.head.repo.full_name }})
+    # if: (${{ github.head_ref }} == "dev") && (${{ github.repository }} == ${{ github.event.pull_request.head.repo.full_name }})
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
