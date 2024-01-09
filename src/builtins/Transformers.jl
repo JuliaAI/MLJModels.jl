@@ -1153,7 +1153,7 @@ metadata_model(UnivariateTimeTypeToContinuous,
     load_path    = "MLJModels.UnivariateTimeTypeToContinuous")
 
 metadata_model(InteractionTransformer,
-    input_scitype   = Table,
+    input_scitype   = Tuple{Table},
     output_scitype = Table,
     human_name = "interaction transformer",
     load_path    = "MLJModels.InteractionTransformer")
