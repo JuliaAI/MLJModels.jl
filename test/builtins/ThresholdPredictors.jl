@@ -320,7 +320,7 @@ end
     seekstart(io)
     mach2 = MLJBase.machine(io)
     close(io)
-    @test_broken MLJBase.predict(mach2, (; x = rand(2))) ==  yhat
+    @test MLJBase.predict(mach2, (; x = rand(2))) ==  yhat
 end
 
 end # module

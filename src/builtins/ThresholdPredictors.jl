@@ -307,16 +307,16 @@ end
 
 ## SERIALIZATION
 
-# function MMI.save(model::ThresholdUnion, fitresult)
-#     atomic_fitresult, threshold = fitresult
-#     atom = model.model
-#     return MMI.save(atom, atomic_fitresult), threshold
-# end
-# function MMI.restore(model::ThresholdUnion, serializable_fitresult)
-#     atomic_serializable_fitresult, threshold = serializable_fitresult
-#     atom = model.model
-#     return MMI.restore(atom, atomic_serializable_fitresult), threshold
-# end
+function MMI.save(model::ThresholdUnion, fitresult)
+    atomic_fitresult, threshold = fitresult
+    atom = model.model
+    return MMI.save(atom, atomic_fitresult), threshold
+end
+function MMI.restore(model::ThresholdUnion, serializable_fitresult)
+    atomic_serializable_fitresult, threshold = serializable_fitresult
+    atom = model.model
+    return MMI.restore(atom, atomic_serializable_fitresult), threshold
+end
 
 
 ## TRAITS
