@@ -275,15 +275,15 @@ end
 thing = []
 struct EphemeralClassifier <: MLJBase.Probabilistic end
 function MLJBase.fit(::EphemeralClassifier, verbosity, X, y)
-    # if I serialize/deserialized `thing` then `view` below changes:
-    view = objectid(thing)
+    # if I serialize/deserialized `thing` then `id` below changes:
+    id = objectid(thing)
     p = Distributions.fit(UnivariateFinite, y)
-    fitresult = (thing, view, p)
+    fitresult = (thing, id, p)
     return fitresult, nothing, NamedTuple()
 end
 function MLJBase.predict(::EphemeralClassifier, fitresult, X)
-    thing, view, p = fitresult
-    return view == objectid(thing) ? fill(p, MLJBase.nrows(X)) :
+    thing, id, p = fitresult
+    return id == objectid(thing) ? fill(p, MLJBase.nrows(X)) :
         throw(ErrorException("dead fitresult"))
 end
 MLJBase.target_scitype(::Type{<:EphemeralClassifier}) = AbstractVector{OrderedFactor{2}}
@@ -293,8 +293,8 @@ function MLJBase.save(::EphemeralClassifier, fitresult)
 end
 function MLJBase.restore(::EphemeralClassifier, serialized_fitresult)
     thing, p = serialized_fitresult
-    view = objectid(thing)
-    return (thing, view, p)
+    id = objectid(thing)
+    return (thing, id, p)
 end
 
 # X, y = (; x = rand(8)), categorical(collect("OXXXXOOX"), ordered=true)
