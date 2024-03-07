@@ -268,6 +268,61 @@ MMI.input_scitype(::Type{<:NaiveClassifier}) = Table(Continuous)
         mode(Distributions.fit(MLJBase.UnivariateFinite, y[I])), MLJBase.nrows(X)
     )
 end
+
+
+# define a probabilistic classifier with non-persistent `fitresult`, but which addresses
+# this by overloading `save`/`restore`:
+thing = []
+struct EphemeralClassifier <: MLJBase.Probabilistic end
+function MLJBase.fit(::EphemeralClassifier, verbosity, X, y)
+    # if I serialize/deserialized `thing` then `id` below changes:
+    id = objectid(thing)
+    p = Distributions.fit(UnivariateFinite, y)
+    fitresult = (thing, id, p)
+    return fitresult, nothing, NamedTuple()
+end
+function MLJBase.predict(::EphemeralClassifier, fitresult, X)
+    thing, id, p = fitresult
+    return id == objectid(thing) ? fill(p, MLJBase.nrows(X)) :
+        throw(ErrorException("dead fitresult"))
+end
+MLJBase.target_scitype(::Type{<:EphemeralClassifier}) = AbstractVector{OrderedFactor{2}}
+function MLJBase.save(::EphemeralClassifier, fitresult)
+    thing, _, p = fitresult
+    return (thing, p)
+end
+function MLJBase.restore(::EphemeralClassifier, serialized_fitresult)
+    thing, p = serialized_fitresult
+    id = objectid(thing)
+    return (thing, id, p)
+end
+
+# X, y = (; x = rand(8)), categorical(collect("OXXXXOOX"), ordered=true)
+# mach = machine(EphemeralClassifier(), X, y) |> fit!
+# io = IOBuffer()
+# MLJBase.save(io, mach)
+# seekstart(io)
+# mach2 = machine(io)
+# predict(mach2, X)
+
+@testset "serialization for atomic models with non-persistent fitresults" begin
+    # https://github.com/alan-turing-institute/MLJ.jl/issues/1099
+    X, y = (; x = rand(8)), categorical(collect("OXXXXOOX"), ordered=true)
+    deterministic_classifier = BinaryThresholdPredictor(
+        EphemeralClassifier(),
+        threshold=0.5,
+    )
+    mach = MLJBase.machine(deterministic_classifier, X, y)
+    MLJBase.fit!(mach, verbosity=0)
+    yhat = MLJBase.predict(mach, MLJBase.selectrows(X, 1:2))
+    io = IOBuffer()
+    MLJBase.save(io, mach)
+    seekstart(io)
+    mach2 = MLJBase.machine(io)
+    close(io)
+    @test MLJBase.predict(mach2, (; x = rand(2))) ==  yhat
+end
+
 end # module
 
 true
