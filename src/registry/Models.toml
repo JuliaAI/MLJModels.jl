@@ -5,6 +5,7 @@ MLJScikitLearnInterface = ["ProbabilisticSGDClassifier", "RidgeCVClassifier", "L
 OutlierDetectionNeighbors = ["ABODDetector", "DNNDetector", "LOFDetector", "KNNDetector", "COFDetector"]
 SIRUS = ["StableRulesClassifier", "StableRulesRegressor", "StableForestClassifier", "StableForestRegressor"]
 PartialLeastSquaresRegressor = ["KPLSRegressor", "PLSRegressor"]
+PartitionedLS = ["PartLS"]
 MLJLinearModels = ["QuantileRegressor", "LogisticClassifier", "MultinomialClassifier", "LADRegressor", "RidgeRegressor", "RobustRegressor", "ElasticNetRegressor", "LinearRegressor", "LassoRegressor", "HuberRegressor"]
 ParallelKMeans = ["KMeans"]
 NaiveBayes = ["GaussianNBClassifier", "MultinomialNBClassifier"]
