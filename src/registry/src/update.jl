@@ -63,6 +63,15 @@ To register all the models in GreatNewPackage with MLJ:
   the updated metadata available to users of the next MLJModels tagged
   release.
 
+Once a new MLJModels version is released, you must make the following updates at MLJ.jl:
+
+- Ensure `GreatNewPackage` is in the [extras] and [target] sections of the Project.toml
+  for MLJ.jl (for inclusion in integration tests)
+
+- Add an entry for the new model(s) in MLJ/docs/ModelDescriptors.toml (for inclusion in
+  the MLJ Model Browser)
+
+These last two actions do not require tagging a new MLJ.jl release.
 
 """
 macro update(ex)
