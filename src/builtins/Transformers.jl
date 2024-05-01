@@ -503,9 +503,10 @@ mutable struct UnivariateStandardizer <: Unsupervised end
 
 function MMI.fit(transformer::UnivariateStandardizer, verbosity::Int,
              v::AbstractVector{T}) where T<:Real
-    std(v) > eps(Float64) ||
+    stdv = std(v)
+    stdv > eps(typeof(stdv)) ||
         @warn "Extremely small standard deviation encountered in standardization."
-    fitresult = (mean(v), std(v))
+    fitresult = (mean(v), stdv)
     cache = nothing
     report = NamedTuple()
     return fitresult, cache, report
