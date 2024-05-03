@@ -503,9 +503,10 @@ mutable struct UnivariateStandardizer <: Unsupervised end
 
 function MMI.fit(transformer::UnivariateStandardizer, verbosity::Int,
              v::AbstractVector{T}) where T<:Real
-    std(v) > eps(Float64) ||
+    stdv = std(v)
+    stdv > eps(typeof(stdv)) ||
         @warn "Extremely small standard deviation encountered in standardization."
-    fitresult = (mean(v), std(v))
+    fitresult = (mean(v), stdv)
     cache = nothing
     report = NamedTuple()
     return fitresult, cache, report
@@ -581,7 +582,7 @@ function MMI.fit(transformer::Standardizer, verbosity::Int, X)
     is_invertible = !transformer.count && !transformer.ordered_factor
 
     # initialize fitresult:
-    fitresult_given_feature = LittleDict{Symbol,Tuple{Float64,Float64}}()
+    fitresult_given_feature = LittleDict{Symbol,Tuple{AbstractFloat,AbstractFloat}}()
 
     # special univariate case:
     if is_univariate
@@ -631,7 +632,6 @@ function MMI.fit(transformer::Standardizer, verbosity::Int, X)
             )
         end
     end
-    fitresult_given_feature = Dict{Symbol,Tuple{Float64,Float64}}()
 
     isempty(cols_to_fit) && verbosity > -1 &&
         @warn "No features to standarize."
