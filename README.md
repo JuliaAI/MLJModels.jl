@@ -1,13 +1,13 @@
 # MLJModels
 
-[![Build Status](https://github.com/alan-turing-institute/MLJModels.jl/workflows/CI/badge.svg)](https://github.com/alan-turing-institute/MLJModels.jl/actions)
+[![Build Status](https://github.com/JuliaAI/MLJModels.jl/workflows/CI/badge.svg)](https://github.com/JuliaAI/MLJModels.jl/actions)
 
 Repository of the "built-in" models available for use in the
-[MLJ](https://github.com/alan-turing-institute/MLJ.jl) MLJ machine
+[MLJ](https://github.com/JuliaAI/MLJ.jl) MLJ machine
 learning framework; and the home of the MLJ model registry.
 
 For instructions on integrating a new model with MLJ visit
-[here](https://alan-turing-institute.github.io/MLJ.jl/dev/adding_models_for_general_use/)
+[here](https://JuliaAI.github.io/MLJ.jl/dev/adding_models_for_general_use/)
 
 
 ### Contents
@@ -19,7 +19,7 @@ For instructions on integrating a new model with MLJ visit
 ## Who is this repo for?
 
 General users of the MLJ machine learning platform should refer to
-[MLJ home page](https://alan-turing-institute.github.io/MLJ.jl/dev/)
+[MLJ home page](https://JuliaAI.github.io/MLJ.jl/dev/)
 for usage and installation instructions. MLJModels is a dependency of
 MLJ that the general user can ignore.
 
@@ -32,7 +32,7 @@ model interfaces, whether they be:
   [`EvoTrees.jl`](https://github.com/Evovest/EvoTrees.jl/blob/master/src/MLJ.jl); or
   
 - implemented in a separate **interface package**, such as
-  [MLJDecisionTreeInterface.jl](https://github.com/alan-turing-institute/MLJDecisionTreeInterface.jl).
+  [MLJDecisionTreeInterface.jl](https://github.com/JuliaAI/MLJDecisionTreeInterface.jl).
 
 It also a place for developers to add models (mostly transformers)
 such as `OneHotEncoder`, that are exported for "built-in" use in
@@ -63,16 +63,16 @@ MLJModels contains:
   models that can be called from MLJ using `@load`. Package developers
   can register new models by implementing the MLJ interface in their
   package and following [these
-  instructions](https://alan-turing-institute.github.io/MLJ.jl/dev/adding_models_for_general_use/).
+  instructions](https://JuliaAI.github.io/MLJ.jl/dev/adding_models_for_general_use/).
   
 
 ## Instructions for updating the MLJ model registry
 
 Generally model registration is performed by administrators. If you
 have an interface you would like registered, open an issue
-[here](https://github.com/alan-turing-institute/MLJ.jl/issues). 
+[here](https://github.com/JuliaAI/MLJ.jl/issues). 
 
 **Administrator instructions.** These are given in the
 `MLJModels.@update` document string. After registering the model, make a PR to MLJ 
-updating [this dictionary of model descriptors](https://github.com/alan-turing-institute/MLJ.jl/blob/dev/docs/ModelDescriptors.toml) 
-to ensure the new models appear in the right places in MLJ's [Model Browser](https://alan-turing-institute.github.io/MLJ.jl/dev/model_browser/#Model-Browser)
+updating [this dictionary of model descriptors](https://github.com/JuliaAI/MLJ.jl/blob/dev/docs/ModelDescriptors.toml) 
+to ensure the new models appear in the right places in MLJ's [Model Browser](https://JuliaAI.github.io/MLJ.jl/dev/model_browser/#Model-Browser)

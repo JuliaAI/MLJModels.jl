@@ -327,7 +327,7 @@ MMI.package_name(::Type{<:ThresholdUnion}) = "MLJModels"
 MMI.package_uuid(::Type{<:ThresholdUnion}) = ""
 MMI.is_wrapper(::Type{<:ThresholdUnion}) = true
 MMI.package_url(::Type{<:ThresholdUnion}) =
-    "https://github.com/alan-turing-institute/MLJModels.jl"
+    "https://github.com/JuliaAI/MLJModels.jl"
 
 for New in THRESHOLD_TYPE_EXS
     New_str = string(New)

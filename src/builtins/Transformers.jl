@@ -1087,7 +1087,7 @@ metadata_pkg.(
      UnivariateTimeTypeToContinuous, InteractionTransformer),
     package_name       = "MLJModels",
     package_uuid       = "d491faf4-2d78-11e9-2867-c94bc002c0b7",
-    package_url        = "https://github.com/alan-turing-institute/MLJModels.jl",
+    package_url        = "https://github.com/JuliaAI/MLJModels.jl",
     is_pure_julia      = true,
     package_license    = "MIT")
 
