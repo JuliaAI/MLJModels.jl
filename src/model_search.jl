@@ -327,29 +327,25 @@ matching(realmodel::Model, args...) = matching(info(realmodel), args...)
 
 
 """
-    models()
+    models(; wrappers=false)
 
-List all models in the MLJ registry. Here and below *model* means the
-registry metadata entry for a genuine model type (a proxy for types
-whose defining code may not be loaded).
+List all models in the MLJ registry. Here and below *model* means the registry metadata
+entry for a genuine model type (a proxy for types whose defining code may not be
+loaded). To include wrappers and other composite models, such as `TunedModel` and `Stack`,
+specify `wrappers=true`.
 
-    models(filters..)
+    models(filters...; wrappers=false)
 
 List all models `m` for which `filter(m)` is true, for each `filter`
 in `filters`.
 
-    models(matching(X, y))
+    models(matching(X, y); wrappers=false)
 
 List all supervised models compatible with training data `X`, `y`.
 
-    models(matching(X))
+    models(matching(X); wrappers=false)
 
 List all unsupervised models compatible with training data `X`.
-
-
-Excluded in the listings are the built-in model-wraps, like `EnsembleModel`,
-`TunedModel`, and `IteratedModel`.
-
 
 
 ### Example
@@ -364,7 +360,8 @@ predictions.
 See also: [`localmodels`](@ref).
 
 """
-function models(conditions...)
+function models(conditions...; wrappers=false)
+    wrappers || (conditions = (conditions..., m-> !m.is_wrapper))
     unsorted = filter(info.(keys(INFO_GIVEN_HANDLE))) do model
         all(c(model) for c in conditions)
     end
@@ -372,30 +369,30 @@ function models(conditions...)
 end
 
 """
-    models(needle::Union{AbstractString,Regex})
+    models(needle::Union{AbstractString,Regex}; wrappers=false)
 
 List all models whole `name` or `docstring` matches a given `needle`.
 """
-function models(needle::Union{AbstractString,Regex})
+function models(needle::Union{AbstractString,Regex}; kwargs...)
     f = model ->
         occursin(needle, model.name) || occursin(needle, model.docstring)
-    return models(f)
+    return models(f; kwargs...)
 end
 
 # get the model types in top-level of given module's namespace:
-function localmodeltypes(modl; toplevel=false)
+function localmodeltypes(modl; toplevel=false, wrappers=false)
     ft = finaltypes(Model)
     return filter!(ft) do M
         name = MLJModelInterface.name(M)
         test1 = !toplevel || isdefined(modl, Symbol(name))
-        !MLJModelInterface.is_wrapper(M) && test1
+        (!MLJModelInterface.is_wrapper(M) || wrappers) && test1
     end
 end
 
 """
-    localmodels(; modl=Main)
-    localmodels(filters...; modl=Main)
-    localmodels(needle::Union{AbstractString,Regex}; modl=Main)
+    localmodels(; modl=Main, wrappers=false)
+    localmodels(filters...; modl=Main, wrappers=false)
+    localmodels(needle::Union{AbstractString,Regex}; modl=Main, wrappers=false)
 
 List all models currently available to the user from the module `modl`
 without importing a package, and which additional pass through the
@@ -412,8 +409,8 @@ examples:
 See also [`models`](@ref), [`load_path`](@ref).
 
 """
-function localmodels(args...; modl=Main, toplevel=false)
-    modeltypes = localmodeltypes(modl, toplevel=toplevel)
+function localmodels(args...; modl=Main, kwargs...)
+    modeltypes = localmodeltypes(modl; kwargs...)
     handles = map(modeltypes) do M
         Handle(MMI.name(M), MMI.package_name(M))
     end

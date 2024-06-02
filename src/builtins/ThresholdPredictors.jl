@@ -328,14 +328,8 @@ MMI.package_uuid(::Type{<:ThresholdUnion}) = ""
 MMI.is_wrapper(::Type{<:ThresholdUnion}) = true
 MMI.package_url(::Type{<:ThresholdUnion}) =
     "https://github.com/JuliaAI/MLJModels.jl"
-
-for New in THRESHOLD_TYPE_EXS
-    New_str = string(New)
-    quote
-        MMI.load_path(::Type{<:$New{M}}) where M = "MLJModels."*$New_str
-    end |> eval
-end
-
+MMI.load_path(::Type{<:ThresholdUnion}) = "MLJModels.BinaryThresholdPredictor"
+MMI.constructor(::Type{<:ThresholdUnion}) = BinaryThresholdPredictor
 
 for trait in [:supports_weights,
               :supports_class_weights,

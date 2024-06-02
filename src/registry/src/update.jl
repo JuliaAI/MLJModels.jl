@@ -10,9 +10,10 @@ function finaltypes(T::Type)
 end
 
 const project_toml = joinpath(srcdir, "../Project.toml")
-const PACKAGES = map(Symbol,
-                     keys(TOML.parsefile(project_toml)["deps"])|>collect)
-push!(PACKAGES, :MLJModels)
+const PACKAGES = map(
+    Symbol,
+    keys(TOML.parsefile(project_toml)["deps"]) |> collect,
+)
 filter!(PACKAGES) do pkg
     !(pkg in (:InteractiveUtils, :Pkg, :MLJModelInterface, :MLJTestIntegration))
 end
@@ -92,16 +93,17 @@ function _update(mod, test_env_only)
         end
         using Pkg
         Pkg.activate($environment_path)
-        @info "resolving registry environment..."
+        @info "resolving Model Registry environment..."
         Pkg.resolve()
     end
 
     program2 = quote
+        warnings = ""
 
-        @info "Instantiating registry environment..."
+        @info "Instantiating Model Registry environment..."
         Pkg.instantiate()
 
-        @info "Loading registered packages..."
+        @info "Loading packages from the Model Registry..."
         import MLJModels
         using Pkg.TOML
 
@@ -113,7 +115,7 @@ function _update(mod, test_env_only)
         modeltypes =
             MLJModels.Registry.finaltypes(MLJModels.Model)
         filter!(modeltypes) do T
-            !isabstracttype(T) && !MLJModels.MLJModelInterface.is_wrapper(T)
+            !isabstracttype(T)
         end
 
         # generate and write to file the model metadata:
@@ -125,12 +127,15 @@ function _update(mod, test_env_only)
             pkg = _info[:package_name]
             path = _info[:load_path]
             api_pkg = split(path, '.') |> first
-            pkg in ["unknown",] &&
-                @warn "$M `package_name` or `load_path` is \"unknown\")"
+            pkg in ["unknown",] && begin
+                global warnings *= "$M `package_name` or `load_path` is \"unknown\")\n"
+            end
             modelname = _info[:name]
-            api_pkg in api_packages ||
-                error("Bad `load_path` trait for $M: "*
-                      "$api_pkg not a registered package. ")
+            api_pkg in api_packages || begin
+                global warnings *= "Bad `load_path` trait for $M: "*
+                    "`$api_pkg` not a registered package.\n"
+            end
+
             haskey(meta_given_package, pkg) ||
                 (meta_given_package[pkg] = Dict())
             haskey(meta_given_package, modelname) &&
@@ -154,6 +159,8 @@ function _update(mod, test_env_only)
             TOML.print(file, models_given_pkg)
         end
 
+        isempty(warnings) || @warn warnings
+
         :(println("Local Metadata.toml updated."))
 
     end
@@ -162,7 +169,7 @@ function _update(mod, test_env_only)
     test_env_only || mod.eval(program2)
 
     println("\n You can check the registry by running "*
-            "`MLJModels.check_registry() but may need to force "*
+            "`MLJModels.check_registry()` but may need to force "*
             "recompilation of MLJModels.\n\n"*
             "You can safely ignore \"conflicting import\" warnings. ")
 
