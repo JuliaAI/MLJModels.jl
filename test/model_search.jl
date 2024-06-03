@@ -47,7 +47,6 @@ end
                         DeterministicConstantRegressor,
                         ConstantClassifier,
                         ConstantRegressor,
-                        FeatureSelector,
                         OneHotEncoder,
                         Standardizer,
                         UnivariateBoxCoxTransformer,
