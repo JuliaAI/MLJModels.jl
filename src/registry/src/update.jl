@@ -112,25 +112,25 @@ function _update(mod, test_env_only)
 
         @info "Generating model metadata..."
 
-        modeltypes =
-            MLJModels.Registry.finaltypes(MLJModels.Model)
-        filter!(modeltypes) do T
-            !isabstracttype(T)
-        end
+        model_type_given_constructor = MLJModels.Registry.model_type_given_constructor()
+        constructors = keys(model_type_given_constructor) |> collect
+        sort!(constructors, by=string)
 
         # generate and write to file the model metadata:
         api_packages = string.(MLJModels.Registry.PACKAGES)
         meta_given_package = Dict()
 
-        for M in modeltypes
+        for C in constructors
+            M = model_type_given_constructor[C]
             _info = MLJModels.info_dict(M)
+            constructor_name = split(string(C), '.') |> last
+            _info[:name] = constructor_name
             pkg = _info[:package_name]
             path = _info[:load_path]
             api_pkg = split(path, '.') |> first
             pkg in ["unknown",] && begin
                 global warnings *= "$M `package_name` or `load_path` is \"unknown\")\n"
             end
-            modelname = _info[:name]
             api_pkg in api_packages || begin
                 global warnings *= "Bad `load_path` trait for $M: "*
                     "`$api_pkg` not a registered package.\n"
@@ -138,11 +138,11 @@ function _update(mod, test_env_only)
 
             haskey(meta_given_package, pkg) ||
                 (meta_given_package[pkg] = Dict())
-            haskey(meta_given_package, modelname) &&
+            haskey(meta_given_package, constructor_name) &&
                 error("Encountered multiple model names for "*
                       "`package_name=$pkg`")
-            meta_given_package[pkg][modelname] = _info
-                println(M, "\u2714 ")
+            meta_given_package[pkg][constructor_name] = _info
+                println(C, "\u2714 ")
         end
         print("\r")
 
