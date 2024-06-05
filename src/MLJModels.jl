@@ -59,6 +59,11 @@ nonmissing = nonmissingtype
 
 include("utilities.jl")
 
+# load built-in models:
+include("builtins/Constant.jl")
+include("builtins/Transformers.jl")
+include("builtins/ThresholdPredictors.jl")
+
 Handle = NamedTuple{(:name, :pkg), Tuple{String,String}}
 (::Type{Handle})(name,string) = NamedTuple{(:name, :pkg)}((name, string))
 
@@ -78,11 +83,6 @@ include("model_search.jl")
 include("loading.jl")
 include("registry/src/Registry.jl")
 using .Registry
-
-# load built-in models:
-include("builtins/Constant.jl")
-include("builtins/Transformers.jl")
-include("builtins/ThresholdPredictors.jl")
 
 # finalize:
 include("init.jl")

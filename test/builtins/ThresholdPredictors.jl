@@ -306,7 +306,7 @@ end
 # predict(mach2, X)
 
 @testset "serialization for atomic models with non-persistent fitresults" begin
-    # https://github.com/alan-turing-institute/MLJ.jl/issues/1099
+    # https://github.com/JuliaAI/MLJ.jl/issues/1099
     X, y = (; x = rand(8)), categorical(collect("OXXXXOOX"), ordered=true)
     deterministic_classifier = BinaryThresholdPredictor(
         EphemeralClassifier(),
