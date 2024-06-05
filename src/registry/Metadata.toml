@@ -5753,7 +5753,7 @@
 ":load_path" = "FeatureSelection.RecursiveFeatureElimination"
 ":package_uuid" = "33837fe5-dbff-4c9e-8c2f-c5612fe2b8b6"
 ":package_url" = "https://github.com/JuliaAI/FeatureSelection.jl"
-":is_wrapper" = "`false`"
+":is_wrapper" = "`true`"
 ":supports_weights" = "`false`"
 ":supports_class_weights" = "`false`"
 ":supports_online" = "`false`"
