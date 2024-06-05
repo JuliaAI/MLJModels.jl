@@ -26,7 +26,14 @@ function decode_dic(s::String)
         if  s[1] == ':'
             return Symbol(s[2:end])
         elseif s[1] == '`' && s[2] != '`' # to exclude strings starting with ```
-            return eval(Meta.parse(s[2:end-1]))
+            ex = Meta.parse(s[2:end-1])
+            # We need a `try` here because `constructor` trait generally returns a
+            # function not in the namespace, because pkg defining it has not been loaded.
+            return try
+                eval(ex)
+            catch
+                ex
+            end
         else
             return s
         end
@@ -150,4 +157,3 @@ function model_traits_in_registry(info_given_handle)
     first_entry = info_given_handle[Handle("ConstantRegressor")]
     return keys(first_entry) |> collect
 end
-

@@ -22,6 +22,9 @@ export @update, check_registry, activate_registry_project, info_dict
 const srcdir = dirname(@__FILE__) # the directory containing this file
 const environment_path = joinpath(srcdir, "..")
 
+# has tool to generate dictionary of model types keyed on constructor
+include("constructors.jl")
+
 # for extracting model traits from a loaded model type
 include("info_dict.jl")
 
