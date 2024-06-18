@@ -43,7 +43,7 @@ export ConstantRegressor, ConstantClassifier,
 export BinaryThresholdPredictor
 
 # from model/Transformers
-export FeatureSelector, UnivariateDiscretizer,
+export UnivariateDiscretizer,
     UnivariateStandardizer, Standardizer, UnivariateBoxCoxTransformer,
     OneHotEncoder, ContinuousEncoder, FillImputer, UnivariateFillImputer,
     UnivariateTimeTypeToContinuous, InteractionTransformer
