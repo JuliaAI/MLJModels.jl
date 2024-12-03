@@ -5941,11 +5941,11 @@
 
 [Clustering.AffinityPropagation]
 ":input_scitype" = "`ScientificTypesBase.Table{<:AbstractVector{<:ScientificTypesBase.Continuous}}`"
-":output_scitype" = "`ScientificTypesBase.Table{<:AbstractVector{<:ScientificTypesBase.Continuous}}`"
+":output_scitype" = "`ScientificTypesBase.Unknown`"
 ":target_scitype" = "`ScientificTypesBase.Unknown`"
-":fit_data_scitype" = "`Tuple{ScientificTypesBase.Table{<:AbstractVector{<:ScientificTypesBase.Continuous}}}`"
+":fit_data_scitype" = "`Tuple{}`"
 ":predict_scitype" = "`ScientificTypesBase.Unknown`"
-":transform_scitype" = "`ScientificTypesBase.Table{<:AbstractVector{<:ScientificTypesBase.Continuous}}`"
+":transform_scitype" = "`ScientificTypesBase.Unknown`"
 ":inverse_transform_scitype" = "`ScientificTypesBase.Table{<:AbstractVector{<:ScientificTypesBase.Continuous}}`"
 ":target_in_fit" = "`false`"
 ":is_pure_julia" = "`true`"
@@ -5963,8 +5963,8 @@
 ":human_name" = "affinity propagation clusterer"
 ":is_supervised" = "`false`"
 ":prediction_type" = ":unknown"
-":abstract_type" = "`MLJModelInterface.Unsupervised`"
-":implemented_methods" = [":clean!", ":fit", ":fitted_params", ":predict", ":transform"]
+":abstract_type" = "`MLJModelInterface.Static`"
+":implemented_methods" = [":clean!", ":predict"]
 ":hyperparameters" = "`(:damp, :maxiter, :tol, :preference, :metric)`"
 ":hyperparameter_types" = "`(\"Float64\", \"Int64\", \"Float64\", \"Union{Nothing, Float64}\", \"Distances.SemiMetric\")`"
 ":hyperparameter_ranges" = "`(nothing, nothing, nothing, nothing, nothing)`"
