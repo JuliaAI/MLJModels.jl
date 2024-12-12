@@ -1,5 +1,7 @@
 module MLJModels
 
+# Hello world.
+
 import MLJModelInterface
 import MLJModelInterface: Model, metadata_pkg, metadata_model, @mlj_model, info,
     nrows, selectrows, reformat, selectcols, transform, inverse_transform, fitted_params
