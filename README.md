@@ -1,6 +1,7 @@
 # MLJModels
 
 [![Build Status](https://github.com/JuliaAI/MLJModels.jl/workflows/CI/badge.svg)](https://github.com/JuliaAI/MLJModels.jl/actions)
+[![codecov](https://codecov.io/gh/JuliaAI/MLJModels.jl/graph/badge.svg?token=KgarnnCc0K)](https://codecov.io/gh/JuliaAI/MLJModels.jl)
 
 Repository of the "built-in" models available for use in the
 [MLJ](https://github.com/JuliaAI/MLJ.jl) MLJ machine
