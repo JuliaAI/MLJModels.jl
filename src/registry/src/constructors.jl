@@ -4,7 +4,7 @@
 **Private method.**
 
 Return a dictionary of all subtypes of MLJ.Model, keyed on constructor. Where multiple
-types share a single constructor, there can only be one key, and which key appears is
+types share a single constructor, there can only be one value, and which value appears is
 ambiguous.
 
 Typically a model type and it's constructor have the same name, but for wrappers, such as
