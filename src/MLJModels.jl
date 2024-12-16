@@ -72,6 +72,7 @@ include("metadata.jl")
 
 # read in the metadata:
 metadata_file = joinpath(srcdir, "registry", "Metadata.toml")
+Base.include_dependency(metadata_file)
 const INFO_GIVEN_HANDLE = info_given_handle(metadata_file)
 const PKGS_GIVEN_NAME = pkgs_given_name(INFO_GIVEN_HANDLE)
 const AMBIGUOUS_NAMES = ambiguous_names(INFO_GIVEN_HANDLE)
