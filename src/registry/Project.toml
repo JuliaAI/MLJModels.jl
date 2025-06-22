@@ -38,6 +38,7 @@ PartitionedLS = "19f41c5e-8610-11e9-2f2a-0d67e7c5027f"
 Pkg = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
 SIRUS = "cdeec39e-fb35-4959-aadb-a1dd5dede958"
 SelfOrganizingMaps = "ba4b7379-301a-4be0-bee6-171e4e152787"
+SymbolicRegression = "8254be44-1295-4e6a-a16d-46603ac705cb"
 
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
