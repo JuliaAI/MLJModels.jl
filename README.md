@@ -1,4 +1,4 @@
-# MLJModels
+# MLJModels.jl
 
 [![Build Status](https://github.com/JuliaAI/MLJModels.jl/workflows/CI/badge.svg)](https://github.com/JuliaAI/MLJModels.jl/actions)
 [![codecov](https://codecov.io/gh/JuliaAI/MLJModels.jl/graph/badge.svg?token=KgarnnCc0K)](https://codecov.io/gh/JuliaAI/MLJModels.jl)
