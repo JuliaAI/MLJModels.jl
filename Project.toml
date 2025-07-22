@@ -33,6 +33,7 @@ CategoricalDistributions = "0.1"
 Combinatorics = "1.0"
 Dates = "1"
 Distances = "0.9,0.10"
+Distributed = "1"
 Distributions = "0.25"
 InteractiveUtils = "1"
 LinearAlgebra = "1"
@@ -53,6 +54,7 @@ Tables = "0.2,1.0"
 julia = "1.10"
 
 [extras]
+Distributed = "8ba89e20-285c-5b6f-9357-94700520ee1b"
 MLJBase = "a7f614a8-145f-11e9-1d2a-a57a1082229d"
 MLJDecisionTreeInterface = "c6f25543-311c-4c74-83dc-3ea6d1015661"
 MLJMultivariateStatsInterface = "1b6a4a23-ba22-4f51-9698-8599985d3728"
@@ -62,4 +64,4 @@ Suppressor = "fd094767-a336-5f1f-9728-57cf17d0bbfb"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]
-test = ["MLJBase", "MLJDecisionTreeInterface", "MLJMultivariateStatsInterface", "Pkg", "StableRNGs", "Suppressor", "Test"]
+test = ["Distributed", "MLJBase", "MLJDecisionTreeInterface", "MLJMultivariateStatsInterface", "Pkg", "StableRNGs", "Suppressor", "Test"]
