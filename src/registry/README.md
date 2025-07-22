@@ -11,4 +11,3 @@ MLJ developers should use
 [MLJModelRegistryTools.jl](https://github.com/JuliaAI/MLJModelRegistryTools.jl) to make
 updates and corrections, following [the
 instructions](https://juliaai.github.io/MLJModelRegistryTools.jl/stable/registry_management_tools/#Registry-management-tools) there.
-
