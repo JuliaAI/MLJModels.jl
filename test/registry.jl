@@ -20,6 +20,7 @@ using Suppressor
     close(stream)
     registry = dirname(filename) # we need to rename project file to ..../Project.toml
     mv(filename, joinpath(registry, "Project.toml"); force=true)
+    rm(joinpath(registry, "Manifest.toml"); force=true)
 
     # open a new Julia process in which to activate the registry project and attempt to
     # load all models:
@@ -27,10 +28,13 @@ using Suppressor
 
     # define the programs to run in that process:
     # 1. To instantiate the registry environment:
+    this_package = joinpath(@__DIR__, "..")
     program1 = quote
         using Pkg
         Pkg.activate($registry)
+        Pkg.develop(path=$this_package) # MLJModels
         Pkg.instantiate()
+        Pkg.status()
         using MLJModels
         !isempty(keys(Pkg.dependencies()))
     end
@@ -42,7 +46,9 @@ using Suppressor
     # remove `@suppress` to debug:
     @test @suppress remotecall_fetch(Main.eval, id, program1)
     @info "Attempting to load all MLJ Model Registry models into a Julia process. "
-    @info "Be patient, this may take five minutes or so..."
+    @info "Be patient, this may take a few minutes ..."
     @test @suppress remotecall_fetch(Main.eval, id, program2)
     rmprocs(id)
 end
+
+true

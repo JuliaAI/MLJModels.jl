@@ -61,16 +61,18 @@ end
 # to define INFO_GIVEN_HANDLE
 function info_given_handle(metadata_file)
     metadata = LittleDict(TOML.parsefile(metadata_file))
-    metadata_given_pkg = decode_dic(metadata)
+    metadata_given_api_pkg = decode_dic(metadata)
 
     # build info_given_handle dictionary:
     ret = Dict{Handle}{Any}()
-    packages = keys(metadata_given_pkg)
-    for pkg in packages
-        info_given_name = metadata_given_pkg[pkg]
+    packages = keys(metadata_given_api_pkg)
+    for api_pkg in packages
+        info_given_name = metadata_given_api_pkg[api_pkg]
         for name in keys(info_given_name)
+            info = info_given_name[name]
+            pkg = info[:package_name]
             handle = Handle(name, pkg)
-            ret[handle] = info_given_name[name]
+            ret[handle] = info
         end
     end
     return ret
