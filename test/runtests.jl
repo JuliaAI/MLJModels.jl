@@ -2,10 +2,6 @@ import Pkg
 
 using Test, MLJModels
 
-@testset "registry_project" begin
-    @test include("registry_project.jl")
-end
-
 @testset "metadata" begin
     @testset "metadata.jl" begin
         @test include("metadata.jl")
@@ -28,4 +24,14 @@ end
     @testset "ThresholdPredictors" begin
         @test include("builtins/ThresholdPredictors.jl")
     end
+end
+
+if parse(Bool, get(ENV, "MLJ_TEST_REGISTRY", "false"))
+    @testset "registry" begin
+        @test include("registry.jl")
+    end
+else
+    @info "Test of the MLJ Registry is being skipped. Set environment variable "*
+        "MLJ_TEST_REGISTRY = \"true\" to include them.\n"*
+        "The Registry test takes at least one hour. "
 end
