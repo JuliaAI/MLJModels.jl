@@ -14,7 +14,7 @@ using Suppressor
 
     # make a clone of the MLJModel registry, to test `registry_project` method:
     filename, stream = mktemp()
-    for line in MLJModels.Registry.registry_project()
+    for line in MLJModels.registry_project()
         write(stream, line*"\n")
     end
     close(stream)

@@ -85,4 +85,7 @@ include("model_search.jl")
 # include tools to load model code:
 include("loading.jl")
 
+# include tool for cloning the Model Registry project file:
+include("registry_project.jl")
+
 end # module

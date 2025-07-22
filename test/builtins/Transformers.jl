@@ -53,7 +53,6 @@ end
     @test round.(Int, MLJBase.transform(stand, f, [0,4,8])) == [-1.0,1.0,3.0]
     @test round.(Int, MLJBase.inverse_transform(stand, f, [-1, 1, 3])) ==
         [0, 4, 8]
-    infos = MLJModels.info_dict(stand)
 
     N = 5
     rand_char = rand("abcefgh", N)
@@ -156,14 +155,6 @@ end
     @test Xnew[3] == X[3]
     @test Xnew[4] == X[4]
     @test Xnew[5] == X[5]
-
-    infos = MLJModels.info_dict(stand)
-
-    @test infos[:name] == "Standardizer"
-    @test infos[:input_scitype] ==
-        Union{MLJBase.Table, AbstractVector{<:Continuous}}
-    @test infos[:output_scitype] ==
-        Union{MLJBase.Table, AbstractVector{<:Continuous}}
 
     # univariate case
     stand = Standardizer()
@@ -296,11 +287,6 @@ end
     e = v - MLJBase.inverse_transform(t, f, MLJBase.transform(t, f, v))
     @test sum(abs, e) <= 5000*eps()
 
-    infos = MLJModels.info_dict(t)
-
-    @test infos[:name] == "UnivariateBoxCoxTransformer"
-    @test infos[:input_scitype] == AbstractVector{MLJBase.Continuous}
-    @test infos[:output_scitype] == AbstractVector{MLJBase.Continuous}
 end
 
 
@@ -382,12 +368,6 @@ end
     t  = OneHotEncoder()
     f, = MLJBase.fit(t, 0, X)
     @test_throws Exception MLJBase.transform(t, f, Xmiss)
-
-    infos = MLJModels.info_dict(t)
-
-    @test infos[:name] == "OneHotEncoder"
-    @test infos[:input_scitype] == MLJBase.Table
-    @test infos[:output_scitype] == MLJBase.Table
 
     # test the work on missing values
     X = (name   = categorical(["Ben", "John", "Mary", "John", missing], ordered=true),

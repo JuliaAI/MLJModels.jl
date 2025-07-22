@@ -4,7 +4,7 @@ using Test
 using MLJModels
 using MLJBase
 
-METADATA = MLJModels.METADATA
+METADATA = MLJModels.REGISTRY_METADATA
 pca = MLJModels.Handle("PCA", "MultivariateStats")
 cnst = MLJModels.Handle("ConstantRegressor", "MLJModels")
 i = MLJModels.info_given_handle(METADATA)[pca]

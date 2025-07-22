@@ -1,3 +1,5 @@
+# The MLJ Model Registry
+
 The *MLJ Model Registry*, also known as the *model metadata database*,
 consists of the files in this directory:
 
