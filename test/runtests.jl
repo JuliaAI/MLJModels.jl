@@ -30,5 +30,5 @@ if parse(Bool, get(ENV, "MLJ_TEST_REGISTRY", "false"))
 else
     @info "Test of the MLJ Registry is being skipped. Set environment variable "*
         "MLJ_TEST_REGISTRY = \"true\" to include them.\n"*
-        "The Registry test takes at least one hour. "
+        "The Registry test takes about ten minutes. "
 end
