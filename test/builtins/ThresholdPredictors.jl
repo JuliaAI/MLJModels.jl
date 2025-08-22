@@ -1,5 +1,5 @@
 module TestThresholdPredictors
-using Test, MLJModels, CategoricalArrays
+using Test, MLJModels, MLJTransforms, CategoricalArrays
 using ScientificTypes
 using CategoricalDistributions
 
