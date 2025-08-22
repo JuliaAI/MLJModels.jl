@@ -13,6 +13,7 @@ Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
 InteractiveUtils = "b77e0a4c-d291-57a0-90e8-8db25a27a240"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 MLJModelInterface = "e80e1ace-859a-464e-9ed9-23947d8ae3ea"
+MLJModelRegistryTools = "0a96183e-380b-4aa6-be10-c555140810f2"
 Markdown = "d6f4376e-aef5-505a-96c1-9c027394607a"
 OrderedCollections = "bac558e1-5e72-5ebc-8fee-abe8a469f55d"
 Parameters = "d96e819e-fc66-5662-9728-84c9c7592b0a"
@@ -38,6 +39,7 @@ Distributions = "0.25"
 InteractiveUtils = "1"
 LinearAlgebra = "1"
 MLJModelInterface = "1.10"
+MLJModelRegistryTools = "0.1.1"
 MLJTransforms = "0.1.1"
 Markdown = "1"
 OrderedCollections = "1.1"
@@ -66,14 +68,4 @@ Suppressor = "fd094767-a336-5f1f-9728-57cf17d0bbfb"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]
-test = [
-    "Distributed",
-    "MLJBase",
-    "MLJDecisionTreeInterface",
-    "MLJMultivariateStatsInterface",
-    "MLJTransforms",
-    "Pkg",
-    "StableRNGs",
-    "Suppressor",
-    "Test",
-]
+test = ["Distributed", "MLJBase", "MLJDecisionTreeInterface", "MLJMultivariateStatsInterface", "MLJTransforms", "Pkg", "StableRNGs", "Suppressor", "Test"]
