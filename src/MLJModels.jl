@@ -60,7 +60,6 @@ include("utilities.jl")
 
 # load built-in models:
 include("builtins/Constant.jl")
-include("builtins/Transformers.jl")
 include("builtins/ThresholdPredictors.jl")
 
 # declare paths to the metadata and associated project file:

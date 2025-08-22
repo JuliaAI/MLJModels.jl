@@ -1,6 +1,6 @@
 import Pkg
 
-using Test, MLJModels
+using Test, MLJModels, MLJTransforms
 
 @testset "metadata" begin
     @testset "metadata.jl" begin
@@ -17,9 +17,6 @@ end
 @testset "built-in models" begin
     @testset "Constant.jl" begin
         @test include("builtins/Constant.jl")
-    end
-    @testset "Transformers.jl" begin
-        @test include("builtins/Transformers.jl")
     end
     @testset "ThresholdPredictors" begin
         @test include("builtins/ThresholdPredictors.jl")

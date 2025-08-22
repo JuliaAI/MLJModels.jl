@@ -1,7 +1,7 @@
 module TestModelSearch
 
 using Test
-using MLJModels
+using MLJModels, MLJTransforms
 using MLJBase
 using ScientificTypes
 using Markdown
@@ -36,7 +36,7 @@ tree = info("DecisionTreeRegressor", pkg="DecisionTree")
     # Note that these tests assume model registry metadata is up to date
     # with the latest trait values in `src/builtins/`:
     @test info(ConstantRegressor) == cnst
-    @test info(Standardizer()) == info("Standardizer", pkg="MLJModels")
+    @test info(Standardizer()) == info("Standardizer", pkg="MLJTransforms")
     @test doc("ConstantRegressor", pkg="MLJModels") == cnst.docstring |> Markdown.parse
     @test_throws MLJModels.ERR_DOC_EXPECTS_STRING doc(ConstantRegressor)
     @test_throws MLJModels.ERR_DOC_EXPECTS_STRING doc(ConstantRegressor())
