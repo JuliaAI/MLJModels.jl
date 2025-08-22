@@ -4,47 +4,10 @@ using Test
 using MLJModels
 using MLJBase
 
-@testset "(de)serialization for TOML" begin
-    d = Dict()
-    d[:test] = Tuple{Union{Continuous,Missing},Finite}
-    d["junk"] = Dict{Any,Any}("H" => Missing, :cross => "lemon",
-                              :t => :w, "r" => "r",
-                              "tuple" =>(nothing, Float64),
-                              "vector" =>[1, 2, Int])
-    d["a"] = "b"
-    d[:f] = true
-    d["j"] = :post
-
-    @test MLJModels.decode_dic(MLJModels.encode_dic(d)) == d
-end
-
-@testset "inverting set-valued dictionaries" begin
-    d = Dict(
-        :x => Set([1, 2]),
-        :y => Set([2, 3, 5]),
-        :z => Set([4, 7]),
-        :a => Set([8, 1]),
-        :b => Set([4,]),
-        :w => Set([3, 1, 2]),
-        :t => Set([0,]))
-
-    dinv = Dict(
-        0 => Set([:t,]),
-        1 => Set([:x, :a, :w]),
-        2 => Set([:x, :y, :w]),
-        3 => Set([:y, :w]),
-        4 => Set([:z, :b]),
-        5 => Set([:y,]),
-        7 => Set([:z,]),
-        8 => Set([:a,]))
-    @test MLJModels.inverse(d) == dinv
-end
-
-metadata_file = joinpath(@__DIR__, "..", "src",
-                         "registry", "Metadata.toml")
+METADATA = MLJModels.REGISTRY_METADATA
 pca = MLJModels.Handle("PCA", "MultivariateStats")
 cnst = MLJModels.Handle("ConstantRegressor", "MLJModels")
-i = MLJModels.info_given_handle(metadata_file)[pca]
+i = MLJModels.info_given_handle(METADATA)[pca]
 
 @testset "Handle constructors" begin
     @test MLJModels.Handle("PCA") ==
@@ -53,8 +16,8 @@ i = MLJModels.info_given_handle(metadata_file)[pca]
 end
 
 @testset "building INFO_GIVEN_HANDLE" begin
-    @test MLJModels.info_given_handle(metadata_file)[pca][:name] == "PCA"
-    d1 = MLJModels.info_given_handle(metadata_file)[cnst][:prediction_type] ==
+    @test MLJModels.info_given_handle(METADATA)[pca][:name] == "PCA"
+    d1 = MLJModels.info_given_handle(METADATA)[cnst][:prediction_type] ==
         :probabilistic
 end
 

@@ -48,7 +48,6 @@ export UnivariateDiscretizer,
     OneHotEncoder, ContinuousEncoder, FillImputer, UnivariateFillImputer,
     UnivariateTimeTypeToContinuous, InteractionTransformer
 
-const srcdir = dirname(@__FILE__) # the directory containing this file
 const MMI = MLJModelInterface
 
 if VERSION < v"1.3"
@@ -61,31 +60,31 @@ include("utilities.jl")
 
 # load built-in models:
 include("builtins/Constant.jl")
-include("builtins/Transformers.jl")
 include("builtins/ThresholdPredictors.jl")
 
-Handle = NamedTuple{(:name, :pkg), Tuple{String,String}}
-(::Type{Handle})(name,string) = NamedTuple{(:name, :pkg)}((name, string))
+# declare paths to the metadata and associated project file:
+const REGISTRY_PROJECT = @path joinpath(@__DIR__, "registry", "Project.toml")
+const REGISTRY_METADATA = @path joinpath(@__DIR__, "registry", "Metadata.toml")
+Base.include_dependency(REGISTRY_PROJECT)
+Base.include_dependency(REGISTRY_METADATA)
 
 # load utilities for reading model metadata from file:
 include("metadata.jl")
 
-# read in the metadata:
-metadata_file = joinpath(srcdir, "registry", "Metadata.toml")
-Base.include_dependency(metadata_file)
-const INFO_GIVEN_HANDLE = info_given_handle(metadata_file)
+# read in metadata:
+const INFO_GIVEN_HANDLE = info_given_handle(REGISTRY_METADATA)
 const PKGS_GIVEN_NAME = pkgs_given_name(INFO_GIVEN_HANDLE)
 const AMBIGUOUS_NAMES = ambiguous_names(INFO_GIVEN_HANDLE)
 const NAMES = model_names(INFO_GIVEN_HANDLE)
 const MODEL_TRAITS_IN_REGISTRY = model_traits_in_registry(INFO_GIVEN_HANDLE)
 
-# model search and registry code:
+# include tools to search the model registry:
 include("model_search.jl")
-include("loading.jl")
-include("registry/src/Registry.jl")
-using .Registry
 
-# finalize:
-include("init.jl")
+# include tools to load model code:
+include("loading.jl")
+
+# include tool for cloning the Model Registry project file:
+include("registry_project.jl")
 
 end # module
