@@ -35,14 +35,14 @@ end
     d = MLJBase.UnivariateFinite([y[1], y[2], y[4]], [0.5, 0.25, 0.25])
 
     yhat = MLJBase.predict_mode(model, fitresult, X)
-    @test MLJBase.classes(yhat[1]) == MLJBase.classes(y[1])
+    @test levels(yhat[1]) == levels(y[1])
     @test yhat[5] == y[1]
     @test length(yhat) == 10
 
     yhat = MLJBase.predict(model, fitresult, X)
     yhat1 = yhat[1]
 
-    for c in MLJBase.classes(d)
+    for c in levels(d)
         Distributions.pdf(yhat1, c) ≈ Distributions.pdf(d, c)
     end
 

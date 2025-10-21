@@ -55,7 +55,7 @@ function MLJModelInterface.fit(::ConstantClassifier,
                                y,
                                w=nothing)
     d = Distributions.fit(UnivariateFinite, y, w)
-    C = classes(d)
+    C = levels(d)
     fitresult = (C, Distributions.pdf([d, ], C))
     cache     = nothing
     report    = NamedTuple()
@@ -66,10 +66,10 @@ MLJModelInterface.fitted_params(::ConstantClassifier, fitresult) =
     (target_distribution=fitresult,)
 
 function MLJModelInterface.predict(::ConstantClassifier, fitresult, Xnew)
-    _classes, probs1 = fitresult
+    _levels, probs1 = fitresult
     N = nrows(Xnew)
-    probs = reshape(vcat(fill(probs1, N)...), N, length(_classes))
-    return UnivariateFinite(_classes, probs)
+    probs = reshape(vcat(fill(probs1, N)...), N, length(_levels))
+    return UnivariateFinite(_levels, probs)
 end
 
 
@@ -216,10 +216,11 @@ ConstantRegressor
 
 This "dummy" probabilistic predictor always returns the same distribution, irrespective of
 the provided input pattern. The distribution `d` returned is the `UnivariateFinite`
-distribution based on frequency of classes observed in the training target data. So,
-`pdf(d, level)` is the number of times the training target takes on the value `level`.
-Use `predict_mode` instead of `predict` to obtain the training target mode instead. For
-more on the `UnivariateFinite` type, see the CategoricalDistributions.jl package.
+distribution based on frequency of levels (classes) observed in the training target
+data. So, `pdf(d, level)` is the number of times the training target takes on the value
+`level`.  Use `predict_mode` instead of `predict` to obtain the training target mode
+instead. For more on the `UnivariateFinite` type, see the CategoricalDistributions.jl
+package.
 
 Almost any reasonable model is expected to outperform `ConstantClassifier`, which is used
 almost exclusively for testing and establishing performance baselines.

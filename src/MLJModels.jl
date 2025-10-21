@@ -22,8 +22,7 @@ using Combinatorics
 import Distributions
 import REPL # stdlib, needed for `Term`
 import PrettyPrinting
-import CategoricalDistributions: UnivariateFinite, UnivariateFiniteArray,
-    classes
+import CategoricalDistributions: UnivariateFinite, UnivariateFiniteArray
 import StatisticalTraits # for `info`
 
 # from loading.jl:
