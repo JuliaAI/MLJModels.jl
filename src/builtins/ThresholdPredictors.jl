@@ -56,16 +56,16 @@ const ThresholdSupported = Union{keys(_type_given_atom)...}
 
 const ERR_MODEL_UNSPECIFIED = ArgumentError(
     "Expecting atomic model as argument. None specified. ")
-warn_classes(first_class, second_class) =
+warn_levels(first_class, second_class) =
     "Taking positive class as `$(second_class)` and negative class as"*
     "`$(first_class)`."*
     "Coerce target to `OrderedFactor{2}` to suppress this warning, "*
     "ensuring that positive class > negative class. "
-const ERR_CLASSES_DETECTOR = ArgumentError(
+const ERR_LEVELS_DETECTOR = ArgumentError(
     "Targets for detector models must be ordered. Consider coercing to "*
     "`OrderedFactor`, ensuring that outlier class > inlier class. ")
 const ERR_TARGET_NOT_BINARY = ArgumentError(
-    "Target `y` must have two classes in its  pool, even if only one "*
+    "Target `y` must have two levels in its  pool, even if only one "*
     "class is manifest. ")
 const err_unsupported_model_type(T) = ArgumentError(
     "`BinaryThresholdPredictor` does not support atomic models with supertype `$T`. "*
@@ -208,9 +208,9 @@ function MMI.fit(model::ThresholdUnion, verbosity::Int, args...)
         length(L) == 2 || throw(ERR_TARGET_NOT_BINARY)
         first_class, second_class = L
         if model.model isa Probabilistic
-            @warn warn_classes(first_class, second_class)
+            @warn warn_levels(first_class, second_class)
         else
-            throw(ERR_CLASSES_DETECTOR)
+            throw(ERR_LEVELS_DETECTOR)
         end
     end
     model_fitresult, model_cache, model_report = MMI.fit(
@@ -259,7 +259,7 @@ function _predict_threshold(yhat::UnivariateFinite, threshold)
     dict = yhat.prob_given_ref
     length(threshold) == length(dict) || throw(
         ArgumentError(
-        "`length(threshold)` has to equal number of classes in specified "*
+        "`length(threshold)` has to equal number of levels in specified "*
         "`UnivariateFinite` distribution."
         )
     )
@@ -277,14 +277,14 @@ function _predict_threshold(yhat::UnivariateFiniteArray{S,V,R,P,N},
     dict = yhat.prob_given_ref
     length(threshold) == length(dict) || throw(
         ArgumentError(
-        "`length(threshold)` has to equal number of classes in specified "*
+        "`length(threshold)` has to equal number of levels in specified "*
         "`UnivariateFiniteArray`."
         )
     )
     d = yhat.decoder(1)
     levs = levels(d)
     ord = isordered(d)
-    # Array to house the predicted classes
+    # Array to house the predicted levels
     ret = CategoricalArray{V, N, R}(undef, size(yhat), levels=levs, ordered=ord)
     #ret = Array{CategoricalValue{V, R}, N}(undef, size(yhat))
     # `temp` vector allocted once to be used for calculations in each loop
