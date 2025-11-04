@@ -27,9 +27,9 @@ y2_ = categorical(yraw[2:end], ordered=true)
     )
 
     # Check warning when `y` is not ordered:
-    @test_logs((:warn, MLJModels.warn_classes(levels(y_)...)),
+    @test_logs((:warn, MLJModels.warn_levels(levels(y_)...)),
                 MMI.fit(model, 1, MMI.reformat(model, X_, y1_)...))
-    # Check predictions containing two classes
+    # Check predictions containing two levels
     @test_throws ArgumentError BinaryThresholdPredictor(ConstantRegressor())
     @test_logs((:warn, r"`threshold` should be"),
                BinaryThresholdPredictor(atom, threshold=-1))
@@ -88,13 +88,13 @@ end
     v1 = categorical(['a', 'b', 'a'])
     v2 = categorical(['a', 'b', 'a', 'c'])
     # Test with UnivariateFinite object
-    d1 = UnivariateFinite(MMI.classes(v1), [0.4, 0.6])
+    d1 = UnivariateFinite(levels(v1), [0.4, 0.6])
     @test_throws ArgumentError MLJModels._predict_threshold(d1, 0.7)
     @test MLJModels._predict_threshold(d1, (0.7, 0.3)) == v1[2]
     @test MLJModels._predict_threshold(d1, [0.5, 0.5]) == v1[2]
     @test MLJModels._predict_threshold(d1, (0.4, 0.6)) == v1[1]
     @test MLJModels._predict_threshold(d1, [0.2, 0.8]) == v1[1]
-    d2 = UnivariateFinite(MMI.classes(v2), [0.4, 0.3, 0.3])
+    d2 = UnivariateFinite(levels(v2), [0.4, 0.3, 0.3])
     @test_throws ArgumentError MLJModels._predict_threshold(d2, (0.7, 0.3))
     @test MLJModels._predict_threshold(d2, (0.2, 0.5, 0.3)) == v2[1]
     @test MLJModels._predict_threshold(d2, [0.3, 0.2, 0.5]) == v2[2]
@@ -117,14 +117,14 @@ end
 
     # Test with UnivariateFiniteArray oject
     probs1 = [0.2 0.8; 0.7 0.3; 0.1 0.9]
-    unf_arr1 = UnivariateFinite(MMI.classes(v1), probs1)
+    unf_arr1 = UnivariateFinite(levels(v1), probs1)
     @test_throws ArgumentError MLJModels._predict_threshold(unf_arr1, 0.7)
     @test MLJModels._predict_threshold(unf_arr1, (0.7, 0.3)) == [v1[2], v1[1], v1[2]]
     @test MLJModels._predict_threshold(unf_arr1, [0.5, 0.5]) == [v1[2], v1[1], v1[2]]
     @test MLJModels._predict_threshold(unf_arr1, (0.4, 0.6)) == [v1[2], v1[1], v1[2]]
     @test MLJModels._predict_threshold(unf_arr1, [0.2, 0.8]) == [v1[1], v1[1], v1[2]]
     probs2 = [0.2 0.3 0.5;0.1 0.6 0.3; 0.4 0.0 0.6]
-    unf_arr2 = UnivariateFinite(MMI.classes(v2), probs2)
+    unf_arr2 = UnivariateFinite(levels(v2), probs2)
     @test_throws ArgumentError MLJModels._predict_threshold(unf_arr2, (0.7, 0.3))
     @test MLJModels._predict_threshold(unf_arr2, (0.2, 0.5, 0.3)) == [v2[4], v2[2], v2[1]]
     @test MLJModels._predict_threshold(unf_arr2, [0.3, 0.2, 0.5]) == [v2[2], v2[2], v2[1]]
@@ -144,7 +144,7 @@ MMI.input_scitype(::Type{<:DummyDetector}) = MMI.Table
 
 @testset "BinaryThresholdPredictor - ProbabilisticUnsupervisedDetector" begin
     detector = BinaryThresholdPredictor(DummyDetector(), threshold=0.2)
-    @test_throws MLJModels.ERR_CLASSES_DETECTOR MMI.fit(
+    @test_throws MLJModels.ERR_LEVELS_DETECTOR MMI.fit(
         detector, 1, MMI.reformat(detector, X_, y1_)...
     )
 
