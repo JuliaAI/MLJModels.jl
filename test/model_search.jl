@@ -151,5 +151,16 @@ end
     @test pca ∉ models(r"PCA′")
 end
 
+@testset "https://github.com/JuliaAI/MLJModels.jl/issues/594" begin
+    ms = map(m->m.name, models())
+    ms_plus = map(m->m.name, models(; wrappers=true))
+    localms = map(m->m.name, localmodels())
+    localms_plus = map(m->m.name, localmodels(; wrappers=true))
+    @test !("Pipeline" in ms)
+    @test "Pipeline" in ms_plus
+    @test !("Pipeline" in localms)
+    @test "Pipeline" in localms_plus
+end
+
 end
 true
