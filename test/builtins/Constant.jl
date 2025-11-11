@@ -1,12 +1,13 @@
 module TestConstant
 
 using Test, MLJModels, CategoricalArrays
-import Distributions, MLJBase
+import Distributions, MLJBase, Tables
+
 
 # Any X will do for constant models:
 X = NamedTuple{(:x1,:x2,:x3)}((rand(10), rand(10), rand(10)))
 
-@testset "Regressor" begin
+@testset "ConstantRegressor" begin
     y = [1.0, 1.0, 2.0, 2.0]
 
     model = ConstantRegressor(distribution_type=
@@ -25,7 +26,39 @@ X = NamedTuple{(:x1,:x2,:x3)}((rand(10), rand(10), rand(10)))
     @test MLJBase.load_path(model) == "MLJModels.ConstantRegressor"
 end
 
-@testset "Classifier" begin
+@testset "DeterministicConstantRegressor" begin
+
+    X = (; x=ones(3))
+    S = MLJBase.target_scitype(DeterministicConstantRegressor())
+
+    # vector target:
+    y = Float64[2, 3, 4]
+    @test MLJBase.scitype(y) <: S
+    mach = MLJBase.machine(MLJModels.DeterministicConstantRegressor(), X, y)
+    MLJBase.fit!(mach, verbosity=0)
+    @test MLJBase.predict(mach, X) ≈ [3, 3, 3]
+    @test only(MLJBase.fitted_params(mach).mean) ≈ 3
+
+    # matrix target:
+    y = Float64[2 5; 3 6; 4 7]
+    @test MLJBase.scitype(y) <: S
+    mach = MLJBase.machine(MLJModels.DeterministicConstantRegressor(), X, y)
+    MLJBase.fit!(mach, verbosity=0)
+    @test MLJBase.predict(mach, X) ≈ [3 6; 3 6; 3 6]
+    @test MLJBase.fitted_params(mach).mean ≈ [3 6]
+
+    # tabular target:
+    y = Float64[2 5; 3 6; 4 7] |> Tables.table |> Tables.rowtable
+    @test MLJBase.scitype(y) <: S
+    mach = MLJBase.machine(MLJModels.DeterministicConstantRegressor(), X, y)
+    MLJBase.fit!(mach, verbosity=0)
+    yhat = MLJBase.predict(mach, X)
+    @test yhat isa Vector{<:NamedTuple}
+    @test Tables.matrix(yhat)  ≈ [3 6; 3 6; 3 6]
+    @test MLJBase.fitted_params(mach).mean ≈ [3 6]
+end
+
+@testset "ConstantClassifier" begin
     yraw = ["Perry", "Antonia", "Perry", "Skater"]
     y = categorical(yraw)
 
