@@ -34,7 +34,10 @@ _mean(y, ::Type{<:Table}) = _mean(Tables.matrix(y), AbstractArray)
 _materializer(y) = _materializer(y, scitype(y))
 _materializer(y, ::Type{<:AbstractMatrix}) = identity
 _materializer(y, ::Type{<:AbstractVector}) = vec
-_materializer(y, ::Type{<:Table}) = Tables.materializer(y)∘Tables.table
+function _materializer(y, ::Type{<:Table})
+    names = Tables.columnnames(Tables.columntable(y))
+    Tables.materializer(y)∘(matrix->Tables.table(matrix; header=names))
+end
 
 struct DeterministicConstantRegressor <: Deterministic end
 
@@ -279,9 +282,9 @@ The fields of `fitted_params(mach)` are:
 ```julia
 using MLJ
 
-X, y = make_regression(10, 2; n_targets=3) # synthetic data: two tables
-regressor = DeterministicConstantRegressor()
-mach = machine(regressor, X, y) |> fit!
+X, y = make_regression(10, 2; n_targets=3); # synthetic data: two tables
+regressor = DeterministicConstantRegressor();
+mach = machine(regressor, X, y) |> fit!;
 
 fitted_params(mach)
 

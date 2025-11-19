@@ -48,12 +48,13 @@ end
     @test MLJBase.fitted_params(mach).mean ≈ [3 6]
 
     # tabular target:
-    y = Float64[2 5; 3 6; 4 7] |> Tables.table |> Tables.rowtable
+    y = Tables.table(Float64[2 5; 3 6; 4 7], header=[:x, :y]) |> Tables.rowtable
     @test MLJBase.scitype(y) <: S
     mach = MLJBase.machine(MLJModels.DeterministicConstantRegressor(), X, y)
     MLJBase.fit!(mach, verbosity=0)
     yhat = MLJBase.predict(mach, X)
     @test yhat isa Vector{<:NamedTuple}
+    @test keys(yhat[1]) == (:x, :y)
     @test Tables.matrix(yhat)  ≈ [3 6; 3 6; 3 6]
     @test MLJBase.fitted_params(mach).mean ≈ [3 6]
 end
