@@ -275,7 +275,7 @@ Train the machine using `fit!(mach, rows=...)`.
 
 The fields of `fitted_params(mach)` are:
 
-- `mean`: The target mean(s). Always a row vector.
+- `mean`: The target mean(s). Always a row vector. (i.e an `AbstractMatrix` object with row dim 1)
 
 # Examples
 
