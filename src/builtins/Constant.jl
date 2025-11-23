@@ -242,7 +242,7 @@ ConstantRegressor
 This "dummy" predictor always makes the same prediction, irrespective of the provided
 input pattern, namely the mean value of the training target values. (It's counterpart,
 `ConstantRegressor` makes probabilistic predictions.) This model handles mutlitargets,
-i.e, the training target can be a matrix or a table (observations the rows).
+i.e, the training target can be a matrix or a table (with rows as observations).
 
 Almost any reasonable model is expected to outperform `DeterministicConstantRegressor`
 which is used almost exclusively for testing and establishing performance baselines.
