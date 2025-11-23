@@ -24,8 +24,20 @@ MLJModelInterface.predict(::ConstantRegressor, fitresult, Xnew) =
     fill(fitresult, nrows(Xnew))
 
 ##
-## THE CONSTANT DETERMINISTIC REGRESSOR (FOR TESTING)
+## THE CONSTANT DETERMINISTIC REGRESSOR
 ##
+
+# helpers:
+_mean(y) = _mean(y, scitype(y))
+_mean(y, ::Type{<:AbstractArray}) = mean(y, dims=1)
+_mean(y, ::Type{<:Table}) = _mean(Tables.matrix(y), AbstractArray)
+_materializer(y) = _materializer(y, scitype(y))
+_materializer(y, ::Type{<:AbstractMatrix}) = identity
+_materializer(y, ::Type{<:AbstractVector}) = vec
+function _materializer(y, ::Type{<:Table})
+    names = Tables.columnnames(Tables.columntable(y))
+    Tables.materializer(y)∘(matrix->Tables.table(matrix; header=names))
+end
 
 struct DeterministicConstantRegressor <: Deterministic end
 
@@ -33,14 +45,20 @@ function MLJModelInterface.fit(::DeterministicConstantRegressor,
                                verbosity::Int,
                                X,
                                y)
-    fitresult = mean(y)
+    μ = _mean(y)
+    materializer = _materializer(y)
+    fitresult = (; μ, materializer)
     cache     = nothing
     report    = NamedTuple()
     return fitresult, cache, report
 end
 
 MLJModelInterface.predict(::DeterministicConstantRegressor, fitresult, Xnew) =
-    fill(fitresult, nrows(Xnew))
+    hcat([fill(fitresult.μ[i], nrows(Xnew)) for i in eachindex(fitresult.μ)]...) |>
+    fitresult.materializer
+
+MLJModelInterface.fitted_params(model::DeterministicConstantRegressor, fitresult) =
+    (; mean=fitresult.μ)
 
 ##
 ## THE CONSTANT CLASSIFIER
@@ -115,7 +133,11 @@ metadata_model(
 metadata_model(
     DeterministicConstantRegressor,
     input_scitype = Table,
-    target_scitype = AbstractVector{Continuous},
+    target_scitype = Union{
+        AbstractMatrix{Continuous},
+        AbstractVector{Continuous},
+        Table,
+    },
     supports_weights = false,
     load_path    = "MLJModels.DeterministicConstantRegressor"
 )
@@ -149,6 +171,9 @@ mean or median values instead. If not specified, a normal distribution is fit.
 
 Almost any reasonable model is expected to outperform `ConstantRegressor` which is used
 almost exclusively for testing and establishing performance baselines.
+
+If you need a multitarget dummy regressor, consider using `DeterministicConstantRegressor`
+instead.
 
 In MLJ (or MLJModels) do `model = ConstantRegressor()` or `model =
 ConstantRegressor(distribution=...)` to construct a model instance.
@@ -210,6 +235,67 @@ See also
 [`ConstantClassifier`](@ref)
 """
 ConstantRegressor
+
+"""
+    DeterministicConstantRegressor
+
+This "dummy" predictor always makes the same prediction, irrespective of the provided
+input pattern, namely the mean value of the training target values. (It's counterpart,
+`ConstantRegressor` makes probabilistic predictions.) This model handles mutlitargets,
+i.e, the training target can be a matrix or a table (with rows as observations).
+
+Almost any reasonable model is expected to outperform `DeterministicConstantRegressor`
+which is used almost exclusively for testing and establishing performance baselines.
+
+In MLJ, do `model = DeterministicConstantRegressor()` to construct a model instance.
+
+
+# Training data
+
+In MLJ (or MLJBase) bind an instance `model` to data with
+
+    mach = machine(model, X, y)
+
+Here:
+
+- `X` is any table of input features (eg, a `DataFrame`)
+
+- `y` is the target, which can be any `AbstractVector`, `AbstractVector` or table whose
+  element scitype is `Continuous`; check the scitype `scitype(y)` or, for tables, with
+  `schema(y)`
+
+Train the machine using `fit!(mach, rows=...)`.
+
+# Operations
+
+- `predict(mach, Xnew)`: Return predictions of the target given
+  features `Xnew` (which for this model are ignored).
+
+# Fitted parameters
+
+The fields of `fitted_params(mach)` are:
+
+- `mean`: The target mean(s). Always a row vector. (i.e an `AbstractMatrix` object with row dim 1)
+
+# Examples
+
+```julia
+using MLJ
+
+X, y = make_regression(10, 2; n_targets=3); # synthetic data: two tables
+regressor = DeterministicConstantRegressor();
+mach = machine(regressor, X, y) |> fit!;
+
+fitted_params(mach)
+
+Xnew, _ = make_regression(3, 2)
+predict(mach, Xnew)
+
+```
+See also
+[`ConstantClassifier`](@ref)
+"""
+DeterministicConstantRegressor
 
 """
     ConstantClassifier
