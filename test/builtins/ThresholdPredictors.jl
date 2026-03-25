@@ -323,6 +323,21 @@ end
     @test MLJBase.predict(mach2, (; x = rand(2))) ==  yhat
 end
 
+@testset "wrapping models with non-empty `reporting_observations`" begin
+    # to resolve https://github.com/JuliaAI/MLJModels.jl/issues/606
+
+    X = (x = rand(3),)
+    y = coerce([0, 1, 0], OrderedFactor)
+    mode_class = y[1] # `0`
+
+    clf = ConstantClassifier()
+    pipe = Standardizer() |> clf
+    point_predictor = BinaryThresholdPredictor(pipe)
+
+    mach = MLJBase.machine(point_predictor, X, y) |> MLJBase.fit!
+    @test MLJBase.predict(mach, X) == fill(mode_class, 3)
+end
+
 end # module
 
 true
