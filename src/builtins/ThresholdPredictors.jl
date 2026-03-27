@@ -245,8 +245,14 @@ function MMI.fitted_params(model::ThresholdUnion, fitresult)
         )
 end
 
+# to strip off any "report" part of the atomic model's output of `predict`:
+prediction_part(output, atomic_model) =
+    prediction_part(output, Val(:predict in MMI.reporting_operations(atomic_model)))
+prediction_part(output, ::Val{true}) = first(output)
+prediction_part(output, ::Val{false}) = output
+
 function MMI.predict(model::ThresholdUnion, fitresult, X)
-    yhat = MMI.predict(model.model, fitresult[1], X)
+    yhat = prediction_part(MMI.predict(model.model, fitresult[1], X), model.model)
     threshold = (1 - fitresult[2], fitresult[2])
     return _predict_threshold(yhat, threshold)
 end
