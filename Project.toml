@@ -1,7 +1,7 @@
 name = "MLJModels"
 uuid = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
 authors = ["Anthony D. Blaom <anthony.blaom@gmail.com>"]
-version = "0.18.7"
+version = "0.18.8"
 
 [deps]
 CategoricalArrays = "324d7699-5711-5eae-9e2f-1d82baa6b597"
@@ -40,7 +40,7 @@ LinearAlgebra = "1"
 MLJModelInterface = "1.10"
 MLJTransforms = "0.1.1"
 Markdown = "1"
-OrderedCollections = "1.1"
+OrderedCollections = "1.1, 2"
 Parameters = "0.12"
 Pkg = "1"
 PrettyPrinting = "0.3, 0.4"
