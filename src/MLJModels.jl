@@ -34,18 +34,12 @@ export models, localmodels, matching, doc
 # extended in model_search.jl:
 export info
 
-# from model/Constant
+# from builtins/Constant.jl
 export ConstantRegressor, ConstantClassifier,
     DeterministicConstantRegressor, DeterministicConstantClassifier
 
-# from model/ThresholdPredictors
+# from builtins/ThresholdPredictors.jl
 export BinaryThresholdPredictor
-
-# from model/Transformers
-export UnivariateDiscretizer,
-    UnivariateStandardizer, Standardizer, UnivariateBoxCoxTransformer,
-    OneHotEncoder, ContinuousEncoder, FillImputer, UnivariateFillImputer,
-    UnivariateTimeTypeToContinuous, InteractionTransformer
 
 const MMI = MLJModelInterface
 
