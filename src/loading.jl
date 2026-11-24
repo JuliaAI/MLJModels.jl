@@ -47,16 +47,6 @@ function MLJModelInterface.load_path(name::String; pkg=nothing)
     return load_path(proxy)
 end
 
-# to also get pkg, which could be different from glue code pkg
-# appearing in load_path:
-function load_path_and_pkg(name::String; pkg=nothing, interactive=false)
-    proxy = info(name; pkg=pkg, interactive=interactive)
-    handle = (name=proxy.name, pkg=proxy.package_name)
-    _info = INFO_GIVEN_HANDLE[handle]
-
-    return _info[:load_path], _info[:package_name]
-end
-
 
 ## THE CODE LOADING MACROS
 
