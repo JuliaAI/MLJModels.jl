@@ -38,9 +38,6 @@ export info
 export ConstantRegressor, ConstantClassifier,
     DeterministicConstantRegressor, DeterministicConstantClassifier
 
-# from builtins/ThresholdPredictors.jl
-export BinaryThresholdPredictor
-
 const MMI = MLJModelInterface
 
 if VERSION < v"1.3"
