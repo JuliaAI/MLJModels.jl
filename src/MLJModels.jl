@@ -49,8 +49,7 @@ nonmissing = nonmissingtype
 include("utilities.jl")
 
 # load built-in models:
-include("builtins/Constant.jl")
-include("builtins/ThresholdPredictors.jl")
+include("constant_models.jl")
 
 # declare paths to the metadata and associated project file:
 const REGISTRY_PROJECT = @path joinpath(@__DIR__, "registry", "Project.toml")
