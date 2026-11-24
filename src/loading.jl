@@ -5,15 +5,6 @@
 
 ## HELPERS
 
-function _append!(program, ex, doprint::Bool, tick_early::Bool)
-    str = string(ex)
-    doprint && push!(program.args, :(print($str)))
-    doprint && !tick_early && push!(program.args, :(println(" \u2714")))
-    push!(program.args, ex)
-    tick_early && doprint && push!(program.args, :(println(" \u2714")))
-    return program
-end
-
 function _import(modl, api_pkg, pkg, doprint)
     doprint && print("import $api_pkg")
     modl.eval(:(import $api_pkg))
