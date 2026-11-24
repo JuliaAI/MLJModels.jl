@@ -237,15 +237,6 @@ Base.propertynames(::Checker) =
      :input_scitype,
      :target_scitype)
 
-function _as_named_tuple(s::Checker)
-    names = propertynames(s)
-    NamedTuple{names}(Tuple(getproperty(s, p) for p in names))
-end
-
-# function Base.show(io::IO, ::MIME"text/plain", S::Checker)
-#     show(io, MIME("text/plain"), _as_named_tuple(S))
-# end
-
 not_missing_and_true(x) = !ismissing(x) && x
 
 const WARN_MULTITARGET = "'y' is a table with only one column. " *
