@@ -5,15 +5,6 @@
 
 ## HELPERS
 
-function _append!(program, ex, doprint::Bool, tick_early::Bool)
-    str = string(ex)
-    doprint && push!(program.args, :(print($str)))
-    doprint && !tick_early && push!(program.args, :(println(" \u2714")))
-    push!(program.args, ex)
-    tick_early && doprint && push!(program.args, :(println(" \u2714")))
-    return program
-end
-
 function _import(modl, api_pkg, pkg, doprint)
     doprint && print("import $api_pkg")
     modl.eval(:(import $api_pkg))
@@ -54,16 +45,6 @@ end
 function MLJModelInterface.load_path(name::String; pkg=nothing)
     proxy = info(name; pkg=pkg)
     return load_path(proxy)
-end
-
-# to also get pkg, which could be different from glue code pkg
-# appearing in load_path:
-function load_path_and_pkg(name::String; pkg=nothing, interactive=false)
-    proxy = info(name; pkg=pkg, interactive=interactive)
-    handle = (name=proxy.name, pkg=proxy.package_name)
-    _info = INFO_GIVEN_HANDLE[handle]
-
-    return _info[:load_path], _info[:package_name]
 end
 
 

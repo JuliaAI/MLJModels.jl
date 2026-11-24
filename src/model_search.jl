@@ -182,23 +182,20 @@ StatisticalTraits.info(model::MMI.Model) = info(typeof(model))
 
 # Basic idea
 
-if false
+    # matching(model::MLJModels.ModelProxy, X) =
+    #     !(model.is_supervised) && scitype(X) <: model.input_scitype
 
-    matching(model::MLJModels.ModelProxy, X) =
-        !(model.is_supervised) && scitype(X) <: model.input_scitype
+    # matching(model::MLJModels.ModelProxy, X, y) =
+    #     model.is_supervised &&
+    #     scitype(X) <: model.input_scitype &&
+    #     scitype(y) <: model.target_scitype
 
-    matching(model::MLJModels.ModelProxy, X, y) =
-        model.is_supervised &&
-        scitype(X) <: model.input_scitype &&
-        scitype(y) <: model.target_scitype
+    # matching(model::MLJModels.ModelProxy, X, y, w::AbstractVector{<:Real}) =
+    #     model.is_supervised &&
+    #     model.supports_weights &&
+    #     scitype(X) <: model.input_scitype &&
+    #     scitype(y) <: model.target_scitype
 
-    matching(model::MLJModels.ModelProxy, X, y, w::AbstractVector{<:Real}) =
-        model.is_supervised &&
-        model.supports_weights &&
-        scitype(X) <: model.input_scitype &&
-        scitype(y) <: model.target_scitype
-
-end
 
 # Implementation
 
@@ -240,21 +237,13 @@ Base.propertynames(::Checker) =
      :input_scitype,
      :target_scitype)
 
-function _as_named_tuple(s::Checker)
-    names = propertynames(s)
-    NamedTuple{names}(Tuple(getproperty(s, p) for p in names))
-end
-
-# function Base.show(io::IO, ::MIME"text/plain", S::Checker)
-#     show(io, MIME("text/plain"), _as_named_tuple(S))
-# end
-
 not_missing_and_true(x) = !ismissing(x) && x
 
-const WARN_MULTITARGET = "'y' is a table with only one column. " *
-                         "If 'y' is a table, we assume you want to do multi-target modeling." *
-                         "If you actually want to do single-target modeling, " *
-                         "you need to convert 'y' to a Vector."
+const WARN_MULTITARGET =
+    "'y' is a table with only one column. " *
+    "If 'y' is a table, we assume you want to do multi-target modeling." *
+    "If you actually want to do single-target modeling, " *
+    "you need to convert 'y' to a Vector."
 
 function warn_if_single_column(y)
     if Tables.istable(y) && (length(Tables.columnnames(y)) == 1)
