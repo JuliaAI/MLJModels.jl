@@ -126,6 +126,18 @@ end
     u(model) = !(model.is_supervised)
     @test pca in models(u, t)
     @test !(cnst in models(u, t))
+
+    # display:
+    proxy = models() do m
+        m.name == "ConstantClassifier"
+    end |> first
+    @test sprint(show, proxy) ==
+            "(name = ConstantClassifier, package_name = MLJModels, ... )"
+    @test startswith(
+        sprint(show, MIME("text/plain"), proxy),
+        "(name = \"ConstantClassifier\",\n package_name = \"MLJModels\",\n "*
+            "is_supervised =",
+    )
 end
 
 @testset "models(matching())" begin
