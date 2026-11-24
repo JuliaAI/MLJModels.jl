@@ -6,8 +6,7 @@ test_files = [
     "metadata.jl",
     "model_search.jl",
     "loading.jl",
-    joinpath("builtins", "Constant.jl"),
-    joinpath("builtins", "ThresholdPredictors.jl"),
+    "constant_models.jl",
 ]
 
 if parse(Bool, get(ENV, "MLJ_TEST_REGISTRY", "false"))

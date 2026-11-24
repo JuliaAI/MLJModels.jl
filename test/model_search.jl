@@ -59,12 +59,22 @@ end
 end
 
 @testset "matching" begin
-    X = ones(2,3)
+    X = ones(2,3) |> MLJBase.table
     y = ones(2)
+    y_multiclass = coerce([1, 2], Multiclass)
     w = ones(2)
     w_class = Dict(:male => 1.0, :female => 10.0)
 
     task = matching(X)
+    @test propertynames(task) == (
+        :is_supervised,
+        :supports_weights,
+        :supports_class_weights,
+        :input_scitype,
+        :target_scitype,
+    )
+    @test !task("ConstantClassifier", pkg="MLJModels")
+    @test task("Standardizer", pkg="MLJTransforms")
     @test !task.is_supervised
     @test ismissing(task.supports_weights)
     @test ismissing(task.supports_class_weights)
@@ -72,6 +82,8 @@ end
     @test ismissing(task.target_scitype)
 
     task = matching(X, y)
+    @test !task("Standardizer", pkg="MLJTransforms")
+    @test task(DeterministicConstantRegressor())
     @test task.is_supervised
     @test ismissing(task.supports_weights)
     @test ismissing(task.supports_class_weights)
@@ -79,18 +91,22 @@ end
     @test task.target_scitype == scitype(y)
 
     task = matching(X, y, w)
+    @test !task(ConstantClassifier())
+    @test task("KNNRegressor", pkg="NearestNeighborModels")
     @test task.is_supervised
     @test task.supports_weights
     @test !task.supports_class_weights
     @test task.input_scitype == scitype(X)
     @test task.target_scitype == scitype(y)
 
-    task = matching(X, y, w_class)
+    task = matching(X, y_multiclass, w_class)
+    @test !task("KNNRegressor", pkg="NearestNeighborModels")
+    @test task("SVC", pkg="LIBSVM")
     @test task.is_supervised
     @test !task.supports_weights
     @test task.supports_class_weights
     @test task.input_scitype == scitype(X)
-    @test task.target_scitype == scitype(y)
+    @test task.target_scitype == scitype(y_multiclass)
 
     @testset "matching(X, y) where y is a table with a single column" begin
         @testset begin
@@ -126,6 +142,18 @@ end
     u(model) = !(model.is_supervised)
     @test pca in models(u, t)
     @test !(cnst in models(u, t))
+
+    # display:
+    proxy = models() do m
+        m.name == "ConstantClassifier"
+    end |> first
+    @test sprint(show, proxy) ==
+            "(name = ConstantClassifier, package_name = MLJModels, ... )"
+    @test startswith(
+        sprint(show, MIME("text/plain"), proxy),
+        "(name = \"ConstantClassifier\",\n package_name = \"MLJModels\",\n "*
+            "is_supervised =",
+    )
 end
 
 @testset "models(matching())" begin

@@ -64,9 +64,9 @@ ambiguous cases.
 ## What is provided here?
 
 The actual MLJ Model Registry consists of the TOML files in [this
-directory](/src/registry). A few models available for immediate use in MLJ (without
-loading model code using `@load`) are also provided by this package, under "/src/builtins"
-but these may be moved out in the future.
+directory](/src/registry). The dummy models, `ConstantClassifier`,
+`DeterministicConstantClassifier`, `ConstantRegressor`, and
+`DeterministicConstantRegressor` are also provided by MLJModels.jl.
 
 ### Historical note
 
