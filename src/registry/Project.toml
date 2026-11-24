@@ -40,5 +40,8 @@ SIRUS = "cdeec39e-fb35-4959-aadb-a1dd5dede958"
 SelfOrganizingMaps = "ba4b7379-301a-4be0-bee6-171e4e152787"
 SymbolicRegression = "8254be44-1295-4e6a-a16d-46603ac705cb"
 
+[sources]
+MLJModels = {path = "/Users/anthony/MLJ/MLJModels/"}
+
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
